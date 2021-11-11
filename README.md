@@ -1,2 +1,2 @@
-# NanoLux
+# Nanolux
 Cymaspace Audiolux Opensource code
