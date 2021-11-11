@@ -1,2 +1,2 @@
 # NanoLux
-Cymaspace AudioLux Opensource code
+Cymaspace Audiolux Opensource code
