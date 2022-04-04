@@ -7,6 +7,6 @@ The Audiolux is a product developed by Portland-based company CymaSpace that vis
 John Zontos (zontosj@oregonstate.edu)
 Evan Cochran (cochraev@oregonstate.edu)
 Longjie Guan (guanl@oregonstate.edu)
-Wei Ming (weimi@oregonstate.edu)
+Ming Wei (weimi@oregonstate.edu)
 
 
