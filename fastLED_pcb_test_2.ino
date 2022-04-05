@@ -1,5 +1,5 @@
 #include <FastLED.h>
-//#include <Arduino.h>
+#include <Arduino.h>
 #include "arduinoFFT.h"
 
 FASTLED_USING_NAMESPACE
@@ -86,8 +86,11 @@ double maxDelt = 0.;    // Frequency with the biggest change in amp.
 
 
 bool debug = true;
-bool hue_flag = false;
+bool hue_flag = true;
 
+// map color logirithmicly
+// raise frequency ^ 2
+// change mapping bounds
 
 
 void setup() {
@@ -108,7 +111,7 @@ void setup() {
 
     // initilization sequence
 
-    startup();
+//    startup();
 
 }
 
