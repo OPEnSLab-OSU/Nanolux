@@ -27,8 +27,11 @@ You will also need to check the port connection with ESP32 Board.
 
 # Contributors
 John Zontos (zontosj@oregonstate.edu)
+
 Evan Cochran (cochraev@oregonstate.edu)
+
 Longjie Guan (guanl@oregonstate.edu)
+
 Ming Wei (weimi@oregonstate.edu)
 
 
