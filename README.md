@@ -15,6 +15,7 @@ Linux (http://docs.arduino.cc/software/ide-v1/tutorials/Linux)
 
 # Dependencies
 You will also need to also install FastLED, ArduinoFFT Library.
+See Wiki Page for including dependencies in your project.
 * ArduinoFFT Library: https://github.com/kosme/arduinoFFT
 * FastLED: http://fastled.io/ (You can also find this in the /dependencies)
 
