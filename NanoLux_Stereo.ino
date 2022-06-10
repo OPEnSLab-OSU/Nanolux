@@ -1,3 +1,4 @@
+
 #include <FastLED.h>
 #include <math.h>
 #include "arduinoFFT.h"
@@ -25,7 +26,7 @@ SimplePatternList gPatterns = { blank, freq_hue_trail, freq_hue_vol_brightness, 
 uint8_t gCurrentPatternNumber = 0;
 
 #define MAX_FREQUENCY       4000.0
-#define MIN_FREQUENCY       50.0
+#define MIN_FREQUENCY       40.0
 double peak = 0.;         //  peak frequency
 double rpeak = 0.;         //  right cannel peak frequency
 double maxDelt = 0.;      // Frequency with the biggest change in amp.
@@ -35,18 +36,18 @@ double delt = 0;
 double maxDeltFreq = 0;        // index of max delt
 
 #define MAX_VOLUME          3000.0
-#define MIN_VOLUME          100.0
+#define MIN_VOLUME          10.0
 double lvolume = 0.;       //  NOTE:  static??
 double rvolume = 0.;
 uint8_t vbrightness = 0;
 
 int brightness = 128;       // default brightness
 
-bool debug = false;
+bool debug = true;
 bool delt_mode = false;      // use delta frequency instead of peak
 
 double vdelay = 0;
-int color_warp = 2;
+double color_warp = 2;
 
 int top = 5, bottom = 5;
 
@@ -87,7 +88,7 @@ int NUM_LEDS = MAX_LEDS;
         arduinoFFT
 */
 #define SAMPLES             128    // Must be a power of 2  // 128 - 1024
-#define SAMPLING_FREQUENCY  10000  // Hz, must be less than 10000 due to ADC
+#define SAMPLING_FREQUENCY  8000  // Hz, must be less than 10000 due to ADC
 #define ANALOG_PIN          A0
 
 unsigned int sampling_period_us = round(1000000/SAMPLING_FREQUENCY);
@@ -142,7 +143,7 @@ void setup() {
 
     blank();
 
-    SerialBT.begin("Audiolux-BT-2"); //Bluetooth device name
+    SerialBT.begin("Audiolux-BT-3"); //Bluetooth device name
     Serial.println("Bluetooth ready");
     pinMode(LED_BUILTIN, OUTPUT);
 
@@ -160,8 +161,10 @@ void loop() {
 
     if (delt_mode){
         fHue = remap(log ( maxDeltFreq ) / log ( color_warp ), log ( bottom ) / log ( color_warp ), log ( SAMPLES - top ) / log ( color_warp ), 10, 240);
+        // fHue = remap(maxDeltFreq, bottom, SAMPLES - top, 0, 240);
     } else {
-        fHue = remap(log ( peak ) / log ( color_warp ), log ( MIN_FREQUENCY ) / log ( color_warp ), log ( MAX_FREQUENCY ) / log ( color_warp ), 10, 240);
+        fHue = remap(log ( peak ) / log ( color_warp ), log ( MIN_FREQUENCY ) / log ( color_warp ), log ( MAX_FREQUENCY ) / log ( color_warp ), 0, 240);
+        // fHue = remap(peak, MIN_FREQUENCY, MAX_FREQUENCY, 0, 240);
     }
 
     vbrightness = remap(lvolume, MIN_VOLUME, MAX_VOLUME, 0, MAX_BRIGHTNESS);
@@ -211,6 +214,8 @@ void audio_analysis() {
 
     if (debug)
       Serial.println("--------AUDIO ANALYSIS--------");
+
+    maxDelt = 0;
 
     for (int i = top; i < SAMPLES-bottom; i++) {
         delt = abs(lReal[i] - lRealHist[i]);
