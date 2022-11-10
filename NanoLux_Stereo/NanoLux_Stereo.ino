@@ -1,8 +1,9 @@
-
 #include <FastLED.h>
 #include <math.h>
 #include "arduinoFFT.h"
 #include "BluetoothSerial.h"
+#include "WebServer.h"
+#include "WebPage.h"
 
 FASTLED_USING_NAMESPACE
 
@@ -21,6 +22,11 @@ void freq_hue_vol_brightness();
 void freq_confetti_vol_brightness();
 void volume_level_middle_bar_freq_hue();
 
+const uint8_t BLANK = 0;
+const uint8_t TRAIL = 1;
+const uint8_t SOLID = 2;
+const uint8_t CONFETTI = 3;
+const uint8_t VOL_BAR = 4;
 SimplePatternList gPatterns = { blank, freq_hue_trail, freq_hue_vol_brightness, freq_confetti_vol_brightness, volume_level_middle_bar_freq_hue };
 
 uint8_t gCurrentPatternNumber = 0;
@@ -126,6 +132,21 @@ void IRAM_ATTR buttonISR()
     }
 }
 
+/*
+ * Web Server
+ */
+WiFiWebServer webServer(80);
+
+void initialize_web_server();
+
+// These are the "route" handlers of the API.
+void handle_root();
+void handle_blank();
+void handle_trail();
+void handle_solid();
+void handle_confetti();
+void handle_vol_bar();
+
 
 
 void setup() {
@@ -151,7 +172,7 @@ void setup() {
 
     // initilization sequence
     // startup();
-
+    initialize_web_server();
 }
 
 void loop() {
@@ -180,6 +201,8 @@ void loop() {
     gPatterns[gCurrentPatternNumber]();
     FastLED.show();
     delay(vdelay);
+
+    webServer.handleClient();
 }
 
 
@@ -488,4 +511,55 @@ void check_serial()
       gCurrentPatternNumber = 0;
     }
   }
+}
+
+
+/*
+ * Web Server Processing
+ */
+void initialize_web_server() {
+    WiFi.mode(WIFI_AP);
+    WiFi.softAP(ssid, pass);
+    delay(1000);
+
+    IPAddress ip = WiFi.softAPIP();
+    Serial.print(F("To interact with the AudioLux open a browser to http://"));
+    Serial.println(ip);
+
+    webServer.on("/", handle_root);
+    webServer.on("/blank", handle_blank);
+    webServer.on("/trail", handle_trail);
+    webServer.on("/solid", handle_solid);
+    webServer.on("/confetti", handle_confetti);
+    webServer.on("/vbar", handle_vol_bar);
+    webServer.begin();
+}
+
+void handle_root() {
+    webServer.send(200, "text/html", web_page());
+}
+
+void handle_blank() {
+    gCurrentPatternNumber = BLANK;
+    webServer.send(200, "text/html", web_page());
+}
+
+void handle_trail() {
+    gCurrentPatternNumber = TRAIL;
+    webServer.send(200, "text/html", web_page());
+}
+
+void handle_solid() {
+    gCurrentPatternNumber = SOLID;
+    webServer.send(200, "text/html", web_page());
+}
+
+void handle_confetti() {
+    gCurrentPatternNumber = CONFETTI;
+    webServer.send(200, "text/html", web_page());
+}
+
+void handle_vol_bar() {
+    gCurrentPatternNumber = VOL_BAR;
+    webServer.send(200, "text/html", web_page());
 }
