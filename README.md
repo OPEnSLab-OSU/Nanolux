@@ -18,12 +18,22 @@ You will also need to also install FastLED, ArduinoFFT Library.
 See Wiki Page for including dependencies in your project.
 * ArduinoFFT Library: https://github.com/kosme/arduinoFFT
 * FastLED: http://fastled.io/ (You can also find this in the /dependencies)
+* WiFiWebServer: https://github.com/khoih-prog/WiFiWebServer
+
+All dependencies are installable through the Library Manager of the Arduino IDE, or with the 
+[Arduino CLI](https://arduino.github.io/arduino-cli/0.28/) tool.
+
 
 # Install Board
 You will need to install the ESP32 board driver for developing on this board.
 * Install ESP32 Board: https://www.hackster.io/abdularbi17/how-to-install-esp32-board-in-arduino-ide-1cd571
 You will also need to check the port connection with ESP32 Board.
 * Serial Connection with ESP32: https://docs.espressif.com/projects/esp-idf/en/latest/esp32/get-started/establish-serial-connection.html
+
+
+# Memory model
+After setting up the board, you will need to select a memory model with enough room for the libraries. In the Arduino IDE, 
+go to Tools->Partition Scheme and make sure "No OTA (Large APP)" is selected.
 
 
 # Contributors
