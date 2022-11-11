@@ -89,7 +89,7 @@ int NUM_LEDS = MAX_LEDS;
 */
 #define SAMPLES             128    // Must be a power of 2  // 128 - 1024
 #define SAMPLING_FREQUENCY  8000  // Hz, must be less than 10000 due to ADC
-#define ANALOG_PIN          A0
+#define ANALOG_PIN          A2
 
 unsigned int sampling_period_us = round(1000000/SAMPLING_FREQUENCY);
 unsigned long microseconds;
@@ -188,10 +188,10 @@ void audio_analysis() {
     for(int i=0; i<SAMPLES; i++) {
         microseconds = micros();    //Overflows after around 70 minutes!
 
-        lReal[i] = analogRead(A0);
+        lReal[i] = analogRead(A2);
         lImag[i] = 0;
 
-        rReal[i] = analogRead(A1);
+        rReal[i] = analogRead(A3);
         rImag[i] = 0;
 
         while(micros() < (microseconds + sampling_period_us)){
