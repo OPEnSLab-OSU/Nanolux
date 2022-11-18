@@ -2,6 +2,27 @@
 #include <math.h>
 //#include <Arduino.h>
 #include "arduinoFFT.h"
+#include "BluetoothSerial.h"
+
+
+/*
+            Bluetooth Configuration
+*/
+#if !defined(CONFIG_BT_ENABLED) || !defined(CONFIG_BLUEDROID_ENABLED)
+#error Bluetooth is not enabled! Please run `make menuconfig` to and enable it
+#endif
+
+// serial definitions for changing parameters, sent as 8 bit chars
+#define SER_LED_OFF     '2'
+#define SER_NEXT_PTRN   '1'
+#define SER_PREV_PTRN   '0'
+#define SER_60_LEDS     'A'   // strip has 60 leds
+#define SER_144_LEDS    'B'   // strip has 144 leds
+#define SER_DELTA       'C'   // use max delta frequency analysis
+#define SER_NORMAL      'D'   // stop using max delta
+BluetoothSerial SerialBT;
+
+
 
 FASTLED_USING_NAMESPACE
 
@@ -11,7 +32,7 @@ FASTLED_USING_NAMESPACE
 /*
         FastLED
 */
-#define NUM_LEDS    64     // Number of leds in strip.
+int NUM_LEDS =      60;     // Number of leds in strip.
 #define DATA_PIN    15      // No hardware SPI pins defined for the ESP32 yet.
 #define CLK_PIN     14      // Use bitbanged output.
 #define LED_TYPE    SK9822  // Define LED protocol.
@@ -19,8 +40,9 @@ FASTLED_USING_NAMESPACE
 #define MAX_BRIGHTNESS         255
 #define FRAMES_PER_SECOND  120
 
-CRGB leds[NUM_LEDS];        // Buffer (front)
-CRGB hist[NUM_LEDS];        // Buffer (back)
+// 144 was previously 'NUM_LEDS'
+CRGB leds[144];        // Buffer (front)
+CRGB hist[144];        // Buffer (back)
 
 /*
         arduinoFFT
@@ -40,11 +62,11 @@ double delt[SAMPLES];
 
 arduinoFFT FFT = arduinoFFT();
 
+
 /*
         Button Input
 */
 #define BUTTON_PIN 33
-
 bool button_pressed = false;
 
 
@@ -61,20 +83,18 @@ void IRAM_ATTR buttonISR()
   }
 }
 
+
 // Array size macro
 #define ARRAY_SIZE(A) (sizeof(A) / sizeof((A)[0]))
 
 // List of patterns to cycle through defined as separate functions below.
 typedef void (*SimplePatternList[])();
-
 SimplePatternList gPatterns = { blank, freq_hue_trail, freq_hue_vol_brightness, freq_confetti_vol_brightness, volume_level_middle_bar_freq_hue };
-
 uint8_t gCurrentPatternNumber = 0; // Index number of which pattern is current
-
 uint8_t gHue = 0;         // rotating base color
 
 #define MAX_FREQUENCY       4000.0
-#define MIN_FREQUENCY       400.0
+#define MIN_FREQUENCY       50.0
 double peak = 0.;         //  peak frequency
 uint8_t fHue = 0;         // hue value based on peak frequency
 
@@ -104,18 +124,26 @@ void setup() {
 
     //  initialize up led strip
     FastLED.addLeds<LED_TYPE,DATA_PIN,CLK_PIN,COLOR_ORDER>(leds, NUM_LEDS).setCorrection(TypicalLEDStrip);
+    blank();
+
+
+    SerialBT.begin("Audiolux-BT"); //Bluetooth device name
+    Serial.println("Bluetooth ready");
+    pinMode(LED_BUILTIN, OUTPUT);
 
     Serial.println("Setup Done!!!!!");
 
     // initilization sequence
 
-    startup();
+    //startup();
 
 }
 
 
 void loop() {
 
+  check_serial(); // check for user inputs on serial links
+  
 
     audio_analysis(); // sets peak and volume
 
@@ -130,7 +158,7 @@ void loop() {
 
     // User Input handling
     if(button_pressed) {
-      if(debug)Serial.println("Pressed !");  //can be removed
+      Serial.println("Pressed !");  //can be removed
       nextPattern();                // code to execute on button press
       button_pressed = false;      // reset pressed
     }
@@ -289,6 +317,16 @@ void nextPattern() {
   gCurrentPatternNumber = (gCurrentPatternNumber + 1) % ARRAY_SIZE( gPatterns);
 }
 
+void prevPattern() {
+  // subtract one to the current pattern number, and avoid underflows
+  if(gCurrentPatternNumber == 0)
+  {
+    gCurrentPatternNumber = ARRAY_SIZE( gPatterns);
+  }
+  
+  gCurrentPatternNumber -= 1;
+}
+
 void setColorHSV(byte h, byte s, byte v) {
   // create a new HSV color
   CHSV color = CHSV(h, s, v);
@@ -352,4 +390,75 @@ int largest(double arr[], int n)
             max = arr[i];
  
     return max;
+}
+
+
+/*
+ * Checks for whether the user has supplied input via bluetooth serial,
+ * or via usb serial. Updates settings accordingly
+ */
+void check_serial()
+{
+  // if available, get serial data
+  char user_cmd = '\0';
+  if (SerialBT.available()) 
+  {
+    user_cmd = SerialBT.read();
+  }
+  if(Serial.available())
+  {
+    user_cmd = Serial.read();
+  }
+
+  // if there was data,
+  if(user_cmd != '\0')
+  {
+    // go to previous pattern
+    if(user_cmd == SER_PREV_PTRN)
+    {
+      Serial.println("Previous Pattern");
+      prevPattern();
+    }
+
+    // go to next pattern
+    if(user_cmd == SER_NEXT_PTRN)
+    {
+      Serial.println("Next Pattern");
+      nextPattern();
+    }
+
+    // the LED strip has 60 LEDs
+    if(user_cmd == SER_60_LEDS)
+    {
+      blank();
+      FastLED.show();
+      NUM_LEDS = 60;
+      FastLED.addLeds<LED_TYPE,DATA_PIN,CLK_PIN,COLOR_ORDER>(leds, NUM_LEDS).setCorrection(TypicalLEDStrip);
+    }
+
+    // the LED strip has 144 LEDs
+    if(user_cmd == SER_144_LEDS)
+    {
+      NUM_LEDS = 144;
+      FastLED.addLeds<LED_TYPE,DATA_PIN,CLK_PIN,COLOR_ORDER>(leds, NUM_LEDS).setCorrection(TypicalLEDStrip);
+    }
+
+    // use max delta analysis 
+    if(user_cmd == SER_DELTA)
+    {
+      hue_flag = false;
+    }
+
+    // use regular dominant frequency analysis
+    if(user_cmd == SER_NORMAL)
+    {
+      hue_flag = true;
+    }
+
+    // turn off the LEDs, by putting the pattern to 0
+    if(user_cmd == SER_LED_OFF)
+    {
+      gCurrentPatternNumber = 0;
+    }
+  }
 }
