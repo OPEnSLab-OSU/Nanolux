@@ -2,8 +2,9 @@
 #include <math.h>
 #include "arduinoFFT.h"
 #include "BluetoothSerial.h"
+#include "LITTLEFS.h"
 #include "WebServer.h"
-#include "WebPage.h"
+
 
 FASTLED_USING_NAMESPACE
 
@@ -147,6 +148,10 @@ void handle_solid();
 void handle_confetti();
 void handle_vol_bar();
 
+/*
+ * File system
+ */
+void initialize_file_system();
 
 
 void setup() {
@@ -168,11 +173,11 @@ void setup() {
     Serial.println("Bluetooth ready");
     pinMode(LED_BUILTIN, OUTPUT);
 
-    Serial.println("Setup Done!!!!!");
-
-    // initilization sequence
-    // startup();
+    // Web app related.
+    initialize_file_system();
     initialize_web_server();
+
+    Serial.println("Setup Done!!!!!");
 }
 
 void loop() {
@@ -517,49 +522,98 @@ void check_serial()
 /*
  * Web Server Processing
  */
+void register_web_paths(fs::FS &fs, const char * dirname, uint8_t levels) {
+    Serial.printf("Scanning path: %s\r\n", dirname);
+    File root = fs.open(dirname);
+    if (!root) {
+        Serial.println("- failed to open root directory");
+        return;
+    }
+    if (!root.isDirectory()) {
+        Serial.println(" - / does not seem to be a directory");
+        return;
+    }
+
+    File file = root.openNextFile();
+    while (file) {
+        if (file.isDirectory()) {
+            Serial.print("Scanning directory: ");
+            Serial.println(file.name());
+            if (levels) {
+                register_web_paths(fs, file.name(), levels-1);
+            }
+        } else {
+            Serial.print("  Registering path: ");
+            Serial.println(file.name());
+            webServer.serveStatic(file.name(), fs, file.name());
+        }
+        file = root.openNextFile();
+    }
+}
+
 void initialize_web_server() {
     WiFi.mode(WIFI_AP);
     WiFi.softAP(ssid, pass);
     delay(1000);
 
     IPAddress ip = WiFi.softAPIP();
-    Serial.print(F("To interact with the AudioLux open a browser to http://"));
-    Serial.println(ip);
 
-    webServer.on("/", handle_root);
+    // API
     webServer.on("/blank", handle_blank);
     webServer.on("/trail", handle_trail);
     webServer.on("/solid", handle_solid);
     webServer.on("/confetti", handle_confetti);
     webServer.on("/vbar", handle_vol_bar);
+
+    // Web App
+    Serial.print(F("Registering Web App files."));
+    register_web_paths(LITTLEFS, "/", 2);
+    webServer.serveStatic("/", LITTLEFS, "/index.html");
+
     webServer.begin();
+
+    Serial.print(F("To interact with the AudioLux open a browser to http://"));
+    Serial.println(ip);
 }
 
 void handle_root() {
-    webServer.send(200, "text/html", web_page());
+//    webServer.send(200, "text/html", web_page());
 }
 
 void handle_blank() {
     gCurrentPatternNumber = BLANK;
-    webServer.send(200, "text/html", web_page());
+//    webServer.send(200, "text/html", web_page());
 }
 
 void handle_trail() {
     gCurrentPatternNumber = TRAIL;
-    webServer.send(200, "text/html", web_page());
+//    webServer.send(200, "text/html", web_page());
 }
 
 void handle_solid() {
     gCurrentPatternNumber = SOLID;
-    webServer.send(200, "text/html", web_page());
+//    webServer.send(200, "text/html", web_page());
 }
 
 void handle_confetti() {
     gCurrentPatternNumber = CONFETTI;
-    webServer.send(200, "text/html", web_page());
+//    webServer.send(200, "text/html", web_page());
 }
 
 void handle_vol_bar() {
     gCurrentPatternNumber = VOL_BAR;
-    webServer.send(200, "text/html", web_page());
+//    webServer.send(200, "text/html", web_page());
+}
+
+
+/*
+ * File system
+ */
+void initialize_file_system() {
+    Serial.println(F("Initializing FS..."));
+    if (LITTLEFS.begin()) {
+        Serial.println(F("done."));
+    } else {
+        Serial.println(F("fail."));
+    }
 }
