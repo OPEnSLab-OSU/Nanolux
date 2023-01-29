@@ -1,7 +1,7 @@
 {
   "private": true,
-  "name": "webapp",
-  "version": "0.0.0",
+  "name": "audiolux_webapp",
+  "version": "0.0.1",
   "license": "MIT",
   "scripts": {
     "build": "preact build",
