@@ -5,7 +5,7 @@ import style from './style.css';
 const Header = () => (
 	<header className={style.header}>
 		<a href="/" className={style.logo}>
-			<img src="../../assets/cropped-cymaspace-logo-32x32.png" alt="CymaSpace Logo" height="32" width="32" />
+			<img src="../../assets/Transparent-Cymaspace-Logo-205x71px.png" alt="CymaSpace Logo" height="32" />
 			<h1>AudioLux</h1>
 		</a>
 		<nav>
@@ -14,9 +14,6 @@ const Header = () => (
 			</Link>
 			<Link activeClassName={style.active} href="/profile">
 				Me
-			</Link>
-			<Link activeClassName={style.active} href="/profile/john">
-				John
 			</Link>
 		</nav>
 	</header>
