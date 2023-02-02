@@ -10,16 +10,21 @@ const SimpleSlider = (props) => {
 
     return (
         <div>
-            <input
-                className={style.slider}
-                type="range"
-                id="slider"
-                name="slider"
-                min={props.minValue}
-                max={props.maxValue}
-                value={value}
-                onChange={valueChanged}
-            />
+            <div>
+                <span>{props.label}</span>
+            </div>
+            <div>
+                <input
+                    className={style.slider}
+                    type="range"
+                    id="slider"
+                    name="slider"
+                    min={props.minValue}
+                    max={props.maxValue}
+                    value={value}
+                    onChange={valueChanged}
+                />
+            </div>
         </div>
     );
 }

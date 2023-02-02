@@ -7,10 +7,10 @@ const Home = () => {
 	return (
 		<div className={style.home}>
 			<Patterns />
-			<NumericSlider />
-			<NumericSlider />
-			<SimpleSlider />
-			<SimpleSlider />
+			<NumericSlider label="Noise Threshold" />
+			<NumericSlider label="Compression threshold" />
+			<SimpleSlider label="Low Frequency Color" />
+			<SimpleSlider label="High Frequency Color" />
 		</div>
 	);
 };
