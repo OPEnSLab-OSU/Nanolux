@@ -3,10 +3,10 @@ import Patterns from "../../components/patterns";
 import NumericSlider from "../../components/numeric_slider";
 import SimpleSlider from "../../components/simple_slider";
 
-const Home = () => {
+const Settings = () => {
 	return (
 		<div className={style.home}>
-			<Patterns />
+			<Patterns patterns={["Pattern1", "Pattern2", "Pattern3"]} />
 			<NumericSlider label="Noise Threshold" />
 			<NumericSlider label="Compression threshold" />
 			<SimpleSlider label="Low Frequency Color" />
@@ -15,4 +15,4 @@ const Home = () => {
 	);
 };
 
-export default Home;
+export default Settings;
