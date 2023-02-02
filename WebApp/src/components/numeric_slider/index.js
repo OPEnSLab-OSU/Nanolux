@@ -5,8 +5,8 @@ import {useSignal} from "@preact/signals";
 const NumericSlider = (props) => {
     const current = useSignal(0);
 
-    const valueChaged = (newValue) => {
-        current.value = newValue;
+    const valueChaged = (event) => {
+        current.value = event.target.value;
     }
 
     return (
