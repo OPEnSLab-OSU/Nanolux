@@ -1,12 +1,14 @@
 import { h } from 'preact';
 import style from './style.css';
+import {useEffect, useState} from "preact/hooks";
+import {getPatternList} from "../../utils/api";
 
-const Patterns = (props) => {
-    const patterns = [];
+const Patterns = () => {
+    const [patterns, setPatterns] = useState([]);
 
-    for (let pattern in props.patterns) {
-        patterns.push(pattern)
-    }
+    useEffect(() => {
+        getPatternList().then(data => setPatterns(data))
+    }, [])
 
     const patternOptions = patterns.map(pattern => {
         return <option key={pattern} value={pattern}>
