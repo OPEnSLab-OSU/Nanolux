@@ -17,4 +17,9 @@ const getPattern = () =>
 const getData = (path) =>
     axios.get(`${BASE_URL}/api/${path}`).then(response => response.data);
 
-export { getSettings, getPatternList, getPattern };
+
+const setPattern = (pattern) =>
+    axios.put(`${BASE_URL}/api/pattern/`,{pattern});
+
+
+export { getSettings, getPatternList, getPattern, setPattern };
