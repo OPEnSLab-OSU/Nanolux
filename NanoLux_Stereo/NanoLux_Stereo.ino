@@ -2,7 +2,6 @@
 #include <math.h>
 #include "arduinoFFT.h"
 #include "BluetoothSerial.h"
-#include "LITTLEFS.h"
 #include "WebServer.h"
 
 
@@ -133,13 +132,6 @@ void IRAM_ATTR buttonISR()
     }
 }
 
-/*
- * Web Server
- */
-WiFiWebServer webServer(80);
-
-void initialize_web_server();
-
 // These are the "route" handlers of the API.
 void handle_root();
 void handle_blank();
@@ -148,10 +140,14 @@ void handle_solid();
 void handle_confetti();
 void handle_vol_bar();
 
-/*
- * File system
- */
-void initialize_file_system();
+APIHook apiHooks[] = {
+        { "/blank", handle_blank },
+        { "/trail", handle_trail },
+        { "/solid", handle_solid },
+        { "/confetti", handle_confetti },
+        { "/vbar", handle_vol_bar }
+};
+const int API_HOOK_COUNT = 5;
 
 
 void setup() {
@@ -174,8 +170,7 @@ void setup() {
     pinMode(LED_BUILTIN, OUTPUT);
 
     // Web app related.
-    initialize_file_system();
-    initialize_web_server();
+    initialize_web_server(apiHooks, API_HOOK_COUNT);
 
     Serial.println("Setup Done!!!!!");
 }
@@ -207,7 +202,7 @@ void loop() {
     FastLED.show();
     delay(vdelay);
 
-    webServer.handleClient();
+    handle_web_requests();
 }
 
 
@@ -518,64 +513,6 @@ void check_serial()
   }
 }
 
-
-/*
- * Web Server Processing
- */
-void register_web_paths(fs::FS &fs, const char * dirname, uint8_t levels) {
-    Serial.printf("Scanning path: %s\r\n", dirname);
-    File root = fs.open(dirname);
-    if (!root) {
-        Serial.println("- failed to open root directory");
-        return;
-    }
-    if (!root.isDirectory()) {
-        Serial.println(" - / does not seem to be a directory");
-        return;
-    }
-
-    File file = root.openNextFile();
-    while (file) {
-        if (file.isDirectory()) {
-            Serial.print("Scanning directory: ");
-            Serial.println(file.name());
-            if (levels) {
-                register_web_paths(fs, file.name(), levels-1);
-            }
-        } else {
-            Serial.print("  Registering path: ");
-            Serial.println(file.name());
-            webServer.serveStatic(file.name(), fs, file.name());
-        }
-        file = root.openNextFile();
-    }
-}
-
-void initialize_web_server() {
-    WiFi.mode(WIFI_AP);
-    WiFi.softAP(ssid, pass);
-    delay(1000);
-
-    IPAddress ip = WiFi.softAPIP();
-
-    // API
-    webServer.on("/blank", handle_blank);
-    webServer.on("/trail", handle_trail);
-    webServer.on("/solid", handle_solid);
-    webServer.on("/confetti", handle_confetti);
-    webServer.on("/vbar", handle_vol_bar);
-
-    // Web App
-    Serial.print(F("Registering Web App files."));
-    register_web_paths(LITTLEFS, "/", 2);
-    webServer.serveStatic("/", LITTLEFS, "/index.html");
-
-    webServer.begin();
-
-    Serial.print(F("To interact with the AudioLux open a browser to http://"));
-    Serial.println(ip);
-}
-
 void handle_root() {
 //    webServer.send(200, "text/html", web_page());
 }
@@ -603,17 +540,4 @@ void handle_confetti() {
 void handle_vol_bar() {
     gCurrentPatternNumber = VOL_BAR;
 //    webServer.send(200, "text/html", web_page());
-}
-
-
-/*
- * File system
- */
-void initialize_file_system() {
-    Serial.println(F("Initializing FS..."));
-    if (LITTLEFS.begin()) {
-        Serial.println(F("done."));
-    } else {
-        Serial.println(F("fail."));
-    }
 }
