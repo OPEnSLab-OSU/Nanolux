@@ -1,0 +1,133 @@
+openapi: 3.0.3
+info:
+  title: AudioLux API - OpenAPI 3.0
+  description: "Control and configuration API for the AudioLux Device"
+  contact:
+    email: udellc@oregonstate.edu
+  license:
+    name: TBD
+    url: http://www.example.org
+  version: 1.0.0
+servers:
+  - url: http://192.168.130.1
+paths:
+  /api/settings:
+    get:
+      tags:
+        - settings
+      summary: Retrieve settings
+      description: Get the current settings values from the firmware.
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Settings'
+    put:
+      tags:
+        - settings
+      summary: Update settings.
+      description: Apply settings values to the firmware.
+      requestBody:
+        description: Settings to apply. All members must be present. No nulls Allowed.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Settings'
+        required: true
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Settings'
+        '405':
+          description: Invalid input
+  /api/pattern:
+    get:
+      tags:
+        - visualization pattern
+      summary: Get visualization pattern.
+      description: Retrieve the value of the current visualization pattern.
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Control'
+    put:
+      tags:
+      - visualization pattern
+      summary: Set visualization pattern.
+      description: Set the value of the current visualization pattern.
+      requestBody:
+        description: Visualization pattern value.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Control'
+        required: true
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Control'
+        '405':
+          description: Invalid input
+components:
+  schemas:
+    Settings:
+      type: object
+      required:
+        - noise
+        - compression
+        - loFreqHue
+        - hiFreqHue
+        - ledCount
+      properties:
+        noise:
+          description: Noise Gate Threshold (0 - 100)
+          type: integer
+          format: int32
+          example: 10
+        compression:
+          description: Compression Threshold (0 - 100)
+          type: integer
+          format: int32
+          example: 80
+        loFreqHue:
+          description: RGB for Low Frequency Hue (0 - 0xFFFFFF)
+          type: integer
+          format: int32
+          example: 0
+        hiFreqHue:
+          description: RGB for High Frequency Hue (0 - 0xFFFFFF)
+          type: integer
+          format: int32
+          example: 80294
+        ledCount:
+          description: Number of LEDs connected to the output.
+          type: integer
+          example: 50
+    Control:
+      type: object
+      required:
+        - pattern
+      properties:
+        pattern:
+          type: string
+          description: name of visualization pattern
+          enum:
+            - confetti
+            - solid
+            - trail
+            - vbar
