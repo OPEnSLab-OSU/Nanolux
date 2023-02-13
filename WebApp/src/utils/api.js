@@ -1,6 +1,6 @@
 import axios from 'redaxios';
 
-const BASE_URL = 'http://localhost:8000';
+const BASE_URL = 'https://audioluxmockapi.azurewebsites.net/';
 
 const getSettings = () =>
     getData('settings');
