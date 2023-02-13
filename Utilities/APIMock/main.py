@@ -9,6 +9,7 @@ origins = [
     "http://localhost:8080",
     "http://localhost:8000",
     "http://localhost",
+    "https://audioluxecampus.azurewebsites.net/",
 ]
 
 app.add_middleware(
