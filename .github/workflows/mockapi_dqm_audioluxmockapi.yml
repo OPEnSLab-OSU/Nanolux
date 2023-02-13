@@ -23,11 +23,13 @@ jobs:
           python-version: '3.10'
 
       - name: Create and start virtual environment
+        working-directory: Utilities/APIMock
         run: |
           python -m venv venv
           source venv/bin/activate
       
       - name: Install dependencies
+        working-directory: Utilities/APIMock
         run: pip install -r requirements.txt
         
       # Optional: Add step to run tests here (PyTest, Django test suites, etc.)
@@ -35,10 +37,10 @@ jobs:
       - name: Upload artifact for deployment jobs
         uses: actions/upload-artifact@v2
         with:
-          name: python-app
+          name: apimock-app
           path: |
-            . 
-            !venv/
+            Utilities/APIMock/ 
+            !Utilities/APIMock/venv/
 
   deploy:
     runs-on: ubuntu-latest
@@ -51,7 +53,7 @@ jobs:
       - name: Download artifact from build job
         uses: actions/download-artifact@v2
         with:
-          name: python-app
+          name: apimock-app
           path: .
           
       - name: 'Deploy to Azure Web App'
