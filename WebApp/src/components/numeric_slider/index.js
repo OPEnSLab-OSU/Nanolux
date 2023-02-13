@@ -1,8 +1,14 @@
+import { h } from 'preact';
 import style from './style.css';
 import {useSignal} from "@preact/signals";
 
-const NumericSlider = (props) => {
-    const current = useSignal(0);
+const NumericSlider = ({
+    label,
+    savedValue,
+    min,
+    max
+}) => {
+    const current = useSignal(savedValue);
 
     const valueChanged = event => {
         current.value = event.target.value;
@@ -11,7 +17,7 @@ const NumericSlider = (props) => {
     return (
         <div>
             <div>
-                <span>{props.label}</span>
+                <span>{label}</span>
             </div>
             <div>
                 <input
@@ -19,8 +25,8 @@ const NumericSlider = (props) => {
                     type="range"
                     id="slider"
                     name="slider"
-                    min={props.minValue}
-                    max={props.maxValue}
+                    min={min}
+                    max={max}
                     value={current}
                     onInput={valueChanged}
                 />
@@ -29,8 +35,8 @@ const NumericSlider = (props) => {
                     type="number"
                     id="spinner"
                     name="spinner"
-                    min={props.minValue}
-                    max={props.maxValue}
+                    min={min}
+                    max={max}
                     value={current}
                     onChange={valueChanged}
                 />
