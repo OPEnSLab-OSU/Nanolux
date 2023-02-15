@@ -4,6 +4,7 @@ import NumericSlider from "../../components/numeric_slider";
 import {useState, useEffect} from "preact/hooks";
 import {getSettings} from "../../utils/api";
 import LedCount from "../../components/led_count";
+import ApiMonitor from "../../components/api_monitor";
 
 const Settings = () => {
 	const [settings, setSettings] = useState({});
@@ -14,12 +15,11 @@ const Settings = () => {
 
 	return (
 		<div className={style.home}>
-			<section>
+			<div className={style.settings_control}>
 				<Patterns
-					className={style.settings_control}
 					patterns={["Pattern1", "Pattern2", "Pattern3"]} />
-			</section>
-			<section>
+			</div>
+			<div className={style.settings_control}>
 				<NumericSlider
 					className={style.settings_control}
 					label="Noise Threshold"
@@ -27,8 +27,8 @@ const Settings = () => {
 					min={0}
 					max={100}
 				/>
-			</section>
-			<section>
+			</div>
+			<dev className={style.settings_control}>
 				<LedCount
 					className={style.settings_control}
 					label="Led Count"
@@ -36,7 +36,12 @@ const Settings = () => {
 					min={1}
 					max={100}
 				/>
-			</section>
+			</dev>
+			<div className={style.settings_control}>
+				<ApiMonitor
+					className={style.settings_control}
+				/>
+			</div>
 		</div>
 	);
 };
