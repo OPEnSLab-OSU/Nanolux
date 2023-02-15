@@ -1,7 +1,7 @@
 import {h} from 'preact';
 import style from './style.css';
 import {useEffect, useState} from "preact/hooks";
-import {getPattern, getPatternList, setPattern} from "../../utils/api";
+import {getPattern, getPatternList, savePattern} from "../../utils/api";
 
 const Patterns = () => {
     const [patterns, setPatterns] = useState([]);
@@ -21,7 +21,7 @@ const Patterns = () => {
     const handleSelection = async (event) => {
         const newPattern = event.target.value;
         setCurrentPattern(newPattern);
-        await setPattern(newPattern);
+        await savePattern(newPattern);
     }
 
     return (

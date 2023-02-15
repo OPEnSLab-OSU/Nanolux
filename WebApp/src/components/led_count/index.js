@@ -1,17 +1,26 @@
 import { h } from 'preact';
 import style from './style.css';
-import {useSignal} from "@preact/signals";
+import {useState, useEffect} from "preact/hooks";
 
 const LedCount = ({
         label,
         savedValue,
         min,
-        max
+        max,
+        onValueChanged
 }) => {
-    const current = useSignal(savedValue);
+    const [count, setCount] = useState(savedValue);
+
+    useEffect(() => {
+        if (savedValue) {
+            setCount(savedValue);
+        }
+    }, [savedValue])
+
 
     const valueChanged = event => {
-        current.value = event.target.value;
+        setCount(event.target.value);
+        onValueChanged(count);
     }
 
     return (
@@ -27,7 +36,7 @@ const LedCount = ({
                     name="spinner"
                     min={min}
                     max={max}
-                    value={current}
+                    value={count}
                     onChange={valueChanged}
                 />
             </div>
