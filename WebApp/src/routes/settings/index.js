@@ -1,9 +1,9 @@
 import style from './style.css';
 import Patterns from "../../components/patterns";
 import NumericSlider from "../../components/numeric_slider";
-import SimpleSlider from "../../components/simple_slider";
 import {useState, useEffect} from "preact/hooks";
 import {getSettings} from "../../utils/api";
+import LedCount from "../../components/led_count";
 
 const Settings = () => {
 	const [settings, setSettings] = useState({});
@@ -14,16 +14,29 @@ const Settings = () => {
 
 	return (
 		<div className={style.home}>
-			<Patterns patterns={["Pattern1", "Pattern2", "Pattern3"]} />
-			<NumericSlider
-				label="Noise Threshold"
-				savedValue={settings.noise_gate}
-				min={0}
-				max={100}
-			/>
-			<NumericSlider label="Compression threshold" />
-			<SimpleSlider label="Low Frequency Color" />
-			<SimpleSlider label="High Frequency Color" />
+			<section>
+				<Patterns
+					className={style.settings_control}
+					patterns={["Pattern1", "Pattern2", "Pattern3"]} />
+			</section>
+			<section>
+				<NumericSlider
+					className={style.settings_control}
+					label="Noise Threshold"
+					savedValue={settings.noise_gate}
+					min={0}
+					max={100}
+				/>
+			</section>
+			<section>
+				<LedCount
+					className={style.settings_control}
+					label="Led Count"
+					savedValue={settings.led_count}
+					min={1}
+					max={100}
+				/>
+			</section>
 		</div>
 	);
 };
