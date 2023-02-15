@@ -34,7 +34,6 @@ const Patterns = () => {
             >
                 {patternOptions}
             </select>
-            <p>{currentPattern}</p>
         </div>
     );
 }

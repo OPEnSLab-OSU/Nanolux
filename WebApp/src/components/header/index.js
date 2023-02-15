@@ -13,7 +13,7 @@ const Header = () => (
 				Settings
 			</Link>
 			<Link activeClassName={style.active} href="/profile">
-				Me
+				User
 			</Link>
 		</nav>
 	</header>
