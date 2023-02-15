@@ -17,6 +17,10 @@
 	column-gap: 1.5rem;
 }
 
+.settings_control {
+	padding: 1rem;
+}
+
 @media (max-width: 639px) {
 	.home section {
 		margin-top: 5rem;
