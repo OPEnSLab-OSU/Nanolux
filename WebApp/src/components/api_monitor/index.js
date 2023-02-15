@@ -1,10 +1,11 @@
 import { h } from 'preact';
 import style from './style.css';
-import {useEffect, useState} from "preact/hooks";
+import {useEffect, useRef, useState} from "preact/hooks";
 import {getHistory} from "../../utils/api";
 
 const ApiMonitor = () => {
     const [history, setHistory] = useState([]);
+    const textarea = useRef(null)
 
     useEffect(() => {
         let timer = setInterval(
@@ -13,6 +14,12 @@ const ApiMonitor = () => {
             500);
         return () => clearInterval(timer);
     }, []);
+
+    useEffect(() => {
+            if (textarea.current) {
+                textarea.current.scrollTop = textarea.current.scrollHeight;
+            }
+        }, [history]);
 
     return (
         <div>
@@ -24,6 +31,7 @@ const ApiMonitor = () => {
                     className={style.textarea}
                     rows={10}
                     cols={90}
+                    ref={textarea}
                 >
                     {history}
                 </textarea>
