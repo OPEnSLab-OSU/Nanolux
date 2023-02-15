@@ -17,12 +17,17 @@ const getPattern = () =>
 const getHistory = () =>
     getData('history')
 
+
 const getData = (path) =>
     axios.get(`${BASE_URL}/api/${path}`).then(response => response.data);
 
 
-const setPattern = (pattern) =>
-    axios.put(`${BASE_URL}/api/pattern/`,{pattern});
+const savePattern = (pattern) =>
+    axios.put(`${BASE_URL}/api/pattern`,{pattern});
 
 
-export { getSettings, getPatternList, getPattern, setPattern, getHistory };
+const saveSettings = (settings) =>
+    axios.put(`${BASE_URL}/api/settings`, {...settings}, );
+
+
+export { getSettings, saveSettings, getPatternList, getPattern, savePattern, getHistory };
