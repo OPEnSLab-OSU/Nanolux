@@ -1,9 +1,10 @@
 import style from './style.css';
 import Patterns from "../../components/patterns";
 import NumericSlider from "../../components/numeric_slider";
-import SimpleSlider from "../../components/simple_slider";
 import {useState, useEffect} from "preact/hooks";
-import {getSettings} from "../../utils/api";
+import {getSettings, saveSettings} from "../../utils/api";
+import LedCount from "../../components/led_count";
+import ApiMonitor from "../../components/api_monitor";
 
 const Settings = () => {
 	const [settings, setSettings] = useState({});
@@ -12,18 +13,46 @@ const Settings = () => {
 		getSettings().then(data => setSettings(data));
 	}, [])
 
+	const handleNoiseChange = async (newValue) => {
+		setSettings(current => ({...current, noise: newValue}));
+		await saveSettings(settings);
+	}
+
+	const handleLedChange = async (newValue) => {
+		setSettings(current => ({...current, ledCount: newValue}));
+		await saveSettings(settings);
+	}
+
 	return (
 		<div className={style.home}>
-			<Patterns patterns={["Pattern1", "Pattern2", "Pattern3"]} />
-			<NumericSlider
-				label="Noise Threshold"
-				savedValue={settings.noise_gate}
-				min={0}
-				max={100}
-			/>
-			<NumericSlider label="Compression threshold" />
-			<SimpleSlider label="Low Frequency Color" />
-			<SimpleSlider label="High Frequency Color" />
+			<div className={style.settings_control}>
+				<Patterns />
+			</div>
+			<div className={style.settings_control}>
+				{ settings && <NumericSlider
+					className={style.settings_control}
+					label="Noise Threshold"
+					savedValue={settings.noise}
+					min={0}
+					max={100}
+					onValueChanged={handleNoiseChange}
+				/> }
+			</div>
+			<dev className={style.settings_control}>
+				<LedCount
+					className={style.settings_control}
+					label="Led Count"
+					savedValue={settings.ledCount}
+					min={1}
+					max={100}
+					onValueChanged={handleLedChange}
+				/>
+			</dev>
+			<div className={style.settings_control}>
+				<ApiMonitor
+					className={style.settings_control}
+				/>
+			</div>
 		</div>
 	);
 };

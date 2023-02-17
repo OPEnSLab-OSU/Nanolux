@@ -1,17 +1,26 @@
 import { h } from 'preact';
 import style from './style.css';
 import {useSignal} from "@preact/signals";
+import {useEffect} from "preact/hooks";
 
 const NumericSlider = ({
     label,
     savedValue,
     min,
-    max
+    max,
+    onValueChanged
 }) => {
     const current = useSignal(savedValue);
 
+    useEffect(() => {
+        if (savedValue) {
+            current.value = savedValue;
+        }
+    }, [savedValue])
+
     const valueChanged = event => {
         current.value = event.target.value;
+        onValueChanged(current.value);
     }
 
     return (
