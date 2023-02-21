@@ -428,7 +428,7 @@ void spring_mass_3 ()
     } 
 }
 
-double amplitude[5] = {0,0,0,0,0}; //for spring mass 1
+/*double amplitude[5] = {0,0,0,0,0}; //for spring mass 1
 
 void make_spring_steady (int sp_position, int sp_mass, int sp_size, int sp_constant, int friction)
 {
@@ -466,7 +466,7 @@ void make_spring_steady (int sp_position, int sp_mass, int sp_size, int sp_const
         leds[i] = CHSV (0, 0, 0);
       }
     }
-}
+}*/
 
 void startup(){
   for(int i = 0; i < NUM_LEDS; i++) {
