@@ -83,6 +83,55 @@ paths:
                 $ref: '#/components/schemas/Control'
         '405':
           description: Invalid input
+  /api/wifis:
+    get:
+      tags:
+        - available networks
+      summary: Get a list of locally scanned WiFi SSIDs.
+      description: Retrieve a list of locally scanned WiFi SSIDs.
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/WiFi'
+  /api/wifi:
+    get:
+      tags:
+        - WiFi network
+      summary: Get the currently joined WiFi network.
+      description: Retrieve the SSID name of currently joined WiFi network.
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WiFi'
+    put:
+      tags:
+      - WiFi network
+      summary: Join a WiFi network.
+      description: Accepts credentials to attempt a WiFi network connection.
+      requestBody:
+        description: WiFi SSDI and password, if required..
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WiFiCreds'
+        required: true
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WiFi'
+        '405':
+          description: Invalid input
 components:
   schemas:
     Settings:
@@ -131,3 +180,29 @@ components:
             - solid
             - trail
             - vbar
+    WiFi:
+      type: object
+      required:
+        - ssid
+      properties:
+        ssid:
+          type: string
+          description: name of the WiFi network
+        rssi:
+          type: integer
+          description: signal strength of the WiFi network
+          format: int32
+        lock:
+          type: boolean
+          description: is the WiFi network password protected?
+    WiFiCreds:
+      type: object
+      required:
+        - ssid
+      properties:
+        ssid:
+          type: string
+          description: name of the WiFi network
+        key:
+          type: string
+          description: hashed key for WiFi

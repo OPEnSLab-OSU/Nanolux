@@ -5,7 +5,7 @@ from starlette import status
 from starlette.requests import Request
 from starlette.responses import JSONResponse
 
-from data_model import Settings, Pattern, Control
+from data_model import Settings, Pattern, Control, WiFiCreds, WiFi
 
 app = FastAPI()
 
@@ -35,6 +35,29 @@ settings = Settings(
 
 
 history = []
+
+wifis = [
+    WiFi.parse_obj({
+        "ssid": "WiFi1", "rssi": 20, "lock": False
+    }),
+    WiFi.parse_obj({
+        "ssid": "WiFi2", "rssi": 80, "lock": True
+    }),
+    WiFi.parse_obj({
+        "ssid": "WiFi3", "rssi": 100, "lock": False
+    }),
+    WiFi.parse_obj({
+        "ssid": "WiFi1", "rssi": 50, "lock": True
+    }),
+    WiFi.parse_obj({
+        "ssid": "Bad WiFi", "rssi": 90, "lock": True
+    }),
+]
+
+selected_wifi = None
+
+joined_wifi = None
+
 
 @app.exception_handler(RequestValidationError)
 async def validation_exception_handler(request: Request, exc: RequestValidationError):
@@ -78,6 +101,40 @@ def put_current_pattern(request: Control):
     print(f"New pattern: {current_pattern}")
     history.append(f"Saved pattern: {current_pattern}\n")
     return {"message": "Pattern saved."}
+
+
+@app.get("/api/wifis")
+def get_pattern_list():
+    history.append(f"Retrieved WiFi list: {[wifi.ssid for wifi in wifis]}\n")
+    return [wifi for wifi in wifis]
+
+
+@app.get("/api/wifi")
+def get_current_pattern():
+    history.append(f"Retrieved current wifi: {selected_wifi}\n")
+    return selected_wifi
+
+
+@app.put("/api/wifi")
+def put_current_pattern(request: WiFiCreds):
+    global selected_wifi
+    global joined_wifi
+    selected_wifi = request.ssid
+    history.append(f"Selected wifi: {selected_wifi}")
+
+    success = selected_wifi != "Bad WiFi"
+    entry = f"{selected_wifi} not joined"
+    joined_wifi = None
+    if success:
+        joined_wifi = request
+        entry = f"{joined_wifi.ssid} joined"
+        if request.key:
+            entry += f", with key: {joined_wifi.key}"
+
+    print(entry)
+    history.append(entry)
+
+    return {"message": f"{entry}"}
 
 
 @app.get("/api/history")
