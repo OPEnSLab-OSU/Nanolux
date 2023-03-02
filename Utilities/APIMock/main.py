@@ -47,7 +47,7 @@ wifis = [
         "ssid": "WiFi3", "rssi": 100, "lock": False
     }),
     WiFi.parse_obj({
-        "ssid": "WiFi1", "rssi": 50, "lock": True
+        "ssid": "WiFi4", "rssi": 50, "lock": True
     }),
     WiFi.parse_obj({
         "ssid": "Bad WiFi", "rssi": 90, "lock": True
