@@ -1,8 +1,38 @@
-.label {
-    display: inline;
-    padding-right: 4px;
+.dropdownContainer {
+    text-align: left;
+    border: 1px solid #ccc;
+    position: relative;
+    border-radius: 5px;
 }
 
-.select {
-    margin-top: 4px;
+.dropdownInput {
+    padding: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    user-select: none;
+}
+
+.dropdownMenu {
+    position: absolute;
+    transform: translateY(4px);
+    width: 100%;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    overflow: auto;
+    max-height: 150px;
+}
+
+.dropdownItem {
+    padding: 5px;
+    cursor: pointer;
+}
+
+.dropdownItem:hover {
+    background-color: #9fc3f870;
+}
+
+.dropdownItem.selected {
+    background-color: #0d6efd;
+    color: white;
 }

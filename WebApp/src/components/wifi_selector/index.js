@@ -2,46 +2,104 @@ import {h} from 'preact';
 import style from './style.css';
 import {useEffect, useState} from "preact/hooks";
 import {getWiFi, getWiFiList} from "../../utils/api";
+import FaWifi from "../icons/wifi";
+import FaWifiWeak from "../icons/wifi-weak";
+import FaWifiFair from "../icons/wifi-fair";
+import FaLock from "../icons/lock";
+import FaUnlock from "../icons/unlock";
+import FaArrowDown from "../icons/arrow-down";
 
-const WifiSelector = ({onNetworkSelected}) => {
+// https://medium.com/tinyso/how-to-create-a-dropdown-select-component-in-react-bf85df53e206
+const WifiSelector = ({
+    placeholder,
+    onNetworkSelected
+}) => {
     const [wifiList, setWifiList] = useState([]);
-    const [currentWifi, setCurrentWifi] = useState("")
+    const [currentWifi, setCurrentWifi] = useState(null);
+    const [showMenu, setShowMenu] = useState(false);
+    let key = 1;
 
     useEffect(() => {
         getWiFiList().then(data => setWifiList(data));
         getWiFi().then(data => setCurrentWifi(data));
     }, [])
 
-    function rssi_icon(rssi) {
-        return " ";
-    }
+    useEffect(() => {
+        const handler = () => setShowMenu(false);
+        window.addEventListener("click", handler);
 
-    function lock_icon(encryption) {
-        return " ";
-    }
-
-    const availableWifis = wifiList.map(wifi => {
-        return <option key={wifi.ssid} value={wifi.ssid}>
-            {wifi.ssid} {rssi_icon(wifi.rssi)} {lock_icon(wifi.encryption)}
-        </option>
+        return () => {
+            window.removeEventListener("click", handler);
+        }
     });
 
-    const handleSelection = async (event) => {
-        const newWiFi = event.target.value;
-        setCurrentWifi(newWiFi);
-        onNetworkSelected(newWiFi);
+    const handleInputClick = (event) => {
+        event.stopPropagation();
+        setShowMenu(!showMenu);
+        onNetworkSelected()
+    };
+
+    function rssi_icon(rssi) {
+        if (rssi >= 80) {
+            return <FaWifi />
+        } else if (rssi >= 50) {
+            return <FaWifiFair />
+        }
+        return <FaWifiWeak />
+    }
+
+    function lock_icon(lock) {
+        if (lock) {
+            return <FaLock  />;
+        }
+        return <FaUnlock />
+    }
+
+    const getDisplay = () => {
+        if (currentWifi) {
+            return currentWifi.ssid;
+        }
+
+        return placeholder;
+    }
+
+    const handleItemClick = (selectedWifi) => {
+        setCurrentWifi(selectedWifi);
+        onNetworkSelected(selectedWifi);
+    }
+
+    const isSelected = (option) => {
+        if (!currentWifi) {
+            return false;
+        }
+
+        return currentWifi.value === option.value;
     }
 
     return (
-        <div>
-            <label className={style.label} htmlFor="wifi-options">Current Pattern</label>
-            <select className={style.label}
-                    id="wifi-options"
-                    value={currentWifi ?? "Select a network"}
-                    onChange={handleSelection}
-            >
-                {availableWifis}
-            </select>
+        <div className={style.dropdownContainer}>
+            <div className={style.dropdownInput}
+                 onClick={handleInputClick}>
+                <div className={style.dropDownSelectedValue}>{getDisplay()}</div>
+                <div className={style.dropDownTools}>
+                    <div className={style.dropDownTool}>
+                        <FaArrowDown />
+                    </div>
+                </div>
+            </div>
+            {showMenu &&
+                <div className={style.dropdownMenu}>
+                {   wifiList.map(wifi => (
+                    <div key={key++}
+                         className={`dropdownItem ${isSelected(wifi) && "dropdownItem.selected"}`}
+                         onClick={() => handleItemClick(wifi)}
+                    >
+                        {wifi.ssid} {rssi_icon(wifi.rssi)} {lock_icon(wifi.lock)}
+                    </div>
+                    ))
+                }
+            </div>
+            }
         </div>
     );
 }
