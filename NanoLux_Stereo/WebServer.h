@@ -5,6 +5,7 @@
 #ifndef NANOLUX_WEBSERVER_H
 #define NANOLUX_WEBSERVER_H
 
+#include <math.h>
 #include "LITTLEFS.h"
 
 /*
@@ -25,6 +26,15 @@
 
 char ssid[] = "AUDIOLUX";
 char pass[] = "12345678";
+
+const int MAX_NETWORKS = 15;
+typedef struct {
+    String SSID;
+    int32_t RSSI;
+    uint8_t EncryptionType;
+} WiFiNetwork;
+
+WiFiNetwork AvailableNetworks[MAX_NETWORKS];
 
 
 /*
@@ -81,8 +91,17 @@ void register_web_paths(fs::FS &fs, const char * dirname, uint8_t levels) {
     }
 }
 
+
+int check_operating_mode() {
+
+
+
+}
+
 void initialize_web_server(APIHook api_hooks[], int hook_count) {
     initialize_file_system();
+
+    int operating_mode = check_operating_mode();
 
     WiFi.mode(WIFI_AP);
     WiFi.softAP(ssid, pass);
@@ -103,7 +122,7 @@ void initialize_web_server(APIHook api_hooks[], int hook_count) {
     // Web App
     Serial.print(F("Registering Web App files."));
     register_web_paths(LITTLEFS, "/", 2);
-    webServer.serveStatic("/", LITTLEFS, "/index.html");
+    webServer.serveStatic("/", LITTLEFS, "/www/index.html");
 
     webServer.begin();
 
@@ -113,6 +132,46 @@ void initialize_web_server(APIHook api_hooks[], int hook_count) {
 
 void handle_web_requests() {
     webServer.handleClient();
+}
+
+String get_encryption_type(wifi_auth_mode_t encryptionType) {
+    switch (encryptionType) {
+        case (WIFI_AUTH_OPEN):
+            return "Open";
+        case (WIFI_AUTH_WEP):
+            return "WEP";
+        case (WIFI_AUTH_WPA_PSK):
+            return "WPA_PSK";
+        case (WIFI_AUTH_WPA2_PSK):
+            return "WPA2_PSK";
+        case (WIFI_AUTH_WPA_WPA2_PSK):
+            return "WPA_WPA2_PSK";
+        case (WIFI_AUTH_WPA2_ENTERPRISE):
+            return "WPA2_ENTERPRISE";
+    }
+}
+
+char** scanSSIDs() {
+    int n = WiFi.scanNetworks();
+
+    if (n == 0) {
+        return NULL;
+    } else {
+        int networkCount = min(n, MAX_NETWORKS);
+        for (int i = 0; i < networkCount; ++i) {
+            AvailableNetworks[i].SSID = String(WiFi.SSID(i));
+            AvailableNetworks[i].RSSI =  WiFi.RSSI(i);
+            AvailableNetworks[i].EncryptionType = WiFi.encryptionType(i);
+
+            // Give some time to the hardware to get the next network ready.
+            delay(10);
+        }
+
+        // Add end of data marker.
+        if (networkCount < MAX_NETWORKS) {
+            AvailableNetworks[networkCount].RSSI = -1;
+        }
+    }
 }
 
 #endif //NANOLUX_WEBSERVER_H

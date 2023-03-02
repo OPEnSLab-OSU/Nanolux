@@ -1,0 +1,35 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.5.33414.496
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "NanoLux_Stereo", "NanoLux_Stereo.vcxproj", "{CBA6610A-9BA4-4DBF-A535-52F98D7917D7}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|ARM = Debug|ARM
+		Debug|ARM64 = Debug|ARM64
+		Release|ARM = Release|ARM
+		Release|ARM64 = Release|ARM64
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{CBA6610A-9BA4-4DBF-A535-52F98D7917D7}.Debug|ARM.ActiveCfg = Debug|ARM
+		{CBA6610A-9BA4-4DBF-A535-52F98D7917D7}.Debug|ARM.Build.0 = Debug|ARM
+		{CBA6610A-9BA4-4DBF-A535-52F98D7917D7}.Debug|ARM.Deploy.0 = Debug|ARM
+		{CBA6610A-9BA4-4DBF-A535-52F98D7917D7}.Debug|ARM64.ActiveCfg = Debug|ARM64
+		{CBA6610A-9BA4-4DBF-A535-52F98D7917D7}.Debug|ARM64.Build.0 = Debug|ARM64
+		{CBA6610A-9BA4-4DBF-A535-52F98D7917D7}.Debug|ARM64.Deploy.0 = Debug|ARM64
+		{CBA6610A-9BA4-4DBF-A535-52F98D7917D7}.Release|ARM.ActiveCfg = Release|ARM
+		{CBA6610A-9BA4-4DBF-A535-52F98D7917D7}.Release|ARM.Build.0 = Release|ARM
+		{CBA6610A-9BA4-4DBF-A535-52F98D7917D7}.Release|ARM.Deploy.0 = Release|ARM
+		{CBA6610A-9BA4-4DBF-A535-52F98D7917D7}.Release|ARM64.ActiveCfg = Release|ARM64
+		{CBA6610A-9BA4-4DBF-A535-52F98D7917D7}.Release|ARM64.Build.0 = Release|ARM64
+		{CBA6610A-9BA4-4DBF-A535-52F98D7917D7}.Release|ARM64.Deploy.0 = Release|ARM64
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {5745E3A9-2E31-49A3-AA65-F72BE07E068E}
+	EndGlobalSection
+EndGlobal

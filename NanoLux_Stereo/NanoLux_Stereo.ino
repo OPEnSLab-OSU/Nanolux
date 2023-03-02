@@ -235,8 +235,8 @@ void audio_analysis() {
 
     double lsum = 0., rsum = 0.;
 
-    if (debug)
-      Serial.println("--------AUDIO ANALYSIS--------");
+//    if (debug)
+//      Serial.println("--------AUDIO ANALYSIS--------");
 
     maxDelt = 0;
 
@@ -254,26 +254,26 @@ void audio_analysis() {
     rvolume = rsum/(SAMPLES-top-bottom);
 
 
-    Serial.print("\t peak: ");
-    Serial.print(peak);
-    Serial.print("\t rpeak: ");
-    Serial.print(rpeak);
-    Serial.print("\t lvolume: ");
-    Serial.print(lvolume);
-    Serial.print("\t rvolume: ");
-    Serial.print(rvolume);
-    Serial.print("\t maxDeltFreq: ");
-    Serial.println(maxDeltFreq);
+//    Serial.print("\t peak: ");
+//    Serial.print(peak);
+//    Serial.print("\t rpeak: ");
+//    Serial.print(rpeak);
+//    Serial.print("\t lvolume: ");
+//    Serial.print(lvolume);
+//    Serial.print("\t rvolume: ");
+//    Serial.print(rvolume);
+//    Serial.print("\t maxDeltFreq: ");
+//    Serial.println(maxDeltFreq);
 }
 
 
 void freq_hue_vol_brightness(){
-    if (debug) {
-        Serial.print("\t pattern: freq_hue_vol_brightness\t fHue: ");
-        Serial.print(fHue);
-        Serial.print("\t vbrightness: ");
-        Serial.println(vbrightness);
-    }
+//    if (debug) {
+//        Serial.print("\t pattern: freq_hue_vol_brightness\t fHue: ");
+//        Serial.print(fHue);
+//        Serial.print("\t vbrightness: ");
+//        Serial.println(vbrightness);
+//    }
     setColorHSV(fHue, 255, vbrightness);
 }
 
