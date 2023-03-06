@@ -10,6 +10,7 @@ import {useState} from "preact/hooks";
 const Wifi = () => {
 	// const [settings, setSettings] = useState({});
 	const [currentWifi, setCurrentWifi] = useState(null);
+	const [locked, setLocked] = useState(false)
 
 	// useEffect(() => {
 	// 	getSettings().then(data => setSettings(data));
@@ -18,8 +19,9 @@ const Wifi = () => {
 	const handleNetworkSelected = async (newWifi) => {
 		setCurrentWifi(newWifi);
 		// await joinWiFi(newWifi);
-		if (newWifi)
-			console.log(newWifi)
+		if (newWifi) {
+			setLocked(newWifi.lock);
+		}
 	}
 
 	// const handleLedChange = async (newValue) => {
@@ -33,7 +35,7 @@ const Wifi = () => {
 			<div className={style.settings_control}>
 				<WifiSelector placeholder="Select a network..." onNetworkSelected={handleNetworkSelected} />
 			</div>
-			{ currentWifi && currentWifi.locked &&
+			{ locked &&
 				<div>
 					Ask for password.
 				</div>
