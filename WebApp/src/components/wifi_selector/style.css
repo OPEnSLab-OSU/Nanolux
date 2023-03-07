@@ -21,6 +21,8 @@
     border-radius: 5px;
     overflow: auto;
     max-height: 150px;
+    z-index: 100;
+    background-color: #1c1c1c;
 }
 
 .dropdownItem {

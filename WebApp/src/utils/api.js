@@ -1,6 +1,7 @@
 import axios from 'redaxios';
 
-const BASE_URL = 'https://audioluxmockapi.azurewebsites.net/';
+// const BASE_URL = 'https://audioluxmockapi.azurewebsites.net/';
+const BASE_URL = 'http://localhost:8000';
 
 const getSettings = () =>
     getData('settings');
@@ -35,7 +36,7 @@ const saveSettings = (settings) =>
     axios.put(`${BASE_URL}/api/settings`, {...settings}, );
 
 const joinWiFi = (wifi) =>
-    axios.put(`${BASE_URL}/api/pattern`,{wifi});
+    axios.put(`${BASE_URL}/api/wifi`,{...wifi});
 
 
 export {
