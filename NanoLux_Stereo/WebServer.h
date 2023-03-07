@@ -5,7 +5,6 @@
 #ifndef NANOLUX_WEBSERVER_H
 #define NANOLUX_WEBSERVER_H
 
-#include <math.h>
 #include "LITTLEFS.h"
 
 /*
@@ -28,8 +27,9 @@ const char* ssid = "AUDIOLUX";
 const char* pass = "12345678";
 
 constexpr int MAX_NETWORKS = 15;
+constexpr int END_OF_DATA = 9999;
 typedef struct {
-    String SSID;
+    String  SSID;
     int32_t RSSI;
     uint8_t EncryptionType;
 } WiFiNetwork;
@@ -43,7 +43,7 @@ const char* CONTENT_TYPE = "application/json";
 /*
  * File system
  */
-void initialize_file_system() {
+inline void initialize_file_system() {
     Serial.println(F("Initializing FS..."));
     if (LITTLEFS.begin()) {
         Serial.println(F("done."));
@@ -65,7 +65,8 @@ typedef struct {
 
 WiFiWebServer webServer(80);
 
-void register_web_paths(fs::FS &fs, const char * dirname, uint8_t levels) {
+
+inline void register_web_paths(fs::FS &fs, const char * dirname, uint8_t levels) {
     Serial.printf("Scanning path: %s\r\n", dirname);
     File root = fs.open(dirname);
     if (!root) {
@@ -97,12 +98,16 @@ void register_web_paths(fs::FS &fs, const char * dirname, uint8_t levels) {
 /*
  * Network configuration
  */
-void scan_ssids() {
-    WiFi.mode(WIFI_STA);
+inline void scan_ssids() {
+    Serial.println("[*] Scanning WiFi network");
     const int n = WiFi.scanNetworks();
+    Serial.print("[*] Scan done. ");
+    Serial.print(n);
+    Serial.println(" networks found.");
+
 
     if (n == 0) {
-        AvailableNetworks[0].RSSI = -1;;
+        AvailableNetworks[0].RSSI = END_OF_DATA;
     }
     else {
         const int network_count = min(n, MAX_NETWORKS);
@@ -115,40 +120,42 @@ void scan_ssids() {
             delay(10);
         }
 
-        // Add end of data marker.
+        Serial.print("[*] Registered networks: ");
+        for(int i = 0; i< network_count; ++i) {
+            Serial.print("SSID:");
+            Serial.print(AvailableNetworks[i].SSID);
+            Serial.print("\t\t RSSI:");
+            Serial.print(AvailableNetworks[i].RSSI);
+            Serial.print("\t Type:");
+            Serial.println(AvailableNetworks[i].EncryptionType);
+        }
+
         if (network_count < MAX_NETWORKS) {
-            AvailableNetworks[network_count].RSSI = -1;
+            AvailableNetworks[network_count].RSSI = END_OF_DATA;
         }
     }
 }
 
 
-int check_operating_mode() {
-
-
-
+inline int check_operating_mode()
+{
+    return 0;
 }
 
-void serve_wifi_list() {
+inline void serve_wifi_list() {
     using namespace ARDUINOJSON_NAMESPACE;
 
-    Serial.println(F("Scanning networks."));
     scan_ssids();
 
-    Serial.println(F("Creating JSON response."));
     StaticJsonDocument<1024> doc;
     int wifi_number = 0;
-    while (wifi_number < MAX_NETWORKS && AvailableNetworks[wifi_number].RSSI >= 0) {
+    while (wifi_number < MAX_NETWORKS && AvailableNetworks[wifi_number].RSSI != END_OF_DATA) {
         JsonObject wifi = doc.createNestedObject();
         wifi["ssid"] = AvailableNetworks[wifi_number].SSID;
         wifi["rssi"] = AvailableNetworks[wifi_number].RSSI;
         wifi["lock"] = AvailableNetworks[wifi_number].EncryptionType != WIFI_AUTH_OPEN;
         wifi_number++;
     }
-
-    Serial.print(F("Found "));
-    Serial.print(wifi_number);
-    Serial.println(F(" networks."));
 
     String wifi_list;
     serializeJson(doc, wifi_list);
@@ -159,13 +166,12 @@ void serve_wifi_list() {
 }
 
 
-
-void initialize_web_server(APIHook api_hooks[], int hook_count) {
+inline void initialize_web_server(APIHook api_hooks[], int hook_count) {
     initialize_file_system();
 
     int operating_mode = check_operating_mode();
 
-    WiFi.mode(WIFI_AP);
+    WiFi.mode(WIFI_MODE_APSTA);
     WiFi.softAP(ssid, pass);
     delay(1000);
 
@@ -183,35 +189,17 @@ void initialize_web_server(APIHook api_hooks[], int hook_count) {
     // Web App
     Serial.print(F("Registering Web App files."));
     register_web_paths(LITTLEFS, "/", 2);
-    webServer.serveStatic("/", LITTLEFS, "/www/index.html");
+    webServer.serveStatic("/", LITTLEFS, "/index.html");
 
+    webServer.enableCrossOrigin();
     webServer.begin();
 
     Serial.print(F("To interact with the AudioLux open a browser to http://"));
     Serial.println(ip);
 }
 
-void handle_web_requests() {
+inline void handle_web_requests() {
     webServer.handleClient();
-}
-
-String get_encryption_type(wifi_auth_mode_t encryptionType) {
-    switch (encryptionType) {
-        case (WIFI_AUTH_OPEN):
-            return "Open";
-        case (WIFI_AUTH_WEP):
-            return "WEP";
-        case (WIFI_AUTH_WPA_PSK):
-            return "WPA_PSK";
-        case (WIFI_AUTH_WPA2_PSK):
-            return "WPA2_PSK";
-        case (WIFI_AUTH_WPA_WPA2_PSK):
-            return "WPA_WPA2_PSK";
-        case (WIFI_AUTH_WPA2_ENTERPRISE):
-            return "WPA2_ENTERPRISE";
-        default:
-            return "UNKNOWN_SECURITY_TYPE";
-    }
 }
 
 #endif //NANOLUX_WEBSERVER_H
