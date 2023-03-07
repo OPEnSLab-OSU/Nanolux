@@ -24,10 +24,10 @@
 
 #include <WiFiWebServer.h>
 
-char ssid[] = "AUDIOLUX";
-char pass[] = "12345678";
+const char* ssid = "AUDIOLUX";
+const char* pass = "12345678";
 
-const int MAX_NETWORKS = 15;
+constexpr int MAX_NETWORKS = 15;
 typedef struct {
     String SSID;
     int32_t RSSI;
@@ -35,6 +35,9 @@ typedef struct {
 } WiFiNetwork;
 
 WiFiNetwork AvailableNetworks[MAX_NETWORKS];
+
+constexpr int HTTP_OK = 200;
+const char* CONTENT_TYPE = "application/json";
 
 
 /*
@@ -91,12 +94,71 @@ void register_web_paths(fs::FS &fs, const char * dirname, uint8_t levels) {
     }
 }
 
+/*
+ * Network configuration
+ */
+void scan_ssids() {
+    WiFi.mode(WIFI_STA);
+    const int n = WiFi.scanNetworks();
+
+    if (n == 0) {
+        AvailableNetworks[0].RSSI = -1;;
+    }
+    else {
+        const int network_count = min(n, MAX_NETWORKS);
+        for (int i = 0; i < network_count; ++i) {
+            AvailableNetworks[i].SSID = String(WiFi.SSID(i));
+            AvailableNetworks[i].RSSI = WiFi.RSSI(i);
+            AvailableNetworks[i].EncryptionType = WiFi.encryptionType(i);
+
+            // Give some time to the hardware to get the next network ready.
+            delay(10);
+        }
+
+        // Add end of data marker.
+        if (network_count < MAX_NETWORKS) {
+            AvailableNetworks[network_count].RSSI = -1;
+        }
+    }
+}
+
 
 int check_operating_mode() {
 
 
 
 }
+
+void serve_wifi_list() {
+    using namespace ARDUINOJSON_NAMESPACE;
+
+    Serial.println(F("Scanning networks."));
+    scan_ssids();
+
+    Serial.println(F("Creating JSON response."));
+    StaticJsonDocument<1024> doc;
+    int wifi_number = 0;
+    while (wifi_number < MAX_NETWORKS && AvailableNetworks[wifi_number].RSSI >= 0) {
+        JsonObject wifi = doc.createNestedObject();
+        wifi["ssid"] = AvailableNetworks[wifi_number].SSID;
+        wifi["rssi"] = AvailableNetworks[wifi_number].RSSI;
+        wifi["lock"] = AvailableNetworks[wifi_number].EncryptionType != WIFI_AUTH_OPEN;
+        wifi_number++;
+    }
+
+    Serial.print(F("Found "));
+    Serial.print(wifi_number);
+    Serial.println(F(" networks."));
+
+    String wifi_list;
+    serializeJson(doc, wifi_list);
+
+    Serial.println(F("Sending networks"));
+    Serial.println(wifi_list);
+    webServer.send(HTTP_OK, CONTENT_TYPE, wifi_list);
+}
+
+
 
 void initialize_web_server(APIHook api_hooks[], int hook_count) {
     initialize_file_system();
@@ -113,11 +175,10 @@ void initialize_web_server(APIHook api_hooks[], int hook_count) {
     for (int i = 0; i < hook_count; i++) {
         webServer.on(api_hooks[i].path, api_hooks[i].handler);
     }
-//    webServer.on("/blank", handle_blank);
-//    webServer.on("/trail", handle_trail);
-//    webServer.on("/solid", handle_solid);
-//    webServer.on("/confetti", handle_confetti);
-//    webServer.on("/vbar", handle_vol_bar);
+
+    // Add internal APi endpoints
+    webServer.on("/api/wifis", serve_wifi_list);
+    // webServer.on("/api/wifi", handle_wifi_request);
 
     // Web App
     Serial.print(F("Registering Web App files."));
@@ -148,29 +209,8 @@ String get_encryption_type(wifi_auth_mode_t encryptionType) {
             return "WPA_WPA2_PSK";
         case (WIFI_AUTH_WPA2_ENTERPRISE):
             return "WPA2_ENTERPRISE";
-    }
-}
-
-char** scanSSIDs() {
-    int n = WiFi.scanNetworks();
-
-    if (n == 0) {
-        return NULL;
-    } else {
-        int networkCount = min(n, MAX_NETWORKS);
-        for (int i = 0; i < networkCount; ++i) {
-            AvailableNetworks[i].SSID = String(WiFi.SSID(i));
-            AvailableNetworks[i].RSSI =  WiFi.RSSI(i);
-            AvailableNetworks[i].EncryptionType = WiFi.encryptionType(i);
-
-            // Give some time to the hardware to get the next network ready.
-            delay(10);
-        }
-
-        // Add end of data marker.
-        if (networkCount < MAX_NETWORKS) {
-            AvailableNetworks[networkCount].RSSI = -1;
-        }
+        default:
+            return "UNKNOWN_SECURITY_TYPE";
     }
 }
 
