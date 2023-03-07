@@ -44,7 +44,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Settings'
+                $ref: "#/components/schemas/ApiResponse"
         '405':
           description: Invalid input
   /api/pattern:
@@ -80,7 +80,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Control'
+                $ref: "#/components/schemas/ApiResponse"
         '405':
           description: Invalid input
   /api/wifis:
@@ -129,9 +129,13 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/WiFi'
-        '405':
-          description: Invalid input
+                $ref: "#/components/schemas/ApiResponse"
+        '401':
+          description: Join Failed
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResponse"
 components:
   schemas:
     Settings:
@@ -206,3 +210,12 @@ components:
         key:
           type: string
           description: hashed key for WiFi
+    ApiResponse:
+      type: object
+      properties:
+        message:
+          type: string
+        details:
+          type: string
+        success:
+          type: boolean

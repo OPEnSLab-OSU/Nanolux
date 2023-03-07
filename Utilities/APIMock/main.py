@@ -5,7 +5,7 @@ from starlette import status
 from starlette.requests import Request
 from starlette.responses import JSONResponse
 
-from data_model import Settings, Pattern, Control, WiFiCreds, WiFi
+from data_model import Settings, Pattern, Control, WiFiCreds, WiFi, ApiResponse
 
 app = FastAPI()
 
@@ -95,46 +95,53 @@ def get_current_pattern():
 
 
 @app.put("/api/pattern")
-def put_current_pattern(request: Control):
+def put_current_pattern(request: Control) -> ApiResponse:
     global current_pattern
     current_pattern = request.pattern
     print(f"New pattern: {current_pattern}")
     history.append(f"Saved pattern: {current_pattern}\n")
-    return {"message": "Pattern saved."}
+    return ApiResponse(message="Pattern saved.", success=True)
 
 
 @app.get("/api/wifis")
-def get_pattern_list():
+def get_wifi_list():
     history.append(f"Retrieved WiFi list: {[wifi.ssid for wifi in wifis]}\n")
     return [wifi for wifi in wifis]
 
 
 @app.get("/api/wifi")
-def get_current_pattern():
-    history.append(f"Retrieved current wifi: {selected_wifi}\n")
-    return selected_wifi
+def get_current_wifi():
+    history.append(f"Retrieved current wifi: {joined_wifi}\n")
+    return joined_wifi
 
 
 @app.put("/api/wifi")
-def put_current_pattern(request: WiFiCreds):
+def join_wifi(request: WiFiCreds) -> ApiResponse:
     global selected_wifi
     global joined_wifi
     selected_wifi = request.ssid
-    history.append(f"Selected wifi: {selected_wifi}")
+
+    if selected_wifi == "" and joined_wifi is not None:
+        history.append(f"Forgetting wifi: {joined_wifi.ssid}")
+        joined_wifi = None
+        return ApiResponse(message=f"{joined_wifi.ssid} forgotten", success=True)
+
+    if selected_wifi != "":
+        history.append(f"Selected wifi: {selected_wifi}")
 
     success = selected_wifi != "Bad WiFi"
     entry = f"{selected_wifi} not joined"
     joined_wifi = None
     if success:
-        joined_wifi = request
+        joined_wifi = next((wifi for wifi in wifis if wifi.ssid == request.ssid), None)
         entry = f"{joined_wifi.ssid} joined"
         if request.key:
-            entry += f", with key: {joined_wifi.key}"
+            entry += f", with key: {request.key}"
 
     print(entry)
     history.append(entry)
 
-    return {"message": f"{entry}"}
+    return ApiResponse(message=entry, success=success)
 
 
 @app.get("/api/history")
