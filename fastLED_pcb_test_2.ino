@@ -10,13 +10,14 @@ FASTLED_USING_NAMESPACE
 /*
         FastLED
 */
-#define NUM_LEDS    64     // Number of leds in strip.
+#define NUM_LEDS    144     // Number of leds in strip.
 #define DATA_PIN    15      // No hardware SPI pins defined for the ESP32 yet.
 #define CLK_PIN     14      // Use bitbanged output.
 #define LED_TYPE    SK9822  // Define LED protocol.
 #define COLOR_ORDER BGR     // Define color color order.
 #define MAX_BRIGHTNESS         255
 #define FRAMES_PER_SECOND  120
+#define NOISE_GATE_THRESH  20
 
 CRGB leds[NUM_LEDS];        // Buffer (front)
 CRGB hist[NUM_LEDS];        // Buffer (back)
@@ -26,7 +27,7 @@ CRGB hist[NUM_LEDS];        // Buffer (back)
 */
 #define SAMPLES             128    // Must be a power of 2  // 128 - 1024
 #define SAMPLING_FREQUENCY  10000   // Hz, must be less than 10000 due to ADC
-#define ANALOG_PIN          A0
+#define ANALOG_PIN          A2
 
 unsigned int sampling_period_us = round(1000000/SAMPLING_FREQUENCY);
 unsigned long microseconds;
@@ -66,14 +67,14 @@ void IRAM_ATTR buttonISR()
 // List of patterns to cycle through defined as separate functions below.
 typedef void (*SimplePatternList[])();
 
-SimplePatternList gPatterns = { blank, freq_hue_trail, freq_hue_vol_brightness, freq_confetti_vol_brightness, volume_level_middle_bar_freq_hue };
+SimplePatternList gPatterns = { blank, freq_hue_trail, freq_hue_vol_brightness, freq_confetti_vol_brightness, volume_level_middle_bar_freq_hue, spring_mass_1, spring_mass_2, spring_mass_3};
 
 uint8_t gCurrentPatternNumber = 0; // Index number of which pattern is current
 
 uint8_t gHue = 0;         // rotating base color
 
 #define MAX_FREQUENCY       4000.0
-#define MIN_FREQUENCY       400.0
+#define MIN_FREQUENCY       50.0
 double peak = 0.;         //  peak frequency
 uint8_t fHue = 0;         // hue value based on peak frequency
 
@@ -86,7 +87,7 @@ double maxDelt = 0.;    // Frequency with the biggest change in amp.
 
 
 bool debug = true;
-bool hue_flag = true;
+bool hue_flag = false;
 
 // map color logirithmicly
 // raise frequency ^ 2
@@ -149,7 +150,7 @@ void audio_analysis() {
     for(int i=0; i<SAMPLES; i++) {
         microseconds = micros();    //Overflows after around 70 minutes!
     
-        vReal[i] = analogRead(A0);
+        vReal[i] = analogRead(A3);
         vImag[i] = 0;
     
         while(micros() < (microseconds + sampling_period_us)){
@@ -184,7 +185,15 @@ void audio_analysis() {
     }
     volume = sum1/(SAMPLES-top-bottom);
     maxDelt = largest(delt, SAMPLES);
-
+    
+    // NOISE GATE
+    if (volume < NOISE_GATE_THRESH) {
+      memset(vReal, 0, sizeof(int)*(SAMPLES-bottom-top));
+      memset(vRealHist, 0, sizeof(int)*(SAMPLES-bottom-top));
+      memset(delt, 0, sizeof(int)*(SAMPLES-bottom-top));
+      volume = 0;
+      maxDelt = 0;
+    }
     
     Serial.print("\t peak: ");
     Serial.print(peak);
@@ -269,6 +278,195 @@ void blank(){
   FastLED.clear();
 }
 
+int frame = 0; //for spring mass 1
+double amplitude = 0; //for spring mass 1
+
+void spring_mass_1 ()
+{
+    int middle_mass_displacement = 0;
+    int middle_position = NUM_LEDS / 2;
+    int mass = 5;
+    int mass_radius = 12;
+    int spring_constant = 5;
+    double period_avg = 0;
+    double friction = 1;
+
+    if (amplitude < middle_position) {
+      amplitude += vbrightness / 7;
+    } 
+
+    middle_mass_displacement = amplitude*cos(sqrt(spring_constant/mass)*(frame)/3);
+    frame++;
+    
+    if (amplitude > friction) {
+      amplitude = amplitude - friction; 
+    } else {
+      amplitude = 0;
+    }
+
+    int left_end = middle_position + middle_mass_displacement - mass_radius;
+    int right_end = middle_position + middle_mass_displacement + mass_radius;
+    
+    for (int i = 0; i < NUM_LEDS-1; i++)
+    {
+      if ((i > left_end) && (i < right_end))
+      {
+        int springbrightness = (90/mass_radius) * abs(mass_radius - abs(i - (middle_mass_displacement+middle_position)));
+        leds[i] = CHSV (fHue, 255-vbrightness, springbrightness);
+      } else {
+        leds[i] = CHSV (0, 0, 0);
+      }
+    }
+}
+
+double velocity = 0;  //for spring mass 2
+double acceleration = 0;  //for spring mass 2
+double smoothing_value[10] = {0,0,0,0,0,0,0,0,0,0}; //for spring mass 2
+int location = 70; //for spring mass 2
+
+void spring_mass_2 () 
+{
+    int middle_position = NUM_LEDS / 2;
+    int mass = 5;
+    int mass_radius = 15;
+    int friction = 100;
+    double spring_constant = 0;
+
+    for (int i = 10; i > 0; i--) {
+      spring_constant += smoothing_value[i];
+      smoothing_value[i] = smoothing_value[i-1];
+    }
+    smoothing_value[0] = fHue;
+    spring_constant += fHue;
+    spring_constant = spring_constant / 2550;
+    
+    acceleration = -1*location * spring_constant/mass;
+    if (velocity > 0)
+    {
+      velocity += acceleration + (vbrightness/80);
+    } else {
+      velocity += acceleration - (vbrightness/80);
+    }
+    location += velocity;
+    if (location < -1*NUM_LEDS/2)
+    {
+      location = -1*NUM_LEDS/2;
+    } else if (location > NUM_LEDS/2) {
+      location = NUM_LEDS/2;
+    }
+
+    int left_end = middle_position + location - mass_radius;
+    int right_end = middle_position + location + mass_radius;
+    
+    for (int i = 0; i < NUM_LEDS-1; i++)
+    {
+      if ((i > left_end) && (i < right_end))
+      {        
+        int springbrightness = 90 - (90/mass_radius * abs(i - (location+middle_position)));
+        leds[i] = CHSV (spring_constant * 255, 255-vbrightness, springbrightness);
+      } else {
+        leds[i] = CHSV (0, 0, 0);
+      }
+    }
+}
+
+
+double velocities[5] = {0,0,0,0,0};  //for spring mass 3
+double accelerations[5] = {0,0,0,0,0};  //for spring mass 3
+int locations[5] = {70,60,50,40,30}; //for spring mass 3
+double vRealSums[5] = {0,0,0,0,0};
+
+    //peak = FFT.MajorPeak(vReal, SAMPLES, SAMPLING_FREQUENCY);
+    //fHue = remap(peak, MIN_FREQUENCY, MAX_FREQUENCY, 0, 240);
+
+void spring_mass_3 () 
+{
+    int middle_position = NUM_LEDS / 2;
+    int mass = 5;
+    int mass_radiuses[5] = {6,5,4,3,2};
+    int friction = 100;
+    double spring_constants[5] = {0.05, 0.10, 0.15, 0.20, 0.25};
+    double tempsum = 0;
+    
+    for (int k = 0; k < 5; k++){      
+      for (int i = (3+(k*SAMPLES/5)); i < ((k+1)*SAMPLES/5)-3; i++) {
+        tempsum +=  vReal[i];
+      }
+      vRealSums[k] = tempsum/(SAMPLES/5);
+      vRealSums[k] = remap(vRealSums[k], MIN_VOLUME, MAX_VOLUME, 0, 5);
+    }
+    
+    for (int j = 0; j < 5; j++) {
+      accelerations[j] = -1*locations[j] * spring_constants[j]/mass;
+      if (velocity > 0)
+      {
+        velocities[j] += accelerations[j] + (vRealSums[j]);
+      } else {
+        velocities[j] += accelerations[j] - (vRealSums[j]);
+      }
+      locations[j] += velocities[j];
+      if (locations[j] < -1*NUM_LEDS/2)
+      {
+        locations[j] = -1*NUM_LEDS/2;
+      } else if (locations[j] > NUM_LEDS/2) {
+        locations[j] = NUM_LEDS/2;
+      }
+
+      int left_end = middle_position + locations[j] - mass_radiuses[j];
+      int right_end = middle_position + locations[j] + mass_radiuses[j];
+    
+      for (int i = 0; i < NUM_LEDS-1; i++)
+      {
+        if ((i > left_end) && (i < right_end))
+        {        
+         //int springbrightness = 90 - (90/mass_radius * abs(i - (locations[j]+middle_position)));
+          leds[i] = CHSV (spring_constants[j] * 255 * 4, 255-vbrightness, 80);
+        } else {
+          leds[i] -= CHSV (0, 0, 10);
+        }
+      }
+    } 
+}
+
+/*double amplitude[5] = {0,0,0,0,0}; //for spring mass 1
+
+void make_spring_steady (int sp_position, int sp_mass, int sp_size, int sp_constant, int friction)
+{
+    int middle_mass_displacement[5] = {0,0,0,0,0};
+    int middle_position[5] = {NUM_LEDS-NUM_LEDS/4, NUM_LEDS-NUM_LEDS/6, NUM_LEDS-NUM_LEDS/8, NUM_LEDS-NUM_LEDS/10, NUM_LEDS - NUM_LEDS/12}
+    int mass = 5;
+    int mass_radius[5] = {1,3,5,7,9};
+    int spring_constant = 5;
+    double period_avg = 0;
+    double friction = 1;
+
+    if (amplitude < middle_position) {
+      amplitude += vbrightness / 7;
+    } 
+
+    middle_mass_displacement = amplitude*cos(sqrt(spring_constant/mass)*(frame)/3);
+    frame++;
+    
+    if (amplitude > friction) {
+      amplitude = amplitude - friction; 
+    } else {
+      amplitude = 0;
+    }
+
+    int left_end = middle_position + middle_mass_displacement - mass_radius;
+    int right_end = middle_position + middle_mass_displacement + mass_radius;
+    
+    for (int i = 0; i < NUM_LEDS-1; i++)
+    {
+      if ((i > left_end) && (i < right_end))
+      {
+        int springbrightness = (90/mass_radius) * abs(mass_radius - abs(i - (middle_mass_displacement+middle_position)));
+        leds[i] = CHSV (fHue, 255-vbrightness, springbrightness);
+      } else {
+        leds[i] = CHSV (0, 0, 0);
+      }
+    }
+}*/
 
 void startup(){
   for(int i = 0; i < NUM_LEDS; i++) {
