@@ -5,7 +5,15 @@ from starlette import status
 from starlette.requests import Request
 from starlette.responses import JSONResponse
 
-from data_model import Settings, Pattern, Control, WiFiCreds, WiFi, ApiResponse
+from data_model import (
+    Settings,
+    Pattern,
+    Control,
+    WiFiCreds,
+    WiFi,
+    Hostname,
+    ApiResponse
+)
 
 app = FastAPI()
 
@@ -57,6 +65,8 @@ wifis = [
 selected_wifi = None
 
 joined_wifi = None
+
+current_hostname = Hostname.parse_obj({"hostname": "audiolux"})
 
 
 @app.exception_handler(RequestValidationError)
@@ -142,6 +152,23 @@ def join_wifi(request: WiFiCreds) -> ApiResponse:
     history.append(entry)
 
     return ApiResponse(message=entry, success=success)
+
+
+@app.get("/api/hostname")
+def get_current_hostname() -> Hostname:
+    history.append(f"Retrieved current hostname: {current_hostname}\n")
+    return current_hostname
+
+
+@app.put("/api/hostname")
+def set_current_hostname(hostname: Hostname) -> ApiResponse:
+    global current_hostname
+    current_hostname = hostname
+    history.append(f"Setting current hostname to: {current_hostname.hostname}\n")
+    return ApiResponse(
+        message="Hostname changed.",
+        details=f"Hostname is now {current_hostname.hostname}",
+        success=True)
 
 
 @app.get("/api/history")

@@ -136,6 +136,38 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ApiResponse"
+  /api/hostname:
+    get:
+      tags:
+        - AudioLux hostname
+      summary: Get the current hostname for mDNS.
+      description: Retrieve current hostname assigned to the device.
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Hostname'
+    put:
+      tags:
+        - AudioLux hostname
+      summary: Set the hostname for mDNS.
+      description: Save a hostname for the device.
+      requestBody:
+        description: A string of 8 to 63 characters with no spaces and at most one dash.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Hostname'
+        required: true
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResponse"
 components:
   schemas:
     Settings:
@@ -210,6 +242,14 @@ components:
         key:
           type: string
           description: hashed key for WiFi
+    Hostname:
+      type: object
+      required:
+        - hostname
+      properties:
+        hostname:
+          type: string
+          format: hostname
     ApiResponse:
       type: object
       properties:
