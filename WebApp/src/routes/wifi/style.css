@@ -18,8 +18,22 @@
 }
 
 .settingsControl {
-	padding: 1rem;
+	padding: 2rem;
 }
+
+.fqdn {
+	padding-top: 1rem;
+}
+
+.wifiBanner {
+	padding-top: 1rem;
+	display: block;
+}
+
+.formButton {
+	margin: .7rem;
+}
+
 
 @media (max-width: 639px) {
 	.home section {

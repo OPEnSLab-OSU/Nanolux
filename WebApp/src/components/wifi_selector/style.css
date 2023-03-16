@@ -3,6 +3,7 @@
     border: 1px solid #ccc;
     position: relative;
     border-radius: 5px;
+    width: 50vw;
 }
 
 .dropdownInput {
@@ -23,11 +24,34 @@
     max-height: 150px;
     z-index: 100;
     background-color: #1c1c1c;
+    /*display: table;*/
 }
 
 .dropdownItem {
     padding: 5px;
     cursor: pointer;
+    /*display: table-row;*/
+}
+
+.dropdownItem:after {
+    content: "";
+    display: table;
+    clear: both;
+}
+
+.dropdownItemColumn {
+    float: left;
+    /*display: table-cell;*/
+}
+
+.dropdownItemSSID {
+    float: left;
+    width: 80%;
+}
+
+.dropdownItemRSSI, .dropdownItemLock {
+    float: left;
+    width: 10%;
 }
 
 .dropdownItem:hover {
@@ -38,3 +62,4 @@
     background-color: #0d6efd;
     color: white;
 }
+
