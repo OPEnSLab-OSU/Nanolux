@@ -1,3 +1,4 @@
+#include <ESPmDNS.h>
 #include <FastLED.h>
 #include <math.h>
 #include <ArduinoJson.h>
