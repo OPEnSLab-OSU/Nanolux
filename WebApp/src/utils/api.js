@@ -1,17 +1,17 @@
 import axios from 'redaxios';
 
-// const BASE_URL = 'https://audioluxmockapi.azurewebsites.net/';
+const BASE_URL = 'https://audioluxmockapi.azurewebsitesnet/';
 // const BASE_URL = 'http://localhost:8000';
-const BASE_URL = 'http://192.168.4.1';
+// const BASE_URL = 'http://192.168.4.1';
 
 
-import *  as data from '../assets/url.json'
+// import *  as data from '../assets/url.json'
 let base_url;
-if (data) {
-    base_url = data.url;
-} else {
+// if (data) {
+//     base_url = data.url;
+// } else {
     base_url = BASE_URL;
-}
+// }
 
 
 const getSettings = () =>
