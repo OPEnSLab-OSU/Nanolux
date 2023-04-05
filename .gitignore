@@ -8,3 +8,9 @@ NanoLux_Stereo/.vs/
 NanoLux_Stereo/data/
 
 NanoLux_Stereo/NanoLux_Stereo.vcxproj
+
+*.sln
+
+*.vcxproj
+
+NanoLux_Stereo/NanoLux_Stereo.vcxproj.filters
