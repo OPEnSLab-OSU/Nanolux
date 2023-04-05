@@ -2,9 +2,10 @@ import { Router } from 'preact-router';
 
 import Header from './header';
 
-// Code-splitting is automated for `rtes` directory
-import Settings from '../rtes/setngs';
-import Profile from '../rtes/profile';
+// Code-splitting is automated for `routes` directory
+import Settings from '../routes/settings';
+import Profile from '../routes/profile';
+
 
 const App = () => (
 	<div id="app">
