@@ -1,17 +1,30 @@
 import axios from 'redaxios';
 
-const BASE_URL = 'https://audioluxmockapi.azurewebsites.net';
+// const BASE_URL = 'https://audioluxmockapi.azurewebsites.net';
 // const BASE_URL = 'http://localhost:8000';
-// const BASE_URL = 'http://192.168.4.1';
+const BASE_URL = 'http://192.168.4.1';
 
 
-// import *  as data from '../assets/url.json'
+// Load the API url from a static file. This file will be updated
+// by the AudioLux firmware on boot or when a local WiFi network
+// is joined.
+//
 let base_url;
-// if (data) {
-//     base_url = data.url;
-// } else {
-    base_url = BASE_URL;
-// }
+async function get_base_url() {
+    const load_url = async () => {
+        try {
+            const response = await fetch('../assets/url.json');
+            const url_data = await response.json();
+            return url_data.url;
+        } catch (error) {
+            return BASE_URL;
+        }
+    }
+
+    base_url = await load_url()
+}
+get_base_url().then(_ => console.log(`base_url: ${base_url}`));
+
 
 
 const getSettings = () =>
@@ -55,7 +68,6 @@ const joinWiFi = (wifi) =>
 
 const saveHostname = (hostname) =>
     axios.put(`${base_url}/api/hostname`,{hostname});
-
 
 export {
     getSettings,
