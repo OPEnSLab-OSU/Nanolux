@@ -90,7 +90,7 @@ SimplePatternList gPatterns = { blank, freq_hue_trail, freq_hue_vol_brightness, 
                                 glitch_sections, glitch, glitch_talk, spring_mass_1, spring_mass_2, spring_mass_3,formant_test, show_formants, band_brightness, 
                                 noisy, alt_drums, show_drums, pix_freq, eq, math, classical, basic_bands, advanced_bands, formant_band };
 
-int NUM_PATTERNS = 20;
+int NUM_PATTERNS = 37;
 SimplePatternList gPatterns_layer = {blank, spring_mass_1};
 
 void IRAM_ATTR onTimer(){
