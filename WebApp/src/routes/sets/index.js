@@ -4,9 +4,11 @@ import NumericSlider from "../../components/numeric_slider";
 import {useState, useEffect} from "preact/hooks";
 import {getSettings, saveSettings} from "../../utils/api";
 import LedCount from "../../components/led_count";
-import ApiMonitor from "../../components/api_monitor";
+import {useModal} from "../../context/global_modal_context";
 
 const Settings = () => {
+	const { openModal } = useModal()
+
 	const [settings, setSettings] = useState({});
 
 	useEffect(() => {
@@ -49,9 +51,10 @@ const Settings = () => {
 				/>
 			</dev>
 			<div className={style.settings_control}>
-				<ApiMonitor
+				<button
 					className={style.settings_control}
-				/>
+					onClick={openModal}
+				>Test modal</button>
 			</div>
 		</div>
 	);

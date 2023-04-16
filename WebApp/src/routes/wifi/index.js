@@ -5,6 +5,8 @@ import WifiSelector from "../../components/wifi_selector";
 import {useEffect, useState} from "preact/hooks";
 import Password from "../../components/password";
 import TextInput from "../../components/textinput";
+import {useModal} from "../../context/global_modal_context";
+
 
 const Wifi = () => {
     const [currentWifi, setCurrentWifi] = useState(null);
@@ -14,6 +16,9 @@ const Wifi = () => {
     const [joinCompleted, setJoinCompleted] = useState(null);
     const [hostname, setHostname] = useState("");
     const [fqdn, setFqdn] = useState(".local");
+
+    const {openModal} = useModal()
+
 
     useEffect(() => {
         getHostname().then(data => {
@@ -94,6 +99,7 @@ const Wifi = () => {
             }
             {joinCompleted &&
                 <div>
+                    {openModal}
                     {joinCompleted}
                 </div>
             }
