@@ -9,10 +9,26 @@ const Modal = ({ isOpen, onClose }) => {
     return (
         <div className={style.modalOverlay}>
             <div className={style.modal}>
-                <h2 className={style.modalTitle}>Modal Title</h2>
-                <p>This is a modal dialog box with a hardcoded title and button legend.</p>
+                <h2 className={style.modalTitle}>Network Connection</h2>
+                <p>The app has lost contact with the AudioLux device.</p>
+                <ul>
+                    <li>
+                        If you just configured it to join a local WiFi, this behaviors
+                        is expected. Redirect your browser to apiUrl to reload the application.
+                    </li>
+                    <li>
+                        If you were already connected to a local network, then just hit the
+                        refresh button on your browser.
+                    </li>
+                    <li>
+                        If have not yet configured the AudioLux device to join a local network,
+                        please reconnect to the AUDIOLUX network and then hit the browser's
+                        refresh button or navigate to the &nbsp;
+                        <a href="http://192.168.4.1">default URL</a>.
+                    </li>
+                </ul>
                 <button className={style.modalButton} onClick={onClose}>
-                    Close
+                    Dismiss
                 </button>
             </div>
         </div>
