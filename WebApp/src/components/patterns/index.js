@@ -8,8 +8,8 @@ const Patterns = () => {
     const [currentPattern, setCurrentPattern] = useState("")
 
     useEffect(() => {
-        getPatternList().then(data => setPatterns(data));
-        getPattern().then(data => setCurrentPattern(data));
+        // getPatternList().then(data => setPatterns(data));
+        // getPattern().then(data => setCurrentPattern(data));
     }, [])
 
     const patternOptions = patterns.map(pattern => {
@@ -21,7 +21,7 @@ const Patterns = () => {
     const handleSelection = async (event) => {
         const newPattern = event.target.value;
         setCurrentPattern(newPattern);
-        await savePattern(newPattern);
+        // await savePattern(newPattern);
     }
 
     return (

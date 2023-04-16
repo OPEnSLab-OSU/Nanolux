@@ -12,17 +12,17 @@ const Settings = () => {
 	const [settings, setSettings] = useState({});
 
 	useEffect(() => {
-		getSettings().then(data => setSettings(data));
+		// getSettings().then(data => setSettings(data));
 	}, [])
 
 	const handleNoiseChange = async (newValue) => {
 		setSettings(current => ({...current, noise: newValue}));
-		await saveSettings(settings);
+		// await saveSettings(settings);
 	}
 
 	const handleLedChange = async (newValue) => {
 		setSettings(current => ({...current, ledCount: newValue}));
-		await saveSettings(settings);
+		// await saveSettings(settings);
 	}
 
 	return (
