@@ -6,6 +6,7 @@ import {useEffect, useState} from "preact/hooks";
 import Password from "../../components/password";
 import TextInput from "../../components/textinput";
 import {useModal} from "../../context/global_modal_context";
+import {useConnectivity} from "../../context/online_context";
 
 
 const Wifi = () => {
@@ -18,15 +19,18 @@ const Wifi = () => {
     const [fqdn, setFqdn] = useState(".local");
 
     const {openModal} = useModal()
+    const {isConnected} = useConnectivity();
 
 
     useEffect(() => {
-        getHostname().then(data => {
-            setHostname(data.hostname);
-            handleHostnameChange(data.hostname);
-        });
-        getWiFi().then(data => setCurrentWifi(data));
-    }, [])
+        if (isConnected) {
+            getHostname().then(data => {
+                setHostname(data.hostname);
+                handleHostnameChange(data.hostname);
+            });
+            getWiFi().then(data => setCurrentWifi(data));
+        }
+    }, [isConnected])
 
 
     const handleNetworkSelected = async (newWifi) => {
@@ -43,6 +47,8 @@ const Wifi = () => {
     }
 
     const handleJoinClick = () => {
+        if (!isConnected) return;
+
         setJoinCompleted(null)
         joinWiFi({ssid: selectedWifi.ssid, key: password})
             .then(response =>
@@ -61,7 +67,9 @@ const Wifi = () => {
 
     const handleHostnameCommit = async (committedHostname) => {
         handleHostnameChange(committedHostname);
-        await saveHostname(committedHostname);
+        if (isConnected) {
+            await saveHostname(committedHostname);
+        }
     }
 
     return (

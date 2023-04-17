@@ -80,5 +80,6 @@ export {
     joinWiFi,
     getHostname,
     saveHostname,
-    getHistory
+    getHistory,
+    base_url
 };

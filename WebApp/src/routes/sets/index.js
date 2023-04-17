@@ -5,24 +5,32 @@ import {useState, useEffect} from "preact/hooks";
 import {getSettings, saveSettings} from "../../utils/api";
 import LedCount from "../../components/led_count";
 import {useModal} from "../../context/global_modal_context";
+import {useConnectivity} from "../../context/online_context";
 
 const Settings = () => {
-	const { openModal } = useModal()
+	const { openModal } = useModal();
+	const { isConnected } = useConnectivity();
 
 	const [settings, setSettings] = useState({});
 
 	useEffect(() => {
-		// getSettings().then(data => setSettings(data));
-	}, [])
+		if (isConnected) {
+			getSettings().then(data => setSettings(data));
+		}
+	}, [isConnected])
 
 	const handleNoiseChange = async (newValue) => {
 		setSettings(current => ({...current, noise: newValue}));
-		// await saveSettings(settings);
+		if (isConnected) {
+			await saveSettings(settings);
+		}
 	}
 
 	const handleLedChange = async (newValue) => {
 		setSettings(current => ({...current, ledCount: newValue}));
-		// await saveSettings(settings);
+		if (isConnected) {
+			await saveSettings(settings);
+		}
 	}
 
 	return (
