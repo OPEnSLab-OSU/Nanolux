@@ -7,6 +7,7 @@ import Settings from '../routes/sets';
 import Profile from '../routes/user';
 import Wifi from "../routes/wifi";
 
+
 const App = () => (
 	<div id="app">
 		<Header />
