@@ -3,8 +3,9 @@ import { Router } from 'preact-router';
 import Header from './header';
 
 // Code-splitting is automated for `routes` directory
-import Settings from '../routes/settings';
-import Profile from '../routes/profile';
+import Settings from '../routes/sets';
+import Profile from '../routes/user';
+import Wifi from "../routes/wifi";
 
 const App = () => (
 	<div id="app">
@@ -12,8 +13,8 @@ const App = () => (
 		<main>
 			<Router>
 				<Settings path="/" />
-				<Profile path="/profile/" user="me" />
-				<Profile path="/profile/:user" />
+				<Profile path="/user/" user="me" />
+				<Wifi path="/wifi" />
 			</Router>
 		</main>
 	</div>

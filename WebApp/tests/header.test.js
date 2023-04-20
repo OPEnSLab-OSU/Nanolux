@@ -6,6 +6,6 @@ describe('Initial Test of the Header', () => {
 	test('Header renders 2 nav items', () => {
 		const context = shallow(<Header />);
 		expect(context.find('h1').text()).toBe('AudioLux');
-		expect(context.find('Link').length).toBe(2);
+		expect(context.find('Link').length).toBe(3);
 	});
 });
