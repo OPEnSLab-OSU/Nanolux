@@ -5,15 +5,18 @@ import style from './style.css';
 const Header = () => (
 	<header className={style.header}>
 		<a href="/" className={style.logo}>
-			<img src="../../assets/Transparent-Cymaspace-Logo-205x71px.png" alt="CymaSpace Logo" height="32" />
+			<img src="../../assets/cymalog1.png" alt="CymaSpace Logo" height="32" />
 			<h1>AudioLux</h1>
 		</a>
 		<nav>
 			<Link activeClassName={style.active} href="/">
 				Settings
 			</Link>
-			<Link activeClassName={style.active} href="/profile">
+			<Link activeClassName={style.active} href="/user">
 				User
+			</Link>
+			<Link activeClassName={style.active} href="/wifi">
+				Wifi
 			</Link>
 		</nav>
 	</header>

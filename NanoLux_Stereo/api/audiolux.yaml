@@ -89,7 +89,6 @@ components:
       type: object
       required:
         - noise
-        - compression
         - loFreqHue
         - hiFreqHue
         - ledCount
@@ -99,11 +98,6 @@ components:
           type: integer
           format: int32
           example: 10
-        compression:
-          description: Compression Threshold (0 - 100)
-          type: integer
-          format: int32
-          example: 80
         loFreqHue:
           escription: RGB for Low Frequency Hue (0 - 0xFFFFFF)
           type: integer
