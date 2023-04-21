@@ -1,0 +1,261 @@
+openapi: 3.0.3
+info:
+  title: AudioLux API - OpenAPI 3.0
+  description: "Control and configuration API for the AudioLux Device"
+  contact:
+    email: udellc@oregonstate.edu
+  license:
+    name: TBD
+    url: http://www.example.org
+  version: 1.0.0
+servers:
+  - url: http://192.168.130.1
+paths:
+  /api/settings:
+    get:
+      tags:
+        - settings
+      summary: Retrieve settings
+      description: Get the current settings values from the firmware.
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Settings'
+    put:
+      tags:
+        - settings
+      summary: Update settings.
+      description: Apply settings values to the firmware.
+      requestBody:
+        description: Settings to apply. All members must be present. No nulls Allowed.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Settings'
+        required: true
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResponse"
+        '405':
+          description: Invalid input
+  /api/pattern:
+    get:
+      tags:
+        - visualization pattern
+      summary: Get visualization pattern.
+      description: Retrieve the value of the current visualization pattern.
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Control'
+    put:
+      tags:
+      - visualization pattern
+      summary: Set visualization pattern.
+      description: Set the value of the current visualization pattern.
+      requestBody:
+        description: Visualization pattern value.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Control'
+        required: true
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResponse"
+        '405':
+          description: Invalid input
+  /api/wifis:
+    get:
+      tags:
+        - available networks
+      summary: Get a list of locally scanned WiFi SSIDs.
+      description: Retrieve a list of locally scanned WiFi SSIDs.
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/WiFi'
+  /api/wifi:
+    get:
+      tags:
+        - WiFi network
+      summary: Get the currently joined WiFi network.
+      description: Retrieve the SSID name of currently joined WiFi network.
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WiFi'
+    put:
+      tags:
+      - WiFi network
+      summary: Join a WiFi network.
+      description: Accepts credentials to attempt a WiFi network connection.
+      requestBody:
+        description: WiFi SSDI and password, if required..
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WiFiCreds'
+        required: true
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResponse"
+        '401':
+          description: Join Failed
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResponse"
+  /api/hostname:
+    get:
+      tags:
+        - AudioLux hostname
+      summary: Get the current hostname for mDNS.
+      description: Retrieve current hostname assigned to the device.
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Hostname'
+    put:
+      tags:
+        - AudioLux hostname
+      summary: Set the hostname for mDNS.
+      description: Save a hostname for the device.
+      requestBody:
+        description: A string of 8 to 63 characters with no spaces and at most one dash.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Hostname'
+        required: true
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResponse"
+components:
+  schemas:
+    Settings:
+      type: object
+      required:
+        - noise
+        - compression
+        - loFreqHue
+        - hiFreqHue
+        - ledCount
+      properties:
+        noise:
+          description: Noise Gate Threshold (0 - 100)
+          type: integer
+          format: int32
+          example: 10
+        compression:
+          description: Compression Threshold (0 - 100)
+          type: integer
+          format: int32
+          example: 80
+        loFreqHue:
+          description: RGB for Low Frequency Hue (0 - 0xFFFFFF)
+          type: integer
+          format: int32
+          example: 0
+        hiFreqHue:
+          description: RGB for High Frequency Hue (0 - 0xFFFFFF)
+          type: integer
+          format: int32
+          example: 80294
+        ledCount:
+          description: Number of LEDs connected to the output.
+          type: integer
+          example: 50
+    Control:
+      type: object
+      required:
+        - pattern
+      properties:
+        pattern:
+          type: string
+          description: name of visualization pattern
+          enum:
+            - confetti
+            - solid
+            - trail
+            - vbar
+    WiFi:
+      type: object
+      required:
+        - ssid
+      properties:
+        ssid:
+          type: string
+          description: name of the WiFi network
+        rssi:
+          type: integer
+          description: signal strength of the WiFi network
+          format: int32
+        lock:
+          type: boolean
+          description: is the WiFi network password protected?
+    WiFiCreds:
+      type: object
+      required:
+        - ssid
+      properties:
+        ssid:
+          type: string
+          description: name of the WiFi network
+        key:
+          type: string
+          description: hashed key for WiFi
+    Hostname:
+      type: object
+      required:
+        - hostname
+      properties:
+        hostname:
+          type: string
+          format: hostname
+    ApiResponse:
+      type: object
+      properties:
+        message:
+          type: string
+        details:
+          type: string
+        success:
+          type: boolean
