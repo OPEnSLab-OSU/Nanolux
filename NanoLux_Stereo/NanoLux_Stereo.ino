@@ -135,22 +135,22 @@ void IRAM_ATTR buttonISR()
     }
 }
 
-// These are the "route" handlers of the API.
-void handle_root();
-void handle_blank();
-void handle_trail();
-void handle_solid();
-void handle_confetti();
-void handle_vol_bar();
 
+/**********************************/
+/* If API were to live in api.h   */
+/* then this would be a great     */
+/* place to include it.           */
+/**********************************/
+//#inlude api.h
+
+/*
+ * The api handlers get registered here.
+ */
 APIHook apiHooks[] = {
-        { "/blank", handle_blank },
-        { "/trail", handle_trail },
-        { "/solid", handle_solid },
-        { "/confetti", handle_confetti },
-        { "/vbar", handle_vol_bar }
+        // { "api/pattern",  handle_pattern_request},
+        // { "api/patterns",  handle_patterns_list},
 };
-const int API_HOOK_COUNT = 5;
+const int API_HOOK_COUNT = 2; // Actual number of APIs registered.
 
 
 void setup() {
