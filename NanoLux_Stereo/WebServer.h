@@ -45,9 +45,13 @@ const char* CONTENT_TEXT = "text/plain";
 const char* ap_ssid = "AUDIOLUX";
 const char* ap_password = "12345678";
 
-static String hostname = String(DEFAULT_HOSTNAME);
+constexpr int MAX_HOSTNAME_LEN = 64;
+static char hostname[MAX_HOSTNAME_LEN];
+
 const char* SETTINGS_FILE = "/settings.json";
 static StaticJsonDocument<384> settings;
+
+static String http_response;
 
 const char* URL_FILE = "/assets/url.json";
 
@@ -56,12 +60,58 @@ const char* URL_FILE = "/assets/url.json";
  * File system
  */
 inline void initialize_file_system() {
-    Serial.println(F("Initializing FS..."));
+    Serial.print(F("Initializing FS..."));
     if (LITTLEFS.begin()) {
         Serial.println(F("done."));
     } else {
         Serial.println(F("fail."));
     }
+}
+
+
+/*
+ * Settings Management
+ */
+inline void save_settings() {
+    File saved_settings = LITTLEFS.open(SETTINGS_FILE, "w");
+    if (saved_settings) {
+        serializeJson(settings, saved_settings);
+        Serial.println("Saving settings:");
+        serializeJsonPretty(settings, Serial);
+        Serial.println(" ");
+    }
+    else {
+        Serial.println("Unable to save settings file.");
+    }
+}
+
+
+inline void load_settings() {
+    Serial.println("Checking if settings are available.");
+
+    File saved_settings = LITTLEFS.open(SETTINGS_FILE, "r");
+    if (saved_settings) {
+        const DeserializationError error = deserializeJson(settings, saved_settings);
+        if (!error) {
+            Serial.println("Settings loaded:");
+            serializeJsonPretty(settings, Serial);
+            Serial.println(" ");
+            return;
+        }
+
+        Serial.print("Error loading saved file: ");
+        Serial.println(error.c_str());
+    }
+
+    Serial.println("Unable to load settings. Will use defaults (re)create file.");
+
+    JsonObject wifi = settings.createNestedObject("wifi");
+    wifi["ssid"] = NULL;
+    wifi["key"] = NULL;
+    wifi["locked"] = false;
+    settings["hostname"] = DEFAULT_HOSTNAME;
+
+    save_settings();
 }
 
 
@@ -151,58 +201,45 @@ inline void scan_ssids() {
 }
 
 
-inline void save_settings() {
-    File saved_settings = LITTLEFS.open(SETTINGS_FILE, "w");
-    if (saved_settings) {
-        serializeJson(settings, saved_settings);
-    } else {
-        Serial.println("Unable to save settings file.");
-    }
-}
+inline bool initiate_wifi_connection(const char* ssid, const char* key) {
+    // Drop the current connection, if any.
+    WiFi.disconnect();
+    delay(100);
 
+    WiFi.begin(ssid, key);
 
-inline void load_settings() {
-    File saved_settings = LITTLEFS.open(SETTINGS_FILE, "r");
-    if (saved_settings) {
-        DeserializationError error = deserializeJson(settings, saved_settings);
-        if (!error) {
-            return;
-        } else {
-            Serial.print("Error loading saved file: ");
-            Serial.println(error.c_str());
-        }
+    int wait_count = 0;
+    while (WiFi.status() != WL_CONNECTED && wait_count < MAX_WIFI_CONNECT_WAIT) {
+        delay(500);
+        ++wait_count;
     }
 
-    Serial.println("Unable to load settings. Will use defaults (re)create file.");
+    if (WiFi.status() == WL_CONNECTED) {
+        return true;
+    }
 
-    JsonObject wifi = settings.createNestedObject("wifi");
-    wifi["ssid"] = NULL;
-    wifi["key"] = NULL;
-    wifi["locked"] = false;
-    settings["hostname"] = DEFAULT_HOSTNAME;
-
-    save_settings();
+    WiFi.disconnect();
+    delay(100);
+    return false;
 }
+
 
 
 /*
  * Wifi Management
  */
-boolean join_wifi(const char* ssid, const char* key) {
+inline boolean join_wifi(const char* ssid, const char* key) {
     Serial.print("Trying to join network ");
     Serial.println(ssid);
 
-    WiFi.setHostname(hostname.c_str());
-    WiFi.begin(ssid, key);
+    WiFi.setHostname(hostname);
 
-    int wait_count = 0;
-    while (WiFi.status() != WL_CONNECTED && wait_count < MAX_WIFI_CONNECT_WAIT) {
-        delay(200);
-        ++wait_count;
-    }
+    if (!initiate_wifi_connection(ssid, key)) {
+        // Try to join the previous network, if any.
+        if (settings["wifi"]["ssid"] != NULL) {
+            initiate_wifi_connection(settings["wifi"]["ssid"], settings["wifi"]["key"]);
+        }
 
-    if (WiFi.status() != WL_CONNECTED) {
-        WiFi.disconnect();
         Serial.println("Unable to join network.");
         return false;
     }
@@ -210,7 +247,7 @@ boolean join_wifi(const char* ssid, const char* key) {
     Serial.println("Network joined");
 
     // We are connected. Setup mDNS
-    if (MDNS.begin(hostname.c_str())) {
+    if (MDNS.begin(hostname)) {
         Serial.print("mDNS connected. The AudioLux can be reached at ");
         Serial.print(hostname);
         Serial.println(".local");
@@ -249,17 +286,17 @@ inline void serve_wifi_list() {
 }
 
 
-const String& build_response(const boolean success, const char* message, const char* details) {
-    String response = "{ \"success\": " + success;
-    if (message != NULL) {
-        response += response + ", \"message\": " + message;
+inline const String& build_response(const boolean success, const char* message, const char* details) {
+    http_response = "{ \"success\": " + success;
+    if (message != nullptr) {
+        http_response += http_response + ", \"message\": " + message;
     }
-    if (details != NULL) {
-        response += response + ", \"details\": " + details;
+    if (details != nullptr) {
+        http_response += http_response + ", \"details\": " + details;
     }
-    response += "}";
+    http_response += "}";
 
-    return response;
+    return http_response;
 }
 
 
@@ -331,6 +368,7 @@ inline void handle_hostname_request() {
 
         settings["hostname"] = payload["hostname"];
         save_settings();
+        Serial.println("Sending response back.");
         webServer.send(HTTP_OK, CONTENT_TEXT, build_response(true, "New hostname saved.", nullptr));
     }
     else {
@@ -341,7 +379,15 @@ inline void handle_hostname_request() {
 }
 
 
-void save_url(const String& url) {
+/*
+ * Health ping.
+ */
+inline void handle_health_check() {
+    webServer.send(HTTP_OK);
+}
+
+
+inline void save_url(const String& url) {
     File saved_url = LITTLEFS.open(URL_FILE, "w");
     if (saved_url) {
         StaticJsonDocument<192> data;
@@ -349,12 +395,11 @@ void save_url(const String& url) {
         data["url"] = url;
 
         serializeJson(data, saved_url);
-        serializeJson(settings, saved_url);
         Serial.print(url);
         Serial.println(" saved as Web App URL.");
     }
     else {
-        Serial.println("Unable to save Web App URL, will default to 192.168.4.1.");
+        Serial.println("Unable to save Web App URL, will default to http://192.168.4.1.");
     }
 }
 
@@ -362,25 +407,45 @@ void save_url(const String& url) {
 inline void initialize_web_server(APIHook api_hooks[], int hook_count) {
     initialize_file_system();
 
+    // Load saved settings. If we have an SSID, try to join the network.
+    load_settings();
+
+    strncpy(hostname, settings["hostname"], MAX_HOSTNAME_LEN);
 
     WiFi.mode(WIFI_MODE_APSTA);
     WiFi.softAP(ap_ssid, ap_password);
     delay(1000);
 
-    IPAddress ip = WiFi.softAPIP();
+    IPAddress ap_ip = WiFi.softAPIP();
 
-    // Load saved settings. If we have an SSID, try to join the network.
-    load_settings();
     if (settings["wifi"]["ssid"] != NULL) {
-        if (join_wifi(settings["wifi"]["ssid"], settings["wifi"]["key"])) {
-            ip = WiFi.localIP();
+        const char* ssid = settings["wifi"]["ssid"];
+        Serial.print("Attempting to connect to saved WiFi: ");
+        Serial.println(ssid);
+        if (initiate_wifi_connection(settings["wifi"]["ssid"], settings["wifi"]["key"])) {
+            Serial.print("WiFi IP: ");
+            Serial.println(WiFi.localIP());
         }
     } else {
+        Serial.println("****");
         Serial.println("No wifi saved. AudioLux available via Access Point.");
+        Serial.print("SSID:");
+        Serial.print(ap_ssid);
+        Serial.print(" Password:");
+        Serial.println(ap_password);
+        Serial.println("****");
     }
 
-    const String url = "http://" + ip.toString();
-    save_url(url);
+    // Set up the URL that the Web App needs to talk to.
+    String api_url = "http://";
+    if (WiFi.isConnected()) {
+        api_url += hostname;
+        api_url += ".local";
+    } else {
+        api_url += ap_ip.toString();
+    }
+    save_url(api_url);
+
 
     // API
     for (int i = 0; i < hook_count; i++) {
@@ -391,6 +456,7 @@ inline void initialize_web_server(APIHook api_hooks[], int hook_count) {
     webServer.on("/api/wifis", serve_wifi_list);
     webServer.on("/api/wifi", handle_wifi_request);
     webServer.on("/api/hostname", handle_hostname_request);
+    webServer.on("/api/health", handle_health_check);
 
     // Web App
     Serial.print(F("Registering Web App files."));
@@ -399,9 +465,6 @@ inline void initialize_web_server(APIHook api_hooks[], int hook_count) {
 
     webServer.enableCrossOrigin();
     webServer.begin();
-
-    Serial.print(F("To interact with the AudioLux open a browser to http://"));
-    Serial.println(ip);
 }
 
 
