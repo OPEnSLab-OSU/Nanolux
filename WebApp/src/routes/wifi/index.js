@@ -1,5 +1,5 @@
 import {h} from 'preact';
-import {getWiFi, joinWiFi, getHostname, saveHostname} from "../../utils/api";
+import {joinWiFi, getHostname, saveHostname} from "../../utils/api";
 import style from "./style.css";
 import WifiSelector from "../../components/wifi_selector";
 import {useEffect, useState} from "preact/hooks";
@@ -28,7 +28,7 @@ const Wifi = () => {
                 setHostname(data.hostname);
                 handleHostnameChange(data.hostname);
             });
-            getWiFi().then(data => setCurrentWifi(data));
+            // getWiFi().then(data => setCurrentWifi(data));
         }
     }, [isConnected])
 
@@ -39,6 +39,12 @@ const Wifi = () => {
             setSelectedWifi(newWifi)
             setLocked(newWifi.lock);
             setJoinCompleted(null);
+        }
+    }
+
+    const handleWifiChanged = (newWifi) => {
+        if (newWifi) {
+            setCurrentWifi(newWifi);
         }
     }
 
@@ -55,7 +61,7 @@ const Wifi = () => {
             {
                 setJoinCompleted(response.data.message);
                 if (response.data.success) {
-                    setCurrentWifi(selectedWifi);
+                    // setCurrentWifi(selectedWifi);
                 }
             });
     };
@@ -90,6 +96,7 @@ const Wifi = () => {
                 <div>
                     <WifiSelector placeholder="Select a network..."
                                   onNetworkSelected={handleNetworkSelected}
+                                  onWifiChanged={handleWifiChanged}
                     />
                 </div>
             </div>
@@ -111,17 +118,16 @@ const Wifi = () => {
                     {joinCompleted}
                 </div>
             }
-            {currentWifi &&
-                <div className={style.settingsControl}>
-                    <div className={style.wifiBanner}>
-                        Current Wifi: {currentWifi.ssid}
-                    </div>
-                    <button className={style.formButton}
-                            onClick={handleJoinClick}
-                    >Forget
-                    </button>
+            <div className={style.settingsControl}>
+                <div className={style.wifiBanner}>
+                    Current Wifi: {currentWifi?.ssid ?? "None"}
                 </div>
-            }
+                <button className={style.formButton}
+                        disabled={!(currentWifi?.ssid)}
+                        onClick={handleJoinClick}
+                >Forget
+                </button>
+            </div>
         </div>
     );
 };
