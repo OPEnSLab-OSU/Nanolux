@@ -16,9 +16,11 @@ Linux (http://docs.arduino.cc/software/ide-v1/tutorials/Linux)
 # Dependencies
 You will also need to also install FastLED, ArduinoFFT Library.
 See Wiki Page for including dependencies in your project.
-* ArduinoFFT Library: https://github.com/kosme/arduinoFFT
-* FastLED: http://fastled.io/ (You can also find this in the /dependencies)
-* WiFiWebServer: https://github.com/khoih-prog/WiFiWebServer
+* ArduinoFFT Library (1.5.6): https://github.com/kosme/arduinoFFT
+* ArduinoJson (6.20.1): https://arduinojson.org/
+* FastLED (3.4.0): http://fastled.io/ (You can also find this in the /dependencies)
+* LittleFS_esp32 (1.0.6): https://github.com/lorol/LITTLEFS
+* WiFiWebServer (1.10.0): https://github.com/khoih-prog/WiFiWebServer
 
 All dependencies are installable through the Library Manager of the Arduino IDE, or with the 
 [Arduino CLI](https://arduino.github.io/arduino-cli/0.28/) tool.
