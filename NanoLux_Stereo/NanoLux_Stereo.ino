@@ -1,5 +1,8 @@
+#include <ESPmDNS.h>
 #include <FastLED.h>
 #include <math.h>
+#include <ArduinoJson.h>
+#include <ArduinoJson.hpp>
 #include "arduinoFFT.h"
 #include "BluetoothSerial.h"
 #include "WebServer.h"
