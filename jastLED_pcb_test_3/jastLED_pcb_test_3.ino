@@ -1,3 +1,6 @@
+// #include <ESPmDNS.h>
+#include <ArduinoJson.h>
+#include <ArduinoJson.hpp>
 #include <FastLED.h>
 #include <Arduino.h>
 #include "arduinoFFT.h"
@@ -5,6 +8,8 @@
 #include "nanolux_types.h"
 #include "nanolux_util.h"
 #include "audio_analysis.h"
+#include "WebServer.h"
+
 
 #ifdef DEBUG
 #pragma message "DEBUG ENABLED"
@@ -93,6 +98,25 @@ SimplePatternList gPatterns = { blank, freq_hue_trail, freq_hue_vol_brightness, 
 int NUM_PATTERNS = 37;
 SimplePatternList gPatterns_layer = {blank, spring_mass_1};
 
+
+// These are the "route" handlers of the API.
+void handle_root();
+void handle_blank();
+void handle_trail();
+void handle_solid();
+void handle_confetti();
+void handle_vol_bar();
+
+APIHook apiHooks[] = {
+        { "/blank", handle_blank },
+        { "/trail", handle_trail },
+        { "/solid", handle_solid },
+        { "/confetti", handle_confetti },
+        { "/vbar", handle_vol_bar }
+};
+const int API_HOOK_COUNT = 5;
+
+
 void IRAM_ATTR onTimer(){
   audio_analysis();
 }
@@ -128,6 +152,8 @@ void setup() {
   //  initialize up led strip
   FastLED.addLeds<LED_TYPE,DATA_PIN,CLK_PIN,COLOR_ORDER>(leds, NUM_LEDS).setCorrection(TypicalLEDStrip);
   blank();
+
+  initialize_web_server(apiHooks, API_HOOK_COUNT);
 }
 
 void loop() {
@@ -158,6 +184,8 @@ void loop() {
 
     FastLED.show();
     delay(10);
+
+    handle_web_requests();
 }
 
 void audio_analysis() {
@@ -181,3 +209,35 @@ void audio_analysis() {
 
   noise_gate(NOISE_GATE_THRESH);
 }
+
+
+
+void handle_root() {
+    //    webServer.send(200, "text/html", web_page());
+}
+
+void handle_blank() {
+    // gCurrentPatternNumber = BLANK;
+    //    webServer.send(200, "text/html", web_page());
+}
+
+void handle_trail() {
+    // gCurrentPatternNumber = TRAIL;
+    //    webServer.send(200, "text/html", web_page());
+}
+
+void handle_solid() {
+    // gCurrentPatternNumber = SOLID;
+    //    webServer.send(200, "text/html", web_page());
+}
+
+void handle_confetti() {
+    // gCurrentPatternNumber = CONFETTI;
+    //    webServer.send(200, "text/html", web_page());
+}
+
+void handle_vol_bar() {
+    // gCurrentPatternNumber = VOL_BAR;
+    //    webServer.send(200, "text/html", web_page());
+}
+
