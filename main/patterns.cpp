@@ -458,7 +458,6 @@ void advanced_bands() {
   double avg4 = 0;
   double avg5 = 0;
 
-  fadeToBlackBy(leds, NUM_LEDS, 50);
 
   // Calculate the volume of each band
   for (int i = 0; i < advanced_size; i++) {
@@ -558,13 +557,6 @@ void advanced_bands() {
     maxIter++;
   }
 
-  // Assign the values for the pixel to goto
-  leds[(int) avg1] = CRGB(255,0,0);
-  leds[(int) NUM_LEDS/5 + (int) avg2] = CRGB(255,255,0);
-  leds[(int) 2*NUM_LEDS/5+(int) avg3] = CRGB(0,255,0);
-  leds[(int) 3*NUM_LEDS/5+(int) avg4] = CRGB(0,255,255);
-  leds[(int) 4*NUM_LEDS/5+(int) avg5] = CRGB(0,0,255);
-
   // Fill the respective chunks of the light strip with the color based on above^
   for (int i = 0; i < vol1-1; i++) {
     leds[i] = CRGB(255,0,0);
@@ -581,6 +573,14 @@ void advanced_bands() {
   for (int i = 4*NUM_LEDS/5; i < 4*NUM_LEDS/5+vol5-1; i++) {
     leds[i] = CRGB(0,0,255);
   }
+  
+  // Assign the values for the pixel to goto
+  leds[(int) avg1+ (int) vol1] = CRGB(255,255,255);
+  leds[(int) NUM_LEDS/5 + (int) avg2+ (int) vol2] = CRGB(255,255,255);
+  leds[(int) 2*NUM_LEDS/5+(int) avg3+ (int) vol3] = CRGB(255,255,255);
+  leds[(int) 3*NUM_LEDS/5+(int) avg4+ (int) vol4] = CRGB(255,255,255);
+  leds[(int) 4*NUM_LEDS/5+(int) avg5+ (int) vol5] = CRGB(255,255,255);
+  fadeToBlackBy(leds, NUM_LEDS, 90);
 
   delete [] fiveSamples;
 }
