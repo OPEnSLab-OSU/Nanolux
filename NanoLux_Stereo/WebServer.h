@@ -328,6 +328,7 @@ inline void handle_wifi_request() {
             Serial.println("Joined (or forgot) network.");
             settings["wifi"]["ssid"] = payload["ssid"];
             settings["wifi"]["key"] = payload["key"];
+            settings["wifi"]["lock"] = payload["key"] == NULL;
             save_settings();
             response_status = HTTP_OK;
             message = "Joined (or forgot) network.";
@@ -404,7 +405,8 @@ inline void save_url(const String& url) {
 }
 
 
-inline void initialize_web_server(APIHook api_hooks[], int hook_count) {
+void setup_networking()
+{
     initialize_file_system();
 
     // Load saved settings. If we have an SSID, try to join the network.
@@ -412,17 +414,13 @@ inline void initialize_web_server(APIHook api_hooks[], int hook_count) {
 
     strncpy(hostname, settings["hostname"], MAX_HOSTNAME_LEN);
 
-    WiFi.mode(WIFI_MODE_APSTA);
-    WiFi.softAP(ap_ssid, ap_password);
-    delay(1000);
-
-    IPAddress ap_ip = WiFi.softAPIP();
-
+    bool wifi_okay;
     if (settings["wifi"]["ssid"] != NULL) {
         const char* ssid = settings["wifi"]["ssid"];
         Serial.print("Attempting to connect to saved WiFi: ");
         Serial.println(ssid);
-        if (initiate_wifi_connection(settings["wifi"]["ssid"], settings["wifi"]["key"])) {
+        wifi_okay = (settings["wifi"]["ssid"], settings["wifi"]["key"]);
+        if (wifi_okay) {
             Serial.print("WiFi IP: ");
             Serial.println(WiFi.localIP());
         }
@@ -436,16 +434,26 @@ inline void initialize_web_server(APIHook api_hooks[], int hook_count) {
         Serial.println("****");
     }
 
+    WiFi.mode(WIFI_MODE_APSTA);
+    WiFi.softAP(ap_ssid, ap_password);
+    delay(1000);
+
+    IPAddress ap_ip = WiFi.softAPIP();
+
+
     // Set up the URL that the Web App needs to talk to.
     String api_url = "http://";
-    if (WiFi.isConnected()) {
+    if (wifi_okay) {
         api_url += hostname;
         api_url += ".local";
     } else {
         api_url += ap_ip.toString();
     }
     save_url(api_url);
+}
 
+inline void initialize_web_server(APIHook api_hooks[], int hook_count) {
+    setup_networking();
 
     // API
     for (int i = 0; i < hook_count; i++) {
