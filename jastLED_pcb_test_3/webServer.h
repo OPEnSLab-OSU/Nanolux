@@ -2,13 +2,26 @@
 
 #include <ESPmDNS.h>
 #include "LITTLEFS.h"
+#include "BluetoothSerial.h"
+
+/*
+ * Bluetooth Configuration
+ * We don't use Bluetooth, but remove this and the initialization of
+ * BluetoothSerial on startup, and the WiFi goes berserk. Don't know why. 
+ */
+#if !defined(CONFIG_BT_ENABLED) || !defined(CONFIG_BLUEDROID_ENABLED)
+#error Bluetooth is not enabled! Please run `make menuconfig` to and enable it
+#endif
+BluetoothSerial SerialBT;
+
+
 
 /*
  * WifiWebServer Library Configuration
  */
 #define DEBUG_WIFI_WEBSERVER_PORT   Serial
 
-#define _WIFI_LOGLEVEL_     4
+#define _WIFI_LOGLEVEL_     3
 
  // Use standard WiFi
 #define USE_WIFI_NINA       false
@@ -108,7 +121,7 @@ inline void load_settings() {
     JsonObject wifi = settings.createNestedObject("wifi");
     wifi["ssid"] = NULL;
     wifi["key"] = NULL;
-    wifi["locked"] = false;
+    wifi["lock"] = false;
     settings["hostname"] = DEFAULT_HOSTNAME;
 
     save_settings();
@@ -320,7 +333,8 @@ inline void handle_wifi_request() {
         int status = HTTP_OK;
 
         boolean joined = false;
-        if (payload["ssid"] == NULL) {
+        if (payload["ssid"] == nullptr) {
+            Serial.println(F("Forgetting current network."));
             joined = true;
         }
         else {
@@ -333,7 +347,7 @@ inline void handle_wifi_request() {
             Serial.println("Joined (or forgot) network.");
             settings["wifi"]["ssid"] = payload["ssid"];
             settings["wifi"]["key"] = payload["key"];
-            settings["wifi"]["lock"] = payload["key"] == NULL;
+            settings["wifi"]["lock"] = payload["key"] == nullptr ? false : true;
             save_settings();
             response_status = HTTP_OK;
             message = "Joined (or forgot) network.";
@@ -350,6 +364,9 @@ inline void handle_wifi_request() {
         const String wifi = ssid == NULL ?
             String("null") : String("\"") + String(ssid) + String("\"");
         const String response = String("{ \"ssid\": ") + String(wifi) + String(" }");
+
+        Serial.println(F("Sending current wifi: "));
+        Serial.println(response);
         webServer.send(HTTP_OK, CONTENT_JSON, response);
     }
 }
@@ -381,6 +398,9 @@ inline void handle_hostname_request() {
     else {
         const char* hostname = settings["hostname"];
         const String response = String("{ \"hostname\": ") + "\"" + String(hostname) + String("\" }");
+
+        Serial.println(F("Sending current hostname: "));
+        Serial.println(response);
         webServer.send(HTTP_OK, CONTENT_JSON, response);
     }
 }
@@ -390,6 +410,7 @@ inline void handle_hostname_request() {
  * Health ping.
  */
 inline void handle_health_check() {
+    Serial.println(F("Sending current realth response."));
     webServer.send(HTTP_OK);
 }
 
@@ -413,6 +434,8 @@ inline void save_url(const String& url) {
 
 inline void setup_networking()
 {
+    SerialBT.begin("Audiolux-BT-3");
+
     initialize_file_system();
 
     // Load saved settings. If we have an SSID, try to join the network.
@@ -421,7 +444,7 @@ inline void setup_networking()
     strncpy(hostname, settings["hostname"], MAX_HOSTNAME_LEN);
 
     bool wifi_okay = false;
-    if (settings["wifi"]["ssid"] != NULL) {
+    if (settings["wifi"]["ssid"] != nullptr) {
         const char* ssid = settings["wifi"]["ssid"];
         Serial.print("Attempting to connect to saved WiFi: ");
         Serial.println(ssid);
@@ -486,5 +509,10 @@ inline void initialize_web_server(APIHook api_hooks[], int hook_count) {
 
 
 inline void handle_web_requests() {
-    webServer.handleClient();
+    try {
+        webServer.handleClient();
+    }
+    catch (const std::exception e) {
+        Serial.printf("Exception handling web request: %s", e.what());
+    }
 }
