@@ -1,3 +1,6 @@
+// #include <ESPmDNS.h>
+#include <ArduinoJson.h>
+#include <ArduinoJson.hpp>
 #include <FastLED.h>
 #include <Arduino.h>
 #include "arduinoFFT.h"
@@ -5,6 +8,8 @@
 #include "nanolux_types.h"
 #include "nanolux_util.h"
 #include "audio_analysis.h"
+#include "WebServer.h"
+
 
 #ifdef DEBUG
 #pragma message "DEBUG ENABLED"
@@ -121,17 +126,19 @@ void setup() {
   checkTime = millis();
   checkVol = 0;
 
-  xTaskCreatePinnedToCore(     runTask0,  // Code to Run (the task)
-                               "Audio Analysis",  // Name of Task
-                               10000,             // Stack Size (Effectively irrelevant for this)
-                               NULL,              // Input Parameters (No input per say, just changing globals)
-                               0,                 // Task Priority (the best)
-                               &Task1,            // Handle of Task (a reference to call)
-                               0);                // Core on which the task is running on (0 is one of two cores)
+  // xTaskCreatePinnedToCore(     runTask0,  // Code to Run (the task)
+  //                              "Audio Analysis",  // Name of Task
+  //                              10000,             // Stack Size (Effectively irrelevant for this)
+  //                              NULL,              // Input Parameters (No input per say, just changing globals)
+  //                              0,                 // Task Priority (the best)
+  //                              &Task1,            // Handle of Task (a reference to call)
+  //                              0);                // Core on which the task is running on (0 is one of two cores)
 
   //  initialize up led strip
   FastLED.addLeds<LED_TYPE,DATA_PIN,CLK_PIN,COLOR_ORDER>(leds, NUM_LEDS).setCorrection(TypicalLEDStrip);
   blank();
+
+  initialize_web_server(apiHooks, API_HOOK_COUNT);
 }
 
 void loop() {
@@ -162,6 +169,8 @@ void loop() {
 
     FastLED.show();
     delay(10);
+
+    handle_web_requests();
 }
 
 // Use all the audio analysis to update every global audio analysis value
