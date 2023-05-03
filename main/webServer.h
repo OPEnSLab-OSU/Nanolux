@@ -49,6 +49,7 @@ const char* DEFAULT_HOSTNAME = "AudioLuxOne";
 
 
 constexpr int HTTP_OK = 200;
+constexpr int HTTP_BAD_REQUEST = 400;
 constexpr int HTTP_UNAUTHORIZED = 401;
 constexpr int HTTP_UNPROCESSABLE = 422;
 const char* CONTENT_JSON = "application/json";
@@ -488,7 +489,9 @@ inline void initialize_web_server(APIHook api_hooks[], int hook_count) {
     setup_networking();
 
     // API
+    Serial.println("Registering main APIs.");
     for (int i = 0; i < hook_count; i++) {
+        Serial.println(api_hooks[i].path);
         webServer.on(api_hooks[i].path, api_hooks[i].handler);
     }
 
@@ -499,7 +502,7 @@ inline void initialize_web_server(APIHook api_hooks[], int hook_count) {
     webServer.on("/api/health", handle_health_check);
 
     // Web App
-    Serial.print(F("Registering Web App files."));
+    Serial.println("Registering Web App files.");
     register_web_paths(LITTLEFS, "/", 2);
     webServer.serveStatic("/", LITTLEFS, "/index.html");
 

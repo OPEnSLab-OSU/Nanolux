@@ -36,6 +36,7 @@ uint8_t fHue = 0;                  // Hue value based on peak frequency
 double volume = 0.;       
 uint8_t vbrightness = 0;
 double maxDelt = 0.;               // Frequency with the biggest change in amp.
+uint8_t gNoiseGateThreshold = NOISE_GATE_THRESH;
 
 int beats = 0;
 int frame = 0;                     // For spring mass
@@ -86,28 +87,71 @@ double accelerations[5] = {0,0,0,0,0};  //for spring mass 3
 int locations[5] = {70,60,50,40,30}; //for spring mass 3
 double vRealSums[5] = {0,0,0,0,0};
 
-typedef void (*SimplePatternList[])();  // List of patterns to cycle through defined as separate functions below.
-SimplePatternList gPatterns = { blank, freq_hue_trail, freq_hue_vol_brightness, freq_confetti_vol_brightness, 
-                                volume_level_middle_bar_freq_hue,saturated_noise, saturated_noise_hue_octaves, saturated_noise_hue_shift, 
-                                saturated_noise_compression,groovy_noise, groovy_noise_hue_shift_change, 
-                                sin_hue_trail, freq_hue_trail_mid , freq_hue_trail_mid_blur,
-                                talking_hue, talking_formants, talking_moving, bounce_back,
-                                glitch_sections, glitch, glitch_talk, spring_mass_1, spring_mass_2, spring_mass_3,formant_test, show_formants, band_brightness, 
-                                noisy, alt_drums, show_drums, pix_freq, eq, math, classical, basic_bands, advanced_bands, formant_band };
+
+typedef struct {
+    int index;
+    const char* pattern_name;
+    void (*pattern_handler)();
+} Pattern;
+
+Pattern mainPatterns[]{
+    { 0, "None", blank},
+    { 1, "Hue Trail", freq_hue_trail},
+    { 2, "Volume Brightness", freq_hue_vol_brightness},
+    { 3, "Confetti", freq_confetti_vol_brightness},
+    { 4, "Volume Level Bar", volume_level_middle_bar_freq_hue},
+    { 5, "Saturated Noise", saturated_noise},
+    { 6, "Saturated Noise Octaves", saturated_noise_hue_octaves},
+    { 7, "Saturated Noise Shift", saturated_noise_hue_shift},
+    { 8, "Saturated Noise Compression", saturated_noise_compression},
+    { 9, "Groovy Noise", groovy_noise},
+    {10, "Groovy Noise Shift", groovy_noise_hue_shift_change},
+    {11, "Sine Wave Trail", sin_hue_trail},
+    {12, "Hue Trail Mid", freq_hue_trail_mid},
+    {13, "Hue Trail Mid Blur", freq_hue_trail_mid_blur},
+    {14, "Talking Hue", talking_hue},
+    {15, "Talking Formants", talking_formants},
+    {16, "Talking Moving", talking_moving},
+    {17, "Bounce Back", bounce_back},
+    {18, "Glitch Sections", glitch_sections},
+    {19, "Glitch", glitch},
+    {20, "Glitch Talk", glitch_talk},
+    {21, "Spring Mass 1", spring_mass_1},
+    {22, "Spring Mass 2", spring_mass_2},
+    {23, "Spring Mass 3", spring_mass_3},
+    {24, "Formant Test", formant_test},
+    {25, "Show Formants", show_formants},
+    {26, "Band Brightness", band_brightness},
+    {27, "Noisy", noisy},
+    {28, "Alt Drums", alt_drums},
+    {29, "Show Drums", show_drums},
+    {30, "Pixel Frequency", pix_freq},
+    {31, "Equalizer", eq},
+    {32, "Math", math},
+    {33, "Classical", classical},
+    {34, "Basic Bands", basic_bands},
+    {35, "Advanced Bands", advanced_bands},
+    {36, "Formant Band", formant_band}
+};
 
 int NUM_PATTERNS = 37; // MAKE SURE TO UPDATE THIS WITH PATTERNS
 SimplePatternList gPatterns_layer = {blank, spring_mass_1};
 
-// Set a timerInterrupt function to run audio analysis
+
+/**********************************************************
+ *
+ * We want the API to be included after the globals.
+ *
+ **********************************************************/
+#include "api.h"
+
+
 void IRAM_ATTR onTimer(){
   audio_analysis();
 }
 
-// Use a separate thread just for audio analysis
-// NOTE: THERE EXIST ONLY 2 EXTERNAL CORES on the ESP32 Feather BOARD; 1 is used here for audio and the other to be used for the WebApp
 void runTask0(void * pvParameters) {
   while (true) {
-    // Make a timer interrupt so the audio runs consistently
     My_timer = timerBegin(0, 80, true);
     timerAttachInterrupt(My_timer, &onTimer, true);
     timerAlarmWrite(My_timer, 1000000, true);
@@ -116,29 +160,26 @@ void runTask0(void * pvParameters) {
 }
 
 void setup() {
-  Serial.begin(115200);               // start USB serial communication
-  while(!Serial){ ; }
+    Serial.begin(115200);               // start USB serial communication
+    while(!Serial){ ; }
 
-  // attach button interrupt
-  pinMode(digitalPinToInterrupt(BUTTON_PIN), INPUT_PULLUP);
-  attachInterrupt(BUTTON_PIN, buttonISR, FALLING);
+    // Reindex mainPatterns, to make sure it is consistent.
+    for (int i = 0; i < NUM_PATTERNS; i++) {
+        mainPatterns[i].index = i;
+    }
 
-  checkTime = millis();
-  checkVol = 0;
+    // attach button interrupt
+    pinMode(digitalPinToInterrupt(BUTTON_PIN), INPUT_PULLUP);
+    attachInterrupt(BUTTON_PIN, buttonISR, FALLING);
 
-  // xTaskCreatePinnedToCore(     runTask0,  // Code to Run (the task)
-  //                              "Audio Analysis",  // Name of Task
-  //                              10000,             // Stack Size (Effectively irrelevant for this)
-  //                              NULL,              // Input Parameters (No input per say, just changing globals)
-  //                              0,                 // Task Priority (the best)
-  //                              &Task1,            // Handle of Task (a reference to call)
-  //                              0);                // Core on which the task is running on (0 is one of two cores)
+    checkTime = millis();
+    checkVol = 0;
 
-  //  initialize up led strip
-  FastLED.addLeds<LED_TYPE,DATA_PIN,CLK_PIN,COLOR_ORDER>(leds, NUM_LEDS).setCorrection(TypicalLEDStrip);
-  blank();
+    //  initialize up led strip
+    FastLED.addLeds<LED_TYPE,DATA_PIN,CLK_PIN,COLOR_ORDER>(leds, NUM_LEDS).setCorrection(TypicalLEDStrip);
+    blank();
 
-  initialize_web_server(apiHooks, API_HOOK_COUNT);
+    initialize_web_server(apiHooks, API_HOOK_COUNT);
 }
 
 void loop() {
@@ -157,7 +198,7 @@ void loop() {
     #ifdef LAYER_PATTERNS
       layer_patterns();
     #else
-      gPatterns[gCurrentPatternNumber]();
+      mainPatterns[gCurrentPatternNumber].pattern_handler();
     #endif
 
     #ifdef VIRTUAL_LED_STRIP
@@ -193,5 +234,5 @@ void audio_analysis() {
 
   update_drums();
 
-  noise_gate(NOISE_GATE_THRESH);
+  noise_gate(gNoiseGateThreshold);
 }
