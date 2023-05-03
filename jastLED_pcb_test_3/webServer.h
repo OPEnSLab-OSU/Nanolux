@@ -1,17 +1,29 @@
-#ifndef NANOLUX_WEBSERVER_H
-#define NANOLUX_WEBSERVER_H
+#pragma once
 
 #include <ESPmDNS.h>
 #include "LITTLEFS.h"
+#include "BluetoothSerial.h"
+
+/*
+ * Bluetooth Configuration
+ * We don't use Bluetooth, but remove this and the initialization of
+ * BluetoothSerial on startup, and the WiFi goes berserk. Don't know why. 
+ */
+#if !defined(CONFIG_BT_ENABLED) || !defined(CONFIG_BLUEDROID_ENABLED)
+#error Bluetooth is not enabled! Please run `make menuconfig` to and enable it
+#endif
+BluetoothSerial SerialBT;
+
+
 
 /*
  * WifiWebServer Library Configuration
  */
 #define DEBUG_WIFI_WEBSERVER_PORT   Serial
 
-#define _WIFI_LOGLEVEL_     4
+#define _WIFI_LOGLEVEL_     3
 
-// Use standard WiFi
+ // Use standard WiFi
 #define USE_WIFI_NINA       false
 #define USE_WIFI_CUSTOM     false
 
@@ -63,7 +75,8 @@ inline void initialize_file_system() {
     Serial.print(F("Initializing FS..."));
     if (LITTLEFS.begin()) {
         Serial.println(F("done."));
-    } else {
+    }
+    else {
         Serial.println(F("fail."));
     }
 }
@@ -108,7 +121,7 @@ inline void load_settings() {
     JsonObject wifi = settings.createNestedObject("wifi");
     wifi["ssid"] = NULL;
     wifi["key"] = NULL;
-    wifi["locked"] = false;
+    wifi["lock"] = false;
     settings["hostname"] = DEFAULT_HOSTNAME;
 
     save_settings();
@@ -129,7 +142,7 @@ typedef struct {
 WiFiWebServer webServer(80);
 
 
-inline void register_web_paths(fs::FS &fs, const char * dirname, uint8_t levels) {
+inline void register_web_paths(fs::FS& fs, const char* dirname, uint8_t levels) {
     Serial.printf("Scanning path: %s\r\n", dirname);
     File root = fs.open(dirname);
     if (!root) {
@@ -147,9 +160,10 @@ inline void register_web_paths(fs::FS &fs, const char * dirname, uint8_t levels)
             Serial.print("Scanning directory: ");
             Serial.println(file.name());
             if (levels) {
-                register_web_paths(fs, file.name(), levels-1);
+                register_web_paths(fs, file.name(), levels - 1);
             }
-        } else {
+        }
+        else {
             Serial.print("  Registering path: ");
             Serial.println(file.name());
             webServer.serveStatic(file.name(), fs, file.name());
@@ -185,7 +199,7 @@ inline void scan_ssids() {
         }
 
         Serial.print("[*] Registered networks: ");
-        for(int i = 0; i< network_count; ++i) {
+        for (int i = 0; i < network_count; ++i) {
             Serial.print("SSID:");
             Serial.print(available_networks[i].SSID);
             Serial.print("\t\t RSSI:");
@@ -224,6 +238,18 @@ inline bool initiate_wifi_connection(const char* ssid, const char* key) {
 }
 
 
+inline void initialize_mdns()
+{
+    // We are connected. Setup mDNS
+    if (MDNS.begin(hostname)) {
+        Serial.print("mDNS connected. The AudioLux can be reached at ");
+        Serial.print(hostname);
+        Serial.println(".local");
+    }
+    else {
+        Serial.println("Unable to setup mDNS");
+    }
+}
 
 /*
  * Wifi Management
@@ -243,18 +269,9 @@ inline boolean join_wifi(const char* ssid, const char* key) {
         Serial.println("Unable to join network.");
         return false;
     }
-
     Serial.println("Network joined");
 
-    // We are connected. Setup mDNS
-    if (MDNS.begin(hostname)) {
-        Serial.print("mDNS connected. The AudioLux can be reached at ");
-        Serial.print(hostname);
-        Serial.println(".local");
-    } else {
-        Serial.println("Unable to setup mDNS");
-    }
-
+    initialize_mdns();
     return true;
 }
 
@@ -305,7 +322,7 @@ inline void handle_wifi_request() {
         StaticJsonDocument<192> payload;
         int args = webServer.args();
         DeserializationError error = deserializeJson(payload, webServer.arg("plain"));
-        
+
         if (error) {
             Serial.print(F("Parsing wifi credentials failed: "));
             Serial.println(error.c_str());
@@ -316,9 +333,11 @@ inline void handle_wifi_request() {
         int status = HTTP_OK;
 
         boolean joined = false;
-        if (payload["ssid"] == NULL) {
+        if (payload["ssid"] == nullptr) {
+            Serial.println(F("Forgetting current network."));
             joined = true;
-        } else {
+        }
+        else {
             joined = join_wifi(payload["ssid"], payload["key"]);
         }
 
@@ -328,11 +347,12 @@ inline void handle_wifi_request() {
             Serial.println("Joined (or forgot) network.");
             settings["wifi"]["ssid"] = payload["ssid"];
             settings["wifi"]["key"] = payload["key"];
-            settings["wifi"]["lock"] = payload["key"] == NULL;
+            settings["wifi"]["lock"] = payload["key"] == nullptr ? false : true;
             save_settings();
             response_status = HTTP_OK;
             message = "Joined (or forgot) network.";
-        } else {
+        }
+        else {
             Serial.println("Unable to join network.");
             response_status = HTTP_UNAUTHORIZED;
             message = "Unable to join network.";
@@ -341,9 +361,12 @@ inline void handle_wifi_request() {
     }
     else {
         const char* ssid = settings["wifi"]["ssid"];
-        const String wifi = ssid == NULL? 
+        const String wifi = ssid == NULL ?
             String("null") : String("\"") + String(ssid) + String("\"");
         const String response = String("{ \"ssid\": ") + String(wifi) + String(" }");
+
+        Serial.println(F("Sending current wifi: "));
+        Serial.println(response);
         webServer.send(HTTP_OK, CONTENT_JSON, response);
     }
 }
@@ -375,6 +398,9 @@ inline void handle_hostname_request() {
     else {
         const char* hostname = settings["hostname"];
         const String response = String("{ \"hostname\": ") + "\"" + String(hostname) + String("\" }");
+
+        Serial.println(F("Sending current hostname: "));
+        Serial.println(response);
         webServer.send(HTTP_OK, CONTENT_JSON, response);
     }
 }
@@ -384,6 +410,7 @@ inline void handle_hostname_request() {
  * Health ping.
  */
 inline void handle_health_check() {
+    Serial.println(F("Sending current realth response."));
     webServer.send(HTTP_OK);
 }
 
@@ -405,8 +432,10 @@ inline void save_url(const String& url) {
 }
 
 
-void setup_networking()
+inline void setup_networking()
 {
+    SerialBT.begin("Audiolux-BT-3");
+
     initialize_file_system();
 
     // Load saved settings. If we have an SSID, try to join the network.
@@ -414,17 +443,19 @@ void setup_networking()
 
     strncpy(hostname, settings["hostname"], MAX_HOSTNAME_LEN);
 
-    bool wifi_okay;
-    if (settings["wifi"]["ssid"] != NULL) {
+    bool wifi_okay = false;
+    if (settings["wifi"]["ssid"] != nullptr) {
         const char* ssid = settings["wifi"]["ssid"];
         Serial.print("Attempting to connect to saved WiFi: ");
         Serial.println(ssid);
-        wifi_okay = (settings["wifi"]["ssid"], settings["wifi"]["key"]);
+        wifi_okay = initiate_wifi_connection(settings["wifi"]["ssid"], settings["wifi"]["key"]);
         if (wifi_okay) {
             Serial.print("WiFi IP: ");
             Serial.println(WiFi.localIP());
+            initialize_mdns();
         }
-    } else {
+    }
+    else {
         Serial.println("****");
         Serial.println("No wifi saved. AudioLux available via Access Point.");
         Serial.print("SSID:");
@@ -446,7 +477,8 @@ void setup_networking()
     if (wifi_okay) {
         api_url += hostname;
         api_url += ".local";
-    } else {
+    }
+    else {
         api_url += ap_ip.toString();
     }
     save_url(api_url);
@@ -477,7 +509,10 @@ inline void initialize_web_server(APIHook api_hooks[], int hook_count) {
 
 
 inline void handle_web_requests() {
-    webServer.handleClient();
+    try {
+        webServer.handleClient();
+    }
+    catch (const std::exception e) {
+        Serial.printf("Exception handling web request: %s", e.what());
+    }
 }
-
-#endif //NANOLUX_WEBSERVER_H

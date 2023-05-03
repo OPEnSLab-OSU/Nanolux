@@ -1,4 +1,3 @@
-#include <ESPmDNS.h>
 #include <FastLED.h>
 #include <math.h>
 #include <ArduinoJson.h>
@@ -52,7 +51,7 @@ uint8_t vbrightness = 0;
 
 int brightness = 128;       // default brightness
 
-bool debug = true;
+bool debug = false;
 bool delt_mode = false;      // use delta frequency instead of peak
 
 double vdelay = 0;
@@ -256,17 +255,18 @@ void audio_analysis() {
     lvolume = lsum/(SAMPLES-top-bottom);
     rvolume = rsum/(SAMPLES-top-bottom);
 
-
-    Serial.print("\t peak: ");
-    Serial.print(peak);
-    Serial.print("\t rpeak: ");
-    Serial.print(rpeak);
-    Serial.print("\t lvolume: ");
-    Serial.print(lvolume);
-    Serial.print("\t rvolume: ");
-    Serial.print(rvolume);
-    Serial.print("\t maxDeltFreq: ");
-    Serial.println(maxDeltFreq);
+    if (debug) {
+        Serial.print("\t peak: ");
+        Serial.print(peak);
+        Serial.print("\t rpeak: ");
+        Serial.print(rpeak);
+        Serial.print("\t lvolume: ");
+        Serial.print(lvolume);
+        Serial.print("\t rvolume: ");
+        Serial.print(rvolume);
+        Serial.print("\t maxDeltFreq: ");
+        Serial.println(maxDeltFreq);
+    }
 }
 
 
