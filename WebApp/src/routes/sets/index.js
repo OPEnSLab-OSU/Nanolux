@@ -2,19 +2,16 @@ import style from './style.css';
 import Patterns from "../../components/patterns";
 import NumericSlider from "../../components/numeric_slider";
 import {useState, useEffect} from "preact/hooks";
-import {getNoise, saveNoise, saveSettings} from "../../utils/api";
-import {useModal} from "../../context/global_modal_context";
+import {getNoise, saveNoise} from "../../utils/api";
 import {useConnectivity} from "../../context/online_context";
 
 const Settings = () => {
-	const { openModal } = useModal();
 	const { isConnected } = useConnectivity();
 
 	const [settings, setSettings] = useState({});
 
 	useEffect(() => {
 		if (isConnected) {
-			// getSettings().then(data => setSettings(data));
 			getNoise().then(data => setSettings(data));
 		}
 	}, [isConnected])

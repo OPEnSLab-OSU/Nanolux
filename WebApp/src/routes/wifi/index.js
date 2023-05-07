@@ -27,7 +27,6 @@ const Wifi = () => {
                 setHostname(data.hostname);
                 handleHostnameChange(data.hostname);
             });
-            // getWiFi().then(data => setCurrentWifi(data));
         }
     }, [isConnected])
 
