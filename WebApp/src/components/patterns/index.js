@@ -7,18 +7,18 @@ import {useConnectivity} from "../../context/online_context";
 const Patterns = () => {
     const {isConnected} = useConnectivity();
     const [patterns, setPatterns] = useState([]);
-    const [currentPattern, setCurrentPattern] = useState("")
+    const [currentPattern, setCurrentPattern] = useState(-1)
 
     useEffect(() => {
         if (isConnected) {
             getPatternList().then(data => setPatterns(data));
-            getPattern().then(data => setCurrentPattern(data));
+            getPattern().then(data => setCurrentPattern(data.index));
         }
     }, [isConnected])
 
     const patternOptions = patterns.map(pattern => {
-        return <option key={pattern} value={pattern}>
-            {pattern}
+        return <option key={pattern.index} value={pattern.index}>
+            {pattern.name}
         </option>
     });
 
@@ -38,6 +38,7 @@ const Patterns = () => {
                     value={currentPattern}
                     onChange={handleSelection}
             >
+                <option value="-1">Requesting pattern list...</option>
                 {patternOptions}
             </select>
         </div>

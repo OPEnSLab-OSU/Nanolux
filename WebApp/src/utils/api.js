@@ -39,6 +39,9 @@ const getPattern = () =>
     getData('pattern');
 
 
+const getNoise = () =>
+    getData('noise');
+
 const getWiFiList = () =>
     getData('wifis');
 
@@ -56,8 +59,12 @@ const getData = (path) =>
     axios.get(`${base_url}/api/${path}`, {headers: {'Access-Control-Allow-Origin': '*'}})
         .then(response => response.data);
 
-const savePattern = (pattern) =>
-    axios.put(`${base_url}/api/pattern`,{pattern});
+const savePattern = (patternIndex) =>
+    axios.put(`${base_url}/api/pattern`,{index: patternIndex});
+
+
+const saveNoise = (noise) =>
+    axios.put(`${base_url}/api/noise`,{noise});
 
 
 const saveSettings = (settings) =>
@@ -75,6 +82,8 @@ export {
     getPatternList,
     getPattern,
     savePattern,
+    getNoise,
+    saveNoise,
     getWiFiList,
     getWiFi,
     joinWiFi,

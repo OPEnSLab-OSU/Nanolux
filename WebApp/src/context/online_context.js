@@ -41,7 +41,7 @@ export const OnlineConnectivityProvider = ({children}) => {
                 setFailCount(0);
             } catch (error) {
                 setFailCount(failCount + 1);
-                if (failCount > 5) {
+                if (failCount > 3) {
                     setIsConnected(false);
                 }
             }
@@ -49,7 +49,7 @@ export const OnlineConnectivityProvider = ({children}) => {
 
         useInterval(() => {
                 checkConnectivity();
-            }, 5000)
+            }, 15000)
 
         return (
             <OnlineConnectivityContext.Provider value={{isConnected}}>

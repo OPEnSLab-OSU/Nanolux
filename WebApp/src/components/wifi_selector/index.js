@@ -35,7 +35,7 @@ const WifiSelector = ({
 
     useInterval(() => {
         getWifiInfo();
-        }, 5000);
+        }, 15000);
 
     useEffect(() => {
         if (onWifiChanged) {
