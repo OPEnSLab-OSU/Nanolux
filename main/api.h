@@ -72,7 +72,7 @@ inline void handle_pattern_request() {
 
         int status = HTTP_OK;
         int pattern_index = payload["index"];
-        if (pattern_index > 0 && pattern_index < NUM_PATTERNS) {
+        if (pattern_index >= 0 && pattern_index < NUM_PATTERNS) {
             gCurrentPatternNumber = pattern_index;
             webServer.send(HTTP_OK, CONTENT_TEXT, build_response(true, "Pattern set.", nullptr));
         }
@@ -81,7 +81,7 @@ inline void handle_pattern_request() {
         }
     }
     else {
-        const String response = String("{ \"pattern\": ") + "\"" + mainPatterns[gCurrentPatternNumber].pattern_name + String("\" }");
+        const String response = String("{ \"index\": ") + gCurrentPatternNumber + String(" }");
         webServer.send(HTTP_OK, CONTENT_JSON, response);
     }
 }
