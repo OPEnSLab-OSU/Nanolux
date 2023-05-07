@@ -8,8 +8,15 @@
 #include "nanolux_types.h"
 #include "nanolux_util.h"
 #include "audio_analysis.h"
-#include "WebServer.h"
 
+
+#define ENABLE_WEB_SERVER
+#ifdef ENABLE_WEB_SERVER
+#include "WebServer.h"
+#endif
+
+// #define DEBUG 1
+#define SHOW_TIMINGS
 
 #ifdef DEBUG
 #pragma message "DEBUG ENABLED"
@@ -144,8 +151,11 @@ SimplePatternList gPatterns_layer = {blank, spring_mass_1};
  * We want the API to be included after the globals.
  *
  **********************************************************/
+#ifdef ENABLE_WEB_SERVER
 #include "api.h"
+#endif
 
+void audio_analysis();
 
 void IRAM_ATTR onTimer(){
   audio_analysis();
@@ -180,7 +190,9 @@ void setup() {
     FastLED.addLeds<LED_TYPE,DATA_PIN,CLK_PIN,COLOR_ORDER>(leds, NUM_LEDS).setCorrection(TypicalLEDStrip);
     blank();
 
+#ifdef ENABLE_WEB_SERVER
     initialize_web_server(apiHooks, API_HOOK_COUNT);
+#endif
 }
 
 void loop() {
@@ -196,10 +208,19 @@ void loop() {
 
     check_button_state();
 
+    #ifdef SHOW_TIMINGS 
+      const int start = micros();
+    #endif
+
     #ifdef LAYER_PATTERNS
       layer_patterns();
     #else
       mainPatterns[gCurrentPatternNumber].pattern_handler();
+    #endif
+
+    #ifdef SHOW_TIMINGS
+      const int end = micros();
+      Serial.printf("%s Visualization: %d us\n", mainPatterns[gCurrentPatternNumber].pattern_name, end - start);
     #endif
 
     #ifdef VIRTUAL_LED_STRIP
@@ -212,11 +233,17 @@ void loop() {
     FastLED.show();
     delay(10);
 
+#ifdef ENABLE_WEB_SERVER
     handle_web_requests();
+#endif
 }
 
 // Use all the audio analysis to update every global audio analysis value
 void audio_analysis() {
+#ifdef SHOW_TIMINGS 
+  const int start = micros();
+#endif
+
   sample_audio();
 
   update_peak();
@@ -236,4 +263,9 @@ void audio_analysis() {
   update_drums();
 
   noise_gate(gNoiseGateThreshold);
+
+#ifdef SHOW_TIMINGS
+  const int end = micros();
+  Serial.printf("Audio analysis: %d ms\n", (end - start) / 1000);
+#endif
 }
