@@ -1,34 +1,47 @@
 import {h} from 'preact';
 import style from './style.css';
 import {useEffect, useState} from "preact/hooks";
-import {getWiFiList} from "../../utils/api";
+import {getWiFi, getWiFiList} from "../../utils/api";
 import FaWifi from "../icons/wifi";
 import FaWifiWeak from "../icons/wifi-weak";
 import FaWifiFair from "../icons/wifi-fair";
 import FaLock from "../icons/lock";
 import FaUnlock from "../icons/unlock";
 import FaArrowDown from "../icons/arrow-down";
+import useInterval from "../../utils/use_interval";
+
 
 // https://medium.com/tinyso/how-to-create-a-dropdown-select-component-in-react-bf85df53e206
 const WifiSelector = ({
                           placeholder,
-                          onNetworkSelected
+                          onNetworkSelected,
+                          onWifiChanged
                       }) => {
     const [wifiList, setWifiList] = useState([]);
     const [showMenu, setShowMenu] = useState(false);
     const [selectedWifi, setSelectedWifi] = useState(null)
+    const [currentWifi,  setCurrentWifi] = useState(null);
+
     let key = 1;
 
     const getWifiInfo = () => {
         getWiFiList().then(data => setWifiList(data));
+        getWiFi().then(data => {
+            if (!currentWifi || currentWifi.ssid !== data.ssid) {
+                setCurrentWifi(data);
+            }
+        });
     }
 
-    useEffect(getWifiInfo, [])
+    useInterval(() => {
+        getWifiInfo();
+        }, 15000);
 
     useEffect(() => {
-        let timer = setInterval(getWifiInfo, 5000);
-        return () => clearInterval(timer);
-    }, []);
+        if (onWifiChanged) {
+            onWifiChanged(currentWifi)
+        }
+    }, [onWifiChanged, currentWifi]);
 
     useEffect(() => {
         const handler = () => setShowMenu(false);

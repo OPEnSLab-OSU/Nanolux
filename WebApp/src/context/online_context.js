@@ -1,6 +1,7 @@
 import {h, createContext} from 'preact';
-import {useState, useEffect, useContext} from 'preact/hooks';
+import {useState, useContext} from 'preact/hooks';
 import {base_url} from "../utils/api";
+import useInterval from "../utils/use_interval";
 
 export const OnlineConnectivityContext = createContext();
 
@@ -40,18 +41,15 @@ export const OnlineConnectivityProvider = ({children}) => {
                 setFailCount(0);
             } catch (error) {
                 setFailCount(failCount + 1);
-                if (failCount > 5) {
+                if (failCount > 3) {
                     setIsConnected(false);
                 }
             }
         }
 
-
-        useEffect(() => {
-            checkConnectivity();
-            const interval = setInterval(checkConnectivity, 5000);
-            return () => clearInterval(interval);
-        }, []);
+        useInterval(() => {
+                checkConnectivity();
+            }, 15000)
 
         return (
             <OnlineConnectivityContext.Provider value={{isConnected}}>
