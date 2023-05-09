@@ -27,6 +27,7 @@ typedef void (*SimplePatternList[])();
 #define SAMPLING_FREQUENCY  10000   // Hz, must be less than 10000 due to ADC
 #define ANALOG_PIN          A0
 #define NOISE_GATE_THRESH   20
+#define MAX_NOISE_GATE_THRESH   100
 
 // Button Input
 #define BUTTON_PIN 33
