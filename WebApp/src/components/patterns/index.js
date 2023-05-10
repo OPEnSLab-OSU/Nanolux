@@ -3,6 +3,7 @@ import style from './style.css';
 import {useEffect, useState} from "preact/hooks";
 import {getPattern, getPatternList, savePattern} from "../../utils/api";
 import {useConnectivity} from "../../context/online_context";
+import useInterval from "../../utils/use_interval";
 
 const Patterns = () => {
     const {isConnected} = useConnectivity();
@@ -21,6 +22,16 @@ const Patterns = () => {
             {pattern.name}
         </option>
     });
+
+    const refreshPattern = () => {
+        getPattern().then(data => setCurrentPattern(data.index));
+    }
+
+    useInterval(() => {
+        if (isConnected) {
+            refreshPattern();
+        }
+    }, 5000);
 
     const handleSelection = async (event) => {
         const newPattern = event.target.value;

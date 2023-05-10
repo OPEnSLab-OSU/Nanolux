@@ -10,3 +10,6 @@ __pycache__/
 *.sln
 *.vcxproj
 *.vcxproj.filters
+
+node_modules/
+build/
