@@ -9,6 +9,8 @@ import FaLock from "../icons/lock";
 import FaUnlock from "../icons/unlock";
 import FaArrowDown from "../icons/arrow-down";
 import useInterval from "../../utils/use_interval";
+import Spinner from "../spinner";
+import {useConnectivity} from "../../context/online_context";
 
 
 // https://medium.com/tinyso/how-to-create-a-dropdown-select-component-in-react-bf85df53e206
@@ -21,21 +23,30 @@ const WifiSelector = ({
     const [showMenu, setShowMenu] = useState(false);
     const [selectedWifi, setSelectedWifi] = useState(null)
     const [currentWifi,  setCurrentWifi] = useState(null);
+    const [loading, setLoading] = useState(true);
+    const {isConnected} = useConnectivity();
 
     let key = 1;
 
+    useEffect(() => {
+        getWifiInfo();
+    }, []);
+
     const getWifiInfo = () => {
-        getWiFiList().then(data => setWifiList(data));
-        getWiFi().then(data => {
-            if (!currentWifi || currentWifi.ssid !== data.ssid) {
-                setCurrentWifi(data);
-            }
-        });
+        if (isConnected) {
+            getWiFiList().then(data => setWifiList(data));
+            getWiFi().then(data => {
+                if (!currentWifi || currentWifi.ssid !== data.ssid) {
+                    setCurrentWifi(data);
+                }
+            });
+            setLoading(false);
+        }
     }
 
     useInterval(() => {
         getWifiInfo();
-        }, 15000);
+    }, 15000);
 
     useEffect(() => {
         if (onWifiChanged) {
@@ -85,32 +96,36 @@ const WifiSelector = ({
 
     return (
         <div>
-            <div className={style.dropdownContainer}>
-                <div className={style.dropdownInput}
-                     onClick={handleInputClick}>
-                    <div className={style.dropDownSelectedValue}>{getDisplay()}</div>
-                    <div className={style.dropDownTools}>
-                        <div className={style.dropDownTool}>
-                            <FaArrowDown />
+            {loading ? (
+                <Spinner />
+            ) : (
+                <div className={style.dropdownContainer}>
+                    <div className={style.dropdownInput}
+                         onClick={handleInputClick}>
+                        <div className={style.dropDownSelectedValue}>{getDisplay()}</div>
+                        <div className={style.dropDownTools}>
+                            <div className={style.dropDownTool}>
+                                <FaArrowDown />
+                            </div>
                         </div>
                     </div>
+                    {showMenu &&
+                        <div className={style.dropdownMenu}>
+                            {wifiList.map(wifi => (
+                                <div key={key++}
+                                     className={style.dropdownItem}
+                                     onClick={() => handleItemClick(wifi)}
+                                >
+                                    <div className={style.dropdownItemSSID}>{wifi.ssid}</div>
+                                    <div className={style.dropdownItemRSSI}>{rssi_icon(wifi.rssi)}</div>
+                                    <div className={style.dropdownItemLock}>{lock_icon(wifi.lock)}</div>
+                                </div>
+                            ))
+                            }
+                        </div>
+                    }
                 </div>
-                {showMenu &&
-                    <div className={style.dropdownMenu}>
-                        {wifiList.map(wifi => (
-                            <div key={key++}
-                                 className={style.dropdownItem}
-                                 onClick={() => handleItemClick(wifi)}
-                            >
-                                <div className={style.dropdownItemSSID}>{wifi.ssid}</div>
-                                <div className={style.dropdownItemRSSI}>{rssi_icon(wifi.rssi)}</div>
-                                <div className={style.dropdownItemLock}>{lock_icon(wifi.lock)}</div>
-                            </div>
-                        ))
-                        }
-                    </div>
-                }
-            </div>
+            )}
         </div>
     );
 }
