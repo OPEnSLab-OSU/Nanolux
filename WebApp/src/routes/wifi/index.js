@@ -6,6 +6,7 @@ import {useEffect, useState} from "preact/hooks";
 import Password from "../../components/password";
 import TextInput from "../../components/textinput";
 import {useConnectivity} from "../../context/online_context";
+import WiFiModal from "../../components/redirect_modal";
 
 
 const Wifi = () => {
@@ -13,10 +14,12 @@ const Wifi = () => {
     const [selectedWifi, setSelectedWifi] = useState(null);
     const [locked, setLocked] = useState(false);
     const [password, setPassword] = useState(null);
-    const [joinCompleted, setJoinCompleted] = useState(null);
+    const [forgetting, setForgetting] = useState(false);
     const [joining, setJoining] = useState(false);
+    const [joinCompleted, setJoinCompleted] = useState(null);
     const [hostname, setHostname] = useState("");
     const [fqdn, setFqdn] = useState(".local");
+    const [isModalOpen, setIsModalOpen] = useState(false);
 
     const {isConnected} = useConnectivity();
 
@@ -43,10 +46,10 @@ const Wifi = () => {
     const handleWifiChanged = (newWifi) => {
         if (newWifi) {
             setCurrentWifi(newWifi);
-            if (joining) {
-                setJoinCompleted(true);
+            if (joining && selectedWifi?.ssid != null && newWifi.ssid === selectedWifi.ssid) {
                 setJoining(false);
-                console.log('Inside sets/wifi/handleWiFiChanged. Join Completed)');
+                setJoinCompleted(true);
+                setIsModalOpen(true);
             }
         }
     }
@@ -65,15 +68,13 @@ const Wifi = () => {
             .then(response =>
             {
                 setJoinCompleted(response.data.message);
-                if (!response.data.success) {
-                    // setCurrentWifi(selectedWifi);
-                }
             });
     };
 
     const handleForgetClick = () => {
         if (!isConnected) return;
 
+        setForgetting(true);
         setJoining(false)
         setJoinCompleted(null)
         joinWiFi({ssid: null, key: null})
@@ -83,6 +84,7 @@ const Wifi = () => {
                 if (response.data.success) {
                     setCurrentWifi(null);
                     setPassword(null)
+                    setForgetting(false);
                 }
             });
     };
@@ -99,56 +101,74 @@ const Wifi = () => {
         }
     }
 
+    const closeModal = () => {
+        setIsModalOpen(false);
+    }
+
     return (
         <div className={style.home}>
             <div className={style.settingsControl}>
-                <TextInput
-                    inputPrompt="Hostname: "
-                    commmitPrompt="Save"
-                    textValue={hostname}
-                    onTextCommit={handleHostnameCommit}
-                />
-                <div className={style.fqdn}>
-                    Current full network name: {fqdn}
+                <div className={style.centeredContainer}>
+                    <TextInput
+                        inputPrompt="Unit Name: "
+                        commmitPrompt="Save"
+                        textValue={hostname}
+                        onTextCommit={handleHostnameCommit}
+                    />
+                </div>
+                <div className={style.centeredContainer}>
+                    <div className={style.fqdn}>
+                        Once it joins a WiFi, AudioLux can be found in the network with this name: {fqdn}
+                    </div>
                 </div>
             </div>
             <div className={style.settingsControl}>
-                <div>Available Networks</div>
-                <div>
+                <div className={style.centeredContainer}>
+                    <div>Available Networks</div>
+                </div>
+                <div className={style.centeredContainer}>
                     <WifiSelector placeholder="Select a network..."
                                   onNetworkSelected={handleNetworkSelected}
                                   onWifiChanged={handleWifiChanged}
                     />
                 </div>
-            </div>
-            {locked &&
+            </div>            {locked && !joining &&
                 <div>
                     <Password prompt="Enter WiFi key/password: "
                               onPasswordChange={handlePasswordChange}
                     />
                 </div>
             }
-            {
+            {joining ? (
+                <div>Attempting to join {selectedWifi.ssid}</div>
+            ):(
                 <button className={style.formButton}
                         onClick={handleJoinClick}
-                        disabled={joining && selectedWifi != null}
+                        disabled={!joining && selectedWifi?.ssid == null}
                 >Join</button>
+                )
             }
             {joinCompleted &&
                 <div>
-                    joinCompleted
+                    {joinCompleted}
                 </div>
             }
             <div className={style.settingsControl}>
                 <div className={style.wifiBanner}>
-                    Current Wifi: {currentWifi?.ssid ?? "None"}
+                    {forgetting ? "Fogetting WiFi" : "Current Wifi" }: {currentWifi?.ssid ?? "None"}
                 </div>
                 <button className={style.formButton}
-                        disabled={!(currentWifi?.ssid)}
+                        disabled={forgetting || !(currentWifi?.ssid)}
                         onClick={handleForgetClick}
                 >Forget
                 </button>
             </div>
+            <WiFiModal
+                isOpen={isModalOpen}
+                onClose={closeModal}
+                ssid={currentWifi?.ssid}
+                audioLuxUrl={fqdn}
+            />
         </div>
     );
 };

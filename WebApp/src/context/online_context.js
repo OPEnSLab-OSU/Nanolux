@@ -1,5 +1,5 @@
 import {h, createContext} from 'preact';
-import {useState, useContext} from 'preact/hooks';
+import {useState, useContext, useEffect} from 'preact/hooks';
 import {base_url} from "../utils/api";
 import useInterval from "../utils/use_interval";
 
@@ -16,6 +16,10 @@ export const useConnectivity = () => {
 export const OnlineConnectivityProvider = ({children}) => {
         const [isConnected, setIsConnected] = useState(false);
         const [failCount, setFailCount] = useState(0);
+
+        useEffect(() => {
+            checkConnectivity();
+        }, []);
 
         const checkConnectivity = async () => {
             try {

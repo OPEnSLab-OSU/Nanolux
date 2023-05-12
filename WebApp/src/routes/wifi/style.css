@@ -21,8 +21,15 @@
 	padding: 2rem;
 }
 
+.centeredContainer {
+	display: flex;
+	justify-content: center;
+	width: 100%;
+}
+
 .fqdn {
 	padding-top: 1rem;
+	max-width: 60%;
 }
 
 .wifiBanner {
