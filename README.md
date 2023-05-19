@@ -39,6 +39,7 @@ go to Tools->Partition Scheme and make sure "No OTA (Large APP)" is selected.
 
 
 # Contributors
+2021-2022 Team:
 John Zontos (zontosj@oregonstate.edu)
 
 Evan Cochran (cochraev@oregonstate.edu)
@@ -46,5 +47,19 @@ Evan Cochran (cochraev@oregonstate.edu)
 Longjie Guan (guanl@oregonstate.edu)
 
 Ming Wei (weimi@oregonstate.edu)
+
+2022-2023 Team:
+
+Andrew Gingerich (gingeria@oregonstate.edu)
+
+Luke Goldsworthy (goldswol@oregonstate.edu)
+
+Mac Handley (handlem@oregonstate.edu)
+
+Vishnu Kalidas (kalidasv@oregonstate.edu)
+
+Jorden Mortenson (mortejor@oregonstate.edu)
+
+David Mora (morad@oregonstate.edu)
 
 
