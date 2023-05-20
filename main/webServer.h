@@ -16,6 +16,7 @@
 #else
 #define DEBUG_PRINT(...)
 #endif
+#define ALWAYS_PRINTF(...) Serial.printf(__VA_ARGS__)
 
 
 /*
@@ -215,6 +216,14 @@ inline void scan_ssids() {
     static int long_scan_count = 0;
     const int MAX_SCAN_ITERATIONS = 2;
 
+    // Flow: check if there was a scan happening, and get its results.
+    // If there was no scan start one and be done. If the previous scan
+    // failed, start a new one and move on. If the previous scan succeeded
+    // then stash the results and start a new one. The main consequence here
+    // is that the very first time the scan is run, the result will be
+    // and empty array. It is up to the client to handle that.
+
+    // Start with the assumption we have an empty scan.
     available_networks[0].RSSI = END_OF_DATA;
     const int n = WiFi.scanComplete();
     if (n == WIFI_SCAN_FAILED) {
@@ -285,7 +294,7 @@ inline bool initialize_wifi_connection() {
 
 inline void initialize_mdns()
 {
-    // We are connected. Setup mDNS
+    // The assumption is that we are connected. Setup mDNS
     if (MDNS.begin(hostname.c_str())) {
         DEBUG_PRINTF("mDNS connected. The AudioLux can be reached at %s.local\n", hostname.c_str());
     }
@@ -309,7 +318,7 @@ inline const char* get_status_description(const wl_status_t status) {
 
 inline void on_join_timer(TimerHandle_t timer) {
     DEBUG_PRINTF("Timer: Checking WiFi Join Status.\n");
-    if (xSemaphoreTake(join_status_mutex, 0) == pdTRUE) {
+    if (xSemaphoreTake(join_status_mutex, pdMS_TO_TICKS(50)) == pdTRUE) {
         if (join_in_progress) {
             wl_status_t status = WiFi.status();
             if (status == WL_CONNECTED) {
@@ -319,7 +328,7 @@ inline void on_join_timer(TimerHandle_t timer) {
                 DEBUG_PRINTF("Timer: WiFi join succeeded.\n");
 
                 // Queue the settings for saving. Can't do it here
-                // because RTOS croaks with a stack overflow.
+                // because FreeRTOS croaks with a stack overflow.
                 // Possibly writing to flash is resource-heavy.
                 current_wifi.SSID = candidate_wifi.SSID;
                 current_wifi.Key = candidate_wifi.Key;
@@ -357,7 +366,7 @@ inline bool join_wifi(const char* ssid, const char* key) {
 
     // Start the connection process.
     WiFi.begin(ssid, key);
-    if (xSemaphoreTake(join_status_mutex, 0) == pdTRUE) {
+    if (xSemaphoreTake(join_status_mutex, pdMS_TO_TICKS(50)) == pdTRUE) {
         join_in_progress = true;
         join_succeeded = false;
 
@@ -384,8 +393,6 @@ inline void serve_wifi_list(AsyncWebServerRequest* request) {
         return;
     }
 
-    using namespace ARDUINOJSON_NAMESPACE;
-
     scan_ssids();
 
     StaticJsonDocument<1024> json_list;
@@ -398,6 +405,7 @@ inline void serve_wifi_list(AsyncWebServerRequest* request) {
         wifi_number++;
     }
 
+    // If no results, return an empty array.
     String wifi_list;
     serializeJson(json_list, wifi_list);
     if (wifi_list == "null") {
@@ -464,7 +472,7 @@ inline void handle_wifi_status_request(AsyncWebServerRequest* request) {
     const String wifi = current_wifi.SSID == EMPTY_SETTING ? String("null") : String("\"") + String(current_wifi.SSID) + String("\"");
 
     String status;
-    if (xSemaphoreTake(join_status_mutex, 0) == pdTRUE) {
+    if (xSemaphoreTake(join_status_mutex, pdMS_TO_TICKS(50)) == pdTRUE) {
         if (join_in_progress) {
             status = "pending";
         }
@@ -583,6 +591,10 @@ inline void handle_unknown_url(AsyncWebServerRequest* request) {
 
 
 inline void save_url(const String& url) {
+    // This is a static file that lives in the "assets" of the web app.
+    // When it starts, it will check this file to know which URL to use to talk
+    // back to the server. The reason we need this is that we don't know which
+    // route is available (AP or STA) until runtime.
     File saved_url = LITTLEFS.open(URL_FILE, "w");
     if (saved_url) {
         StaticJsonDocument<192> data;
@@ -608,12 +620,6 @@ inline void setup_networking()
     // Prevent he radio from going to sleep.
     WiFi.setSleep(false);
 
-    // AP mode is always active.
-    WiFi.mode(WIFI_MODE_APSTA);
-    WiFi.softAP(ap_ssid, ap_password);
-    delay(1000);
-    IPAddress ap_ip = WiFi.softAPIP();
-
     // Local WiFi connection depends on whether it has been configured
     // by the user.
     bool wifi_okay = false;
@@ -621,17 +627,22 @@ inline void setup_networking()
         DEBUG_PRINTF("Attempting to connect to saved WiFi: %s\n", current_wifi.SSID.c_str());
         wifi_okay = initialize_wifi_connection();
         if (wifi_okay) {
-            DEBUG_PRINTF("WiFi IP: %s\n", WiFi.localIP().toString().c_str());
+            ALWAYS_PRINTF("WiFi IP: %s\n", WiFi.localIP().toString().c_str());
             initialize_mdns();
         }
     }
     else {
-        DEBUG_PRINTF("****\n");
-        DEBUG_PRINTF("No wifi saved. AudioLux available via Access Point:\n");
-        DEBUG_PRINTF("SSID: %s Password: %s\n", ap_ssid, ap_password);
-        DEBUG_PRINTF("****\n");
+        ALWAYS_PRINTF("****\n");
+        ALWAYS_PRINTF("No wifi saved. AudioLux available via Access Point:\n");
+        ALWAYS_PRINTF("SSID: %s Password: %s\n", ap_ssid, ap_password);
+        ALWAYS_PRINTF("****\n");
     }
 
+    // AP mode is always active.
+    WiFi.mode(WIFI_MODE_APSTA);
+    WiFi.softAP(ap_ssid, ap_password);
+    delay(1000);
+    const IPAddress ap_ip = WiFi.softAPIP();
 
     // Set up the URL that the Web App needs to talk to.
     // We prefer user's network if available.
@@ -644,6 +655,7 @@ inline void setup_networking()
         api_url += ap_ip.toString();
     }
     save_url(api_url);
+    ALWAYS_PRINTF("Backend availbale at: %s", api_url.c_str());
 }
 
 
