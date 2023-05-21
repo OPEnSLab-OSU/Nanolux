@@ -26,7 +26,6 @@ async function get_base_url() {
 get_base_url().then(_ => console.log(`base_url: ${base_url}`));
 
 
-
 const getSettings = () =>
     getData('settings');
 
@@ -47,6 +46,9 @@ const getWiFiList = () =>
 
 const getWiFi = () =>
     getData('wifi')
+
+const getWiFiJoinStatus = () =>
+    getData('wifi_status')
 
 const getHostname = () =>
     getData('hostname');
@@ -87,6 +89,7 @@ export {
     getWiFiList,
     getWiFi,
     joinWiFi,
+    getWiFiJoinStatus,
     getHostname,
     saveHostname,
     getHistory,

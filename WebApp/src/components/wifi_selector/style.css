@@ -1,3 +1,17 @@
+.selector {
+    display: flex;
+    justify-content: space-between; /* or 'flex-start', 'flex-end', 'center', 'space-around' */
+    /*align-items: center; !* or 'flex-start', 'flex-end', 'stretch' *!*/
+}
+
+.leftComponent {
+    margin-right: auto;
+}
+
+.rightComponent {
+    margin-left: auto;
+}
+
 .dropdownContainer {
     text-align: left;
     border: 1px solid #ccc;
@@ -63,3 +77,7 @@
     color: white;
 }
 
+.scanButton {
+    margin-left: 8px;
+    padding: 3px;
+}

@@ -24,7 +24,7 @@ export const OnlineConnectivityProvider = ({children}) => {
         const checkConnectivity = async () => {
             try {
                 const apiUrl = `${base_url}/api/health`;
-                const timeout = 2000;
+                const timeout = 3023;
 
                 const controller = new AbortController();
                 const signal = controller.signal;
@@ -53,7 +53,7 @@ export const OnlineConnectivityProvider = ({children}) => {
 
         useInterval(() => {
                 checkConnectivity();
-            }, 15000)
+            }, 15107)
 
         return (
             <OnlineConnectivityContext.Provider value={{isConnected}}>

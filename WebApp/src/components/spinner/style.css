@@ -28,6 +28,17 @@
     text-align: center;
 }
 
+.spinnerStandalone {
+    border: 6px solid rgba(0, 0, 0, 0.1);
+    width: 100%;
+    height: 0;
+    position: relative;
+    border-radius: 50%;
+    border-left-color: #3498db;
+    animation: spin 1s linear infinite;
+    box-sizing: border-box;
+}
+
 @keyframes spin {
     0% {
         transform: rotate(0deg);

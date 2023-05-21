@@ -7,6 +7,7 @@ import Password from "../../components/password";
 import TextInput from "../../components/textinput";
 import {useConnectivity} from "../../context/online_context";
 import WiFiModal from "../../components/redirect_modal";
+import useInterval from "../../utils/use_interval";
 
 
 const Wifi = () => {
@@ -17,21 +18,36 @@ const Wifi = () => {
     const [forgetting, setForgetting] = useState(false);
     const [joining, setJoining] = useState(false);
     const [joinCompleted, setJoinCompleted] = useState(null);
+    const [joinResult, setJoinResult] = useState(null);
     const [hostname, setHostname] = useState("");
+    const [gotHostname, setGotHostname] = useState(false);
     const [fqdn, setFqdn] = useState(".local");
     const [isModalOpen, setIsModalOpen] = useState(false);
 
     const {isConnected} = useConnectivity();
 
+    function loadHostname() {
+        getHostname()
+            .then(data => {
+            setHostname(data.hostname);
+            handleHostnameChange(data.hostname);
+            setGotHostname(true);
+            })
+            .catch(() => setHostname(null));
+    }
 
     useEffect(() => {
         if (isConnected) {
-            getHostname().then(data => {
-                setHostname(data.hostname);
-                handleHostnameChange(data.hostname);
-            });
+            loadHostname();
         }
     }, [isConnected])
+
+    useInterval(() => {
+        if (!gotHostname) {
+            loadHostname();
+        }
+    }, 1150);
+
 
 
     const handleNetworkSelected = async (newWifi) => {
@@ -44,13 +60,20 @@ const Wifi = () => {
     }
 
     const handleWifiChanged = (newWifi) => {
-        if (newWifi) {
             setCurrentWifi(newWifi);
-            if (joining && selectedWifi?.ssid != null && newWifi.ssid === selectedWifi.ssid) {
-                setJoining(false);
-                setJoinCompleted(true);
-                setIsModalOpen(true);
-            }
+    }
+
+    const handleWiFiJoinStatus = (status) => {
+        if (status === "success") {
+            setJoining(false);
+            setJoinResult(`Successfully joined ${selectedWifi.ssid}.`)
+            setJoinCompleted(true);
+            setIsModalOpen(true);
+        } else if (status === "fail") {
+            setJoining(false);
+            setJoinResult(`Unable to join ${selectedWifi.ssid}.`)
+            setJoinCompleted(true);
+            setIsModalOpen(false);
         }
     }
 
@@ -61,8 +84,9 @@ const Wifi = () => {
     const handleJoinClick = () => {
         if (!isConnected) return;
 
-        setJoining(true)
-        setJoinCompleted(null)
+        setJoining(true);
+        setJoinCompleted(null);
+        setJoinResult(null);
         const wifiKey = password || null;
         joinWiFi({ssid: selectedWifi.ssid, key: wifiKey})
             .then(response =>
@@ -75,13 +99,15 @@ const Wifi = () => {
         if (!isConnected) return;
 
         setForgetting(true);
-        setJoining(false)
-        setJoinCompleted(null)
+        setJoining(false);
+        setJoinCompleted(null);
+        setJoinResult(null);
         joinWiFi({ssid: null, key: null})
             .then(response =>
             {
                 setJoinCompleted(response.data.message);
                 if (response.data.success) {
+                    console.log(`Forget completed.`)
                     setCurrentWifi(null);
                     setPassword(null)
                     setForgetting(false);
@@ -128,13 +154,18 @@ const Wifi = () => {
                 </div>
                 <div className={style.centeredContainer}>
                     <WifiSelector placeholder="Select a network..."
+                                  isJoining={joining}
+                                  selectedWifi={selectedWifi}
                                   onNetworkSelected={handleNetworkSelected}
                                   onWifiChanged={handleWifiChanged}
+                                  onWifiJoinStatus={handleWiFiJoinStatus}
                     />
                 </div>
-            </div>            {locked && !joining &&
+            </div>
+            {locked && !joining && !joinCompleted &&
                 <div>
                     <Password prompt="Enter WiFi key/password: "
+                              password={password}
                               onPasswordChange={handlePasswordChange}
                     />
                 </div>
@@ -148,9 +179,9 @@ const Wifi = () => {
                 >Join</button>
                 )
             }
-            {joinCompleted &&
+            {joinCompleted && !joining &&
                 <div>
-                    {joinCompleted}
+                    {joinResult}
                 </div>
             }
             <div className={style.settingsControl}>
