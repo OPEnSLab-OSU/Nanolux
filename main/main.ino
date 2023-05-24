@@ -1,4 +1,5 @@
 // #include <ESPmDNS.h>
+
 #include <ArduinoJson.h>
 #include <ArduinoJson.hpp>
 #include <FastLED.h>
@@ -16,7 +17,7 @@
 #endif
 
 // #define DEBUG 1
-#define SHOW_TIMINGS
+// #define SHOW_TIMINGS
 
 #ifdef DEBUG
 #pragma message "DEBUG ENABLED"
@@ -26,6 +27,9 @@ FASTLED_USING_NAMESPACE
 
 arduinoFFT FFT = arduinoFFT();
 
+//
+// Variables touched by the API should be declared as volatile.
+//
 CRGB leds[NUM_LEDS];               // Buffer (front)
 CRGB hist[NUM_LEDS];               // Buffer (back)
 unsigned int sampling_period_us = round(1000000/SAMPLING_FREQUENCY);
@@ -36,14 +40,14 @@ double vRealHist[SAMPLES];         // Delta freq
 double delt[SAMPLES];
 double amplitude = 0;              // For spring mass 2
 bool button_pressed = false;
-uint8_t gCurrentPatternNumber = 0; // Index number of which pattern is current
+volatile uint8_t gCurrentPatternNumber = 0; // Index number of which pattern is current
 uint8_t gHue = 0;                  // Rotating base color
 double peak = 0.;                  // Peak frequency
 uint8_t fHue = 0;                  // Hue value based on peak frequency
 double volume = 0.;       
 uint8_t vbrightness = 0;
 double maxDelt = 0.;               // Frequency with the biggest change in amp.
-uint8_t gNoiseGateThreshold = NOISE_GATE_THRESH;
+volatile uint8_t gNoiseGateThreshold = NOISE_GATE_THRESH;
 
 int beats = 0;
 int frame = 0;                     // For spring mass
@@ -191,7 +195,7 @@ void setup() {
     blank();
 
 #ifdef ENABLE_WEB_SERVER
-    initialize_web_server(apiHooks, API_HOOK_COUNT);
+    initialize_web_server(apiGetHooks, API_GET_HOOK_COUNT, apiPutHooks, API_PUT_HOOK_COUNT);
 #endif
 }
 
@@ -233,9 +237,13 @@ void loop() {
     FastLED.show();
     delay(10);
 
-#ifdef ENABLE_WEB_SERVER
-    handle_web_requests();
-#endif
+    // Some settings are updated inside a more constrained context
+    // without enough stack space for a "disk" operation so we
+    // defer the save to here.
+    if (dirty_settings) {
+        save_settings();
+        dirty_settings = false;
+    }
 }
 
 // Use all the audio analysis to update every global audio analysis value

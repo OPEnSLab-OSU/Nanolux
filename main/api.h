@@ -34,7 +34,7 @@ inline void initialize_pattern_list() {
  * Handle Settings request
  * (Simple value list API example.)
  */
-inline void handle_patterns_list_request() {
+inline void handle_patterns_list_request(AsyncWebServerRequest* request) {
     static bool initialized = false;
 
     if (!initialized) {
@@ -42,7 +42,7 @@ inline void handle_patterns_list_request() {
         initialized = true;
     }
 
-    webServer.send(HTTP_OK, CONTENT_JSON, patterns_list);
+    request->send(HTTP_OK, CONTENT_JSON, patterns_list);
 }
 
  /*
@@ -51,83 +51,67 @@ inline void handle_patterns_list_request() {
   * Assume payload is JSON:
   * { "patten": "<80-char-max-string>" }
   */
-inline void handle_pattern_request() {
-    if (webServer.method() == HTTP_PUT) {
-        // We receive the pattern index number.
-        StaticJsonDocument<32> payload;
-        int args = webServer.args();
-
-        // The JSON payload of the PUT statement lives in the "plain" property of the request.
-        const DeserializationError error = deserializeJson(payload, webServer.arg("plain"));
-
-        // If there is a problem (unlikely for pattern since we provided the value
-        // and it is, presumably, elected from a combo, but you never know), log
-        // and tell the client the messed up.
-        if (error) {
-            Serial.print("Parsing pattern index message failed: ");
-            Serial.println(error.c_str());
-            webServer.send(HTTP_UNPROCESSABLE, CONTENT_JSON, error.c_str());
-            return;
-        }
+inline void handle_pattern_put_request(AsyncWebServerRequest* request, JsonVariant& json) {
+    if (request->method() == HTTP_PUT) {
+        const JsonObject& payload = json.as<JsonObject>();
 
         int status = HTTP_OK;
         int pattern_index = payload["index"];
         if (pattern_index >= 0 && pattern_index < NUM_PATTERNS) {
             gCurrentPatternNumber = pattern_index;
-            webServer.send(HTTP_OK, CONTENT_TEXT, build_response(true, "Pattern set.", nullptr));
+            request->send(HTTP_OK, CONTENT_TEXT, build_response(true, "Pattern set.", nullptr));
         }
         else {
-            webServer.send(HTTP_BAD_REQUEST, CONTENT_TEXT, build_response(true, "Invalid pattern index.", nullptr));
+            request->send(HTTP_BAD_REQUEST, CONTENT_TEXT, build_response(true, "Invalid pattern index.", nullptr));
         }
     }
     else {
-        const String response = String("{ \"index\": ") + gCurrentPatternNumber + String(" }");
-        webServer.send(HTTP_OK, CONTENT_JSON, response);
     }
 }
 
+inline void handle_pattern_get_request(AsyncWebServerRequest* request) {
+    const String response = String("{ \"index\": ") + gCurrentPatternNumber + String(" }");
+    request->send(HTTP_OK, CONTENT_JSON, response);
+}
 
-inline void handle_noise_request() {
-    if (webServer.method() == HTTP_PUT) {
-        // We receive the pattern index number.
-        StaticJsonDocument<32> payload;
-        int args = webServer.args();
 
-        // The JSON payload of the PUT statement lives in the "plain" property of the request.
-        const DeserializationError error = deserializeJson(payload, webServer.arg("plain"));
-
-        // If there is a problem (unlikely for pattern since we provided the value
-        // and it is, presumably, elected from a combo, but you never know), log
-        // and tell the client the messed up.
-        if (error) {
-            Serial.print("Parsing noise gate message failed: ");
-            Serial.println(error.c_str());
-            webServer.send(HTTP_UNPROCESSABLE, CONTENT_JSON, error.c_str());
-            return;
-        }
-
+inline void handle_noise_put_request(AsyncWebServerRequest* request, JsonVariant& json) {
+    if (request->method() == HTTP_PUT) {
+        const JsonObject& payload = json.as<JsonObject>();
+        
         int status = HTTP_OK;
-        int noise_gate = payload["noise"];
+        const uint8_t noise_gate = payload["noise"];
         if (noise_gate > 0 && noise_gate < MAX_NOISE_GATE_THRESH) {
             gNoiseGateThreshold = noise_gate;
-            webServer.send(HTTP_OK, CONTENT_TEXT, build_response(true, "Noise gate threshold set.", nullptr));
+            request->send(HTTP_OK, CONTENT_TEXT, build_response(true, "Noise gate threshold set.", nullptr));
         }
         else {
-            webServer.send(HTTP_BAD_REQUEST, CONTENT_TEXT, build_response(true, "Invalid noise gate value.", nullptr));
+            request->send(HTTP_BAD_REQUEST, CONTENT_TEXT, build_response(true, "Invalid noise gate value.", nullptr));
         }
     }
     else {
-        const String response = String("{ \"noise\": ")  + gNoiseGateThreshold + String(" }");
-        webServer.send(HTTP_OK, CONTENT_JSON, response);
+        request->send(HTTP_METHOD_NOT_ALLOWED);
     }
 }
 
 
+inline void handle_noise_get_request(AsyncWebServerRequest* request) {
+    const String response = String("{ \"noise\": ") + gNoiseGateThreshold + String(" }");
+    request->send(HTTP_OK, CONTENT_JSON, response);
+}
 
-APIHook apiHooks[] = {
-    { "/api/patterns", handle_patterns_list_request },
-    { "/api/pattern", handle_pattern_request },
-    { "/api/noise", handle_noise_request }
+
+
+
+APIGetHook apiGetHooks[] = {
+    { "/api/patterns", handle_patterns_list_request},
+    { "/api/pattern", handle_pattern_get_request},
+    { "/api/noise", handle_noise_get_request}
 };
-constexpr int API_HOOK_COUNT = 3;
+constexpr int API_GET_HOOK_COUNT = 3;
 
+APIPutHook apiPutHooks[] = {
+    { "/api/pattern", handle_pattern_put_request},
+    { "/api/noise", handle_noise_put_request}
+};
+constexpr int API_PUT_HOOK_COUNT = 2;

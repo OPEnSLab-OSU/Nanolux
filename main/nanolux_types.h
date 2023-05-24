@@ -25,9 +25,21 @@ typedef void (*SimplePatternList[])();
 // arduinoFFT
 #define SAMPLES             128     // Must be a power of 2  // 128 - 1024
 #define SAMPLING_FREQUENCY  10000   // Hz, must be less than 10000 due to ADC
-#define ANALOG_PIN          A0
 #define NOISE_GATE_THRESH   20
 #define MAX_NOISE_GATE_THRESH   100
+
+
+// ADC2 (pins A0, A1) is not available when the WiFi radio is active,
+// so we use ADC1 (pins A2, A3). Additionally, rev 1.2 of the board
+// must be blue-wired to use pins A2, A3.
+// Rev 1.2: https://github.com/OPEnSLab-OSU/Nanolux/commit/caa2e2b44d8ce75352e0c0d2d5ace363cbcfa450
+//
+// When using a board with a version below 1.2, or an unmodified
+// v1.2 board, set this pin to A0.
+#define ANALOG_PIN          A2
+
+
+
 
 // Button Input
 #define BUTTON_PIN 33
