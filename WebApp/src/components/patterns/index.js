@@ -4,7 +4,7 @@ import {useEffect, useState} from "preact/hooks";
 import {getPattern, getPatternList, savePattern} from "../../utils/api";
 import {useConnectivity} from "../../context/online_context";
 import useInterval from "../../utils/use_interval";
-import Spinner from "../spinner";
+import {LabelSpinner} from "../spinner";
 
 const Patterns = () => {
     const {isConnected} = useConnectivity();
@@ -48,7 +48,7 @@ const Patterns = () => {
     return (
         <div>
             {loading ? (
-                <Spinner />
+                <LabelSpinner />
             ) : (
                 <div>
                     <label className={style.label} htmlFor="pattern-options">Current Pattern</label>

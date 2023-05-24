@@ -2,13 +2,11 @@ import {h} from 'preact';
 import style from './style.css';
 import {useState} from "preact/hooks";
 
-const Password = ({ prompt, onPasswordChange }) => {
+const Password = ({ prompt, password, onPasswordChange }) => {
     const [showPassword, setShowPassword] = useState(false);
-    const [password, setPassword] = useState("")
 
     const handlePasswordChange = async (event) => {
         const newPassword = event.target.value;
-        setPassword(newPassword);
         onPasswordChange(newPassword);
     }
 
