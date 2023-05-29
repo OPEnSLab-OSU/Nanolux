@@ -237,6 +237,7 @@ void loop() {
     FastLED.show();
     delay(10);
 
+#ifdef ENABLE_WEB_SERVER
     // Some settings are updated inside a more constrained context
     // without enough stack space for a "disk" operation so we
     // defer the save to here.
@@ -244,6 +245,7 @@ void loop() {
         save_settings();
         dirty_settings = false;
     }
+#endif
 }
 
 // Use all the audio analysis to update every global audio analysis value
