@@ -67,4 +67,13 @@ Jorden Mortenson (mortejor@oregonstate.edu)
 
 David Mora (morad@oregonstate.edu)
 
+# Some Important Things To Note
+
+1. The most current up to date code is located in the [Main](https://github.com/OPEnSLab-OSU/Nanolux/tree/main/main) directory. 
+This is the code that should be uploaded to the device. Make sure to follow the webapp wiki first however to upload the code
+needed to run the webapp.
+
+2. If you wish to disable the webapp, you can comment out the flag "ENABLE_WEB_SERVER". Make note to which analog ports are being used,
+disabling the webapp however should not give a boost in performance, given that the webapp is asych and on a seperate core.
+
 
