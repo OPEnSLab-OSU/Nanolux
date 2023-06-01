@@ -14,7 +14,7 @@
 #ifdef DEBUG
 #define DEBUG_PRINTF(...) Serial.printf(__VA_ARGS__)
 #else
-#define DEBUG_PRINT(...)
+#define DEBUG_PRINTF(...)
 #endif
 #define ALWAYS_PRINTF(...) Serial.printf(__VA_ARGS__)
 
