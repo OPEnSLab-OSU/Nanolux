@@ -14,16 +14,21 @@ Mac OS (http://docs.arduino.cc/software/ide-v1/tutorials/macOS)
 Linux (http://docs.arduino.cc/software/ide-v1/tutorials/Linux)
 
 # Dependencies
-You will also need to also install FastLED, ArduinoFFT Library.
-See Wiki Page for including dependencies in your project.
+You will also need several libraries. See the [IDE Setup Guide](https://github.com/OPEnSLab-OSU/Nanolux/wiki/Arduino-IDE-Setting-Guide) Wiki Page for steps on how to install these libraries.
+
 * ArduinoFFT Library (1.5.6): https://github.com/kosme/arduinoFFT
 * ArduinoJson (6.20.1): https://arduinojson.org/
 * FastLED (3.4.0): http://fastled.io/ (You can also find this in the /dependencies)
 * LittleFS_esp32 (1.0.6): https://github.com/lorol/LITTLEFS
-* WiFiWebServer (1.10.0): https://github.com/khoih-prog/WiFiWebServer
+* ArduinoJson (6.20.1): https://github.com/bblanchon/ArduinoJson
 
-All dependencies are installable through the Library Manager of the Arduino IDE, or with the 
+All dependencies are above installable through the Library Manager of the Arduino IDE, or with the 
 [Arduino CLI](https://arduino.github.io/arduino-cli/0.28/) tool.
+
+The following dependencies must be installed manually. Refer to Wiki for more info.
+
+* ESPAsynWebServer (1.2.3): https://github.com/me-no-dev/ESPAsyncWebServer
+* AsyncTCP (1.1.1): https://github.com/me-no-dev/AsyncTCP
 
 
 # Install Board
