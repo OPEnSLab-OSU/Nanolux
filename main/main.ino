@@ -99,6 +99,12 @@ int locations[5] = {70,60,50,40,30}; //for spring mass 3
 double vRealSums[5] = {0,0,0,0,0};
 
 
+//
+// Patterns structure.
+//
+// Describes a pattern by name, whether it will be presented to the user in the
+// web application and the function that implements the pattern.
+// 
 typedef struct {
     int index;
     const char* pattern_name;
@@ -106,6 +112,14 @@ typedef struct {
     void (*pattern_handler)();
 } Pattern;
 
+
+//
+// Register all the patterns here. The index property must be sequential, but the code make sure
+// that constraint is satisfied. The name is arbitrary, but keep it relatively short as it will be
+// presented in a UI to the user. The enabled flag indicates whether the pattern will be shown
+// in the UI or not. If not shown, it i snot selectable. If a pattern is not registered here,
+// It will not be selectable and the loop below will not know about it.
+//
 Pattern mainPatterns[]{
     { 0, "None", true, blank},
     { 1, "Hue Trail", true, freq_hue_trail},
@@ -145,8 +159,8 @@ Pattern mainPatterns[]{
     {35, "Advanced Bands", true, advanced_bands},
     {36, "Formant Band", true, formant_band}
 };
+int NUM_PATTERNS = 37; // MAKE SURE TO UPDATE THIS WITH THE ACTUAL NUMBER OF PATTERNS
 
-int NUM_PATTERNS = 37; // MAKE SURE TO UPDATE THIS WITH PATTERNS
 SimplePatternList gPatterns_layer = {blank, spring_mass_1};
 
 
