@@ -36,7 +36,7 @@ typedef void (*SimplePatternList[])();
 //
 // When using a board with a version below 1.2, or an unmodified
 // v1.2 board, set this pin to A0.
-#define ANALOG_PIN          A2
+#define ANALOG_PIN          A0
 
 
 

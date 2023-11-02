@@ -11,7 +11,6 @@
 #include "audio_analysis.h"
 
 
-#define ENABLE_WEB_SERVER
 #ifdef ENABLE_WEB_SERVER
 #include "WebServer.h"
 #endif
