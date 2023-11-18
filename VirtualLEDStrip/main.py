@@ -71,7 +71,7 @@ if __name__ == '__main__':
                 # Attempt to connect to serial. If serial_setup returns a value
                 # that is not None, move to the connected state and give a
                 # notification print.
-                SER = sim.serial_setup(sim.NO_DEBUG)
+                SER = sim.serial_setup(sc.NO_DEBUG)
                 if SER != None:
                     app_state = sc.CONNECTED_STATE
                     print("Connected to NanoLux device.")

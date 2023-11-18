@@ -6,20 +6,13 @@ from PIL import Image
 import io
 import pathlib
 import math
-
-NO_DEBUG = False
-DEBUG = True
-
-# The LED bar length will target 600 pixels.
-LED_BAR_TARGET_LENGTH = 600
+import sim_constants as sc
 
 # Returns the size of each LED pixel given LED strip length
 # and the amount of overhang pixels.
 def calculate_pixel_width(led_count):
-
-    w = math.floor(LED_BAR_TARGET_LENGTH/led_count)
-    e = LED_BAR_TARGET_LENGTH - w*led_count
-
+    w = math.floor(sc.LED_BAR_TARGET_LENGTH/led_count)
+    e = sc.LED_BAR_TARGET_LENGTH - w*led_count
     return w, e
 
 # Convert a relative path to an absolute path
@@ -40,6 +33,7 @@ def print_ports(ports):
     for port, desc, hwid in sorted(ports):
         print("{}: {} [{}]".format(port, desc, hwid))
 
+# Set up and connect to serial port 4.
 def serial_setup(is_debug):
     available_ports = serial_ports() # Get all serial ports(com)
     if is_debug: print_ports(available_ports)
@@ -49,6 +43,8 @@ def serial_setup(is_debug):
         SER = None
     return SER
 
+# Resizes an OpenCV image by a given scale factor.
+# Typically used to scale a nx1 image to a new height.
 def resize_image(img, scale_x, scale_y):
     width = int(img.shape[1] * scale_x)
     height = int(img.shape[0] * scale_y)
@@ -56,8 +52,10 @@ def resize_image(img, scale_x, scale_y):
     resized = cv2.resize(img, dim, interpolation = cv2.INTER_AREA)
     return resized
 
+# Attempts to update an OpenCV image with new serial data.
+# If this fails, just scale the (probably black) image to
+# the correct height.
 def update_image(img, serial_data):
-
     # Get the number of pixels per pixel.
     try:
         w, _ = calculate_pixel_width(len(serial_data))
