@@ -22,16 +22,20 @@ def calculate_pixel_width(led_count):
 
     return w, e
 
+# Convert a relative path to an absolute path
 def get_absolute_path(relative_path):
     return pathlib.Path(__file__).parent.resolve().__str__() + relative_path
 
+# Generate UI elements for the LED strip bar and title string
 def make_display_bar(key):
-    return [sg.Text(key + ": "), sg.Image(key="-" + key + "-")]
+    return [sg.Text(key + ": "), sg.Image('', key=key)]
 
+# Return the list of serial ports connected to the computer.
 def serial_ports():
     ports = serial.tools.list_ports.comports()
     return ports
 
+# Print the list of availible serial ports
 def print_ports(ports):
     for port, desc, hwid in sorted(ports):
         print("{}: {} [{}]".format(port, desc, hwid))
