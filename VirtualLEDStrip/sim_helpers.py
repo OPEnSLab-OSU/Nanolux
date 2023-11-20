@@ -33,12 +33,20 @@ def print_ports(ports):
     for port, desc, hwid in sorted(ports):
         print("{}: {} [{}]".format(port, desc, hwid))
 
+# Return a string list of all serial ports.
+def ports_to_list():
+    ports = serial_ports()
+    str_ports = []
+    for port, desc, hwid in sorted(ports):
+        str_ports.append(port)
+    return str_ports
+
 # Set up and connect to serial port 4.
-def serial_setup(is_debug):
+def serial_setup(is_debug, serial_port):
     available_ports = serial_ports() # Get all serial ports(com)
     if is_debug: print_ports(available_ports)
     try:
-        SER = serial.Serial("COM4", 115200)
+        SER = serial.Serial(serial_port, 115200)
     except:
         SER = None
     return SER
@@ -65,7 +73,6 @@ def update_image(img, serial_data):
         img = resize_image(img, 1, 30)
         return img
 
-    led_values = []
     # Enumerate through the serial data and split out each pixel.
     for i, led_value in enumerate(serial_data):
         values = led_value.split(",")
@@ -83,6 +90,12 @@ def update_image(img, serial_data):
 # https://www.blog.pythonlibrary.org/2021/02/16/creating-an-image-viewer-with-pysimplegui/
 def mat_to_png(mat):
     img = Image.fromarray(mat)
+    bio = io.BytesIO()
+    img.save(bio, format="PNG")
+    return bio.getvalue()
+
+def path_to_png(path):
+    img = Image.open(path)
     bio = io.BytesIO()
     img.save(bio, format="PNG")
     return bio.getvalue()

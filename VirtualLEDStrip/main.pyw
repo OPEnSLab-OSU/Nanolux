@@ -7,10 +7,25 @@ import sim_helpers as sim
 # absolute system path.
 logo_path = sim.get_absolute_path(sc.LOGO_RELATIVE_PATH)
 
+# Convert the Windows' icon relative path to a system path.
+icon_path = sim.get_absolute_path(sc.ICON_RELATIVE_PATH)
+
+old_serial_options = [sc.NO_SERIAL_PORT] + sim.ports_to_list()
+if "COM1" in old_serial_options:
+    old_serial_options.remove("COM1")
+
 # Configure the GUI
 sg.theme(sc.APP_THEME)
 layout = [
-    [sg.Image(logo_path, subsample=sc.LOGO_SCALE)],
+    [
+        sg.Image(logo_path, subsample=sc.LOGO_SCALE),
+        sg.OptionMenu(
+            values=old_serial_options,
+            key=sc.COM_SELECTOR_KEY,
+            default_value=sc.NO_SERIAL_PORT,
+        ),
+        sg.Button(sc.RESCAN_BUTTON, key=sc.RESCAN_BUTTON),
+    ],
     sim.make_display_bar(sc.HSV_KEY),
     sim.make_display_bar(sc.RGB_KEY),
     sim.make_display_bar(sc.BGR_KEY),
@@ -18,11 +33,15 @@ layout = [
         sg.Button(sc.CONNECT_BUTTON, key=sc.CONNECT_BUTTON),
         sg.Button(sc.DISCONNECT_BUTTON, key=sc.DISCONNECT_BUTTON),
         sg.Text(sc.state_to_string[sc.DEFAULT_STATE], key=sc.STATUS_FIELD)
-    ]
+    ],
 ]
 
 # Create the Window
-window = sg.Window(sc.APP_NAME, layout)
+window = sg.Window(
+    sc.APP_NAME,
+    layout,
+    icon=sim.path_to_png(icon_path),
+)
 
 # Ensure the openCV arrays are global variables
 bgr = np.zeros((sc.DEFAULT_LED_HEIGHT, sc.LED_BAR_TARGET_LENGTH, 3), np.uint8)
@@ -33,6 +52,17 @@ def update_bars(bgr, hsv, rgb):
     window[sc.RGB_KEY].update(data=sim.mat_to_png(rgb))
     window[sc.BGR_KEY].update(data=sim.mat_to_png(bgr))
     window[sc.HSV_KEY].update(data=sim.mat_to_png(hsv))
+
+def update_selector_options():
+    options = [sc.NO_SERIAL_PORT] + sim.ports_to_list()
+    if "COM1" in options:
+        options.remove("COM1")
+    window[sc.COM_SELECTOR_KEY].update(values=options, value=sc.NO_SERIAL_PORT)
+
+def disconnect_teardown(SER):
+    SER.close()
+    SER = None
+    return sc.DISCONNECTED_STATE
 
 if __name__ == '__main__':
 
@@ -54,9 +84,12 @@ if __name__ == '__main__':
         event, values = window.read(0)
         if event == sg.WIN_CLOSED: # if user closes window or clicks cancel
             app_state = sc.EXITING_STATE
+        
+        if event == sc.RESCAN_BUTTON:
+            update_selector_options()
 
         # Reset the bgr image
-        bgr = np.zeros((sc.DEFAULT_LED_HEIGHT, sim.LED_BAR_TARGET_LENGTH, 3), np.uint8)  # (B, G, R)
+        bgr = np.zeros((sc.DEFAULT_LED_HEIGHT, sc.LED_BAR_TARGET_LENGTH, 3), np.uint8)  # (B, G, R) 
 
         match app_state:
             case sc.CONNECTING_STATE:
@@ -71,7 +104,7 @@ if __name__ == '__main__':
                 # Attempt to connect to serial. If serial_setup returns a value
                 # that is not None, move to the connected state and give a
                 # notification print.
-                SER = sim.serial_setup(sc.NO_DEBUG)
+                SER = sim.serial_setup(sc.NO_DEBUG, values[sc.COM_SELECTOR_KEY])
                 if SER != None:
                     app_state = sc.CONNECTED_STATE
                     print("Connected to NanoLux device.")
@@ -81,10 +114,6 @@ if __name__ == '__main__':
                 # Set the disable state of both buttons
                 window[sc.CONNECT_BUTTON].update(disabled=True)
                 window[sc.DISCONNECT_BUTTON].update(disabled=False)
-
-                # If the connection button is pressed again, disconnect.
-                if event == sc.DISCONNECT_BUTTON:
-                    app_state = sc.DISCONNECTED_STATE
 
                 # Try to grab serial data and transform the blank image using the BGR
                 # data from the AudioLux.
@@ -97,11 +126,15 @@ if __name__ == '__main__':
                     hsv, rgb = sim.bgr_to_hsv_rgb(bgr)
                     update_bars(bgr, hsv, rgb)
                 except:
-                    app_state = sc.DISCONNECTED_STATE
-                    SER.close()
-                    SER = None
+                    app_state = disconnect_teardown(SER)
+                    update_selector_options()
+                
+                # If the connection button is pressed again, disconnect.
+                if event == sc.DISCONNECT_BUTTON:
+                    app_state = disconnect_teardown(SER)
 
             case sc.DISCONNECTED_STATE:
+
                 # Set the disable state of both buttons
                 window[sc.CONNECT_BUTTON].update(disabled=False)
                 window[sc.DISCONNECT_BUTTON].update(disabled=True)

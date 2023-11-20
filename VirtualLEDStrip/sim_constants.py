@@ -20,8 +20,11 @@ BGR_KEY = "BGR"
 RGB_KEY = "RGB"
 LOGO_SCALE = 10
 LOGO_RELATIVE_PATH = '\\assets\logo2.png'
+ICON_RELATIVE_PATH = '\\assets\icon.ico'
 APP_NAME = "Nanolux LED Strip Simulator"
 APP_THEME = 'SystemDefault'
+COM_SELECTOR_KEY = 'COMSelector'
+RESCAN_BUTTON = 'Rescan'
 
 # Numpy Constants
 DEFAULT_LED_HEIGHT = 1
@@ -31,3 +34,6 @@ LED_BAR_TARGET_LENGTH = 600
 # Debug
 NO_DEBUG = False
 DEBUG = True
+
+# Connection constants
+NO_SERIAL_PORT = 'No Serial'
