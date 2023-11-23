@@ -1,12 +1,12 @@
 import {h} from 'preact';
 import style from './style.css';
 import {useEffect, useState} from "preact/hooks";
-import {getPattern, getPatternList, savePattern} from "../../utils/api";
+import {getSecondaryPattern, getPatternList, saveSecondaryPattern} from "../../utils/api";
 import {useConnectivity} from "../../context/online_context";
 import useInterval from "../../utils/use_interval";
 import {LabelSpinner} from "../spinner";
 
-const Patterns = () => {
+const SecondaryPatterns = () => {
     const {isConnected} = useConnectivity();
     const [patterns, setPatterns] = useState([]);
     const [currentPattern, setCurrentPattern] = useState(-1)
@@ -16,7 +16,7 @@ const Patterns = () => {
     useEffect(() => {
         if (isConnected) {
             getPatternList().then(data => setPatterns(data));
-            getPattern().then(data => setCurrentPattern(data.index));
+            getSecondaryPattern().then(data => setCurrentPattern(data.index));
             setLoading(false);
         }
     }, [isConnected])
@@ -28,7 +28,7 @@ const Patterns = () => {
     });
 
     const refreshPattern = () => {
-        getPattern().then(data => setCurrentPattern(data.index));
+        getSecondaryPattern().then(data => setCurrentPattern(data.index));
     }
 
     useInterval(() => {
@@ -41,7 +41,7 @@ const Patterns = () => {
         const newPattern = event.target.value;
         setCurrentPattern(newPattern);
         if  (isConnected) {
-            await savePattern(newPattern);
+            await saveSecondaryPattern(newPattern);
         }
     }
 
@@ -51,9 +51,9 @@ const Patterns = () => {
                 <LabelSpinner />
             ) : (
                 <div>
-                    <label className={style.label} htmlFor="pattern-options">Current Primary Pattern</label>
+                    <label className={style.label} htmlFor="pattern-options">Current Secondary Pattern</label>
                     <select className={style.label}
-                            id="pattern-options"
+                            id="pattern2-options"
                             value={currentPattern}
                             onChange={handleSelection}
                     >
@@ -66,4 +66,4 @@ const Patterns = () => {
     );
 }
 
-export default Patterns;
+export default SecondaryPatterns;

@@ -34,7 +34,6 @@
     "preact-icon-base": "^2.0.6",
     "preact-render-to-string": "^5.2.6",
     "preact-router": "^3.2.1",
-    "react-scripts": "^5.0.1",
     "redaxios": "0.5.1"
   },
   "jest": {

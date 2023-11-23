@@ -29,7 +29,6 @@ get_base_url().then(_ => console.log(`base_url: ${base_url}`));
 const getSettings = () =>
     getData('settings');
 
-
 const getPatternList = () =>
     getData('patterns');
 
@@ -37,6 +36,8 @@ const getPatternList = () =>
 const getPattern = () =>
     getData('pattern');
 
+const getSecondaryPattern = () =>
+    getData('pattern2');
 
 const getNoise = () =>
     getData('noise');
@@ -64,6 +65,9 @@ const getData = (path) =>
 const savePattern = (patternIndex) =>
     axios.put(`${base_url}/api/pattern`,{index: patternIndex});
 
+const saveSecondaryPattern = (patternIndex) =>
+    axios.put(`${base_url}/api/pattern2`,{index: patternIndex});
+
 
 const saveNoise = (noise) =>
     axios.put(`${base_url}/api/noise`,{noise});
@@ -84,6 +88,8 @@ export {
     getPatternList,
     getPattern,
     savePattern,
+    getSecondaryPattern,
+    saveSecondaryPattern,
     getNoise,
     saveNoise,
     getWiFiList,

@@ -1,5 +1,6 @@
 import style from './style.css';
 import Patterns from "../../components/patterns";
+import SecondaryPatterns from "../../components/secondary_patterns";
 import NumericSlider from "../../components/numeric_slider";
 import {useState, useEffect} from "preact/hooks";
 import {getNoise, saveNoise} from "../../utils/api";
@@ -27,6 +28,9 @@ const Settings = () => {
 		<div className={style.home}>
 			<div className={style.settings_control}>
 				<Patterns />
+			</div>
+			<div className={style.settings_control}>
+				<SecondaryPatterns />
 			</div>
 			<div className={style.settings_control}>
 				{ settings && <NumericSlider
