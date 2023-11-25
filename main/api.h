@@ -100,6 +100,40 @@ inline void handle_noise_get_request(AsyncWebServerRequest* request) {
     request->send(HTTP_OK, CONTENT_JSON, response);
 }
 
+inline void handle_splitting_get_request(AsyncWebServerRequest* request) {
+    if(isStripSplitting){
+      const String response = String("{ \"splitting\": ") + "1" + String(" }");
+      request->send(HTTP_OK, CONTENT_JSON, response);
+    }else{
+      const String response = String("{ \"splitting\": ") + "0" + String(" }");
+      request->send(HTTP_OK, CONTENT_JSON, response);
+    }
+    
+    
+}
+
+inline void handle_splitting_put_request(AsyncWebServerRequest* request, JsonVariant& json) {
+    if (request->method() == HTTP_PUT) {
+        const JsonObject& payload = json.as<JsonObject>();
+        
+        int status = HTTP_OK;
+        const int sp = payload["isSplitting"];
+        if (sp == 1) {
+            isStripSplitting = true;
+            request->send(HTTP_OK, CONTENT_TEXT, build_response(true, "Splitting state set: set to True: " + sp, nullptr));
+        }else if (sp == 0){
+          isStripSplitting = false;
+          request->send(HTTP_OK, CONTENT_TEXT, build_response(true, "Splitting state set: set to False: " + sp, nullptr));
+        }
+        else {
+            request->send(HTTP_BAD_REQUEST, CONTENT_TEXT, build_response(true, "Invalid splitting state value: " + sp, nullptr));
+        }
+    }
+    else {
+        request->send(HTTP_METHOD_NOT_ALLOWED);
+    }
+}
+
 
 
 
@@ -107,13 +141,15 @@ APIGetHook apiGetHooks[] = {
     { "/api/patterns", handle_patterns_list_request},
     { "/api/pattern", handle_pattern_get_request},
     { "/api/pattern2", handle_pattern_get_request},
-    { "/api/noise", handle_noise_get_request}
+    { "/api/noise", handle_noise_get_request},
+    { "/api/splitting", handle_splitting_get_request}
 };
-constexpr int API_GET_HOOK_COUNT = 4;
+constexpr int API_GET_HOOK_COUNT = 5;
 
 APIPutHook apiPutHooks[] = {
     { "/api/pattern", handle_pattern_put_request},
     { "/api/pattern2", handle_pattern_put_request},
-    { "/api/noise", handle_noise_put_request}
+    { "/api/noise", handle_noise_put_request},
+    { "/api/splitting", handle_splitting_put_request}
 };
-constexpr int API_PUT_HOOK_COUNT = 3;
+constexpr int API_PUT_HOOK_COUNT = 4;

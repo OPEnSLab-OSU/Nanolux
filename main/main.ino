@@ -16,7 +16,7 @@
 #include "WebServer.h"
 #endif
 
-// #define DEBUG 1
+#define DEBUG 1
 // #define SHOW_TIMINGS
 
 #ifdef DEBUG
@@ -56,6 +56,8 @@ int F0arr[20];
 int F1arr[20];
 int F2arr[20];
 int formant_pose = 0;
+
+volatile bool isStripSplitting = false;
 
 uint8_t genre_smoothing[10] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 int genre_pose = 0;

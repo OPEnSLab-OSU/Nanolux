@@ -25,6 +25,7 @@
     "jest": "^27.0.0",
     "jest-preset-preact": "^4.0.5",
     "preact-cli": "^3.4.2",
+    "preact-material-components": "^1.6.1",
     "sirv-cli": "^2.0.2"
   },
   "dependencies": {

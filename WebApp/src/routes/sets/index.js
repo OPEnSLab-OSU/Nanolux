@@ -1,5 +1,6 @@
 import style from './style.css';
 import Patterns from "../../components/patterns";
+import SplittingButton from "../../components/splitting_button";
 import SecondaryPatterns from "../../components/secondary_patterns";
 import NumericSlider from "../../components/numeric_slider";
 import {useState, useEffect} from "preact/hooks";
@@ -31,6 +32,9 @@ const Settings = () => {
 			</div>
 			<div className={style.settings_control}>
 				<SecondaryPatterns />
+			</div>
+			<div className={style.settings_control}>
+				<SplittingButton />
 			</div>
 			<div className={style.settings_control}>
 				{ settings && <NumericSlider
