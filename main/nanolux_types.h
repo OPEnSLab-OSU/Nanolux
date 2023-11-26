@@ -8,7 +8,7 @@ typedef void (*SimplePatternList[])();
 //#define LAYER_PATTERNS
 #define HUE_FLAG
 #define DEBUG
-//#define VIRTUAL_LED_STRIP
+#define VIRTUAL_LED_STRIP
 
 // Array size macro
 #define ARRAY_SIZE(A) (sizeof(A) / sizeof((A)[0]))
@@ -21,6 +21,7 @@ typedef void (*SimplePatternList[])();
 #define COLOR_ORDER BGR     // Define color color order.
 #define MAX_BRIGHTNESS     255
 #define FRAMES_PER_SECOND  120
+#define HALF_NUM_LEDS      NUM_LEDS/2
 
 // arduinoFFT
 #define SAMPLES             128     // Must be a power of 2  // 128 - 1024

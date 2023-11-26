@@ -69,8 +69,31 @@ inline void handle_pattern_put_request(AsyncWebServerRequest* request, JsonVaria
     }
 }
 
+inline void handle_secondary_pattern_put_request(AsyncWebServerRequest* request, JsonVariant& json) {
+    if (request->method() == HTTP_PUT) {
+        const JsonObject& payload = json.as<JsonObject>();
+
+        int status = HTTP_OK;
+        int pattern_index = payload["index"];
+        if (pattern_index >= 0 && pattern_index < NUM_PATTERNS) {
+            gCurrentPatternNumber2 = pattern_index;
+            request->send(HTTP_OK, CONTENT_TEXT, build_response(true, "Pattern set.", nullptr));
+        }
+        else {
+            request->send(HTTP_BAD_REQUEST, CONTENT_TEXT, build_response(true, "Invalid pattern index.", nullptr));
+        }
+    }
+    else {
+    }
+}
+
 inline void handle_pattern_get_request(AsyncWebServerRequest* request) {
     const String response = String("{ \"index\": ") + gCurrentPatternNumber + String(" }");
+    request->send(HTTP_OK, CONTENT_JSON, response);
+}
+
+inline void handle_secondary_pattern_get_request(AsyncWebServerRequest* request) {
+    const String response = String("{ \"index\": ") + gCurrentPatternNumber2 + String(" }");
     request->send(HTTP_OK, CONTENT_JSON, response);
 }
 
@@ -140,7 +163,7 @@ inline void handle_splitting_put_request(AsyncWebServerRequest* request, JsonVar
 APIGetHook apiGetHooks[] = {
     { "/api/patterns", handle_patterns_list_request},
     { "/api/pattern", handle_pattern_get_request},
-    { "/api/pattern2", handle_pattern_get_request},
+    { "/api/pattern2", handle_secondary_pattern_get_request},
     { "/api/noise", handle_noise_get_request},
     { "/api/splitting", handle_splitting_get_request}
 };
@@ -148,7 +171,7 @@ constexpr int API_GET_HOOK_COUNT = 5;
 
 APIPutHook apiPutHooks[] = {
     { "/api/pattern", handle_pattern_put_request},
-    { "/api/pattern2", handle_pattern_put_request},
+    { "/api/pattern2", handle_secondary_pattern_put_request},
     { "/api/noise", handle_noise_put_request},
     { "/api/splitting", handle_splitting_put_request}
 };

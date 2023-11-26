@@ -16,7 +16,7 @@
 #include "WebServer.h"
 #endif
 
-#define DEBUG 1
+//#define DEBUG 1
 // #define SHOW_TIMINGS
 
 #ifdef DEBUG
@@ -32,6 +32,11 @@ arduinoFFT FFT = arduinoFFT();
 //
 CRGB leds[NUM_LEDS];               // Buffer (front)
 CRGB hist[NUM_LEDS];               // Buffer (back)
+
+// LED arrays and buffers for strip splitting.
+CRGB half_leds_buf[HALF_NUM_LEDS];
+int virtual_led_count = NUM_LEDS;
+
 unsigned int sampling_period_us = round(1000000/SAMPLING_FREQUENCY);
 unsigned long microseconds;
 double vReal[SAMPLES];             // Sampling buffers
@@ -41,6 +46,7 @@ double delt[SAMPLES];
 double amplitude = 0;              // For spring mass 2
 bool button_pressed = false;
 volatile uint8_t gCurrentPatternNumber = 0; // Index number of which pattern is current
+volatile uint8_t gCurrentPatternNumber2 = 0;
 uint8_t gHue = 0;                  // Rotating base color
 double peak = 0.;                  // Peak frequency
 uint8_t fHue = 0;                  // Hue value based on peak frequency
@@ -235,7 +241,19 @@ void loop() {
     #ifdef LAYER_PATTERNS
       layer_patterns();
     #else
-      mainPatterns[gCurrentPatternNumber].pattern_handler();
+
+      if(isStripSplitting){
+        virtual_led_count = HALF_NUM_LEDS;
+        mainPatterns[gCurrentPatternNumber2].pattern_handler();
+        memcpy(&leds[0], &half_leds_buf[0], sizeof(leds[0]) * HALF_NUM_LEDS);
+        mainPatterns[gCurrentPatternNumber].pattern_handler();
+        memcpy(&half_leds_buf[0], &leds[HALF_NUM_LEDS], sizeof(leds[0]) * HALF_NUM_LEDS);
+      }else{
+        virtual_led_count = NUM_LEDS;
+        mainPatterns[gCurrentPatternNumber].pattern_handler();
+      }
+
+      
     #endif
 
     #ifdef SHOW_TIMINGS
