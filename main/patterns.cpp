@@ -1154,3 +1154,32 @@ void volume_level_middle_bar_freq_hue_with_fade_and_blur(){
     blur1d(leds, NUM_LEDS, 80); 
     fadeToBlackBy( leds, NUM_LEDS, 20);
 }
+
+void echo_ripple(){
+    //used to get the frequency info
+    double* temp_formants = density_formant();
+
+    //the led that the drop will ripple from
+    int impact_idx = random16(NUM_LEDS);
+
+    //determines distance of the ripple based off frequency
+    int distance = map(temp_formants[0], MIN_FREQUENCY, MAX_FREQUENCY, 1, 10);
+
+    //color based off the formant hues
+    CHSV ripple_color = CRGB(formant_hues[0], formant_hues[1], formant_hues[2]);
+
+    for(int i = 0; i < NUM_LEDS; i++){
+          int distance_from_impact = abs(i - impact_idx);
+          if (distance_from_impact <= distance){
+              //brightness will change based on distance
+              int brightness = map(distance_fromt_impact, 0, distance, 255, 0);
+
+              //adds color and fade out effect
+              leds[i] = ripple_color;
+              leds[i].fadeToBlackBy(brightness);
+          }
+    }
+  
+  //release formants alloc memory
+  delete[] temp_formants;
+}
