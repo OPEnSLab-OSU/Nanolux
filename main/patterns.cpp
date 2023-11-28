@@ -15,8 +15,6 @@ extern double vReal[SAMPLES];      // Sampling buffers
 extern double vImag[SAMPLES];
 extern double vRealHist[SAMPLES];  // for delta freq
 extern double delt[SAMPLES];
-extern int frame;                 // for spring mass
-extern double amplitude;          //for spring mass 2
 extern arduinoFFT FFT;
 extern bool button_pressed;
 extern SimplePatternList gPatterns;
@@ -29,33 +27,15 @@ extern uint8_t fHue;                      // hue value based on peak frequency
 extern double volume;                     //  NOOOOTEEEE:  static?? 
 extern uint8_t vbrightness;
 extern double maxDelt;                    // Frequency with the biggest change in amp.
-extern int frame;
 extern int beats;
-extern int tempHue;
-extern int vol_pos;
-extern int pix_pos;
 extern bool vol_show; // A boolean to change if not wanting to see the color changing pixel in pix_freq()
-extern uint8_t genre_smoothing[10];
-extern int genre_pose;
 extern int advanced_size;
-extern double max1[20];
-extern double max2[20];
-extern double max3[20];
-extern double max4[20];
-extern double max5[20];
-extern int maxIter;
 CRGBPalette16 gPal = GMT_hot_gp; //store all palettes in array
 CRGBPalette16 gPal2 = nrwc_gp; //store all palettes in array
 bool gReverseDirection = false;
-extern double velocity;
-extern double acceleration;
-extern double smoothing_value[10];
-extern int location;
-extern double velocities[5];
-extern double accelerations[5];
-extern int locations[5];
-extern double vRealSums[5];
+
 extern int virtual_led_count;
+extern Pattern_History current_history;
 
 void nextPattern() {
   // add one to the current pattern number, and wrap around at the end
@@ -140,17 +120,17 @@ void spring_mass_1 (){
   double period_avg = 0;
   double friction = 1;
 
-  if (amplitude < middle_position) {
-    amplitude += vbrightness / 7;
+  if (current_history.amplitude < middle_position) {
+    current_history.amplitude += vbrightness / 7;
   } 
 
-  middle_mass_displacement = amplitude*cos(sqrt(spring_constant/mass)*(frame)/3);
-  frame++;
+  middle_mass_displacement = current_history.amplitude*cos(sqrt(spring_constant/mass)*(current_history.frame)/3);
+  current_history.frame++;
   
-  if (amplitude > friction) {
-    amplitude = amplitude - friction; 
+  if (current_history.amplitude > friction) {
+    current_history.amplitude = current_history.amplitude - friction; 
   } else {
-    amplitude = 0;
+    current_history.amplitude = 0;
   }
 
   int left_end = middle_position + middle_mass_displacement - mass_radius;
@@ -176,36 +156,36 @@ void spring_mass_2 () {
   double spring_constant = 0;
 
   for (int i = 10; i > 0; i--) {
-    spring_constant += smoothing_value[i];
-    smoothing_value[i] = smoothing_value[i-1];
+    spring_constant += current_history.smoothing_value[i];
+    current_history.smoothing_value[i] = current_history.smoothing_value[i-1];
   }
-  smoothing_value[0] = fHue;
+  current_history.smoothing_value[0] = fHue;
   spring_constant += fHue;
   spring_constant = spring_constant / 2550;
   
-  acceleration = -1*location * spring_constant/mass;
-  if (velocity > 0)
+  current_history.acceleration = -1*current_history.location * spring_constant/mass;
+  if (current_history.velocity > 0)
   {
-    velocity += acceleration + (vbrightness/80);
+    current_history.velocity += current_history.acceleration + (vbrightness/80);
   } else {
-    velocity += acceleration - (vbrightness/80);
+    current_history.velocity += current_history.acceleration - (vbrightness/80);
   }
-  location += velocity;
-  if (location < -1*virtual_led_count/2)
+  current_history.location += current_history.velocity;
+  if (current_history.location < -1*virtual_led_count/2)
   {
-    location = -1*virtual_led_count/2;
-  } else if (location > virtual_led_count/2) {
-    location = virtual_led_count/2;
+    current_history.location = -1*virtual_led_count/2;
+  } else if (current_history.location > virtual_led_count/2) {
+    current_history.location = virtual_led_count/2;
   }
 
-  int left_end = middle_position + location - mass_radius;
-  int right_end = middle_position + location + mass_radius;
+  int left_end = middle_position + current_history.location - mass_radius;
+  int right_end = middle_position + current_history.location + mass_radius;
   
   for (int i = 0; i < virtual_led_count-1; i++)
   {
     if ((i > left_end) && (i < right_end))
     {        
-      int springbrightness = 90 - (90/mass_radius * abs(i - (location+middle_position)));
+      int springbrightness = 90 - (90/mass_radius * abs(i - (current_history.location+middle_position)));
       leds[i] = CHSV (spring_constant * 255, 255-vbrightness, springbrightness);
     } else {
       leds[i] = CHSV (0, 0, 0);
@@ -225,34 +205,34 @@ void spring_mass_3() {
     for (int i = (3+(k*SAMPLES/5)); i < ((k+1)*SAMPLES/5)-3; i++) {
       tempsum +=  vReal[i];
     }
-    vRealSums[k] = tempsum/(SAMPLES/5);
-    vRealSums[k] = remap(vRealSums[k], MIN_VOLUME, MAX_VOLUME, 0, 5);
+    current_history.vRealSums[k] = tempsum/(SAMPLES/5);
+    current_history.vRealSums[k] = remap(current_history.vRealSums[k], MIN_VOLUME, MAX_VOLUME, 0, 5);
   }
   
   for (int j = 0; j < 5; j++) {
-    accelerations[j] = -1*locations[j] * spring_constants[j]/mass;
-    if (velocity > 0)
+    current_history.accelerations[j] = -1*current_history.locations[j] * spring_constants[j]/mass;
+    if (current_history.velocity > 0)
     {
-      velocities[j] += accelerations[j] + (vRealSums[j]);
+      current_history.velocities[j] += current_history.accelerations[j] + (current_history.vRealSums[j]);
     } else {
-      velocities[j] += accelerations[j] - (vRealSums[j]);
+      current_history.velocities[j] += current_history.accelerations[j] - (current_history.vRealSums[j]);
     }
-    locations[j] += velocities[j];
-    if (locations[j] < -1*virtual_led_count/2)
+    current_history.locations[j] += current_history.velocities[j];
+    if (current_history.locations[j] < -1*virtual_led_count/2)
     {
-      locations[j] = -1*virtual_led_count/2;
-    } else if (locations[j] > virtual_led_count/2) {
-      locations[j] = virtual_led_count/2;
+      current_history.locations[j] = -1*virtual_led_count/2;
+    } else if (current_history.locations[j] > virtual_led_count/2) {
+      current_history.locations[j] = virtual_led_count/2;
     }
 
-    int left_end = middle_position + locations[j] - mass_radiuses[j];
-    int right_end = middle_position + locations[j] + mass_radiuses[j];
+    int left_end = middle_position + current_history.locations[j] - mass_radiuses[j];
+    int right_end = middle_position + current_history.locations[j] + mass_radiuses[j];
   
     for (int i = 0; i < virtual_led_count-1; i++)
     {
       if ((i > left_end) && (i < right_end))
       {        
-        //int springbrightness = 90 - (90/mass_radius * abs(i - (locations[j]+middle_position)));
+        //int springbrightness = 90 - (90/mass_radius * abs(i - (current_history.locations[j]+middle_position)));
         leds[i] = CHSV (spring_constants[j] * 255 * 4, 255-vbrightness, 80);
       } else {
         leds[i] -= CHSV (0, 0, 10);
@@ -284,25 +264,25 @@ void classical() {
 void pix_freq() {
   fadeToBlackBy(leds, virtual_led_count, 50);
   if (volume > 200) {
-    pix_pos = map(peak, MIN_FREQUENCY, MAX_FREQUENCY, 0, virtual_led_count-1);
-    tempHue = fHue;
+    current_history.pix_pos = map(peak, MIN_FREQUENCY, MAX_FREQUENCY, 0, virtual_led_count-1);
+    current_history.tempHue = fHue;
   }
   else {
-    pix_pos--;
-    tempHue--;
-    vol_pos--;
+    current_history.pix_pos--;
+    current_history.tempHue--;
+    current_history.vol_pos--;
   }
   if (vol_show) {
     if (volume > 100) {
-      vol_pos = map(volume, MIN_VOLUME, MAX_VOLUME, 0, virtual_led_count-1);
-      tempHue = fHue;
+      current_history.vol_pos = map(volume, MIN_VOLUME, MAX_VOLUME, 0, virtual_led_count-1);
+      current_history.tempHue = fHue;
     } else {
-      vol_pos--;
+      current_history.vol_pos--;
     }
 
-    leds[vol_pos] = vol_pos < virtual_led_count ? CRGB(255, 255, 255):CRGB(0, 0, 0);
+    leds[current_history.vol_pos] = current_history.vol_pos < virtual_led_count ? CRGB(255, 255, 255):CRGB(0, 0, 0);
   }
-  leds[pix_pos] = pix_pos < virtual_led_count ? CHSV(tempHue, 255, 255):CRGB(0, 0, 0);
+  leds[current_history.pix_pos] = current_history.pix_pos < virtual_led_count ? CHSV(current_history.tempHue, 255, 255):CRGB(0, 0, 0);
 }
 
 // Utility function for sending a wave with sine for the math rock function
@@ -368,21 +348,21 @@ void math() {
   green /= 300;
 
   uint8_t hue = remap(log ( red + green + 2.5*blue ) / log ( 2 ), log ( MIN_FREQUENCY ) / log ( 2 ), log ( MAX_FREQUENCY ) / log ( 2 ), 10, 240);
-  genre_smoothing[genre_pose] = hue;
-  genre_pose++;
-  if (genre_pose == 10) {
-    genre_pose = 0;
+  current_history.genre_smoothing[current_history.genre_pose] = hue;
+  current_history.genre_pose++;
+  if (current_history.genre_pose == 10) {
+    current_history.genre_pose = 0;
   }
   // Get average hue values for the middle frequency^^^
 
   
   int nue = 0;
   for (int i = 0; i < 10; i++) {
-    nue += genre_smoothing[i];
+    nue += current_history.genre_smoothing[i];
   }
   hue = nue/8;
 
-  frame++;
+  current_history.frame++;
 
   CHSV color = CHSV(255-hue, 255, 4*brit);
 
@@ -462,23 +442,23 @@ void advanced_bands() {
 
   // Calculate the volume of each band
   for (int i = 0; i < advanced_size; i++) {
-    avg1 += max1[i];    
+    avg1 += current_history.max1[i];    
   }
   avg1 /= advanced_size;
   for (int i = 0; i < advanced_size; i++) {
-    avg2 += max2[i];
+    avg2 += current_history.max2[i];
   }
   avg2 /= advanced_size;
   for (int i = 0; i < advanced_size; i++) {
-    avg3 += max3[i];
+    avg3 += current_history.max3[i];
   }
   avg3 /= advanced_size;
   for (int i = 0; i < advanced_size; i++) {
-    avg4 += max4[i];
+    avg4 += current_history.max4[i];
   }
   avg4 /= advanced_size;
   for (int i = 0; i < advanced_size; i++) {
-    avg5 += max5[i];
+    avg5 += current_history.max5[i];
   }
   avg5 /= advanced_size;
 
@@ -507,55 +487,55 @@ void advanced_bands() {
 
   // If there exists a new volume that is bigger than the falling pixel, reassign it to the top, otherwise make it fall for each band
   if (vol1 <= avg1) {
-    max1[maxIter] = 0;
+    current_history.max1[current_history.maxIter] = 0;
   }
   else {
       for (int i = 0; i < 5; i++) {
-        max1[i] = vol1;
+        current_history.max1[i] = vol1;
       }
   }
     
   if (vol2 <= avg2) {
-    max2[maxIter] = 0;
+    current_history.max2[current_history.maxIter] = 0;
   }
   else {
       for (int i = 0; i < 5; i++) {
-        max2[i] = vol2;
+        current_history.max2[i] = vol2;
       }
   }
 
   if (vol3 <= avg3) {
-    max3[maxIter] = 0;
+    current_history.max3[current_history.maxIter] = 0;
   }
   else {
       for (int i = 0; i < 5; i++) {
-        max3[i] = vol3;
+        current_history.max3[i] = vol3;
       }
   }
 
   if (vol4 <= avg4) {
-    max4[maxIter] = 0;
+    current_history.max4[current_history.maxIter] = 0;
   }
   else {
       for (int i = 0; i < 5; i++) {
-        max4[i] = vol4;
+        current_history.max4[i] = vol4;
       }
   }
 
   if (vol5 <= avg5) {
-    max5[maxIter] = 0;
+    current_history.max5[current_history.maxIter] = 0;
   }
   else {
       for (int i = 0; i < 5; i++) {
-        max5[i] = vol5;
+        current_history.max5[i] = vol5;
       }
   }
 
   // Get this smoothed array to loop to beginning again once it is at teh end of the falling pixel smoothing
-  if (maxIter == advanced_size-1) {
-    maxIter = 0;
+  if (current_history.maxIter == advanced_size-1) {
+    current_history.maxIter = 0;
   } else {
-    maxIter++;
+    current_history.maxIter++;
   }
 
   // Fill the respective chunks of the light strip with the color based on above^

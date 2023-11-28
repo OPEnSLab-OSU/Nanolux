@@ -106,7 +106,6 @@ double accelerations[5] = {0,0,0,0,0};  //for spring mass 3
 int locations[5] = {70,60,50,40,30}; //for spring mass 3
 double vRealSums[5] = {0,0,0,0,0};
 
-
 //
 // Patterns structure.
 //
@@ -120,6 +119,11 @@ typedef struct {
     void (*pattern_handler)();
 } Pattern;
 
+// Pattern history array and index.
+// To switch patterns, simply change the index.
+// Primary pattern is 0.
+Pattern_History histories[2];
+Pattern_History current_history = histories[0];
 
 //
 // Register all the patterns here. The index property must be sequential, but the code make sure
