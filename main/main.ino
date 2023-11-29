@@ -16,7 +16,7 @@
 #include "WebServer.h"
 #endif
 
-//#define DEBUG 1
+#define DEBUG 1
 // #define SHOW_TIMINGS
 
 #ifdef DEBUG
@@ -65,8 +65,8 @@ int F1arr[20];
 int F2arr[20];
 int formant_pose = 0;
 
-volatile bool isStripSplitting = false;
-bool previousState = isStripSplitting;
+volatile bool current_mode = 0;
+bool old_mode = current_mode;
 
 uint8_t genre_smoothing[10] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 int genre_pose = 0;
@@ -251,15 +251,15 @@ void loop() {
 
       // If the last run was not using strip splitting, clear all buffers
       // and histories.
-      if(isStripSplitting != previousState){
-        previousState = isStripSplitting;
+      if(current_mode != old_mode){
+        old_mode = current_mode;
         memset(leds, 0, sizeof(CRGB) * NUM_LEDS);
         memset(hist, 0, sizeof(CRGB) * NUM_LEDS);
         histories[0] = Pattern_History();
         histories[1] = Pattern_History();
       }
 
-      if(isStripSplitting){
+      if(current_mode == 1){
         // Set the virtual LED strip length
         virtual_led_count = HALF_NUM_LEDS;
 

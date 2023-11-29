@@ -8,7 +8,7 @@ typedef void (*SimplePatternList[])();
 //#define LAYER_PATTERNS
 #define HUE_FLAG
 #define DEBUG
-#define VIRTUAL_LED_STRIP
+//#define VIRTUAL_LED_STRIP
 
 // Array size macro
 #define ARRAY_SIZE(A) (sizeof(A) / sizeof((A)[0]))

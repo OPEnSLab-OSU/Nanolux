@@ -42,8 +42,8 @@ const getSecondaryPattern = () =>
 const getNoise = () =>
     getData('noise');
 
-const getIsStripSplitting = () =>
-    getData('splitting');
+const getExclusiveMode = () =>
+    getData('mode');
 
 const getWiFiList = () =>
     getData('wifis');
@@ -75,8 +75,8 @@ const saveSecondaryPattern = (patternIndex) =>
 const saveNoise = (noise) =>
     axios.put(`${base_url}/api/noise`,{noise});
 
-const saveSplitting = (isSplitting) =>
-    axios.put(`${base_url}/api/splitting`,{isSplitting});
+const saveExclusiveMode = (mode) =>
+    axios.put(`${base_url}/api/mode`,{mode});
 
 
 const saveSettings = (settings) =>
@@ -105,7 +105,7 @@ export {
     getHostname,
     saveHostname,
     getHistory,
-    saveSplitting,
-    getIsStripSplitting,
+    getExclusiveMode,
+    saveExclusiveMode,
     base_url
 };
