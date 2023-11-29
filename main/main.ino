@@ -247,13 +247,35 @@ void loop() {
     #else
 
       if(isStripSplitting){
+        // Set the virtual LED strip length
         virtual_led_count = HALF_NUM_LEDS;
+
+        // Swap out the current loaded history for the loaded history of
+        // pattern 2.
+        current_history = histories[1];
+
+        // Load pattern 2's previous LED strip data.
+        memcpy(&leds[0], &leds[virtual_led_count], sizeof(CRGB) * virtual_led_count);
+
+        // Run the pattern handler for pattern #2, then store the resulting LED
+        // strip data in another buffer to allow for pattern 1 to run.
         mainPatterns[gCurrentPatternNumber2].pattern_handler();
-        memcpy(&leds[0], &half_leds_buf[0], sizeof(leds[0]) * HALF_NUM_LEDS);
+        memcpy(&half_leds_buf[0], &leds[0], sizeof(CRGB) * virtual_led_count);
+
+        // Overwrite the old LED strip data with pattern #1's previous image 
+        // and load in pattern #1's history. The previous image was overwritten by
+        // pattern 2, so it must be recovered from hist[].
+        memcpy(&leds[0], &hist[0], sizeof(CRGB) * virtual_led_count);
+        current_history = histories[0];
+
+        // Run pattern 1's pattern handler.
         mainPatterns[gCurrentPatternNumber].pattern_handler();
-        memcpy(&half_leds_buf[0], &leds[HALF_NUM_LEDS], sizeof(leds[0]) * HALF_NUM_LEDS);
+
+        // Copy pattern 2's new LED data into the back half of the LED array.
+        memcpy(&leds[virtual_led_count], &half_leds_buf[0], sizeof(CRGB) * virtual_led_count);
       }else{
         virtual_led_count = NUM_LEDS;
+        current_history = histories[0];
         mainPatterns[gCurrentPatternNumber].pattern_handler();
       }
 
@@ -273,6 +295,8 @@ void loop() {
     #endif
 
     FastLED.show();
+    // Update the buffer.
+    memcpy(hist, leds, sizeof(CRGB) * NUM_LEDS);
     delay(10);
 
 #ifdef ENABLE_WEB_SERVER
