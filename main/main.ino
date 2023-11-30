@@ -33,6 +33,7 @@ arduinoFFT FFT = arduinoFFT();
 CRGB leds[NUM_LEDS];               // Buffer (front)
 CRGB hist[NUM_LEDS];               // Buffer (back)
 
+CRGB leds_upper[NUM_LEDS];
 CRGB empty_strip[NUM_LEDS]; 
 
 // LED arrays and buffers for strip splitting.
@@ -56,6 +57,7 @@ double volume = 0.;
 uint8_t vbrightness = 0;
 double maxDelt = 0.;               // Frequency with the biggest change in amp.
 volatile uint8_t gNoiseGateThreshold = NOISE_GATE_THRESH;
+double alpha = 1;
 
 int beats = 0;
 int frame = 0;                     // For spring mass
@@ -65,7 +67,7 @@ int F1arr[20];
 int F2arr[20];
 int formant_pose = 0;
 
-volatile bool current_mode = 0;
+volatile int current_mode = 0;
 bool old_mode = current_mode;
 
 uint8_t genre_smoothing[10] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
@@ -249,12 +251,17 @@ void loop() {
       layer_patterns();
     #else
 
+       #ifdef DEBUG
+            Serial.println(current_mode);
+        #endif
+
       // If the last run was not using strip splitting, clear all buffers
       // and histories.
       if(current_mode != old_mode){
         old_mode = current_mode;
         memset(leds, 0, sizeof(CRGB) * NUM_LEDS);
         memset(hist, 0, sizeof(CRGB) * NUM_LEDS);
+        memset(leds_upper, 0, sizeof(CRGB) * NUM_LEDS);
         histories[0] = Pattern_History();
         histories[1] = Pattern_History();
       }
@@ -286,10 +293,44 @@ void loop() {
 
         // Copy pattern 2's new LED data into the back half of the LED array.
         memcpy(&leds[virtual_led_count], &half_leds_buf[0], sizeof(CRGB) * virtual_led_count);
+
+        memcpy(hist, leds, sizeof(CRGB) * NUM_LEDS);
+      }else if(current_mode == 2){
+
+        virtual_led_count = NUM_LEDS;
+
+        // Move the upper pattern into the pattern buffer and history buffer.
+        memcpy(&leds[0], &leds_upper[0], sizeof(CRGB) * virtual_led_count);
+        current_history = histories[1];
+
+        // Run the upper pattern's handler.
+        mainPatterns[gCurrentPatternNumber2].pattern_handler();
+
+        // Copy the new pattern 2 back into it's buffer and replace it with
+        // pattern 1.
+        memcpy(&leds_upper[0], &leds[0], sizeof(CRGB) * virtual_led_count);
+        memcpy(&leds[0], &hist[0], sizeof(CRGB) * virtual_led_count);
+        current_history = histories[0];
+
+        // Run pattern 1's handler and store the output in hist.
+        mainPatterns[gCurrentPatternNumber].pattern_handler();
+        memcpy(hist, leds, sizeof(CRGB) * NUM_LEDS);
+
+        // TRANSPARENCY EFFECT
+        // For all pixels, the formula (upper * (alpha)) + (lower * (1 - alpha))
+        // if there is data on the upper LED
+        for(int i = 0; i < NUM_LEDS; i++){
+          if(leds_upper[i].red > 0 || leds_upper[i].blue > 0 || leds_upper[i].blue > 0){
+            leds[i] = leds[i]*(1-alpha) + leds_upper[i]*alpha;
+          }
+          
+        }
+
       }else{
         virtual_led_count = NUM_LEDS;
         current_history = histories[0];
         mainPatterns[gCurrentPatternNumber].pattern_handler();
+        memcpy(hist, leds, sizeof(CRGB) * NUM_LEDS);
       }
 
       
@@ -309,7 +350,7 @@ void loop() {
 
     FastLED.show();
     // Update the buffer.
-    memcpy(hist, leds, sizeof(CRGB) * NUM_LEDS);
+    
     delay(10);
 
 #ifdef ENABLE_WEB_SERVER

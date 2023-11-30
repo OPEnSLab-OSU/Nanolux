@@ -46,7 +46,7 @@ const ModeSelector = () => {
                     <label for="sp">Single Pattern</label><br/>
                     <input type="radio" id="dp" name="mode" value="1" onChange={handleClick} checked={value==1}/>
                     <label for="dp">Dual Pattern</label><br/>
-                    <input type="radio" id="zl" name="mode" value="2" onChange={handleClick} checked={value==2} disabled='true'/>
+                    <input type="radio" id="zl" name="mode" value="2" onChange={handleClick} checked={value==2}/>
                     <label for="zl">Z-Layering</label> 
                 </div>
             )}
