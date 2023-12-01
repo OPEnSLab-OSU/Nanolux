@@ -4,7 +4,7 @@ import ModeSelector from "../../components/mode_selector";
 import SecondaryPatterns from "../../components/secondary_patterns";
 import NumericSlider from "../../components/numeric_slider";
 import {useState, useEffect} from "preact/hooks";
-import {getNoise, saveNoise} from "../../utils/api";
+import {getNoise, saveNoise, getAlpha, saveAlpha} from "../../utils/api";
 import {useConnectivity} from "../../context/online_context";
 
 const Settings = () => {
@@ -15,6 +15,7 @@ const Settings = () => {
 	useEffect(() => {
 		if (isConnected) {
 			getNoise().then(data => setSettings(data));
+			getAlpha().then(data => setSettings(data));
 		}
 	}, [isConnected])
 
@@ -25,16 +26,17 @@ const Settings = () => {
 		}
 	}
 
+	const handleAlphaChange = async (newValue) => {
+		setSettings(current => ({...current, alpha: newValue}));
+		if (isConnected) {
+			await saveAlpha(settings.alpha);
+		}
+	}
+
 	return (
 		<div className={style.home}>
 			<div className={style.settings_control}>
 				<Patterns />
-			</div>
-			<div className={style.settings_control}>
-				<SecondaryPatterns />
-			</div>
-			<div className={style.settings_control}>
-				<ModeSelector />
 			</div>
 			<div className={style.settings_control}>
 				{ settings && <NumericSlider
@@ -44,6 +46,22 @@ const Settings = () => {
 					min={0}
 					max={100}
 					onValueChanged={handleNoiseChange}
+				/> }
+			</div>
+			<div className={style.settings_control}>
+				<ModeSelector />
+			</div>
+			<div className={style.settings_control}>
+				<SecondaryPatterns />
+			</div>	
+			<div className={style.settings_control}>
+				{ settings && <NumericSlider
+					className={style.settings_control}
+					label="Z-Layering Transparency"
+					savedValue={settings.alpha}
+					min={0}
+					max={100}
+					onValueChanged={handleAlphaChange}
 				/> }
 			</div>
 		</div>

@@ -42,6 +42,9 @@ const getSecondaryPattern = () =>
 const getNoise = () =>
     getData('noise');
 
+const getAlpha = () =>
+    getData('alpha');
+
 const getExclusiveMode = () =>
     getData('mode');
 
@@ -75,6 +78,9 @@ const saveSecondaryPattern = (patternIndex) =>
 const saveNoise = (noise) =>
     axios.put(`${base_url}/api/noise`,{noise});
 
+const saveAlpha = (alpha) =>
+    axios.put(`${base_url}/api/alpha`,{alpha});
+
 const saveExclusiveMode = (mode) =>
     axios.put(`${base_url}/api/mode`,{mode});
 
@@ -107,5 +113,7 @@ export {
     getHistory,
     getExclusiveMode,
     saveExclusiveMode,
+    saveAlpha,
+    getAlpha,
     base_url
 };

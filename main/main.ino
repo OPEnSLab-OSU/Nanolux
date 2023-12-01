@@ -57,7 +57,7 @@ double volume = 0.;
 uint8_t vbrightness = 0;
 double maxDelt = 0.;               // Frequency with the biggest change in amp.
 volatile uint8_t gNoiseGateThreshold = NOISE_GATE_THRESH;
-double alpha = 1;
+volatile double alpha = 100;
 
 int beats = 0;
 int frame = 0;                     // For spring mass
@@ -68,7 +68,7 @@ int F2arr[20];
 int formant_pose = 0;
 
 volatile int current_mode = 0;
-bool old_mode = current_mode;
+int old_mode = current_mode;
 
 uint8_t genre_smoothing[10] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 int genre_pose = 0;
@@ -321,9 +321,16 @@ void loop() {
         // if there is data on the upper LED
         for(int i = 0; i < NUM_LEDS; i++){
           if(leds_upper[i].red > 0 || leds_upper[i].blue > 0 || leds_upper[i].blue > 0){
-            leds[i] = leds[i]*(1-alpha) + leds_upper[i]*alpha;
+            //leds[i] = leds[i]*(.5) + leds_upper[i]*(.5);
+            leds[i].r = leds[i].r*(.5) + leds_upper[i].r*.5;
+            leds[i].g = leds[i].g*(.5) + leds_upper[i].g*.5;
+            leds[i].b = leds[i].b*(.5) + leds_upper[i].b*.5;
+            leds[i] = leds_upper[i];
+
+            #ifdef DEBUG
+              Serial.println(leds_upper[i].green);
+            #endif
           }
-          
         }
 
       }else{

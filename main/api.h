@@ -117,9 +117,33 @@ inline void handle_noise_put_request(AsyncWebServerRequest* request, JsonVariant
     }
 }
 
+inline void handle_alpha_put_request(AsyncWebServerRequest* request, JsonVariant& json) {
+    if (request->method() == HTTP_PUT) {
+        const JsonObject& payload = json.as<JsonObject>();
+        
+        int status = HTTP_OK;
+        const uint8_t a = payload["alpha"];
+        if (a > 0 && a < 100) {
+            alpha = a;
+            request->send(HTTP_OK, CONTENT_TEXT, build_response(true, "alpha set.", nullptr));
+        }
+        else {
+            request->send(HTTP_BAD_REQUEST, CONTENT_TEXT, build_response(true, "Invalid alpha value.", nullptr));
+        }
+    }
+    else {
+        request->send(HTTP_METHOD_NOT_ALLOWED);
+    }
+}
+
 
 inline void handle_noise_get_request(AsyncWebServerRequest* request) {
     const String response = String("{ \"noise\": ") + gNoiseGateThreshold + String(" }");
+    request->send(HTTP_OK, CONTENT_JSON, response);
+}
+
+inline void handle_alpha_get_request(AsyncWebServerRequest* request) {
+    const String response = String("{ \"alpha\": ") + alpha + String(" }");
     request->send(HTTP_OK, CONTENT_JSON, response);
 }
 
@@ -155,14 +179,16 @@ APIGetHook apiGetHooks[] = {
     { "/api/pattern", handle_pattern_get_request},
     { "/api/pattern2", handle_secondary_pattern_get_request},
     { "/api/noise", handle_noise_get_request},
+    { "/api/alpha", handle_alpha_get_request},
     { "/api/mode", handle_mode_get_request}
 };
-constexpr int API_GET_HOOK_COUNT = 5;
+constexpr int API_GET_HOOK_COUNT = 6;
 
 APIPutHook apiPutHooks[] = {
     { "/api/pattern", handle_pattern_put_request},
     { "/api/pattern2", handle_secondary_pattern_put_request},
     { "/api/noise", handle_noise_put_request},
+    { "/api/alpha", handle_alpha_put_request},
     { "/api/mode", handle_mode_put_request}
 };
-constexpr int API_PUT_HOOK_COUNT = 4;
+constexpr int API_PUT_HOOK_COUNT = 5;
