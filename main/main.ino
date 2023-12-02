@@ -16,7 +16,7 @@
 #include "WebServer.h"
 #endif
 
-#define DEBUG 1
+//#define DEBUG 1
 // #define SHOW_TIMINGS
 
 #ifdef DEBUG
@@ -34,10 +34,6 @@ CRGB leds[NUM_LEDS];               // Buffer (front)
 CRGB hist[NUM_LEDS];               // Buffer (back)
 
 CRGB leds_upper[NUM_LEDS];
-CRGB empty_strip[NUM_LEDS]; 
-
-// LED arrays and buffers for strip splitting.
-CRGB half_leds_buf[HALF_NUM_LEDS];
 int virtual_led_count = NUM_LEDS;
 
 unsigned int sampling_period_us = round(1000000/SAMPLING_FREQUENCY);
@@ -57,7 +53,7 @@ double volume = 0.;
 uint8_t vbrightness = 0;
 double maxDelt = 0.;               // Frequency with the biggest change in amp.
 volatile uint8_t gNoiseGateThreshold = NOISE_GATE_THRESH;
-volatile double alpha = 100;
+volatile int alpha = 0;
 
 int beats = 0;
 int frame = 0;                     // For spring mass
@@ -205,6 +201,17 @@ void runTask0(void * pvParameters) {
   }
 }
 
+int check_for_mode_change(int source, int target){
+  if(source != target){
+    memset(leds, 0, sizeof(CRGB) * NUM_LEDS);
+    memset(hist, 0, sizeof(CRGB) * NUM_LEDS);
+    memset(leds_upper, 0, sizeof(CRGB) * NUM_LEDS);
+    histories[0] = Pattern_History();
+    histories[1] = Pattern_History();
+  }
+  return source;
+}
+
 void setup() {
     Serial.begin(115200);               // start USB serial communication
     while(!Serial){ ; }
@@ -230,6 +237,35 @@ void setup() {
 #endif
 }
 
+/**
+* load_process_store() does 4 major actions:
+* 
+* 1) Move LED information from a buffer into the main LED buffer.
+* 2) Switch history to the history about to be used for pattern processing.
+* 3) Run the pattern handler for a given pattern index.
+* 4) If such a buffer exists, move the data in the main LED buffer to an
+*    output buffer.
+*    
+* To ensure LED data is not copied into an output buffer, leave *in as NULL.
+**/
+void load_process_store(CRGB *out, CRGB *in, int size, int p_index, int h_index){
+  memcpy(&leds[0], &out[0], sizeof(CRGB) * size);
+  current_history = histories[h_index];
+  mainPatterns[p_index].pattern_handler();
+
+  // Only copy into *in if *in exists 
+  if(in != NULL)
+    memcpy(&out[0], &leds[0], sizeof(CRGB) * size);
+}
+
+void calculate_layering(CRGB *upper, CRGB *lower, int length, uint8_t a){
+  for(int i = 0; i < length; i++){
+    if(upper[i].red > 0 || upper[i].blue > 0 || upper[i].blue > 0){
+      leds[i] = blend(upper[i], lower[i], a);
+    }
+  }
+}
+
 void loop() {
     audio_analysis(); // sets peak and volume
 
@@ -247,101 +283,70 @@ void loop() {
       const int start = micros();
     #endif
 
-    #ifdef LAYER_PATTERNS
-      layer_patterns();
-    #else
+    // If the last run was not using strip splitting, clear all buffers
+    // and histories.
+    old_mode = check_for_mode_change(current_mode, old_mode);
 
-       #ifdef DEBUG
-            Serial.println(current_mode);
-        #endif
-
-      // If the last run was not using strip splitting, clear all buffers
-      // and histories.
-      if(current_mode != old_mode){
-        old_mode = current_mode;
-        memset(leds, 0, sizeof(CRGB) * NUM_LEDS);
-        memset(hist, 0, sizeof(CRGB) * NUM_LEDS);
-        memset(leds_upper, 0, sizeof(CRGB) * NUM_LEDS);
-        histories[0] = Pattern_History();
-        histories[1] = Pattern_History();
-      }
-
-      if(current_mode == 1){
-        // Set the virtual LED strip length
+    switch(current_mode){
+      case STRIP_SPLITTING:
+        // Set the virtual LED strip length to half of the real length.
         virtual_led_count = HALF_NUM_LEDS;
 
-        // Swap out the current loaded history for the loaded history of
-        // pattern 2.
-        current_history = histories[1];
+        load_process_store(
+          &hist[virtual_led_count],
+          &leds[virtual_led_count],
+          virtual_led_count,
+          gCurrentPatternNumber2,
+          1
+        );
 
-        // Load pattern 2's previous LED strip data.
-        memcpy(&leds[0], &leds[virtual_led_count], sizeof(CRGB) * virtual_led_count);
+        load_process_store(
+          &hist[0],
+          NULL,
+          virtual_led_count,
+          gCurrentPatternNumber,
+          0
+        );
 
-        // Run the pattern handler for pattern #2, then store the resulting LED
-        // strip data in another buffer to allow for pattern 1 to run.
-        mainPatterns[gCurrentPatternNumber2].pattern_handler();
-        memcpy(&half_leds_buf[0], &leds[0], sizeof(CRGB) * virtual_led_count);
-
-        // Overwrite the old LED strip data with pattern #1's previous image 
-        // and load in pattern #1's history. The previous image was overwritten by
-        // pattern 2, so it must be recovered from hist[].
-        memcpy(&leds[0], &hist[0], sizeof(CRGB) * virtual_led_count);
-        current_history = histories[0];
-
-        // Run pattern 1's pattern handler.
-        mainPatterns[gCurrentPatternNumber].pattern_handler();
-
-        // Copy pattern 2's new LED data into the back half of the LED array.
-        memcpy(&leds[virtual_led_count], &half_leds_buf[0], sizeof(CRGB) * virtual_led_count);
-
+        // Copy the main LED array into a long-term storage buffer.
         memcpy(hist, leds, sizeof(CRGB) * NUM_LEDS);
-      }else if(current_mode == 2){
 
+      break;
+
+      case Z_LAYERING:
         virtual_led_count = NUM_LEDS;
 
-        // Move the upper pattern into the pattern buffer and history buffer.
-        memcpy(&leds[0], &leds_upper[0], sizeof(CRGB) * virtual_led_count);
-        current_history = histories[1];
+        load_process_store(
+          &leds_upper[0],
+          &leds_upper[0],
+          virtual_led_count,
+          gCurrentPatternNumber2,
+          1
+        );
 
-        // Run the upper pattern's handler.
-        mainPatterns[gCurrentPatternNumber2].pattern_handler();
+        load_process_store(
+          &hist[0],
+          &hist[0],
+          virtual_led_count,
+          gCurrentPatternNumber,
+          0
+        );
 
-        // Copy the new pattern 2 back into it's buffer and replace it with
-        // pattern 1.
-        memcpy(&leds_upper[0], &leds[0], sizeof(CRGB) * virtual_led_count);
-        memcpy(&leds[0], &hist[0], sizeof(CRGB) * virtual_led_count);
-        current_history = histories[0];
+        calculate_layering(
+          &leds_upper[0],
+          &hist[0],
+          virtual_led_count,
+          alpha
+        );
 
-        // Run pattern 1's handler and store the output in hist.
-        mainPatterns[gCurrentPatternNumber].pattern_handler();
-        memcpy(hist, leds, sizeof(CRGB) * NUM_LEDS);
+      break;
 
-        // TRANSPARENCY EFFECT
-        // For all pixels, the formula (upper * (alpha)) + (lower * (1 - alpha))
-        // if there is data on the upper LED
-        for(int i = 0; i < NUM_LEDS; i++){
-          if(leds_upper[i].red > 0 || leds_upper[i].blue > 0 || leds_upper[i].blue > 0){
-            //leds[i] = leds[i]*(.5) + leds_upper[i]*(.5);
-            leds[i].r = leds[i].r*(.5) + leds_upper[i].r*.5;
-            leds[i].g = leds[i].g*(.5) + leds_upper[i].g*.5;
-            leds[i].b = leds[i].b*(.5) + leds_upper[i].b*.5;
-            leds[i] = leds_upper[i];
-
-            #ifdef DEBUG
-              Serial.println(leds_upper[i].green);
-            #endif
-          }
-        }
-
-      }else{
+      default:
         virtual_led_count = NUM_LEDS;
         current_history = histories[0];
         mainPatterns[gCurrentPatternNumber].pattern_handler();
         memcpy(hist, leds, sizeof(CRGB) * NUM_LEDS);
-      }
-
-      
-    #endif
+    }
 
     #ifdef SHOW_TIMINGS
       const int end = micros();

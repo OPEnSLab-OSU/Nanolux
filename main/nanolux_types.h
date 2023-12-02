@@ -8,7 +8,7 @@ typedef void (*SimplePatternList[])();
 //#define LAYER_PATTERNS
 #define HUE_FLAG
 #define DEBUG
-//#define VIRTUAL_LED_STRIP
+#define VIRTUAL_LED_STRIP
 
 // Array size macro
 #define ARRAY_SIZE(A) (sizeof(A) / sizeof((A)[0]))
@@ -39,7 +39,9 @@ typedef void (*SimplePatternList[])();
 // v1.2 board, set this pin to A0.
 #define ANALOG_PIN          A2
 
-
+// Mode Constants
+#define STRIP_SPLITTING 1
+#define Z_LAYERING      2
 
 
 // Button Input
