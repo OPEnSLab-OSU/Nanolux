@@ -123,7 +123,7 @@ inline void handle_alpha_put_request(AsyncWebServerRequest* request, JsonVariant
         
         int status = HTTP_OK;
         const uint8_t a = payload["alpha"];
-        if (a > 0 && a < 100) {
+        if (a > -1 && a < 256) {
             alpha = a;
             request->send(HTTP_OK, CONTENT_TEXT, build_response(true, "alpha set.", nullptr));
         }

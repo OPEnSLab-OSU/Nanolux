@@ -44,14 +44,6 @@ void nextPattern() {
   // gCurrentPatternNumber++;
 }
 
-void layer_patterns(){
-  // Loop through number of patterns being layered
-  for(int i = 0; i < NUM_PATTERNS; i++){
-    // Get current pattern led values
-    gPatterns_layer[i]();
-  }
-}
-
 void setColorHSV(CRGB* leds, byte h, byte s, byte v) {
   // create a new HSV color
   CHSV color = CHSV(h, s, v);

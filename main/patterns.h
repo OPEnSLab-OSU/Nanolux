@@ -29,8 +29,6 @@ typedef struct{
 
 void nextPattern();
 
-void layer_patterns();
-
 void setColorHSV(CRGB* leds, byte h, byte s, byte v);
 
 void freq_hue_vol_brightness();

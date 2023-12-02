@@ -60,7 +60,7 @@ const Settings = () => {
 					label="Z-Layering Transparency"
 					savedValue={settings.alpha}
 					min={0}
-					max={100}
+					max={255}
 					onValueChanged={handleAlphaChange}
 				/> }
 			</div>
