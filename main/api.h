@@ -171,8 +171,41 @@ inline void handle_mode_put_request(AsyncWebServerRequest* request, JsonVariant&
     }
 }
 
+inline void handle_save_request(AsyncWebServerRequest* request, JsonVariant& json) {
+    if (request->method() == HTTP_PUT) {
+        const JsonObject& payload = json.as<JsonObject>();
+        
+        int status = HTTP_OK;
+        const int slot = payload["slot"];
+        if(slot < 0 || slot > 5){
+          request->send(HTTP_OK, CONTENT_TEXT, build_response(true, "unacceptable slot: " + slot, nullptr));
+        }else{
+          save_pattern(slot);
+          request->send(HTTP_OK, CONTENT_TEXT, build_response(true, "acceptable slot: " + slot, nullptr));
+        }
+    }
+    else {
+        request->send(HTTP_METHOD_NOT_ALLOWED);
+    }
+}
 
-
+inline void handle_load_request(AsyncWebServerRequest* request, JsonVariant& json) {
+    if (request->method() == HTTP_PUT) {
+        const JsonObject& payload = json.as<JsonObject>();
+        
+        int status = HTTP_OK;
+        const int slot = payload["slot"];
+        if(slot < 0 || slot > 5){
+          request->send(HTTP_OK, CONTENT_TEXT, build_response(true, "unacceptable slot: " + slot, nullptr));
+        }else{
+          load_pattern(slot);
+          request->send(HTTP_OK, CONTENT_TEXT, build_response(true, "acceptable slot: " + slot, nullptr));
+        }
+    }
+    else {
+        request->send(HTTP_METHOD_NOT_ALLOWED);
+    }
+}
 
 APIGetHook apiGetHooks[] = {
     { "/api/patterns", handle_patterns_list_request},
@@ -189,6 +222,8 @@ APIPutHook apiPutHooks[] = {
     { "/api/pattern2", handle_secondary_pattern_put_request},
     { "/api/noise", handle_noise_put_request},
     { "/api/alpha", handle_alpha_put_request},
-    { "/api/mode", handle_mode_put_request}
+    { "/api/mode", handle_mode_put_request},
+    { "/api/save", handle_save_request},
+    { "/api/load", handle_load_request}
 };
-constexpr int API_PUT_HOOK_COUNT = 5;
+constexpr int API_PUT_HOOK_COUNT = 7;

@@ -16,6 +16,7 @@ extern volatile uint8_t gCurrentPatternNumber2;
 extern volatile uint8_t gNoiseGateThreshold;
 extern volatile int alpha;
 extern volatile int current_mode;
+int current_slot = 0;
 
 // PATTERN SAVING VARIABLES
 Saved_Pattern saved_patterns[5];

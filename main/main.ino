@@ -295,7 +295,7 @@ void loop() {
         virtual_led_count = HALF_NUM_LEDS;
 
         load_process_store(
-          &hist[virtual_led_count],
+          &leds[virtual_led_count],
           &leds[virtual_led_count],
           virtual_led_count,
           gCurrentPatternNumber2,
