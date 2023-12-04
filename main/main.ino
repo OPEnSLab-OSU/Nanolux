@@ -9,7 +9,7 @@
 #include "nanolux_types.h"
 #include "nanolux_util.h"
 #include "audio_analysis.h"
-
+#include "storage.h"
 
 #define ENABLE_WEB_SERVER
 #ifdef ENABLE_WEB_SERVER
@@ -213,6 +213,8 @@ int check_for_mode_change(int source, int target){
 }
 
 void setup() {
+    load_all_patterns();
+    load_pattern(0);
     Serial.begin(115200);               // start USB serial communication
     while(!Serial){ ; }
 
