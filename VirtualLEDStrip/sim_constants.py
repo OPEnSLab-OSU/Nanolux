@@ -37,3 +37,4 @@ DEBUG = True
 
 # Connection constants
 NO_SERIAL_PORT = 'No Serial'
+TIMEOUT_LEN = 1

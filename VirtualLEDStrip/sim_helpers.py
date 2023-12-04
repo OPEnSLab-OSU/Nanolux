@@ -42,11 +42,11 @@ def ports_to_list():
     return str_ports
 
 # Set up and connect to serial port 4.
-def serial_setup(is_debug, serial_port):
+def serial_setup(is_debug, serial_port, timeout):
     available_ports = serial_ports() # Get all serial ports(com)
     if is_debug: print_ports(available_ports)
     try:
-        SER = serial.Serial(serial_port, 115200)
+        SER = serial.Serial(serial_port, 115200, timeout=timeout)
     except:
         SER = None
     return SER

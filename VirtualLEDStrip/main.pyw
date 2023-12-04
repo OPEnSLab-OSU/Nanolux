@@ -2,6 +2,7 @@ import sim_constants as sc
 import numpy as np
 import PySimpleGUI as sg
 import sim_helpers as sim
+from Audiolux import Nanolux
 
 # Convert the logo's relative path to this file to an
 # absolute system path.
@@ -70,6 +71,8 @@ if __name__ == '__main__':
     app_state = sc.DEFAULT_STATE
     SER = None
     connection_attempted = False
+    device = None
+    
 
     # Ensure that the bars are drawn at least once
     event, values = window.read(0)
@@ -104,8 +107,14 @@ if __name__ == '__main__':
                 # Attempt to connect to serial. If serial_setup returns a value
                 # that is not None, move to the connected state and give a
                 # notification print.
-                SER = sim.serial_setup(sc.NO_DEBUG, values[sc.COM_SELECTOR_KEY])
+                SER = sim.serial_setup(
+                    sc.NO_DEBUG,
+                    values[sc.COM_SELECTOR_KEY],
+                    sc.TIMEOUT_LEN
+                )
+
                 if SER != None:
+                    device = Nanolux(SER, sc.TIMEOUT_LEN)
                     app_state = sc.CONNECTED_STATE
                     print("Connected to NanoLux device.")
                     connection_attempted = False
@@ -115,10 +124,17 @@ if __name__ == '__main__':
                 window[sc.CONNECT_BUTTON].update(disabled=True)
                 window[sc.DISCONNECT_BUTTON].update(disabled=False)
 
-                # Try to grab serial data and transform the blank image using the BGR
-                # data from the AudioLux.
-                # If this fails for whatever reason, move to the disconnected state and
-                # disconnect from the AudioLux.
+                # Check to see if the serial connection is still alive.
+                # If it is not, move to the disconnect state.
+                if device.is_running():
+                    data = device.getBuffer()
+                    bgr = sim.update_image(bgr, serial_data)
+                    hsv, rgb = sim.bgr_to_hsv_rgb(bgr)
+                    update_bars(bgr, hsv, rgb)
+
+
+
+
                 try:
                     # Read in data from serial and process it into a bgr image.
                     serial_data = SER.readline().decode("utf-8").split()
