@@ -55,6 +55,7 @@ extern double velocities[5];
 extern double accelerations[5];
 extern int locations[5];
 extern double vRealSums[5];
+extern CRGB formant_hues[NUM_LEDS];
 
 void nextPattern() {
   // add one to the current pattern number, and wrap around at the end
@@ -1166,7 +1167,7 @@ void echo_ripple(){
     int distance = map(temp_formants[0], MIN_FREQUENCY, MAX_FREQUENCY, 1, 10);
 
     //color based off the formant hues
-    CHSV ripple_color = CHSV(0, 0, 255);//CRGB(formant_hues[0], formant_hues[1], formant_hues[2]);
+    CRGB ripple_color = CRGB(0, 0, 100);
 
     for(int i = 0; i < NUM_LEDS; i++){
           int distance_from_impact = abs(i - impact_idx);
