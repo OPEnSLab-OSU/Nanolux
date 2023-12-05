@@ -1166,13 +1166,13 @@ void echo_ripple(){
     int distance = map(temp_formants[0], MIN_FREQUENCY, MAX_FREQUENCY, 1, 10);
 
     //color based off the formant hues
-    CHSV ripple_color = CRGB(formant_hues[0], formant_hues[1], formant_hues[2]);
+    CHSV ripple_color = CHSV(0, 0, 255);//CRGB(formant_hues[0], formant_hues[1], formant_hues[2]);
 
     for(int i = 0; i < NUM_LEDS; i++){
           int distance_from_impact = abs(i - impact_idx);
           if (distance_from_impact <= distance){
               //brightness will change based on distance
-              int brightness = map(distance_fromt_impact, 0, distance, 255, 0);
+              int brightness = map(distance_from_impact, 0, distance, 255, 0);
 
               //adds color and fade out effect
               leds[i] = ripple_color;
