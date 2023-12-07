@@ -122,7 +122,8 @@ typedef struct {
 //
 Pattern mainPatterns[]{
     { 0, "None", true, blank},
-    { 1, "Hue Trail", true, freq_hue_trail},
+    { 1, "Mirror Pix Freq", true, mirror_pix_freq},
+    //{ 1, "Hue Trail", true, freq_hue_trail},
     { 2, "Volume Brightness", true, freq_hue_vol_brightness},
     { 3, "Confetti", true, freq_confetti_vol_brightness},
     { 4, "Volume Level Bar", true, volume_level_middle_bar_freq_hue},

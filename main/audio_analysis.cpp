@@ -33,7 +33,7 @@ extern double fss[5]; // Master FIVE SAMPLE SPLIT which stores changing bands ba
 void sample_audio(){
   for(int i=0; i<SAMPLES; i++) {
     microseconds = micros();    //Overflows after around 70 minutes!
-    vReal[i] = analogRead(ANALOG_PIN);
+    vReal[i] = analogRead(ANALOG_PIN) * 3;
     vImag[i] = 0;
     while(micros() < (microseconds + sampling_period_us)){}    // Busy While loop
   }

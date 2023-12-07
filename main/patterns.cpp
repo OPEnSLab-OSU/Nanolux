@@ -304,6 +304,35 @@ void pix_freq() {
   leds[pix_pos] = pix_pos < NUM_LEDS ? CHSV(tempHue, 255, 255):CRGB(0, 0, 0);
 }
 
+void mirror_pix_freq() {
+  fadeToBlackBy(leds, NUM_LEDS, 50);
+  
+  if (volume > 200) {
+    pix_pos = NUM_LEDS / 2 + map(peak, MIN_FREQUENCY, MAX_FREQUENCY, -NUM_LEDS/2 , NUM_LEDS / 2);
+    tempHue = fHue;
+    saturation = map(volume, MIN_VOLUME, MAX_VOLUME, 128, 255);
+  } else {
+    pix_pos = NUM_LEDS / 2;
+    tempHue--;
+  }
+  if (vol_show) {
+    if (volume > 100) {
+      vol_pos = NUM_LEDS / 2 + map(volume, MIN_VOLUME, MAX_VOLUME, -NUM_LEDS/2 , NUM_LEDS / 2);
+      tempHue = fHue;
+      saturation = map(volume, MIN_VOLUME, MAX_VOLUME, 128, 255);
+    } else {
+      vol_pos = NUM_LEDS / 2;
+      saturation = 128;
+    }
+    leds[NUM_LEDS / 2 - 1 - vol_pos] = CRGB(255, 255, 255);
+    leds[NUM_LEDS/2 + 1 + vol_pos] = CRGB(255, 255, 255);
+  }
+  leds[NUM_LEDS/2 - 1 - pix_pos] = CHSV(tempHue, saturation, 255);
+  leds[NUM_LEDS/2 + 1 + pix_pos] = CHSV(tempHue, saturation, 255);
+}
+
+
+
 // Utility function for sending a wave with sine for the math rock function
 void send_wave() {
   double change_by = vbrightness;

@@ -27,6 +27,8 @@ void classical();
 
 void pix_freq();
 
+void mirror_pix_freq();
+
 void send_wave();
 
 void math();
