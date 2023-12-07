@@ -1,28 +1,42 @@
 import style from './style.css';
-import {useState} from "preact/hooks";
+import {useEffect, useState} from "preact/hooks";
+import {loadFromSlot, saveInSlot} from "../../utils/api";
+import {useConnectivity} from "../../context/online_context";
 
 const Save_Entry = ({
-
     name,
     idx
-
 }) => {
-    const [value, setValue] = useState(0);
+    const {isConnected} = useConnectivity();
 
-    const valueChanged = (event) => {
-        setValue(event.target.value);
-    };
+    useEffect(() => {
+        if (isConnected) {
+            setLoading(false);
+        }
+    }, [isConnected])
+
+    const handleLoad = async => {
+        loadFromSlot(idx);
+    }
+
+    const handleSave = async => {
+        saveInSlot(idx);
+    }
 
     return (
-        <div class='entry'>
+
+        
+
+        <div >
             <tr>
-                <th>{name}</th>
+                <th width='150'>{name}</th>
                 <th>
-                    <button>Load Pattern</button>
+                    <button onClick={handleLoad}>Load Pattern</button>
                 </th>
                 <th>
-                    <button border-radius='5px'>Save Pattern</button>
+                    <button onClick={handleSave}>Save Pattern</button>
                 </th>
+                
             </tr>
         </div>
     );

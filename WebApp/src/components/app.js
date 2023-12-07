@@ -4,7 +4,6 @@ import Settings from '../routes/sets';
 // import Profile from '../routes/user';
 import Wifi from "../routes/wifi";
 import Modal from "./network_modal";
-import Saves from "../routes/saved_patterns";
 import {ModalProvider, useModal} from "../context/global_modal_context";
 import {OnlineConnectivityProvider, useConnectivity} from "../context/online_context";
 import {useEffect, useState} from "preact/hooks";
@@ -44,7 +43,6 @@ const AppContent = () => {
                 <Router>
                     <Settings path="/" />
                     {/*<Profile path="/user/" user="me"/>*/}
-                    <Saves path="/saves" />
                     <Wifi path="/wifi" />
                 </Router>
                 {isModalOpen && <Modal isOpen={isModalOpen} onClose={closeModal} />}

@@ -16,9 +16,6 @@ const Header = () => (
 			{/*<Link activeClassName={style.active} href="/user">*/}
 			{/*	User*/}
 			{/*</Link>*/}
-			<Link activeClassName={style.active} href="/saves">
-				Saved Patterns
-			</Link>
 			<Link activeClassName={style.active} href="/wifi">
 				Wifi
 			</Link>

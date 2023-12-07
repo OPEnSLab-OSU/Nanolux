@@ -1,8 +1,13 @@
-button {
-    border-radius: 5px;
-}
-
 .entry {
     border-radius: 5px;
     background-color: mediumseagreen;
+}
+
+.namefield{
+    width: 60px;
+}
+
+.tableHeader{
+    width: 300px;
+    table-layout: fixed;
 }

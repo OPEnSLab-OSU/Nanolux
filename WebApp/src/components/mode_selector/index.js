@@ -3,6 +3,7 @@ import 'preact-material-components/Switch/style.css';
 import {getExclusiveMode, saveExclusiveMode} from "../../utils/api";
 import {useConnectivity} from "../../context/online_context";
 import {LabelSpinner} from "../spinner";
+import useInterval from "../../utils/use_interval";
 
 // Radio buttons code reused from here:
 // https://www.w3schools.com/tags/att_input_type_radio.asp
@@ -32,6 +33,16 @@ const ModeSelector = () => {
             setValue(0);
         }
 
+    }
+
+    useInterval(() => {
+        if (isConnected) {
+            refresh();
+        }
+    }, 1000);
+
+    const refresh = () => {
+        getExclusiveMode().then(data => setValue(data.mode));
     }
 
     return (

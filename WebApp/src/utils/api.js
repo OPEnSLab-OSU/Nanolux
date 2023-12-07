@@ -81,6 +81,12 @@ const saveNoise = (noise) =>
 const saveAlpha = (alpha) =>
     axios.put(`${base_url}/api/alpha`,{alpha});
 
+const saveInSlot = (slot) =>
+    axios.put(`${base_url}/api/save`,{slot});
+
+const loadFromSlot = (slot) =>
+    axios.put(`${base_url}/api/load`,{slot});
+
 const saveExclusiveMode = (mode) =>
     axios.put(`${base_url}/api/mode`,{mode});
 
@@ -115,5 +121,7 @@ export {
     saveExclusiveMode,
     saveAlpha,
     getAlpha,
+    saveInSlot,
+    loadFromSlot,
     base_url
 };

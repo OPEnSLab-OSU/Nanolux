@@ -35,7 +35,7 @@ const SecondaryPatterns = () => {
         if (isConnected) {
             refreshPattern();
         }
-    }, 5000);
+    }, 1000);
 
     const handleSelection = async (event) => {
         const newPattern = event.target.value;
