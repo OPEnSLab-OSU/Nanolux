@@ -22,8 +22,24 @@ const Saves = () => {
 	return (
 		<div className={style.home}>
 			<Save_Entry 
-                name='Default'
+                name="Default Pattern"
                 idx='0'
+            />
+            <Save_Entry 
+                name="Saved Pattern 1"
+                idx='1'
+            />
+            <Save_Entry 
+                name="Saved Pattern 2"
+                idx='2'
+            />
+            <Save_Entry 
+                name="Saved Pattern 3"
+                idx='3'
+            />
+            <Save_Entry 
+                name="Saved Pattern 4"
+                idx='4'
             />
 		</div>
 	);
