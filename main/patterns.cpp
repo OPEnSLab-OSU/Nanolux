@@ -56,6 +56,7 @@ extern double accelerations[5];
 extern int locations[5];
 extern double vRealSums[5];
 
+
 void nextPattern() {
   // add one to the current pattern number, and wrap around at the end
   // gCurrentPatternNumber = (gCurrentPatternNumber + 1) % ARRAY_SIZE(gPatterns);
@@ -306,7 +307,7 @@ void pix_freq() {
 
 void mirror_pix_freq() {
   fadeToBlackBy(leds, NUM_LEDS, 50);
-  
+  uint8_t saturation = 255;
   if (volume > 200) {
     pix_pos = NUM_LEDS / 2 + map(peak, MIN_FREQUENCY, MAX_FREQUENCY, -NUM_LEDS/2 , NUM_LEDS / 2);
     tempHue = fHue;
