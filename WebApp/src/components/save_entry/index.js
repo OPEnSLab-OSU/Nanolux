@@ -14,11 +14,11 @@ const Save_Entry = ({
     };
 
     return (
-        <div>
+        <div class='entry'>
             <tr>
                 <th>{name}</th>
                 <th>
-                    <button border-radius='5px'>Load Pattern</button>
+                    <button>Load Pattern</button>
                 </th>
                 <th>
                     <button border-radius='5px'>Save Pattern</button>

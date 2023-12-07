@@ -21,7 +21,7 @@ const Saves = () => {
 
 	return (
 		<div className={style.home}>
-			<Save_Entry 
+            <Save_Entry 
                 name="Default Pattern"
                 idx='0'
             />
