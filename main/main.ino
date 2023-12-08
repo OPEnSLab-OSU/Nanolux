@@ -35,7 +35,7 @@ CRGB hist[NUM_LEDS];               // Buffer (back)
 
 CRGB leds_upper[NUM_LEDS];
 int virtual_led_count = NUM_LEDS;
-
+volatile uint8_t alpha = 0;
 unsigned int sampling_period_us = round(1000000/SAMPLING_FREQUENCY);
 unsigned long microseconds;
 double vReal[SAMPLES];             // Sampling buffers
@@ -53,7 +53,7 @@ double volume = 0.;
 uint8_t vbrightness = 0;
 double maxDelt = 0.;               // Frequency with the biggest change in amp.
 volatile uint8_t gNoiseGateThreshold = NOISE_GATE_THRESH;
-volatile int alpha = 0;
+
 
 int beats = 0;
 int frame = 0;                     // For spring mass
@@ -63,8 +63,8 @@ int F1arr[20];
 int F2arr[20];
 int formant_pose = 0;
 
-volatile int current_mode = 0;
-int old_mode = current_mode;
+volatile uint8_t current_mode = 0;
+uint8_t old_mode = current_mode;
 
 uint8_t genre_smoothing[10] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 int genre_pose = 0;
@@ -201,7 +201,7 @@ void runTask0(void * pvParameters) {
   }
 }
 
-int check_for_mode_change(int source, int target){
+uint8_t check_for_mode_change(uint8_t source, uint8_t target){
   if(source != target){
     memset(leds, 0, sizeof(CRGB) * NUM_LEDS);
     memset(hist, 0, sizeof(CRGB) * NUM_LEDS);
@@ -262,9 +262,7 @@ void load_process_store(CRGB *out, CRGB *in, int size, int p_index, int h_index)
 
 void calculate_layering(CRGB *upper, CRGB *lower, int length, uint8_t a){
   for(int i = 0; i < length; i++){
-    if(upper[i].red > 0 || upper[i].blue > 0 || upper[i].blue > 0){
-      leds[i] = blend(upper[i], lower[i], a);
-    }
+    leds[i] = blend(upper[i], lower[i], a);
   }
 }
 

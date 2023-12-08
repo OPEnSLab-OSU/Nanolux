@@ -21,6 +21,7 @@ const NumericSlider = ({
     const valueChanged = event => {
         current.value = event.target.value;
         onValueChanged(current.value);
+        
     }
 
     return (
@@ -37,7 +38,7 @@ const NumericSlider = ({
                     min={min}
                     max={max}
                     value={current}
-                    onInput={valueChanged}
+                    onChange={valueChanged}
                 />
                 <input
                     className={style.spin_button}

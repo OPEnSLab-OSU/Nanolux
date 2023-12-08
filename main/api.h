@@ -104,7 +104,7 @@ inline void handle_noise_put_request(AsyncWebServerRequest* request, JsonVariant
         
         int status = HTTP_OK;
         const uint8_t noise_gate = payload["noise"];
-        if (noise_gate > 0 && noise_gate < MAX_NOISE_GATE_THRESH) {
+        if (noise_gate >= 0 && noise_gate <= MAX_NOISE_GATE_THRESH) {
             gNoiseGateThreshold = noise_gate;
             request->send(HTTP_OK, CONTENT_TEXT, build_response(true, "Noise gate threshold set.", nullptr));
         }
@@ -123,7 +123,7 @@ inline void handle_alpha_put_request(AsyncWebServerRequest* request, JsonVariant
         
         int status = HTTP_OK;
         const uint8_t a = payload["alpha"];
-        if (a > -1 && a < 256) {
+        if (a > -1 && a <= 255) {
             alpha = a;
             request->send(HTTP_OK, CONTENT_TEXT, build_response(true, "alpha set.", nullptr));
         }

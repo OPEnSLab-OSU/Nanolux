@@ -1,4 +1,3 @@
-import style from './style.css';
 import {useEffect, useState} from "preact/hooks";
 import {loadFromSlot, saveInSlot} from "../../utils/api";
 import {useConnectivity} from "../../context/online_context";
@@ -9,12 +8,6 @@ const Save_Entry = ({
 }) => {
     const {isConnected} = useConnectivity();
 
-    useEffect(() => {
-        if (isConnected) {
-            setLoading(false);
-        }
-    }, [isConnected])
-
     const handleLoad = async => {
         loadFromSlot(idx);
     }
@@ -24,9 +17,6 @@ const Save_Entry = ({
     }
 
     return (
-
-        
-
         <div >
             <tr>
                 <th width='150'>{name}</th>

@@ -14,8 +14,8 @@ struct Saved_Pattern{
 extern volatile uint8_t gCurrentPatternNumber; // Index number of which pattern is current
 extern volatile uint8_t gCurrentPatternNumber2;
 extern volatile uint8_t gNoiseGateThreshold;
-extern volatile int alpha;
-extern volatile int current_mode;
+extern volatile uint8_t alpha;
+extern volatile uint8_t current_mode;
 int current_slot = 0;
 
 // PATTERN SAVING VARIABLES
@@ -47,7 +47,7 @@ void load_pattern(int slot){
   gCurrentPatternNumber = saved_patterns[slot].id1;
   gCurrentPatternNumber2 = saved_patterns[slot].id2;
   gNoiseGateThreshold = saved_patterns[slot].noise;
-  alpha = saved_patterns[slot].noise;
+  alpha = saved_patterns[slot].alpha;
   current_mode = saved_patterns[slot].mode;
 }
 

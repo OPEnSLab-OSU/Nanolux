@@ -13,6 +13,7 @@ const Settings = () => {
 	const { isConnected } = useConnectivity();
 
 	const [settings, setSettings] = useState({});
+	const [latch, setLatch] = useState(false);
 
 	useEffect(() => {
 		if (isConnected) {
@@ -24,14 +25,14 @@ const Settings = () => {
 	const handleNoiseChange = async (newValue) => {
 		setSettings(current => ({...current, noise: newValue}));
 		if (isConnected) {
-			await saveNoise(settings.noise);
+			await saveNoise(newValue);
 		}
 	}
 
 	const handleAlphaChange = async (newValue) => {
 		setSettings(current => ({...current, alpha: newValue}));
 		if (isConnected) {
-			await saveAlpha(settings.alpha);
+			await saveAlpha(newValue);
 		}
 	}
 
