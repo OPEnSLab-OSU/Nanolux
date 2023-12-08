@@ -44,6 +44,11 @@ void nextPattern() {
   // gCurrentPatternNumber++;
 }
 
+void clearLEDSegment(){
+  for(int i = 0; i < virtual_led_count; i++)
+    leds[i] = CRGB(0,0,0);
+}
+
 void setColorHSV(CRGB* leds, byte h, byte s, byte v) {
   // create a new HSV color
   CHSV color = CHSV(h, s, v);
@@ -74,7 +79,7 @@ void freq_confetti_vol_brightness(){
 
 
 void volume_level_middle_bar_freq_hue(){
-  FastLED.clear();
+  clearLEDSegment();
 
   int n = remap(volume, MIN_VOLUME, MAX_VOLUME, 0, virtual_led_count/2);
   int mid_point = (int) virtual_led_count/2;
@@ -97,9 +102,8 @@ void freq_hue_trail(){
   }
 }
 
-
 void blank(){
-  FastLED.clear();
+  clearLEDSegment();
 }
 
 
