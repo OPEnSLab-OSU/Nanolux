@@ -281,6 +281,32 @@ void pix_freq() {
   leds[current_history.pix_pos] = current_history.pix_pos < virtual_led_count ? CHSV(current_history.tempHue, 255, 255):CRGB(0, 0, 0);
 }
 
+// A mirroed version of the pix_freq, splittion it on two sides starting from the middle
+void mirror_pix_freq() {
+  fadeToBlackBy(leds, virtual_led_count, 50);
+        
+  if (volume > 125) {
+    current_history.pix_pos = (virtual_led_count / 2) + map(peak, MIN_FREQUENCY, MAX_FREQUENCY, -virtual_led_count/2 , virtual_led_count / 2);
+    current_history.tempHue = fHue;
+    
+  } else {
+    current_history.pix_pos--;
+    current_history.vol_pos--;
+  }
+  if (vol_show) {
+    if (volume > 75) {
+      current_history.vol_pos = (virtual_led_count / 2) + map(volume, MIN_VOLUME, MAX_VOLUME, virtual_led_count/2 , virtual_led_count / 2);
+      current_history.tempHue = fHue;
+    } else {
+      current_history.vol_pos--;
+    }
+    leds[virtual_led_count / 2 - 1 - current_history.vol_pos] =  current_history.vol_pos < virtual_led_count/2 ? CRGB(255, 255, 255):CRGB(0, 0, 0);
+    leds[virtual_led_count / 2 + 1 + current_history.vol_pos] = current_history.vol_pos < virtual_led_count/2 ? CRGB(255, 255, 255):CRGB(0, 0, 0);
+  }
+  leds[virtual_led_count/2 - 1 - current_history.pix_pos] = current_history.pix_pos < virtual_led_count/2 ? CHSV(current_history.tempHue, 255, 255):CRGB(0, 0, 0);
+  leds[virtual_led_count/2 + 1 + current_history.pix_pos] = current_history.pix_pos < virtual_led_count/2 ? CHSV(current_history.tempHue, 255, 255):CRGB(0, 0, 0);
+}
+
 // Utility function for sending a wave with sine for the math rock function
 void send_wave() {
   double change_by = vbrightness;

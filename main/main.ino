@@ -170,9 +170,10 @@ Pattern mainPatterns[]{
     {33, "Classical", true, classical},
     {34, "Basic Bands", true, basic_bands},
     {35, "Advanced Bands", true, advanced_bands},
-    {36, "Formant Band", true, formant_band}
+    {36, "Formant Band", true, formant_band},
+    {37, "Mirrored Pixel Frequency", true, mirror_pix_freq}
 };
-int NUM_PATTERNS = 37; // MAKE SURE TO UPDATE THIS WITH THE ACTUAL NUMBER OF PATTERNS
+int NUM_PATTERNS = 38; // MAKE SURE TO UPDATE THIS WITH THE ACTUAL NUMBER OF PATTERNS (+1 last array pos)
 
 SimplePatternList gPatterns_layer = {blank, spring_mass_1};
 
