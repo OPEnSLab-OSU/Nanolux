@@ -305,16 +305,16 @@ void pix_freq() {
   leds[pix_pos] = pix_pos < NUM_LEDS ? CHSV(tempHue, 255, 255):CRGB(0, 0, 0);
 }
 
+// A mirroed version of the pix_freq, splittion it on two sides starting from the middle
 void mirror_pix_freq() {
   fadeToBlackBy(leds, NUM_LEDS, 50);
-  
+        
   if (volume > 125) {
     pix_pos = (NUM_LEDS / 2) + map(peak, MIN_FREQUENCY, MAX_FREQUENCY, -NUM_LEDS/2 , NUM_LEDS / 2);
     tempHue = fHue;
     
   } else {
     pix_pos--;
-    tempHue--;
     vol_pos--;
   }
   if (vol_show) {
@@ -324,11 +324,11 @@ void mirror_pix_freq() {
     } else {
       vol_pos--;
     }
-    leds[NUM_LEDS / 2 - 1 - vol_pos] = CRGB(255, 255, 255);
-    leds[NUM_LEDS/2 + 1 + vol_pos] = CRGB(255, 255, 255);
+    leds[NUM_LEDS / 2 - 1 - vol_pos] =  vol_pos < NUM_LEDS/2 ? CRGB(255, 255, 255):CRGB(0, 0, 0);
+    leds[NUM_LEDS/2 + 1 + vol_pos] = vol_pos < NUM_LEDS/2 ? CRGB(255, 255, 255):CRGB(0, 0, 0);
   }
-  leds[NUM_LEDS/2 - 1 - pix_pos] = CHSV(tempHue, 255, vbrightness);
-  leds[NUM_LEDS/2 + 1 + pix_pos] = CHSV(tempHue, 255, vbrightness);
+  leds[NUM_LEDS/2 - 1 - pix_pos] = pix_pos < NUM_LEDS/2 ? CHSV(tempHue, 255, 255):CRGB(0, 0, 0);
+  leds[NUM_LEDS/2 + 1 + pix_pos] = pix_pos < NUM_LEDS/2 ? CHSV(tempHue, 255, 255):CRGB(0, 0, 0);
 }
 
 
