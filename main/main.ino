@@ -121,7 +121,7 @@ typedef struct {
 // It will not be selectable and the loop below will not know about it.
 //
 Pattern mainPatterns[]{
-    { 0, "None", true, blank},
+    { 0, "Echo Ripple", true, echo_ripple},//{ 0, "None", true, blank},
     { 1, "Hue Trail", true, freq_hue_trail},
     { 2, "Volume Brightness", true, freq_hue_vol_brightness},
     { 3, "Confetti", true, freq_confetti_vol_brightness},

@@ -1157,30 +1157,96 @@ void volume_level_middle_bar_freq_hue_with_fade_and_blur(){
 }
 
 void echo_ripple(){
-    //used to get the frequency info
-    double* temp_formants = density_formant();
+    //prevents dead pixels from staying
+    for (int i = 0; i < NUM_LEDS; i++) {
+      leds[i] = CRGB::Black;  // Set to black (off)
+    }
+    FastLED.show();
+    
+    // //used to get the frequency info
+    // double* temp_formants = density_formant();
 
-    //the led that the drop will ripple from
-    int impact_idx = random16(NUM_LEDS);
+    // //the led that the drop will ripple from
+    // int impact_idx = random16(NUM_LEDS);
 
-    //determines distance of the ripple based off frequency
-    int distance = map(temp_formants[0], MIN_FREQUENCY, MAX_FREQUENCY, 1, 10);
+    // //determines distance of the ripple based off frequency
+    // //int distance = map(temp_formants[0], MIN_FREQUENCY, MAX_FREQUENCY, 1, 10);
 
-    //color based off the formant hues
-    CRGB ripple_color = CRGB(0, 0, 100);
+    // //color based off the formant hues
+    // CRGB ripple_color = CRGB(0, 0, 100);
 
-    for(int i = 0; i < NUM_LEDS; i++){
-          int distance_from_impact = abs(i - impact_idx);
-          if (distance_from_impact <= distance){
-              //brightness will change based on distance
-              int brightness = map(distance_from_impact, 0, distance, 255, 0);
+    int randomPixel1 = random(NUM_LEDS);
+    int randomPixel2 = random(NUM_LEDS);
+    int randomPixel3 = random(NUM_LEDS);
 
-              //adds color and fade out effect
-              leds[i] = ripple_color;
-              leds[i].fadeToBlackBy(brightness);
-          }
+    for (int brightness = 0; brightness <= 255; brightness += 5) {
+      leds[randomPixel1] = CRGB(brightness, 0, 0); // Set the color (red in this case)
+      leds[randomPixel2] = CRGB(0, brightness, 0); 
+      leds[randomPixel3] = CRGB(0, 0, brightness); 
+
+      leds[randomPixel1 + 1] = CRGB(brightness, 0, 0);
+      leds[randomPixel2 + 1] = CRGB(0, brightness, 0);
+      leds[randomPixel3 + 1] = CRGB(0, 0, brightness);
+
+      leds[randomPixel1 - 1] = CRGB(brightness, 0, 0);
+      leds[randomPixel2 - 1] = CRGB(0, brightness, 0);
+      leds[randomPixel3 - 1] = CRGB(0, 0, brightness);
+
+      FastLED.show();
+      delay(10); // Adjust the delay for the fade-in speed
+    }
+
+    // Wait for a few seconds
+    delay(800); // Adjust the delay as needed
+
+    // Fade out the pixel
+    for (int brightness = 255; brightness >= 0; brightness -= 5) {
+      leds[randomPixel1] = CRGB(brightness, 0, 0); 
+      leds[randomPixel2] = CRGB(0, brightness, 0); 
+      leds[randomPixel3] = CRGB(0, 0, brightness); 
+
+      leds[randomPixel1 + 1] = CRGB(brightness, 0, 0);
+      leds[randomPixel2 + 1] = CRGB(0, brightness, 0);
+      leds[randomPixel3 + 1] = CRGB(0, 0, brightness);
+
+      leds[randomPixel1 - 1] = CRGB(brightness, 0, 0);
+      leds[randomPixel2 - 1] = CRGB(0, brightness, 0);
+      leds[randomPixel3 - 1] = CRGB(0, 0, brightness);
+      FastLED.show();
+      delay(40); // Adjust the delay for the fade-out speed
+    }
+  
+    leds[randomPixel1] = CRGB::Black;
+    leds[randomPixel2] = CRGB::Black;
+    leds[randomPixel3] = CRGB::Black;
+
+    int distance = 20;
+    int brightness = 5;
+    int brightness_increment = 5;
+
+    for(int i = 1; i < distance; i++, brightness += 5){
+      leds[randomPixel1 + i] = CRGB(brightness, 0, 0);
+      leds[randomPixel2 + i] = CRGB(0, brightness, 0);
+      leds[randomPixel3 + i] = CRGB(0, 0, brightness);
+
+      leds[randomPixel1 - i] = CRGB(brightness, 0, 0);
+      leds[randomPixel2 - i] = CRGB(0, brightness, 0);
+      leds[randomPixel3 - i] = CRGB(0, 0, brightness);
+
+
+      brightness += brightness_increment;
+
+      delay(80);
+      FastLED.show();
+
+      // Fade in each LED individually
+      for (int j = 0; j < NUM_LEDS; j++) {
+        leds[j].fadeToBlackBy(255 - brightness);
+      }
+
+      FastLED.delay(10);
     }
   
   //release formants alloc memory
-  delete[] temp_formants;
+  // delete[] temp_formants;
 }
