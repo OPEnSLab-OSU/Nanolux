@@ -35,7 +35,6 @@ CRGB hist[NUM_LEDS];               // Buffer (back)
 
 CRGB leds_upper[NUM_LEDS];
 int virtual_led_count = NUM_LEDS;
-volatile uint8_t alpha = 0;
 unsigned int sampling_period_us = round(1000000/SAMPLING_FREQUENCY);
 unsigned long microseconds;
 double vReal[SAMPLES];             // Sampling buffers
@@ -44,15 +43,12 @@ double vRealHist[SAMPLES];         // Delta freq
 double delt[SAMPLES];
 double amplitude = 0;              // For spring mass 2
 bool button_pressed = false;
-volatile uint8_t gCurrentPatternNumber = 0; // Index number of which pattern is current
-volatile uint8_t gCurrentPatternNumber2 = 0;
 uint8_t gHue = 0;                  // Rotating base color
 double peak = 0.;                  // Peak frequency
 uint8_t fHue = 0;                  // Hue value based on peak frequency
 double volume = 0.;       
 uint8_t vbrightness = 0;
 double maxDelt = 0.;               // Frequency with the biggest change in amp.
-volatile uint8_t gNoiseGateThreshold = NOISE_GATE_THRESH;
 
 
 int beats = 0;
@@ -63,8 +59,7 @@ int F1arr[20];
 int F2arr[20];
 int formant_pose = 0;
 
-volatile uint8_t current_mode = 0;
-uint8_t old_mode = current_mode;
+
 
 uint8_t genre_smoothing[10] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 int genre_pose = 0;
@@ -106,6 +101,9 @@ double velocities[5] = {0,0,0,0,0};  //for spring mass 3
 double accelerations[5] = {0,0,0,0,0};  //for spring mass 3
 int locations[5] = {70,60,50,40,30}; //for spring mass 3
 double vRealSums[5] = {0,0,0,0,0};
+
+Pattern_Data current_pattern;
+uint8_t old_mode = 0;
 
 //
 // Patterns structure.
@@ -214,8 +212,8 @@ uint8_t check_for_mode_change(uint8_t source, uint8_t target){
 }
 
 void setup() {
-    load_all_patterns();
-    load_pattern(0);
+    load_from_nvs();
+    load_slot(0);
     Serial.begin(115200);               // start USB serial communication
     while(!Serial){ ; }
 
@@ -286,9 +284,9 @@ void loop() {
 
     // If the last run was not using strip splitting, clear all buffers
     // and histories.
-    old_mode = check_for_mode_change(current_mode, old_mode);
+    old_mode = check_for_mode_change(current_pattern.mode, old_mode);
 
-    switch(current_mode){
+    switch(current_pattern.mode){
       case STRIP_SPLITTING:
         // Set the virtual LED strip length to half of the real length.
         virtual_led_count = HALF_NUM_LEDS;
@@ -297,7 +295,7 @@ void loop() {
           &leds[virtual_led_count],
           &leds[virtual_led_count],
           virtual_led_count,
-          gCurrentPatternNumber2,
+          current_pattern.pattern_2,
           1
         );
 
@@ -305,7 +303,7 @@ void loop() {
           &hist[0],
           NULL,
           virtual_led_count,
-          gCurrentPatternNumber,
+          current_pattern.pattern_1,
           0
         );
 
@@ -321,7 +319,7 @@ void loop() {
           &leds_upper[0],
           &leds_upper[0],
           virtual_led_count,
-          gCurrentPatternNumber2,
+          current_pattern.pattern_2,
           1
         );
 
@@ -329,7 +327,7 @@ void loop() {
           &hist[0],
           &hist[0],
           virtual_led_count,
-          gCurrentPatternNumber,
+          current_pattern.pattern_1,
           0
         );
 
@@ -337,7 +335,7 @@ void loop() {
           &leds_upper[0],
           &hist[0],
           virtual_led_count,
-          alpha
+          current_pattern.alpha
         );
 
       break;
@@ -345,13 +343,13 @@ void loop() {
       default:
         virtual_led_count = NUM_LEDS;
         current_history = histories[0];
-        mainPatterns[gCurrentPatternNumber].pattern_handler();
+        mainPatterns[current_pattern.pattern_1].pattern_handler();
         memcpy(hist, leds, sizeof(CRGB) * NUM_LEDS);
     }
 
     #ifdef SHOW_TIMINGS
       const int end = micros();
-      Serial.printf("%s Visualization: %d us\n", mainPatterns[gCurrentPatternNumber].pattern_name, end - start);
+      Serial.printf("%s Visualization: %d us\n", mainPatterns[current_pattern.pattern_1].pattern_name, end - start);
     #endif
 
     #ifdef VIRTUAL_LED_STRIP
@@ -401,7 +399,7 @@ void audio_analysis() {
 
   update_drums();
 
-  noise_gate(gNoiseGateThreshold);
+  noise_gate(current_pattern.noise_thresh);
 
 #ifdef SHOW_TIMINGS
   const int end = micros();

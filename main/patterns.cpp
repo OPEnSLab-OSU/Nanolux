@@ -6,6 +6,7 @@
 #include "nanolux_util.h"
 #include "palettes.h"
 #include "audio_analysis.h"
+#include "storage.h"
 
 extern CRGB leds[NUM_LEDS];        // Buffer (front)
 extern CRGB hist[NUM_LEDS];        // Buffer (back)
@@ -20,7 +21,6 @@ extern bool button_pressed;
 extern SimplePatternList gPatterns;
 extern int NUM_PATTERNS;
 extern SimplePatternList gPatterns_layer;
-extern uint8_t gCurrentPatternNumber;     // Index number of which pattern is current
 extern uint8_t gHue;                      // rotating base color
 extern double peak;                       //  peak frequency
 extern uint8_t fHue;                      // hue value based on peak frequency
@@ -37,11 +37,11 @@ bool gReverseDirection = false;
 extern int virtual_led_count;
 extern Pattern_History current_history;
 
+extern Pattern_Data current_pattern;
+
 void nextPattern() {
   // add one to the current pattern number, and wrap around at the end
-  // gCurrentPatternNumber = (gCurrentPatternNumber + 1) % ARRAY_SIZE(gPatterns);
-  gCurrentPatternNumber = (gCurrentPatternNumber + 1) % NUM_PATTERNS;
-  // gCurrentPatternNumber++;
+  current_pattern.pattern_1 = (current_pattern.pattern_1 + 1) % NUM_PATTERNS;
 }
 
 void clearLEDSegment(){

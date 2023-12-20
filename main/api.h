@@ -58,7 +58,7 @@ inline void handle_pattern_put_request(AsyncWebServerRequest* request, JsonVaria
         int status = HTTP_OK;
         int pattern_index = payload["index"];
         if (pattern_index >= 0 && pattern_index < NUM_PATTERNS) {
-            gCurrentPatternNumber = pattern_index;
+            current_pattern.pattern_1 = pattern_index;
             request->send(HTTP_OK, CONTENT_TEXT, build_response(true, "Pattern set.", nullptr));
         }
         else {
@@ -76,7 +76,7 @@ inline void handle_secondary_pattern_put_request(AsyncWebServerRequest* request,
         int status = HTTP_OK;
         int pattern_index = payload["index"];
         if (pattern_index >= 0 && pattern_index < NUM_PATTERNS) {
-            gCurrentPatternNumber2 = pattern_index;
+            current_pattern.pattern_2 = pattern_index;
             request->send(HTTP_OK, CONTENT_TEXT, build_response(true, "Pattern set.", nullptr));
         }
         else {
@@ -88,12 +88,12 @@ inline void handle_secondary_pattern_put_request(AsyncWebServerRequest* request,
 }
 
 inline void handle_pattern_get_request(AsyncWebServerRequest* request) {
-    const String response = String("{ \"index\": ") + gCurrentPatternNumber + String(" }");
+    const String response = String("{ \"index\": ") + current_pattern.pattern_1 + String(" }");
     request->send(HTTP_OK, CONTENT_JSON, response);
 }
 
 inline void handle_secondary_pattern_get_request(AsyncWebServerRequest* request) {
-    const String response = String("{ \"index\": ") + gCurrentPatternNumber2 + String(" }");
+    const String response = String("{ \"index\": ") + current_pattern.pattern_2 + String(" }");
     request->send(HTTP_OK, CONTENT_JSON, response);
 }
 
@@ -105,7 +105,7 @@ inline void handle_noise_put_request(AsyncWebServerRequest* request, JsonVariant
         int status = HTTP_OK;
         const uint8_t noise_gate = payload["noise"];
         if (noise_gate >= 0 && noise_gate <= MAX_NOISE_GATE_THRESH) {
-            gNoiseGateThreshold = noise_gate;
+            current_pattern.noise_thresh = noise_gate;
             request->send(HTTP_OK, CONTENT_TEXT, build_response(true, "Noise gate threshold set.", nullptr));
         }
         else {
@@ -124,7 +124,7 @@ inline void handle_alpha_put_request(AsyncWebServerRequest* request, JsonVariant
         int status = HTTP_OK;
         const uint8_t a = payload["alpha"];
         if (a > -1 && a <= 255) {
-            alpha = a;
+            current_pattern.alpha = a;
             request->send(HTTP_OK, CONTENT_TEXT, build_response(true, "alpha set.", nullptr));
         }
         else {
@@ -138,17 +138,17 @@ inline void handle_alpha_put_request(AsyncWebServerRequest* request, JsonVariant
 
 
 inline void handle_noise_get_request(AsyncWebServerRequest* request) {
-    const String response = String("{ \"noise\": ") + gNoiseGateThreshold + String(" }");
+    const String response = String("{ \"noise\": ") + current_pattern.noise_thresh + String(" }");
     request->send(HTTP_OK, CONTENT_JSON, response);
 }
 
 inline void handle_alpha_get_request(AsyncWebServerRequest* request) {
-    const String response = String("{ \"alpha\": ") + alpha + String(" }");
+    const String response = String("{ \"alpha\": ") +  current_pattern.alpha + String(" }");
     request->send(HTTP_OK, CONTENT_JSON, response);
 }
 
 inline void handle_mode_get_request(AsyncWebServerRequest* request) {
-    const String response = String("{ \"mode\": ") + current_mode + String(" }");
+    const String response = String("{ \"mode\": ") +  current_pattern.mode + String(" }");
     request->send(HTTP_OK, CONTENT_JSON, response);
 }
 
@@ -161,7 +161,7 @@ inline void handle_mode_put_request(AsyncWebServerRequest* request, JsonVariant&
         if(mode < 0 || mode > 2){
           request->send(HTTP_OK, CONTENT_TEXT, build_response(true, "unacceptable mode: " + mode, nullptr));
         }else{
-          current_mode = mode;
+          current_pattern.mode = mode;
           request->send(HTTP_OK, CONTENT_TEXT, build_response(true, "acceptable mode: " + mode, nullptr));
         }
 
@@ -180,7 +180,8 @@ inline void handle_save_request(AsyncWebServerRequest* request, JsonVariant& jso
         if(slot < 0 || slot > 5){
           request->send(HTTP_OK, CONTENT_TEXT, build_response(true, "unacceptable slot: " + slot, nullptr));
         }else{
-          save_pattern(slot);
+          set_slot(slot);
+          save_to_nvs();
           request->send(HTTP_OK, CONTENT_TEXT, build_response(true, "acceptable slot: " + slot, nullptr));
         }
     }
@@ -198,7 +199,7 @@ inline void handle_load_request(AsyncWebServerRequest* request, JsonVariant& jso
         if(slot < 0 || slot > 5){
           request->send(HTTP_OK, CONTENT_TEXT, build_response(true, "unacceptable slot: " + slot, nullptr));
         }else{
-          load_pattern(slot);
+          load_slot(slot);
           request->send(HTTP_OK, CONTENT_TEXT, build_response(true, "acceptable slot: " + slot, nullptr));
         }
     }

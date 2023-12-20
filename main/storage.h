@@ -2,12 +2,26 @@
 #ifndef STORAGE_H
 #define STORAGE_H
 
-void load_test_pattern();
+#define NUM_SAVES  5
 
-void save_pattern(int slot);
+typedef struct{
 
-void load_pattern(int slot);
+  uint8_t pattern_1 = 0; // Index number of which pattern is current
+  uint8_t pattern_2 = 0;
+  uint8_t noise_thresh = 0;
+  uint8_t alpha = 0;
+  uint8_t mode = 0;
 
-void load_all_patterns();
+} Pattern_Data;
+
+void load_slot(int slot);
+
+void set_slot(int slot);
+
+void save_to_nvs();
+
+void clear_all();
+
+void load_from_nvs();
 
 #endif
