@@ -66,4 +66,7 @@ typedef void (*SimplePatternList[])();
 // Default 120, suggested range 50-200.
 #define SPARKING 72
 
+// The time the button must be pressed to reset the ESP32 is 10 seconds.
+#define RESET_TIME 10000
+
 #endif

@@ -43,6 +43,7 @@ double vRealHist[SAMPLES];         // Delta freq
 double delt[SAMPLES];
 double amplitude = 0;              // For spring mass 2
 bool button_pressed = false;
+bool button_held = false;
 uint8_t gHue = 0;                  // Rotating base color
 double peak = 0.;                  // Peak frequency
 uint8_t fHue = 0;                  // Hue value based on peak frequency
@@ -212,6 +213,7 @@ uint8_t check_for_mode_change(uint8_t source, uint8_t target){
 }
 
 void setup() {
+    pinMode(LED_BUILTIN, OUTPUT);
     load_from_nvs();
     load_slot(0);
     Serial.begin(115200);               // start USB serial communication
@@ -265,7 +267,57 @@ void calculate_layering(CRGB *upper, CRGB *lower, int length, uint8_t a){
   }
 }
 
+unsigned long start_millis = NULL;
+
+
+void led_on_forever(){
+  
+  // Clear the LED strip before moving into the forever blink
+  // code.
+  FastLED.clear();
+  FastLED.show();
+
+  // Source: Blink example
+  while(true){
+    digitalWrite(LED_BUILTIN, LOW);  // turn the LED on (HIGH is the voltage level)
+    delay(1000);                      // wait for a second
+    digitalWrite(LED_BUILTIN, HIGH);   // turn the LED off by making the voltage LOW
+    delay(1000);   
+  }
+}
+
+void process_reset_button(){
+
+  if(!digitalRead(BUTTON_PIN)){
+
+    if(start_millis == NULL)
+      start_millis = millis();
+
+    // Only turns on the LED if the button is pressed for longer
+    // than 1.5 seconds.
+    (millis() - start_millis > 1500) ?
+      digitalWrite(LED_BUILTIN, HIGH):
+      digitalWrite(LED_BUILTIN, LOW);
+      
+    // if millis is ever less than start_millis,
+    // just reset it to NULL.
+    if(start_millis > millis()){
+      start_millis = NULL;
+      return;
+    }  
+
+    if(millis() - start_millis > RESET_TIME){
+      clear_all();
+      led_on_forever();
+    }
+  }else{
+    digitalWrite(LED_BUILTIN, LOW);
+    start_millis = NULL;
+  }
+}
+
 void loop() {
+    process_reset_button();
     audio_analysis(); // sets peak and volume
 
     #ifdef HUE_FLAG

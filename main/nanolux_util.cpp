@@ -8,6 +8,7 @@
 extern double vReal[SAMPLES];      // Sampling buffers
 extern double vImag[SAMPLES];
 extern bool button_pressed;
+extern bool button_held;
 
 void IRAM_ATTR buttonISR(){
   // let debounce settle 5ms, do not exceed 15ms
@@ -17,6 +18,15 @@ void IRAM_ATTR buttonISR(){
     button_pressed = true;
   }
 }
+
+void IRAM_ATTR button_down(){
+  button_held = false;
+}
+
+void IRAM_ATTR button_up(){
+  button_held = true;
+}
+
 
 void check_button_state(){
   // User Input handling
