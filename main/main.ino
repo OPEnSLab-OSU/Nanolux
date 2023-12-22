@@ -32,8 +32,8 @@ arduinoFFT FFT = arduinoFFT();
 //
 CRGB leds[NUM_LEDS];               // Buffer (front)
 CRGB hist[NUM_LEDS];               // Buffer (back)
-
 CRGB leds_upper[NUM_LEDS];
+CRGB smoothed_output[NUM_LEDS];
 int virtual_led_count = NUM_LEDS;
 unsigned int sampling_period_us = round(1000000/SAMPLING_FREQUENCY);
 unsigned long microseconds;
@@ -261,9 +261,9 @@ void load_process_store(CRGB *out, CRGB *in, int size, int p_index, int h_index)
     memcpy(&out[0], &leds[0], sizeof(CRGB) * size);
 }
 
-void calculate_layering(CRGB *upper, CRGB *lower, int length, uint8_t a){
+void calculate_layering(CRGB *a, CRGB *b, int length, uint8_t blur){
   for(int i = 0; i < length; i++){
-    leds[i] = blend(upper[i], lower[i], a);
+    leds[i] = blend(a[i], b[i], blur);
   }
 }
 
@@ -411,9 +411,11 @@ void loop() {
       Serial.print("\n");
     #endif
 
+    //FastLED.setBrightness(current_pattern.brightness);
+    current_pattern.smoothing = 100;
+    current_pattern.brightness = 255;
+    calculate_layering(smoothed_output, leds, NUM_LEDS, current_pattern.smoothing);
     FastLED.show();
-    // Update the buffer.
-    
     delay(10);
 
 #ifdef ENABLE_WEB_SERVER
