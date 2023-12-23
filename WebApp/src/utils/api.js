@@ -63,6 +63,12 @@ const getHostname = () =>
 const getHistory = () =>
     getData('history')
 
+const getSmoothing = () =>
+    getData('smoothing')
+
+const getBrightness = () =>
+    getData('brightness')
+
 
 const getData = (path) =>
     axios.get(`${base_url}/api/${path}`, {headers: {'Access-Control-Allow-Origin': '*'}})
@@ -100,6 +106,12 @@ const joinWiFi = (wifi) =>
 const saveHostname = (hostname) =>
     axios.put(`${base_url}/api/hostname`,{hostname});
 
+const saveBrightness = (brightness) =>
+    axios.put(`${base_url}/api/brightness`,{brightness});
+
+const saveSmoothing = (smoothing) =>
+    axios.put(`${base_url}/api/smoothing`,{smoothing});
+
 export {
     getSettings,
     saveSettings,
@@ -123,5 +135,9 @@ export {
     getAlpha,
     saveInSlot,
     loadFromSlot,
+    saveBrightness,
+    saveSmoothing,
+    getBrightness,
+    getSmoothing,
     base_url
 };
