@@ -232,7 +232,7 @@ void setup() {
     checkVol = 0;
 
     //  initialize up led strip
-    FastLED.addLeds<LED_TYPE,DATA_PIN,CLK_PIN,COLOR_ORDER>(leds, NUM_LEDS).setCorrection(TypicalLEDStrip);
+    FastLED.addLeds<LED_TYPE,DATA_PIN,CLK_PIN,COLOR_ORDER>(smoothed_output, NUM_LEDS).setCorrection(TypicalLEDStrip);
     blank();
 
 #ifdef ENABLE_WEB_SERVER
@@ -261,9 +261,9 @@ void load_process_store(CRGB *out, CRGB *in, int size, int p_index, int h_index)
     memcpy(&out[0], &leds[0], sizeof(CRGB) * size);
 }
 
-void calculate_layering(CRGB *a, CRGB *b, int length, uint8_t blur){
+void calculate_layering(CRGB *a, CRGB *b, CRGB *out, int length, uint8_t blur){
   for(int i = 0; i < length; i++){
-    leds[i] = blend(a[i], b[i], blur);
+    out[i] = blend(a[i], b[i], blur);
   }
 }
 
@@ -386,6 +386,7 @@ void loop() {
         calculate_layering(
           &leds_upper[0],
           &hist[0],
+          &leds[0],
           virtual_led_count,
           current_pattern.alpha
         );
@@ -411,10 +412,19 @@ void loop() {
       Serial.print("\n");
     #endif
 
-    //FastLED.setBrightness(current_pattern.brightness);
-    current_pattern.smoothing = 100;
-    current_pattern.brightness = 255;
-    calculate_layering(smoothed_output, leds, NUM_LEDS, current_pattern.smoothing);
+    // Set the global brightness of the LED strip.
+    FastLED.setBrightness(current_pattern.brightness);
+
+    // Smooth the light output on the LED strip using
+    // the smoothing constant.
+    calculate_layering(
+      smoothed_output,
+      leds,
+      smoothed_output,
+      NUM_LEDS,
+      current_pattern.smoothing
+    );
+
     FastLED.show();
     delay(10);
 
