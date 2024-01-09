@@ -17,6 +17,9 @@ using namespace ARDUINOJSON_NAMESPACE;
 constexpr int PATTERN_BUFFER_SIZE = 4096;
 static char patterns_list[PATTERN_BUFFER_SIZE];
 
+constexpr int SAVE_BUFFER_SIZE = 256;
+static char saves_list[SAVE_BUFFER_SIZE];
+
 inline void initialize_pattern_list() {
     // Holds roughly 50 patterns.
     DynamicJsonDocument patterns(PATTERN_BUFFER_SIZE);
@@ -27,6 +30,25 @@ inline void initialize_pattern_list() {
         pattern["name"] = mainPatterns[i].pattern_name;
     }
     serializeJson(patterns, patterns_list);
+}
+
+// https://arduino.stackexchange.com/questions/91734/best-way-to-get-json-from-struct-vector-class
+inline void initialize_save_list() {
+  DynamicJsonDocument saves(PATTERN_BUFFER_SIZE);
+
+  for (const Pattern_Data& item : saved_patterns) {
+    const JsonObject obj = saves.createNestedObject();
+    obj["index_1"] = item.pattern_1;
+    obj["index_2"] = item.pattern_2;
+    obj["noise"] = item.noise_thresh;
+    obj["alpha"] = item.alpha;
+    obj["mode"] = item.mode;
+    obj["brightness"] = item.brightness;
+    obj["smoothing"] = item.smoothing;
+  }
+
+  memset(saves_list, 0, sizeof(saves_list[0]) * SAVE_BUFFER_SIZE);
+  serializeJson(saves, saves_list);
 }
 
 
@@ -56,7 +78,7 @@ inline void handle_pattern_put_request(AsyncWebServerRequest* request, JsonVaria
         const JsonObject& payload = json.as<JsonObject>();
 
         int status = HTTP_OK;
-        int pattern_index = payload["index"];
+        int pattern_index = payload["data"];
         if (pattern_index >= 0 && pattern_index < NUM_PATTERNS) {
             current_pattern.pattern_1 = pattern_index;
             request->send(HTTP_OK, CONTENT_TEXT, build_response(true, "Pattern set.", nullptr));
@@ -74,7 +96,7 @@ inline void handle_secondary_pattern_put_request(AsyncWebServerRequest* request,
         const JsonObject& payload = json.as<JsonObject>();
 
         int status = HTTP_OK;
-        int pattern_index = payload["index"];
+        int pattern_index = payload["data"];
         if (pattern_index >= 0 && pattern_index < NUM_PATTERNS) {
             current_pattern.pattern_2 = pattern_index;
             request->send(HTTP_OK, CONTENT_TEXT, build_response(true, "Pattern set.", nullptr));
@@ -88,12 +110,12 @@ inline void handle_secondary_pattern_put_request(AsyncWebServerRequest* request,
 }
 
 inline void handle_pattern_get_request(AsyncWebServerRequest* request) {
-    const String response = String("{ \"index\": ") + current_pattern.pattern_1 + String(" }");
+    const String response = String("{ \"index1\": ") + current_pattern.pattern_1 + String(" }");
     request->send(HTTP_OK, CONTENT_JSON, response);
 }
 
 inline void handle_secondary_pattern_get_request(AsyncWebServerRequest* request) {
-    const String response = String("{ \"index\": ") + current_pattern.pattern_2 + String(" }");
+    const String response = String("{ \"index2\": ") + current_pattern.pattern_2 + String(" }");
     request->send(HTTP_OK, CONTENT_JSON, response);
 }
 
@@ -103,7 +125,7 @@ inline void handle_noise_put_request(AsyncWebServerRequest* request, JsonVariant
         const JsonObject& payload = json.as<JsonObject>();
         
         int status = HTTP_OK;
-        const uint8_t noise_gate = payload["noise"];
+        const uint8_t noise_gate = payload["data"];
         if (noise_gate >= 0 && noise_gate <= MAX_NOISE_GATE_THRESH) {
             current_pattern.noise_thresh = noise_gate;
             request->send(HTTP_OK, CONTENT_TEXT, build_response(true, "Noise gate threshold set.", nullptr));
@@ -122,7 +144,7 @@ inline void handle_alpha_put_request(AsyncWebServerRequest* request, JsonVariant
         const JsonObject& payload = json.as<JsonObject>();
         
         int status = HTTP_OK;
-        const uint8_t a = payload["alpha"];
+        const uint8_t a = payload["data"];
         if (a > -1 && a <= 255) {
             current_pattern.alpha = a;
             request->send(HTTP_OK, CONTENT_TEXT, build_response(true, "alpha set.", nullptr));
@@ -157,7 +179,7 @@ inline void handle_mode_put_request(AsyncWebServerRequest* request, JsonVariant&
         const JsonObject& payload = json.as<JsonObject>();
         
         int status = HTTP_OK;
-        const int mode = payload["mode"];
+        const int mode = payload["data"];
         if(mode < 0 || mode > 2){
           request->send(HTTP_OK, CONTENT_TEXT, build_response(true, "unacceptable mode: " + mode, nullptr));
         }else{
@@ -176,11 +198,12 @@ inline void handle_save_request(AsyncWebServerRequest* request, JsonVariant& jso
         const JsonObject& payload = json.as<JsonObject>();
         
         int status = HTTP_OK;
-        const int slot = payload["slot"];
+        const int slot = payload["data"];
         if(slot < 0 || slot > 5){
           request->send(HTTP_OK, CONTENT_TEXT, build_response(true, "unacceptable slot: " + slot, nullptr));
         }else{
           set_slot(slot);
+          initialize_save_list();
           save_to_nvs();
           request->send(HTTP_OK, CONTENT_TEXT, build_response(true, "acceptable slot: " + slot, nullptr));
         }
@@ -195,7 +218,7 @@ inline void handle_load_request(AsyncWebServerRequest* request, JsonVariant& jso
         const JsonObject& payload = json.as<JsonObject>();
         
         int status = HTTP_OK;
-        const int slot = payload["slot"];
+        const int slot = payload["data"];
         if(slot < 0 || slot > 5){
           request->send(HTTP_OK, CONTENT_TEXT, build_response(true, "unacceptable slot: " + slot, nullptr));
         }else{
@@ -218,7 +241,7 @@ inline void handle_brightness_put_request(AsyncWebServerRequest* request, JsonVa
         const JsonObject& payload = json.as<JsonObject>();
         
         int status = HTTP_OK;
-        const uint8_t brightness = payload["brightness"];
+        const uint8_t brightness = payload["data"];
         if(brightness < 0 || brightness > 255){
           request->send(HTTP_OK, CONTENT_TEXT, build_response(true, "unacceptable brightness: " + brightness, nullptr));
         }else{
@@ -231,17 +254,12 @@ inline void handle_brightness_put_request(AsyncWebServerRequest* request, JsonVa
     }
 }
 
-inline void handle_smoothing_get_request(AsyncWebServerRequest* request) {
-    const String response = String("{ \"smoothing\": ") +  current_pattern.smoothing + String(" }");
-    request->send(HTTP_OK, CONTENT_JSON, response);
-}
-
 inline void handle_smoothing_put_request(AsyncWebServerRequest* request, JsonVariant& json) {
     if (request->method() == HTTP_PUT) {
         const JsonObject& payload = json.as<JsonObject>();
         
         int status = HTTP_OK;
-        const uint8_t smoothing = payload["smoothing"];
+        const uint8_t smoothing = payload["data"];
         if(smoothing < 0 || smoothing > 255){
           request->send(HTTP_OK, CONTENT_TEXT, build_response(true, "unacceptable smoothing: " + smoothing, nullptr));
         }else{
@@ -254,22 +272,39 @@ inline void handle_smoothing_put_request(AsyncWebServerRequest* request, JsonVar
     }
 }
 
+inline void handle_smoothing_get_request(AsyncWebServerRequest* request) {
+    const String response = String("{ \"smoothing\": ") +  current_pattern.smoothing + String(" }");
+    request->send(HTTP_OK, CONTENT_JSON, response);
+}
+
+inline void handle_all_get_request(AsyncWebServerRequest* request) {
+    static bool saves_initalized = false;
+
+    if (!saves_initalized) {
+        initialize_save_list();
+        saves_initalized = true;
+    }
+
+    request->send(HTTP_OK, CONTENT_JSON, saves_list);
+}
+
 
 APIGetHook apiGetHooks[] = {
     { "/api/patterns", handle_patterns_list_request},
-    { "/api/pattern", handle_pattern_get_request},
-    { "/api/pattern2", handle_secondary_pattern_get_request},
+    { "/api/index1", handle_pattern_get_request},
+    { "/api/index2", handle_secondary_pattern_get_request},
     { "/api/noise", handle_noise_get_request},
     { "/api/alpha", handle_alpha_get_request},
     { "/api/mode", handle_mode_get_request},
     { "/api/brightness", handle_brightness_get_request},
-    { "/api/smoothing", handle_smoothing_get_request}
+    { "/api/smoothing", handle_smoothing_get_request},
+    { "/api/all", handle_all_get_request}
 };
 constexpr int API_GET_HOOK_COUNT = 8;
 
 APIPutHook apiPutHooks[] = {
-    { "/api/pattern", handle_pattern_put_request},
-    { "/api/pattern2", handle_secondary_pattern_put_request},
+    { "/api/index1", handle_pattern_put_request},
+    { "/api/index2", handle_secondary_pattern_put_request},
     { "/api/noise", handle_noise_put_request},
     { "/api/alpha", handle_alpha_put_request},
     { "/api/mode", handle_mode_put_request},

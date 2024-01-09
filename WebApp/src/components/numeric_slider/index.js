@@ -20,16 +20,14 @@ const NumericSlider = ({
 
     const valueChanged = event => {
         current.value = event.target.value;
-        onValueChanged(current.value);
-        
+        onValueChanged(label, current.value);
     }
 
     return (
         <div>
-            <div>
-                <span>{label}</span>
-            </div>
-            <div>
+
+            <div style="display: flex; align-items: center; justify-content: center;">
+                <span className={style.info}>{label}: </span>
                 <input
                     className={style.slider}
                     type="range"

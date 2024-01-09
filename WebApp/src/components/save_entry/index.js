@@ -4,16 +4,18 @@ import {useConnectivity} from "../../context/online_context";
 
 const Save_Entry = ({
     name,
-    idx
+    idx,
+    handleSave,
+    handleLoad
 }) => {
     const {isConnected} = useConnectivity();
 
-    const handleLoad = async => {
-        loadFromSlot(idx);
+    const load = async () => {
+        handleLoad(idx);
     }
 
-    const handleSave = async => {
-        saveInSlot(idx);
+    const save = async () => {
+        handleSave(idx);
     }
 
     return (
@@ -21,10 +23,10 @@ const Save_Entry = ({
             <tr>
                 <th width='150'>{name}</th>
                 <th>
-                    <button onClick={handleLoad}>Load Pattern</button>
+                    <button onClick={load}>Load Pattern</button>
                 </th>
                 <th>
-                    <button onClick={handleSave}>Save Pattern</button>
+                    <button onClick={save}>Save Pattern</button>
                 </th>
                 
             </tr>

@@ -8,6 +8,7 @@ import {ModalProvider, useModal} from "../context/global_modal_context";
 import {OnlineConnectivityProvider, useConnectivity} from "../context/online_context";
 import {useEffect, useState} from "preact/hooks";
 import Toast from "./toast/toast";
+import Controls from '../routes/sets';
 
 
 const AppContent = () => {
@@ -41,7 +42,7 @@ const AppContent = () => {
             <Header />
             <main style={{position: 'relative'}}>
                 <Router>
-                    <Settings path="/" />
+                    <Controls path="/" />
                     {/*<Profile path="/user/" user="me"/>*/}
                     <Wifi path="/wifi" />
                 </Router>

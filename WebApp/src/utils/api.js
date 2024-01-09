@@ -26,12 +26,14 @@ async function get_base_url() {
 get_base_url().then(_ => console.log(`base_url: ${base_url}`));
 
 
+const getAll = () =>
+    getData('all')
+
 const getSettings = () =>
     getData('settings');
 
 const getPatternList = () =>
     getData('patterns');
-
 
 const getPattern = () =>
     getData('pattern');
@@ -68,7 +70,6 @@ const getSmoothing = () =>
 
 const getBrightness = () =>
     getData('brightness')
-
 
 const getData = (path) =>
     axios.get(`${base_url}/api/${path}`, {headers: {'Access-Control-Allow-Origin': '*'}})
@@ -112,6 +113,9 @@ const saveBrightness = (brightness) =>
 const saveSmoothing = (smoothing) =>
     axios.put(`${base_url}/api/smoothing`,{smoothing});
 
+const saveData = (key, data) =>
+    axios.put(`${base_url}/api/${key.toLowerCase()}`,{data});
+
 export {
     getSettings,
     saveSettings,
@@ -139,5 +143,7 @@ export {
     saveSmoothing,
     getBrightness,
     getSmoothing,
+    saveData,
+    getAll,
     base_url
 };

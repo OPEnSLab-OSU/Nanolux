@@ -50,7 +50,7 @@ uint8_t fHue = 0;                  // Hue value based on peak frequency
 double volume = 0.;       
 uint8_t vbrightness = 0;
 double maxDelt = 0.;               // Frequency with the biggest change in amp.
-
+Pattern_Data saved_patterns[NUM_SAVES];
 
 int beats = 0;
 int frame = 0;                     // For spring mass

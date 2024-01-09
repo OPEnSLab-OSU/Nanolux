@@ -4,7 +4,7 @@
 
 // PATTERN STORAGE
 extern Pattern_Data current_pattern; // Currently loaded pattern
-Pattern_Data saved_patterns[NUM_SAVES]; // Array of saved patterns
+extern Pattern_Data saved_patterns[NUM_SAVES]; // Array of saved patterns
 
 // PREFRENCES
 char * NAMESPACE = "p";

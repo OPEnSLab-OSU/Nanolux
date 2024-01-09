@@ -1,161 +1,247 @@
+
+import React from 'react';
 import style from './style.css';
-import Patterns from "../../components/patterns";
-import ModeSelector from "../../components/mode_selector";
-import SecondaryPatterns from "../../components/secondary_patterns";
 import NumericSlider from "../../components/numeric_slider";
 import Save_Entry from '../../components/save_entry';
-import {useState, useEffect} from "preact/hooks";
-import {getNoise, saveNoise, getAlpha, saveAlpha, 
-	getSmoothing, saveSmoothing, getBrightness, saveBrightness} from "../../utils/api";
+import {useState} from "preact/hooks";
 import {useConnectivity} from "../../context/online_context";
 import useInterval from "../../utils/use_interval";
+import { saveData } from '../../utils/api';
+import {saveInSlot} from "../../utils/api";
+import {getPatternList} from "../../utils/api";
+import DropDown from '../../components/drop_down';
 
-const Settings = () => {
-	const { isConnected } = useConnectivity();
+const Controls = () => {
 
+    // Controls to manage animation.
+    var basicOpacity = 0;
+
+    useInterval(() => {
+        if(basicOpacity < 1){
+            basicOpacity = basicOpacity + 0.1;
+        }
+        document.getElementById('anim').style = 'opacity:' + basicOpacity + ';';
+    }, 5);
+
+    
+
+    const [currentTab, setCurrentTab] = useState("Basic Settings");
+    const { isConnected } = useConnectivity();
 	const [settings, setSettings] = useState({});
-	const [latch, setLatch] = useState(false);
 
-	useEffect(() => {
-		if (isConnected) {
-			getNoise().then(data => setSettings(data));
-			getAlpha().then(data => setSettings(data));
-		}
-	}, [isConnected])
+    // Global labels, mainly to standardize constants.
+    const brightnessLabel = "Brightness";
+    const smoothingLabel = "Smoothing";
+    const primaryKey = "index1";
+    const secondaryKey = "index2";
+    const modeKey = "mode";
+    const noiseKey = "Noise";
+    const alphaKey = "Alpha";
 
-	const handleNoiseChange = async (newValue) => {
-		setSettings(current => ({...current, noise: newValue}));
-		if (isConnected) {
-			await saveNoise(newValue);
-		}
-	}
+    const Tab = ({name}) => {
+        return (
+            <div>
+                { (name === currentTab) ? (
+                    <button className={style.tab_active}>{name}</button>
+                ) : (
+                    <button className={style.tab_inactive} onClick={async function () {
+                        setCurrentTab(name);
+                        animFrame = 0;
+                    }}>{name}</button>
+                )}
+            </div>
+        );
+    }
 
-	const handleAlphaChange = async (newValue) => {
-		setSettings(current => ({...current, alpha: newValue}));
-		if (isConnected) {
-			await saveAlpha(newValue);
-		}
-	}
+    // Updates a key/value settings pair and updates
+    // the accompaning data field on the Audiolux.
+    const handleChange = async (key, value) => {
+        settings[key] = value;
+        if(isConnected){
+            saveData(key, value);
+        }
+    }
 
-	const handleBrightnessChange = async (newValue) => {
-		setSettings(current => ({...current, brightness: newValue}));
-		if (isConnected) {
-			await saveBrightness(newValue);
-		}
-	}
+    // When a load is forced, we recieve the new pattern on the
+    // web app, then update both the values on the web app and
+    // the AudioLux at the same time:
+    const loadSave = async (slot) => {
+        getAll().then(data => setSettings(data[slot]));
+        handleChange(brightnessLabel, settings[brightnessLabel]);
+        handleChange(smoothingLabel, settings[smoothingLabel]);
+        handleChange(primaryKey, settings[primaryKey]);
+        handleChange(secondaryKey, settings[secondaryKey]);
+        handleChange(modeKey, settings[modeKey]);
+        handleChange(alphaKey, settings[alphaKey]);
+        handleChange(noiseKey, settings[noiseKey]);
+    }
 
-	const handleSmoothingChange = async (newValue) => {
-		setSettings(current => ({...current, smoothing: newValue}));
-		if (isConnected) {
-			await saveSmoothing(newValue);
-		}
-	}
+    const [patterns, setPatterns] = useState([]);
+    const [patternsFound, setPatternsFound] = useState(false);
 
-	useInterval(() => {
+    // The pattern list is updated every second.
+    useInterval(() => {
         if (isConnected) {
-            refresh();
+            getPatternList().then(data => setPatterns(data));
+            setPatternsFound(true);
         }
     }, 1000);
 
-    const refresh = () => {
-        getAlpha().then(data => setSettings(data));
-		getNoise().then(data => setSettings(data));
-		getSmoothing().then(data => setSettings(data));
-		getBrightness().then(data => setSettings(data));
-    }
+    const modes = [
+        {index:0, name:"Single Pattern"},
+        {index:1, name:"Dual Pattern"},
+        {index:2, name:"Pattern Layering"}
+    ];
 
-	return (
-		<tr >
-			<th>
-				<div className={style.home}>
-					<div className={style.settings_control}>
-						<Patterns />
-					</div>
-					<div className={style.settings_control}>
-						{ settings && <NumericSlider
-							className={style.settings_control}
-							label="Noise Threshold"
-							savedValue={settings.noise}
-							min={0}
-							max={100}
-							onValueChanged={handleNoiseChange}
-						/> }
-					</div>
-					<div className={style.settings_control}>
-						{ settings && <NumericSlider
-							className={style.settings_control}
-							label="Brightness"
-							savedValue={settings.brightness}
-							min={0}
-							max={255}
-							onValueChanged={handleBrightnessChange}
-						/> }
-					</div>
-					<div className={style.settings_control}>
-						{ settings && <NumericSlider
-							className={style.settings_control}
-							label="Smoothing"
-							savedValue={settings.smoothing}
-							min={0}
-							max={255}
-							onValueChanged={handleSmoothingChange}
-						/> }
-					</div>
-					<div className={style.settings_control}>
-						<ModeSelector />
-					</div>
-					<div className={style.settings_control}>
-						<SecondaryPatterns />
-					</div>	
-					<div className={style.settings_control}>
-						{ settings && <NumericSlider
-							className={style.settings_control}
-							label="Z-Layering Transparency"
-							savedValue={settings.alpha}
-							min={0}
-							max={255}
-							onValueChanged={handleAlphaChange}
-						/> }
-					</div>
-				</div>
-				</th>
-				<th >
-					
-					<div className={style.background0}>
-						<Save_Entry 
-							name="Default Pattern"
-							idx='0'
-						/>
-					</div>
-					<br></br>
-					<div className={style.background1}>
-						<Save_Entry 
-							name="Saved Pattern 1"
-							idx='1'
-						/>
-					</div>
-					<div className={style.background2}>
-						<Save_Entry 
-							name="Saved Pattern 2"
-							idx='2'
-						/>
-					</div>
-					<div className={style.background3}>
-						<Save_Entry 
-							name="Saved Pattern 3"
-							idx='3'
-						/>
-					</div>
-					<div className={style.background4}>
-						<Save_Entry 
-							name="Saved Pattern 4"
-							idx='4'
-						/>
-					</div>
+    const modeOptions = modes.map(mode => {
+        return <option key={mode.index} value={mode.index}>
+            {mode.name}
+        </option>
+    });
 
-				</th>
-			</tr>
-	);
-};
+    const patternOptions = patterns.map(pattern => {
+        return <option key={pattern.index} value={pattern.index}>
+            {pattern.name}
+        </option>
+    });
 
-export default Settings;
+    return (
+        <div>
+            <table>
+                <tr>
+                    {/* To add more tab headers, add them here. */}
+                    <td><Tab name="Basic Settings"></Tab></td>
+                    <td><Tab name="All Settings"></Tab></td>
+                    <td><Tab name="Saved Patterns"></Tab></td>
+                </tr>
+            </table>
+            <br></br>
+
+            { (currentTab === "Basic Settings" || currentTab == "All Settings") ? (
+            <div id='anim'>
+                <div className={style.settings_control}>
+                    <DropDown
+                        label="Primary Pattern"
+                        api_key={primaryKey}
+                        optionsList={patternOptions}
+                        savedValue={settings[primaryKey]}
+                        onValueChanged={handleChange}
+                    />
+                </div>
+                <div className={style.settings_control}>
+                    { settings && <NumericSlider
+                        className={style.settings_control}
+                        label={brightnessLabel}
+                        savedValue={settings[brightnessLabel]}
+                        min={0}
+                        max={255}
+                        onValueChanged={handleChange}
+                    /> }
+                </div>
+                <div className={style.settings_control}>
+                    { settings && <NumericSlider
+                        className={style.settings_control}
+                        label={smoothingLabel}
+                        savedValue={settings[smoothingLabel]}
+                        min={0}
+                        max={255}
+                        onValueChanged={handleChange}
+                    /> }
+                </div>
+            </div>
+            ) : (<div></div>)}
+
+            { (currentTab === "All Settings") ? (
+                <div id='anim'>
+                    <div className={style.settings_control}>
+                        <DropDown
+                            label="Secondary Pattern"
+                            api_key={secondaryKey}
+                            optionsList={patternOptions}
+                            savedValue={settings[secondaryKey]}
+                            onValueChanged={handleChange}
+                        />
+                    </div>
+                    <div className={style.settings_control}>
+                        <DropDown
+                            label="Current Mode"
+                            api_key={modeKey}
+                            optionsList={modeOptions}
+                            savedValue={settings[modeKey]}
+                            onValueChanged={handleChange}
+                        />
+					</div>
+                    <div className={style.settings_control}>
+                        { settings && <NumericSlider
+                            className={style.settings_control}
+                            label={alphaKey}
+                            savedValue={settings[alphaKey]}
+                            min={0}
+                            max={255}
+                            onValueChanged={handleChange}
+                        /> }
+                    </div>
+                    <div className={style.settings_control}>
+                        { settings && <NumericSlider
+                            className={style.settings_control}
+                            label={noiseKey}
+                            savedValue={settings[noiseKey]}
+                            min={0}
+                            max={100}
+                            onValueChanged={handleChange}
+                        /> }
+                    </div>
+                </div>
+            ) : (<div></div>)}
+
+            { (currentTab === "Saved Patterns" ) ? (
+            <div id='anim'>
+                <div className={style.background0}>
+                    <Save_Entry 
+                        name="Default Pattern"
+                        idx='0'
+                    />
+                </div>
+                <br></br>
+                <div className={style.background1}>
+                    <Save_Entry 
+                        name="Saved Pattern 1"
+                        idx='1'
+                        handleSave={saveInSlot}
+                        handleLoad={loadSave}
+                    />
+                </div>
+                <div className={style.background2}>
+                    <Save_Entry 
+                        name="Saved Pattern 2"
+                        idx='2'
+                        handleSave={saveInSlot}
+                        handleLoad={loadSave}
+                    />
+                </div>
+                <div className={style.background3}>
+                    <Save_Entry 
+                        name="Saved Pattern 3"
+                        idx='3'
+                        handleSave={saveInSlot}
+                        handleLoad={loadSave}
+                    />
+                </div>
+                <div className={style.background4}>
+                    <Save_Entry 
+                        name="Saved Pattern 4"
+                        idx='4'
+                        handleSave={saveInSlot}
+                        handleLoad={loadSave}
+                    />
+                </div>
+            </div>
+            ) : (<div></div>)}
+
+        </div>
+        
+    );
+}
+
+export default Controls;
+

@@ -1,5 +1,43 @@
+.info {
+    padding-right: 5px;
+    font-weight: normal;
+}
+
 .slider {
+    -webkit-appearance: none;  /* Override default CSS styles */
+    appearance: none;
+    width: 100px;
+    height: 15px;
+    border-radius: 5px;
+    outline: none; /* Remove outline */
+    opacity: 1; /* Set transparency (for mouse-over effects on hover) */
+    -webkit-transition: .2s; /* 0.2 seconds transition on hover */
+    transition: opacity .2s;
+}
+
+.slider:hover {
+    opacity: 0.7; /* Fully shown on mouse-over */
 }
 
 .spin_button {
+    width: 22px;
+    -webkit-appearance: none;
+    -moz-appearance: textfield;
+}
+
+.slider::-moz- {
+    cursor: pointer; /* Cursor on hover */
+    height:1px;
+}
+
+.slider::-webkit-slider-thumb {
+    -webkit-appearance: none; /* Override default look */
+    appearance: none;
+    background: white;
+    cursor: pointer; /* Cursor on hover */
+  }
+
+  .slider::-moz-range-thumb {
+  background: white;
+  cursor: pointer; /* Cursor on hover */
 }
