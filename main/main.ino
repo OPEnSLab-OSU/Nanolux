@@ -51,7 +51,6 @@ double volume = 0.;
 uint8_t vbrightness = 0;
 double maxDelt = 0.;               // Frequency with the biggest change in amp.
 
-
 int beats = 0;
 int frame = 0;                     // For spring mass
 
@@ -422,7 +421,7 @@ void loop() {
       leds,
       smoothed_output,
       NUM_LEDS,
-      current_pattern.smoothing
+      255 - current_pattern.smoothing
     );
 
     FastLED.show();

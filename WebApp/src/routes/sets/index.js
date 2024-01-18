@@ -20,6 +20,8 @@ const Settings = () => {
 		if (isConnected) {
 			getNoise().then(data => setSettings(data));
 			getAlpha().then(data => setSettings(data));
+			getSmoothing().then(data => setSettings(data));
+			getBrightness().then(data => setSettings(data));
 		}
 	}, [isConnected])
 
@@ -97,7 +99,7 @@ const Settings = () => {
 							label="Smoothing"
 							savedValue={settings.smoothing}
 							min={0}
-							max={255}
+							max={175}
 							onValueChanged={handleSmoothingChange}
 						/> }
 					</div>
@@ -120,7 +122,6 @@ const Settings = () => {
 				</div>
 				</th>
 				<th >
-					
 					<div className={style.background0}>
 						<Save_Entry 
 							name="Default Pattern"
@@ -152,7 +153,6 @@ const Settings = () => {
 							idx='4'
 						/>
 					</div>
-
 				</th>
 			</tr>
 	);
