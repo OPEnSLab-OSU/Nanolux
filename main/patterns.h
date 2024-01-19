@@ -111,4 +111,6 @@ void glitch_talk();
 
 void glitch_sections();
 
+void echo_ripple();
+
 #endif
