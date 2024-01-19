@@ -1232,37 +1232,26 @@ void echo_ripple(){
     brightness1 = 0, brightness2 = 0, brightness3 = 0;
 
     for (int cur_iter = 1; cur_iter < distance; cur_iter++, brightness1 += brightness_inc1, brightness2 += brightness_inc2, brightness3 += brightness_inc3) {
-      // Blend colors during fade-out
-      int fade_out_brightness = (cur_iter >= distance/2) ? brightness_inc1 * (distance - cur_iter) : brightness_inc1;
-      CRGB fade_out_color = CRGB(fade_out_brightness, 0, brightness3);
-
-      // Set colors for expanding part
-      leds[randomPixel1 + cur_iter] += CRGB(brightness_inc1, 0, brightness3);
-      leds[randomPixel2 + cur_iter] += CRGB(brightness_inc1, brightness2, 0);
-      leds[randomPixel3 + cur_iter] += CRGB(0, brightness2, brightness3);
-
-      leds[randomPixel1 - cur_iter] += CRGB(brightness_inc1, 0, brightness3);
-      leds[randomPixel2 - cur_iter] += CRGB(brightness_inc1, brightness2, 0);
-      leds[randomPixel3 - cur_iter] += CRGB(0, brightness2, brightness3);
-
-      // Blend the fade-out colors
-      leds[randomPixel1 + cur_iter] += fade_out_color;
-      leds[randomPixel2 + cur_iter] += fade_out_color;
-      leds[randomPixel3 + cur_iter] += fade_out_color;
-
-      leds[randomPixel1 - cur_iter] += fade_out_color;
-      leds[randomPixel2 - cur_iter] += fade_out_color;
-      leds[randomPixel3 - cur_iter] += fade_out_color;
-
       // Fade out the previous pixels
       for (int i = 0; i < NUM_LEDS; i++) {
         leds[i].fadeToBlackBy(15); // Adjust the fade value as needed
       }
 
+      // changes color after half way point of distance and allows for color blending
+      int fade_out_brightness = (cur_iter >= distance/2) ? brightness_inc1 * (distance - cur_iter) : brightness_inc1;
+
+      leds[randomPixel1 + cur_iter] = CRGB(fade_out_brightness, 0, brightness3);
+      leds[randomPixel2 + cur_iter] = CRGB(fade_out_brightness, brightness2, 0);
+      leds[randomPixel3 + cur_iter] = CRGB(0, brightness2, brightness3);
+
+      leds[randomPixel1 - cur_iter] = CRGB(fade_out_brightness, 0, brightness3);
+      leds[randomPixel2 - cur_iter] = CRGB(fade_out_brightness, brightness2, 0);
+      leds[randomPixel3 - cur_iter] = CRGB(0, brightness2, brightness3);
+
       delay(80);
       FastLED.show();
     }
-  
+    delay(100);
 
   //release formants alloc memory
   delete[] formants;
