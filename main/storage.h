@@ -11,6 +11,8 @@ typedef struct{
   uint8_t noise_thresh = 0;
   uint8_t alpha = 0;
   uint8_t mode = 0;
+  uint8_t brightness = 0;
+  uint8_t smoothing = 0;
 
 } Pattern_Data;
 

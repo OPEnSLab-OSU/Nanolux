@@ -208,15 +208,64 @@ inline void handle_load_request(AsyncWebServerRequest* request, JsonVariant& jso
     }
 }
 
+inline void handle_brightness_get_request(AsyncWebServerRequest* request) {
+    const String response = String("{ \"brightness\": ") +  current_pattern.brightness + String(" }");
+    request->send(HTTP_OK, CONTENT_JSON, response);
+}
+
+inline void handle_brightness_put_request(AsyncWebServerRequest* request, JsonVariant& json) {
+    if (request->method() == HTTP_PUT) {
+        const JsonObject& payload = json.as<JsonObject>();
+        
+        int status = HTTP_OK;
+        const uint8_t brightness = payload["brightness"];
+        if(brightness < 0 || brightness > 255){
+          request->send(HTTP_OK, CONTENT_TEXT, build_response(true, "unacceptable brightness: " + brightness, nullptr));
+        }else{
+          current_pattern.brightness = brightness;
+          request->send(HTTP_OK, CONTENT_TEXT, build_response(true, "acceptable brightness: " + brightness, nullptr));
+        }
+    }
+    else {
+        request->send(HTTP_METHOD_NOT_ALLOWED);
+    }
+}
+
+inline void handle_smoothing_get_request(AsyncWebServerRequest* request) {
+    const String response = String("{ \"smoothing\": ") +  current_pattern.smoothing + String(" }");
+    request->send(HTTP_OK, CONTENT_JSON, response);
+}
+
+inline void handle_smoothing_put_request(AsyncWebServerRequest* request, JsonVariant& json) {
+    if (request->method() == HTTP_PUT) {
+        const JsonObject& payload = json.as<JsonObject>();
+        
+        int status = HTTP_OK;
+        const uint8_t smoothing = payload["smoothing"];
+        if(smoothing < 0 || smoothing > 255){
+          request->send(HTTP_OK, CONTENT_TEXT, build_response(true, "unacceptable smoothing: " + smoothing, nullptr));
+        }else{
+          current_pattern.smoothing = smoothing;
+          request->send(HTTP_OK, CONTENT_TEXT, build_response(true, "acceptable smoothing: " + smoothing, nullptr));
+        }
+    }
+    else {
+        request->send(HTTP_METHOD_NOT_ALLOWED);
+    }
+}
+
+
 APIGetHook apiGetHooks[] = {
     { "/api/patterns", handle_patterns_list_request},
     { "/api/pattern", handle_pattern_get_request},
     { "/api/pattern2", handle_secondary_pattern_get_request},
     { "/api/noise", handle_noise_get_request},
     { "/api/alpha", handle_alpha_get_request},
-    { "/api/mode", handle_mode_get_request}
+    { "/api/mode", handle_mode_get_request},
+    { "/api/brightness", handle_brightness_get_request},
+    { "/api/smoothing", handle_smoothing_get_request}
 };
-constexpr int API_GET_HOOK_COUNT = 6;
+constexpr int API_GET_HOOK_COUNT = 8;
 
 APIPutHook apiPutHooks[] = {
     { "/api/pattern", handle_pattern_put_request},
@@ -225,6 +274,8 @@ APIPutHook apiPutHooks[] = {
     { "/api/alpha", handle_alpha_put_request},
     { "/api/mode", handle_mode_put_request},
     { "/api/save", handle_save_request},
-    { "/api/load", handle_load_request}
+    { "/api/load", handle_load_request},
+    { "/api/brightness", handle_brightness_put_request},
+    { "/api/smoothing", handle_smoothing_put_request}
 };
-constexpr int API_PUT_HOOK_COUNT = 7;
+constexpr int API_PUT_HOOK_COUNT = 9;

@@ -91,3 +91,13 @@ int largest(double arr[], int n){
 
   return max;
 }
+
+uint8_t topNibble(uint8_t b){
+  return (b & 240) >> 4;
+}
+
+uint8_t bottomNibble(uint8_t b){
+  return (b & 15);
+}
+
+

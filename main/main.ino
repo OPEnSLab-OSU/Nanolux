@@ -32,8 +32,8 @@ arduinoFFT FFT = arduinoFFT();
 //
 CRGB leds[NUM_LEDS];               // Buffer (front)
 CRGB hist[NUM_LEDS];               // Buffer (back)
-
 CRGB leds_upper[NUM_LEDS];
+CRGB smoothed_output[NUM_LEDS];
 int virtual_led_count = NUM_LEDS;
 unsigned int sampling_period_us = round(1000000/SAMPLING_FREQUENCY);
 unsigned long microseconds;
@@ -50,7 +50,6 @@ uint8_t fHue = 0;                  // Hue value based on peak frequency
 double volume = 0.;       
 uint8_t vbrightness = 0;
 double maxDelt = 0.;               // Frequency with the biggest change in amp.
-
 
 int beats = 0;
 int frame = 0;                     // For spring mass
@@ -232,7 +231,7 @@ void setup() {
     checkVol = 0;
 
     //  initialize up led strip
-    FastLED.addLeds<LED_TYPE,DATA_PIN,CLK_PIN,COLOR_ORDER>(leds, NUM_LEDS).setCorrection(TypicalLEDStrip);
+    FastLED.addLeds<LED_TYPE,DATA_PIN,CLK_PIN,COLOR_ORDER>(smoothed_output, NUM_LEDS).setCorrection(TypicalLEDStrip);
     blank();
 
 #ifdef ENABLE_WEB_SERVER
@@ -261,9 +260,9 @@ void load_process_store(CRGB *out, CRGB *in, int size, int p_index, int h_index)
     memcpy(&out[0], &leds[0], sizeof(CRGB) * size);
 }
 
-void calculate_layering(CRGB *upper, CRGB *lower, int length, uint8_t a){
+void calculate_layering(CRGB *a, CRGB *b, CRGB *out, int length, uint8_t blur){
   for(int i = 0; i < length; i++){
-    leds[i] = blend(upper[i], lower[i], a);
+    out[i] = blend(a[i], b[i], blur);
   }
 }
 
@@ -386,6 +385,7 @@ void loop() {
         calculate_layering(
           &leds_upper[0],
           &hist[0],
+          &leds[0],
           virtual_led_count,
           current_pattern.alpha
         );
@@ -411,9 +411,20 @@ void loop() {
       Serial.print("\n");
     #endif
 
+    // Set the global brightness of the LED strip.
+    FastLED.setBrightness(current_pattern.brightness);
+
+    // Smooth the light output on the LED strip using
+    // the smoothing constant.
+    calculate_layering(
+      smoothed_output,
+      leds,
+      smoothed_output,
+      NUM_LEDS,
+      255 - current_pattern.smoothing
+    );
+
     FastLED.show();
-    // Update the buffer.
-    
     delay(10);
 
 #ifdef ENABLE_WEB_SERVER

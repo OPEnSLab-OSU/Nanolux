@@ -5,7 +5,8 @@ import SecondaryPatterns from "../../components/secondary_patterns";
 import NumericSlider from "../../components/numeric_slider";
 import Save_Entry from '../../components/save_entry';
 import {useState, useEffect} from "preact/hooks";
-import {getNoise, saveNoise, getAlpha, saveAlpha} from "../../utils/api";
+import {getNoise, saveNoise, getAlpha, saveAlpha, 
+	getSmoothing, saveSmoothing, getBrightness, saveBrightness} from "../../utils/api";
 import {useConnectivity} from "../../context/online_context";
 import useInterval from "../../utils/use_interval";
 
@@ -19,6 +20,8 @@ const Settings = () => {
 		if (isConnected) {
 			getNoise().then(data => setSettings(data));
 			getAlpha().then(data => setSettings(data));
+			getSmoothing().then(data => setSettings(data));
+			getBrightness().then(data => setSettings(data));
 		}
 	}, [isConnected])
 
@@ -36,6 +39,20 @@ const Settings = () => {
 		}
 	}
 
+	const handleBrightnessChange = async (newValue) => {
+		setSettings(current => ({...current, brightness: newValue}));
+		if (isConnected) {
+			await saveBrightness(newValue);
+		}
+	}
+
+	const handleSmoothingChange = async (newValue) => {
+		setSettings(current => ({...current, smoothing: newValue}));
+		if (isConnected) {
+			await saveSmoothing(newValue);
+		}
+	}
+
 	useInterval(() => {
         if (isConnected) {
             refresh();
@@ -45,6 +62,8 @@ const Settings = () => {
     const refresh = () => {
         getAlpha().then(data => setSettings(data));
 		getNoise().then(data => setSettings(data));
+		getSmoothing().then(data => setSettings(data));
+		getBrightness().then(data => setSettings(data));
     }
 
 	return (
@@ -62,6 +81,26 @@ const Settings = () => {
 							min={0}
 							max={100}
 							onValueChanged={handleNoiseChange}
+						/> }
+					</div>
+					<div className={style.settings_control}>
+						{ settings && <NumericSlider
+							className={style.settings_control}
+							label="Brightness"
+							savedValue={settings.brightness}
+							min={0}
+							max={255}
+							onValueChanged={handleBrightnessChange}
+						/> }
+					</div>
+					<div className={style.settings_control}>
+						{ settings && <NumericSlider
+							className={style.settings_control}
+							label="Smoothing"
+							savedValue={settings.smoothing}
+							min={0}
+							max={175}
+							onValueChanged={handleSmoothingChange}
 						/> }
 					</div>
 					<div className={style.settings_control}>
@@ -83,7 +122,6 @@ const Settings = () => {
 				</div>
 				</th>
 				<th >
-					
 					<div className={style.background0}>
 						<Save_Entry 
 							name="Default Pattern"
@@ -115,7 +153,6 @@ const Settings = () => {
 							idx='4'
 						/>
 					</div>
-
 				</th>
 			</tr>
 	);
