@@ -1165,9 +1165,6 @@ void echo_ripple(){
     
     //used to get the frequency info
     double* formants = density_formant();
-
-    //double f0Hue = remap(formants[0], MIN_FREQUENCY, MAX_FREQUENCY, 0, 255);
-    //double f1Hue = remap(formants[1], MIN_FREQUENCY, MAX_FREQUENCY, 0, 255);
     double f0 = remap(formants[0], MIN_FREQUENCY, MAX_FREQUENCY, 0, 255);
     double f1 = remap(formants[1], MIN_FREQUENCY, MAX_FREQUENCY, 0, 255);
     double f2 = remap(formants[2], MIN_FREQUENCY, MAX_FREQUENCY, 0, 255);
@@ -1204,7 +1201,7 @@ void echo_ripple(){
     }
 
     // Wait for a few seconds
-    delay(800); // Adjust the delay as needed
+    delay(400); // Adjust the delay as needed
 
     //fades out formant colors
     for (; brightness1 >= 0; brightness1 -= brightness_inc1, brightness2 -= brightness_inc2, brightness3 -= brightness_inc3) {
@@ -1221,14 +1218,14 @@ void echo_ripple(){
       leds[randomPixel3 - 1] = CRGB(0, brightness2, brightness3);
 
       FastLED.show();
-      delay(40); // Adjust the delay for the fade-out speed
+      delay(20); // Adjust the delay for the fade-out speed
     }
   
     leds[randomPixel1] = CRGB::Black;
     leds[randomPixel2] = CRGB::Black;
     leds[randomPixel3] = CRGB::Black;
 
-    int distance = 30;
+    int distance = static_cast<int>(f0)+1;
     brightness1 = 0, brightness2 = 0, brightness3 = 0;
 
     for (int cur_iter = 1; cur_iter < distance; cur_iter++, brightness1 += brightness_inc1, brightness2 += brightness_inc2, brightness3 += brightness_inc3) {
@@ -1248,10 +1245,18 @@ void echo_ripple(){
       leds[randomPixel2 - cur_iter] = CRGB(fade_out_brightness, brightness2, 0);
       leds[randomPixel3 - cur_iter] = CRGB(0, brightness2, brightness3);
 
-      delay(80);
+      delay(30);
       FastLED.show();
     }
-    delay(100);
+
+    // fade out all pixels before patten ends
+    for (int fade_out_value = 255; fade_out_value >= 0; fade_out_value--) {
+      for (int i = 0; i < NUM_LEDS; i++) {
+        leds[i].fadeToBlackBy(3);  // Adjust fade value as needed
+      }
+      FastLED.show();
+      delay(10);  // Adjusted delay for the fade-out speed
+    }
 
   //release formants alloc memory
   delete[] formants;
