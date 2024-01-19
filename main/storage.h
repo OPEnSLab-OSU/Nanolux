@@ -11,12 +11,13 @@ typedef struct{
   uint8_t noise_thresh = 0;
   uint8_t alpha = 0;
   uint8_t mode = 0;
-  uint8_t brightness = 0;
+  uint8_t brightness = 255;
   uint8_t smoothing = 0;
+  uint8_t length = 60;
 
 } Pattern_Data;
 
-void load_slot(int slot);
+Pattern_Data load_slot(int slot);
 
 void set_slot(int slot);
 

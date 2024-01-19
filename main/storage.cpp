@@ -19,8 +19,8 @@ void clear_nvs(){
 }
 
 // PUBLIC FUNCTIONS:
-void load_slot(int slot){
-  current_pattern = saved_patterns[slot];
+Pattern_Data load_slot(int slot){
+  return saved_patterns[slot];
 }
 
 void set_slot(int slot){

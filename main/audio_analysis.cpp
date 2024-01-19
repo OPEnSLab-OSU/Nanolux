@@ -30,6 +30,8 @@ extern bool drums[3]; // Master drums array that stores whether a KICK, SNARE, o
 extern double fbs[5]; // Master FIVE BAND SPLIT which stores changing bands based on raw frequencies
 extern double fss[5]; // Master FIVE SAMPLE SPLIT which stores changing bands based on splitting up the samples
 
+extern int virtual_led_count;
+
 void sample_audio(){
   for(int i=0; i<SAMPLES; i++) {
     microseconds = micros();    //Overflows after around 70 minutes!
@@ -223,36 +225,36 @@ double* band_split_bounce() {
     double vol5 = 0;
     // Sum the frequencies
     for (int i = 5; i < SAMPLES-3; i++) {
-      if (0 <= i && i < NUM_LEDS/6) {
+      if (0 <= i && i < virtual_led_count/6) {
         vol1 += vReal[i];
       }
-      if (NUM_LEDS/6 <= i && i < 2*NUM_LEDS/6) {
+      if (virtual_led_count/6 <= i && i < 2*virtual_led_count/6) {
         vol2 += vReal[i];
       }
-      if (2*NUM_LEDS/6 <= i && i < 3*NUM_LEDS/6) {
+      if (2*virtual_led_count/6 <= i && i < 3*virtual_led_count/6) {
         vol3 += vReal[i];
       }
-      if (3*NUM_LEDS/6 <= i && i < 4*NUM_LEDS/6) {
+      if (3*virtual_led_count/6 <= i && i < 4*virtual_led_count/6) {
         vol4 += vReal[i];
       }
-      if (4*NUM_LEDS/6 <= i && i < 5*NUM_LEDS/6) {
+      if (4*virtual_led_count/6 <= i && i < 5*virtual_led_count/6) {
         vol5 += vReal[i];
       }
     }
     
     // Average the frequencies
-    vol1 /= (NUM_LEDS/6);
-    vol2 /= (NUM_LEDS/6);
-    vol3 /= (NUM_LEDS/6);
-    vol4 /= (NUM_LEDS/6);
-    vol5 /= (NUM_LEDS/6);
+    vol1 /= (virtual_led_count/6);
+    vol2 /= (virtual_led_count/6);
+    vol3 /= (virtual_led_count/6);
+    vol4 /= (virtual_led_count/6);
+    vol5 /= (virtual_led_count/6);
 
     // Map to frequency based values
-    vol1 = map(vol1, MIN_VOLUME, MAX_VOLUME, 0, NUM_LEDS/6);
-    vol2 = map(vol2, MIN_VOLUME, MAX_VOLUME, 0, NUM_LEDS/6);
-    vol3 = map(vol3, MIN_VOLUME, MAX_VOLUME, 0, NUM_LEDS/6);
-    vol4 = map(vol4, MIN_VOLUME, MAX_VOLUME, 0, NUM_LEDS/6);
-    vol5 = map(vol5, MIN_VOLUME, MAX_VOLUME, 0, NUM_LEDS/6);
+    vol1 = map(vol1, MIN_VOLUME, MAX_VOLUME, 0, virtual_led_count/6);
+    vol2 = map(vol2, MIN_VOLUME, MAX_VOLUME, 0, virtual_led_count/6);
+    vol3 = map(vol3, MIN_VOLUME, MAX_VOLUME, 0, virtual_led_count/6);
+    vol4 = map(vol4, MIN_VOLUME, MAX_VOLUME, 0, virtual_led_count/6);
+    vol5 = map(vol5, MIN_VOLUME, MAX_VOLUME, 0, virtual_led_count/6);
 
     // Create a resultant array
     double *fiveBands = new double[5];

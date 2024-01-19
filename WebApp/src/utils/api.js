@@ -69,6 +69,9 @@ const getSmoothing = () =>
 const getBrightness = () =>
     getData('brightness')
 
+const getLength = () =>
+    getData('len')
+
 
 const getData = (path) =>
     axios.get(`${base_url}/api/${path}`, {headers: {'Access-Control-Allow-Origin': '*'}})
@@ -112,6 +115,9 @@ const saveBrightness = (brightness) =>
 const saveSmoothing = (smoothing) =>
     axios.put(`${base_url}/api/smoothing`,{smoothing});
 
+const saveLength = (len) =>
+    axios.put(`${base_url}/api/len`,{len});
+
 export {
     getSettings,
     saveSettings,
@@ -139,5 +145,7 @@ export {
     saveSmoothing,
     getBrightness,
     getSmoothing,
+    getLength,
+    saveLength,
     base_url
 };

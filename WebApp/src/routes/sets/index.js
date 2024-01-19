@@ -6,7 +6,9 @@ import NumericSlider from "../../components/numeric_slider";
 import Save_Entry from '../../components/save_entry';
 import {useState, useEffect} from "preact/hooks";
 import {getNoise, saveNoise, getAlpha, saveAlpha, 
-	getSmoothing, saveSmoothing, getBrightness, saveBrightness} from "../../utils/api";
+	getSmoothing, saveSmoothing, getBrightness, saveBrightness,
+	saveLength,
+	getLength} from "../../utils/api";
 import {useConnectivity} from "../../context/online_context";
 import useInterval from "../../utils/use_interval";
 
@@ -18,10 +20,7 @@ const Settings = () => {
 
 	useEffect(() => {
 		if (isConnected) {
-			getNoise().then(data => setSettings(data));
-			getAlpha().then(data => setSettings(data));
-			getSmoothing().then(data => setSettings(data));
-			getBrightness().then(data => setSettings(data));
+			refresh();
 		}
 	}, [isConnected])
 
@@ -46,6 +45,13 @@ const Settings = () => {
 		}
 	}
 
+	const handleLenChange = async (newValue) => {
+		setSettings(current => ({...current, len: newValue}));
+		if (isConnected) {
+			await saveLength(newValue);
+		}
+	}
+
 	const handleSmoothingChange = async (newValue) => {
 		setSettings(current => ({...current, smoothing: newValue}));
 		if (isConnected) {
@@ -64,6 +70,7 @@ const Settings = () => {
 		getNoise().then(data => setSettings(data));
 		getSmoothing().then(data => setSettings(data));
 		getBrightness().then(data => setSettings(data));
+		getLength().then(data => setSettings(data));
     }
 
 	return (
@@ -101,6 +108,16 @@ const Settings = () => {
 							min={0}
 							max={175}
 							onValueChanged={handleSmoothingChange}
+						/> }
+					</div>
+					<div className={style.settings_control}>
+						{ settings && <NumericSlider
+							className={style.settings_control}
+							label="LED Count"
+							savedValue={settings.len}
+							min={30}
+							max={120}
+							onValueChanged={handleLenChange}
 						/> }
 					</div>
 					<div className={style.settings_control}>

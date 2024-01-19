@@ -8,8 +8,8 @@
 #include "audio_analysis.h"
 #include "storage.h"
 
-extern CRGB leds[NUM_LEDS];        // Buffer (front)
-extern CRGB hist[NUM_LEDS];        // Buffer (back)
+extern CRGB leds[MAX_LEDS];        // Buffer (front)
+extern CRGB hist[MAX_LEDS];        // Buffer (back)
 extern unsigned int sampling_period_us;
 extern unsigned long microseconds;
 extern double vReal[SAMPLES];      // Sampling buffers

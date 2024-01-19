@@ -30,11 +30,11 @@ arduinoFFT FFT = arduinoFFT();
 //
 // Variables touched by the API should be declared as volatile.
 //
-CRGB leds[NUM_LEDS];               // Buffer (front)
-CRGB hist[NUM_LEDS];               // Buffer (back)
-CRGB leds_upper[NUM_LEDS];
-CRGB smoothed_output[NUM_LEDS];
-int virtual_led_count = NUM_LEDS;
+CRGB leds[MAX_LEDS];               // Buffer (front)
+CRGB hist[MAX_LEDS];               // Buffer (back)
+CRGB leds_upper[MAX_LEDS];
+CRGB smoothed_output[MAX_LEDS];
+int virtual_led_count = MAX_LEDS;
 unsigned int sampling_period_us = round(1000000/SAMPLING_FREQUENCY);
 unsigned long microseconds;
 double vReal[SAMPLES];             // Sampling buffers
@@ -58,8 +58,6 @@ int F0arr[20];
 int F1arr[20];
 int F2arr[20];
 int formant_pose = 0;
-
-
 
 uint8_t genre_smoothing[10] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 int genre_pose = 0;
@@ -104,6 +102,8 @@ double vRealSums[5] = {0,0,0,0,0};
 
 Pattern_Data current_pattern;
 uint8_t old_mode = 0;
+volatile bool pattern_changed = false;
+Pattern_Data updated_data;
 
 //
 // Patterns structure.
@@ -123,6 +123,7 @@ typedef struct {
 // Primary pattern is 0.
 Pattern_History histories[2];
 Pattern_History current_history = histories[0];
+
 
 //
 // Register all the patterns here. The index property must be sequential, but the code make sure
@@ -203,11 +204,12 @@ void runTask0(void * pvParameters) {
 
 uint8_t check_for_mode_change(uint8_t source, uint8_t target){
   if(source != target){
-    memset(leds, 0, sizeof(CRGB) * NUM_LEDS);
-    memset(hist, 0, sizeof(CRGB) * NUM_LEDS);
-    memset(leds_upper, 0, sizeof(CRGB) * NUM_LEDS);
+    memset(leds, 0, sizeof(CRGB) * MAX_LEDS);
+    memset(hist, 0, sizeof(CRGB) * MAX_LEDS);
+    memset(leds_upper, 0, sizeof(CRGB) * MAX_LEDS);
     histories[0] = Pattern_History();
     histories[1] = Pattern_History();
+    memset(smoothed_output, 0, sizeof(CRGB) * MAX_LEDS);
   }
   return source;
 }
@@ -215,7 +217,7 @@ uint8_t check_for_mode_change(uint8_t source, uint8_t target){
 void setup() {
     pinMode(LED_BUILTIN, OUTPUT);
     load_from_nvs();
-    load_slot(0);
+    updated_data = load_slot(0);
     Serial.begin(115200);               // start USB serial communication
     while(!Serial){ ; }
 
@@ -232,8 +234,10 @@ void setup() {
     checkVol = 0;
 
     //  initialize up led strip
-    FastLED.addLeds<LED_TYPE,DATA_PIN,CLK_PIN,COLOR_ORDER>(smoothed_output, NUM_LEDS).setCorrection(TypicalLEDStrip);
+    FastLED.addLeds<LED_TYPE,DATA_PIN,CLK_PIN,COLOR_ORDER>(smoothed_output, MAX_LEDS).setCorrection(TypicalLEDStrip);
     blank();
+
+    current_pattern = updated_data;
 
 #ifdef ENABLE_WEB_SERVER
     initialize_web_server(apiGetHooks, API_GET_HOOK_COUNT, apiPutHooks, API_PUT_HOOK_COUNT);
@@ -317,6 +321,12 @@ void process_reset_button(){
 }
 
 void loop() {
+
+    // Check to make sure the length of the strip is not 0.
+    if(current_pattern.length < 30){
+      current_pattern.length = 30;
+    }
+
     process_reset_button();
     audio_analysis(); // sets peak and volume
 
@@ -338,10 +348,23 @@ void loop() {
     // and histories.
     old_mode = check_for_mode_change(current_pattern.mode, old_mode);
 
+    // if the length has been changed, reset all buffers
+    // and histories.
+    if(pattern_changed){
+      pattern_changed = false;
+      memset(leds, 0, sizeof(CRGB) * MAX_LEDS);
+      memset(hist, 0, sizeof(CRGB) * MAX_LEDS);
+      memset(leds_upper, 0, sizeof(CRGB) * MAX_LEDS);
+      memset(smoothed_output, 0, sizeof(CRGB) * MAX_LEDS);
+      histories[0] = Pattern_History();
+      histories[1] = Pattern_History();
+      current_pattern = updated_data;
+    }
+
     switch(current_pattern.mode){
       case STRIP_SPLITTING:
         // Set the virtual LED strip length to half of the real length.
-        virtual_led_count = HALF_NUM_LEDS;
+        virtual_led_count = current_pattern.length/2;
 
         load_process_store(
           &leds[virtual_led_count],
@@ -360,12 +383,12 @@ void loop() {
         );
 
         // Copy the main LED array into a long-term storage buffer.
-        memcpy(hist, leds, sizeof(CRGB) * NUM_LEDS);
+        memcpy(hist, leds, sizeof(CRGB) * MAX_LEDS);
 
       break;
 
       case Z_LAYERING:
-        virtual_led_count = NUM_LEDS;
+        virtual_led_count = current_pattern.length;
 
         load_process_store(
           &leds_upper[0],
@@ -394,10 +417,10 @@ void loop() {
       break;
 
       default:
-        virtual_led_count = NUM_LEDS;
+        virtual_led_count = current_pattern.length;
         current_history = histories[0];
         mainPatterns[current_pattern.pattern_1].pattern_handler();
-        memcpy(hist, leds, sizeof(CRGB) * NUM_LEDS);
+        memcpy(hist, leds, sizeof(CRGB) * MAX_LEDS);
     }
 
     #ifdef SHOW_TIMINGS
@@ -406,7 +429,7 @@ void loop() {
     #endif
 
     #ifdef VIRTUAL_LED_STRIP
-      for (int i = 0; i < NUM_LEDS-1; i++) {
+      for (int i = 0; i < current_pattern.length; i++) {
         Serial.print(String(leds[i].r) + "," + String(leds[i].g) + "," + String(leds[i].b) + " ");
       }
       Serial.print("\n");
@@ -421,7 +444,7 @@ void loop() {
       smoothed_output,
       leds,
       smoothed_output,
-      NUM_LEDS,
+      current_pattern.length,
       255 - current_pattern.smoothing
     );
 

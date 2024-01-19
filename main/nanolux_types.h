@@ -8,13 +8,14 @@ typedef void (*SimplePatternList[])();
 //#define LAYER_PATTERNS
 #define HUE_FLAG
 #define DEBUG
-#define VIRTUAL_LED_STRIP
+//#define VIRTUAL_LED_STRIP
 
 // Array size macro
 #define ARRAY_SIZE(A) (sizeof(A) / sizeof((A)[0]))
 
 // FastLED
 #define NUM_LEDS    60     // Number of leds in strip.
+#define MAX_LEDS    120
 #define DATA_PIN    15      // No hardware SPI pins defined for the ESP32 yet.
 #define CLK_PIN     14      // Use bitbanged output.
 #define LED_TYPE    SK9822  // Define LED protocol.
