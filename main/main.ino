@@ -119,7 +119,7 @@ typedef struct {
 // presented in a UI to the user. The enabled flag indicates whether the pattern will be shown
 // in the UI or not. If not shown, it i snot selectable. If a pattern is not registered here,
 // It will not be selectable and the loop below will not know about it.
-//
+//..
 Pattern mainPatterns[]{
     { 0, "Echo Ripple", true, echo_ripple},//{ 0, "None", true, blank},
     { 1, "Hue Trail", true, freq_hue_trail},
