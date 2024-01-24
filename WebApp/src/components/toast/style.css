@@ -10,3 +10,11 @@
     font-size: 14px;
     z-index: 1000;
 }
+body {
+    background-color: #325886;
+    background-image: url(../../assets/icons/home-bg.jpg);
+    background-repeat: no-repeat;
+    background-size: 100%auto;
+    color: #639b76;
+}
+

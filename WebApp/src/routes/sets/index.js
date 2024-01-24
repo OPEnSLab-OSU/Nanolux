@@ -38,6 +38,10 @@ const Settings = () => {
 					onValueChanged={handleNoiseChange}
 				/> }
 			</div>
+            <div className=''>
+                
+            </div>
+            
 		</div>
 	);
 };

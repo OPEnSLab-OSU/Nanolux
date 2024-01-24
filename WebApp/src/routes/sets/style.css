@@ -19,6 +19,7 @@
 
 .settings_control {
 	padding: 1rem;
+    color: white;
 }
 
 @media (max-width: 639px) {
@@ -54,3 +55,4 @@
 		box-shadow: 0 25px 50px -12px #673ab888;
 	}
 }
+
