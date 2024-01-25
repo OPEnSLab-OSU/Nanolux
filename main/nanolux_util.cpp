@@ -4,6 +4,9 @@
 #include "patterns.h"
 #include "nanolux_types.h"
 #include "nanolux_util.h"
+#include "storage.h"
+
+extern Config_Data config; // Currently loaded config
 
 extern double vReal[SAMPLES];      // Sampling buffers
 extern double vImag[SAMPLES];
@@ -31,9 +34,10 @@ void IRAM_ATTR button_up(){
 void check_button_state(){
   // User Input handling
   if(button_pressed) {
-    #ifdef DEBUG
+    if(config.debug_mode == 1){
       Serial.println("Pressed !");
-    #endif
+    }
+
     #ifndef LAYER_PATTERNS
       nextPattern();                // code to execute on button press
     #endif
@@ -92,12 +96,25 @@ int largest(double arr[], int n){
   return max;
 }
 
-uint8_t topNibble(uint8_t b){
-  return (b & 240) >> 4;
+// TIMING
+
+long loop_start_time = 0;
+long loop_end_time = 0;
+
+void begin_loop_timer(long ms){
+  loop_start_time = millis();
+  loop_end_time = loop_start_time + ms;
 }
 
-uint8_t bottomNibble(uint8_t b){
-  return (b & 15);
-}
+long timer_overrun(){
+  // Check for timer overflow.
+  // This shouldn't happen as millis() shouldn't overflow
+  // for 50 days.
+  if(loop_start_time > millis()) return -1;
 
+  // Return 0 if the current time is under the loop end time,
+  // else return the difference between the current time and
+  // the expected loop end time.
+  return (millis() < loop_end_time) ? 0 : millis() - loop_end_time + 1;
+}
 

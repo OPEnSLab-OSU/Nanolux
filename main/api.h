@@ -58,7 +58,8 @@ inline void handle_pattern_put_request(AsyncWebServerRequest* request, JsonVaria
         int status = HTTP_OK;
         int pattern_index = payload["index"];
         if (pattern_index >= 0 && pattern_index < NUM_PATTERNS) {
-            current_pattern.pattern_1 = pattern_index;
+            updated_data.pattern_1 = pattern_index;
+            pattern_changed = true;
             request->send(HTTP_OK, CONTENT_TEXT, build_response(true, "Pattern set.", nullptr));
         }
         else {
@@ -76,7 +77,8 @@ inline void handle_secondary_pattern_put_request(AsyncWebServerRequest* request,
         int status = HTTP_OK;
         int pattern_index = payload["index"];
         if (pattern_index >= 0 && pattern_index < NUM_PATTERNS) {
-            current_pattern.pattern_2 = pattern_index;
+            updated_data.pattern_2 = pattern_index;
+            pattern_changed = true;
             request->send(HTTP_OK, CONTENT_TEXT, build_response(true, "Pattern set.", nullptr));
         }
         else {
@@ -88,12 +90,12 @@ inline void handle_secondary_pattern_put_request(AsyncWebServerRequest* request,
 }
 
 inline void handle_pattern_get_request(AsyncWebServerRequest* request) {
-    const String response = String("{ \"index\": ") + current_pattern.pattern_1 + String(" }");
+    const String response = String("{ \"index\": ") + updated_data.pattern_1 + String(" }");
     request->send(HTTP_OK, CONTENT_JSON, response);
 }
 
 inline void handle_secondary_pattern_get_request(AsyncWebServerRequest* request) {
-    const String response = String("{ \"index\": ") + current_pattern.pattern_2 + String(" }");
+    const String response = String("{ \"index\": ") + updated_data.pattern_2 + String(" }");
     request->send(HTTP_OK, CONTENT_JSON, response);
 }
 
@@ -105,7 +107,8 @@ inline void handle_noise_put_request(AsyncWebServerRequest* request, JsonVariant
         int status = HTTP_OK;
         const uint8_t noise_gate = payload["noise"];
         if (noise_gate >= 0 && noise_gate <= MAX_NOISE_GATE_THRESH) {
-            current_pattern.noise_thresh = noise_gate;
+            updated_data.noise_thresh = noise_gate;
+            pattern_changed = true;
             request->send(HTTP_OK, CONTENT_TEXT, build_response(true, "Noise gate threshold set.", nullptr));
         }
         else {
@@ -124,7 +127,8 @@ inline void handle_alpha_put_request(AsyncWebServerRequest* request, JsonVariant
         int status = HTTP_OK;
         const uint8_t a = payload["alpha"];
         if (a > -1 && a <= 255) {
-            current_pattern.alpha = a;
+            updated_data.alpha = a;
+            pattern_changed = true;
             request->send(HTTP_OK, CONTENT_TEXT, build_response(true, "alpha set.", nullptr));
         }
         else {
@@ -138,17 +142,17 @@ inline void handle_alpha_put_request(AsyncWebServerRequest* request, JsonVariant
 
 
 inline void handle_noise_get_request(AsyncWebServerRequest* request) {
-    const String response = String("{ \"noise\": ") + current_pattern.noise_thresh + String(" }");
+    const String response = String("{ \"noise\": ") + updated_data.noise_thresh + String(" }");
     request->send(HTTP_OK, CONTENT_JSON, response);
 }
 
 inline void handle_alpha_get_request(AsyncWebServerRequest* request) {
-    const String response = String("{ \"alpha\": ") +  current_pattern.alpha + String(" }");
+    const String response = String("{ \"alpha\": ") +  updated_data.alpha + String(" }");
     request->send(HTTP_OK, CONTENT_JSON, response);
 }
 
 inline void handle_mode_get_request(AsyncWebServerRequest* request) {
-    const String response = String("{ \"mode\": ") +  current_pattern.mode + String(" }");
+    const String response = String("{ \"mode\": ") +  updated_data.mode + String(" }");
     request->send(HTTP_OK, CONTENT_JSON, response);
 }
 
@@ -161,7 +165,8 @@ inline void handle_mode_put_request(AsyncWebServerRequest* request, JsonVariant&
         if(mode < 0 || mode > 2){
           request->send(HTTP_OK, CONTENT_TEXT, build_response(true, "unacceptable mode: " + mode, nullptr));
         }else{
-          current_pattern.mode = mode;
+          updated_data.mode = mode;
+          pattern_changed = true;
           request->send(HTTP_OK, CONTENT_TEXT, build_response(true, "acceptable mode: " + mode, nullptr));
         }
 
@@ -199,7 +204,8 @@ inline void handle_load_request(AsyncWebServerRequest* request, JsonVariant& jso
         if(slot < 0 || slot > 5){
           request->send(HTTP_OK, CONTENT_TEXT, build_response(true, "unacceptable slot: " + slot, nullptr));
         }else{
-          load_slot(slot);
+          updated_data = load_slot(slot);
+          pattern_changed = true;
           request->send(HTTP_OK, CONTENT_TEXT, build_response(true, "acceptable slot: " + slot, nullptr));
         }
     }
@@ -209,7 +215,7 @@ inline void handle_load_request(AsyncWebServerRequest* request, JsonVariant& jso
 }
 
 inline void handle_brightness_get_request(AsyncWebServerRequest* request) {
-    const String response = String("{ \"brightness\": ") +  current_pattern.brightness + String(" }");
+    const String response = String("{ \"brightness\": ") +  updated_data.brightness + String(" }");
     request->send(HTTP_OK, CONTENT_JSON, response);
 }
 
@@ -222,7 +228,8 @@ inline void handle_brightness_put_request(AsyncWebServerRequest* request, JsonVa
         if(brightness < 0 || brightness > 255){
           request->send(HTTP_OK, CONTENT_TEXT, build_response(true, "unacceptable brightness: " + brightness, nullptr));
         }else{
-          current_pattern.brightness = brightness;
+          updated_data.brightness = brightness;
+          pattern_changed = true;
           request->send(HTTP_OK, CONTENT_TEXT, build_response(true, "acceptable brightness: " + brightness, nullptr));
         }
     }
@@ -232,7 +239,7 @@ inline void handle_brightness_put_request(AsyncWebServerRequest* request, JsonVa
 }
 
 inline void handle_smoothing_get_request(AsyncWebServerRequest* request) {
-    const String response = String("{ \"smoothing\": ") +  current_pattern.smoothing + String(" }");
+    const String response = String("{ \"smoothing\": ") +  updated_data.smoothing + String(" }");
     request->send(HTTP_OK, CONTENT_JSON, response);
 }
 
@@ -245,8 +252,81 @@ inline void handle_smoothing_put_request(AsyncWebServerRequest* request, JsonVar
         if(smoothing < 0 || smoothing > 255){
           request->send(HTTP_OK, CONTENT_TEXT, build_response(true, "unacceptable smoothing: " + smoothing, nullptr));
         }else{
-          current_pattern.smoothing = smoothing;
+          updated_data.smoothing = smoothing;
+          pattern_changed = true;
           request->send(HTTP_OK, CONTENT_TEXT, build_response(true, "acceptable smoothing: " + smoothing, nullptr));
+        }
+    }
+    else {
+        request->send(HTTP_METHOD_NOT_ALLOWED);
+    }
+}
+
+inline void handle_len_get_request(AsyncWebServerRequest* request) {
+    const String response = String("{ \"len\": ") +  config.length + String(" }");
+    request->send(HTTP_OK, CONTENT_JSON, response);
+}
+
+inline void handle_len_put_request(AsyncWebServerRequest* request, JsonVariant& json) {
+    if (request->method() == HTTP_PUT) {
+        const JsonObject& payload = json.as<JsonObject>();
+        
+        int status = HTTP_OK;
+        const uint8_t length = payload["len"];
+        if(length < 30 || length > MAX_LEDS){
+          request->send(HTTP_OK, CONTENT_TEXT, build_response(true, "unacceptable length: " + length, nullptr));
+        }else{
+          config.length = length;
+          altered_config = true;
+          request->send(HTTP_OK, CONTENT_TEXT, build_response(true, "acceptable length: " + length, nullptr));
+        }
+    }
+    else {
+        request->send(HTTP_METHOD_NOT_ALLOWED);
+    }
+}
+
+inline void handle_ms_get_request(AsyncWebServerRequest* request) {
+    const String response = String("{ \"ms\": ") +  config.loop_ms + String(" }");
+    request->send(HTTP_OK, CONTENT_JSON, response);
+}
+
+inline void handle_ms_put_request(AsyncWebServerRequest* request, JsonVariant& json) {
+    if (request->method() == HTTP_PUT) {
+        const JsonObject& payload = json.as<JsonObject>();
+        
+        int status = HTTP_OK;
+        const uint8_t loop_ms = payload["ms"];
+        if(loop_ms < MIN_REFRESH || loop_ms > MAX_REFRESH){
+          request->send(HTTP_OK, CONTENT_TEXT, build_response(true, "unacceptable loop time: " + loop_ms, nullptr));
+        }else{
+          config.loop_ms = loop_ms;
+          altered_config = true;
+          request->send(HTTP_OK, CONTENT_TEXT, build_response(true, "acceptable loop time: " + loop_ms, nullptr));
+        }
+    }
+    else {
+        request->send(HTTP_METHOD_NOT_ALLOWED);
+    }
+}
+
+inline void handle_debug_get_request(AsyncWebServerRequest* request) {
+    const String response = String("{ \"debug\": ") +  config.debug_mode + String(" }");
+    request->send(HTTP_OK, CONTENT_JSON, response);
+}
+
+inline void handle_debug_put_request(AsyncWebServerRequest* request, JsonVariant& json) {
+    if (request->method() == HTTP_PUT) {
+        const JsonObject& payload = json.as<JsonObject>();
+        
+        int status = HTTP_OK;
+        const uint8_t debug_mode = payload["debug"];
+        if(debug_mode < 0 || debug_mode > 2){
+          request->send(HTTP_OK, CONTENT_TEXT, build_response(true, "unacceptable debug: " + debug_mode, nullptr));
+        }else{
+          config.debug_mode = debug_mode;
+          altered_config = true;
+          request->send(HTTP_OK, CONTENT_TEXT, build_response(true, "acceptable loop time: " + debug_mode, nullptr));
         }
     }
     else {
@@ -263,9 +343,13 @@ APIGetHook apiGetHooks[] = {
     { "/api/alpha", handle_alpha_get_request},
     { "/api/mode", handle_mode_get_request},
     { "/api/brightness", handle_brightness_get_request},
-    { "/api/smoothing", handle_smoothing_get_request}
+    { "/api/smoothing", handle_smoothing_get_request},
+    { "/api/len", handle_len_get_request},
+    { "/api/ms", handle_ms_get_request},
+    { "/api/debug", handle_debug_get_request}
+
 };
-constexpr int API_GET_HOOK_COUNT = 8;
+constexpr int API_GET_HOOK_COUNT = 11;
 
 APIPutHook apiPutHooks[] = {
     { "/api/pattern", handle_pattern_put_request},
@@ -276,6 +360,9 @@ APIPutHook apiPutHooks[] = {
     { "/api/save", handle_save_request},
     { "/api/load", handle_load_request},
     { "/api/brightness", handle_brightness_put_request},
-    { "/api/smoothing", handle_smoothing_put_request}
+    { "/api/smoothing", handle_smoothing_put_request},
+    { "/api/len", handle_len_put_request},
+    { "/api/ms", handle_ms_put_request},
+    { "/api/debug", handle_debug_put_request}
 };
-constexpr int API_PUT_HOOK_COUNT = 9;
+constexpr int API_PUT_HOOK_COUNT = 12;
