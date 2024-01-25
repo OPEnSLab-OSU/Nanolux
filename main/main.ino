@@ -359,6 +359,10 @@ void loop() {
     // and histories.
     old_mode = check_for_mode_change(current_pattern.mode, old_mode);
 
+    if(altered_config){
+      save_config_to_nvs();
+    }
+
     // if the length has been changed, reset all buffers
     // and histories.
     if(pattern_changed || altered_config){
