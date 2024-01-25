@@ -16,12 +16,7 @@
 #include "WebServer.h"
 #endif
 
-//#define DEBUG 1
 // #define SHOW_TIMINGS
-
-#ifdef DEBUG
-#pragma message "DEBUG ENABLED"
-#endif
 
 FASTLED_USING_NAMESPACE
 
@@ -104,6 +99,8 @@ Pattern_Data current_pattern;
 uint8_t old_mode = 0;
 volatile bool pattern_changed = false;
 Pattern_Data updated_data;
+Config_Data config; // Currently loaded config
+volatile extern bool altered_config = false;
 
 //
 // Patterns structure.
@@ -320,11 +317,25 @@ void process_reset_button(){
   }
 }
 
+// Some settings are updated inside a more constrained context
+// without enough stack space for a "disk" operation so we
+// defer the save to here.
+void update_web_server(){  
+    #ifdef ENABLE_WEB_SERVER
+      if (dirty_settings) {
+          save_settings();
+          dirty_settings = false;
+      }
+    #endif
+}
+
 void loop() {
 
+    begin_loop_timer(config.loop_ms);
+
     // Check to make sure the length of the strip is not 0.
-    if(current_pattern.length < 30){
-      current_pattern.length = 30;
+    if(config.length < 30){
+      config.length = 30;
     }
 
     process_reset_button();
@@ -350,8 +361,9 @@ void loop() {
 
     // if the length has been changed, reset all buffers
     // and histories.
-    if(pattern_changed){
+    if(pattern_changed || altered_config){
       pattern_changed = false;
+      altered_config = false;
       memset(leds, 0, sizeof(CRGB) * MAX_LEDS);
       memset(hist, 0, sizeof(CRGB) * MAX_LEDS);
       memset(leds_upper, 0, sizeof(CRGB) * MAX_LEDS);
@@ -364,7 +376,7 @@ void loop() {
     switch(current_pattern.mode){
       case STRIP_SPLITTING:
         // Set the virtual LED strip length to half of the real length.
-        virtual_led_count = current_pattern.length/2;
+        virtual_led_count = config.length/2;
 
         load_process_store(
           &leds[virtual_led_count],
@@ -388,7 +400,7 @@ void loop() {
       break;
 
       case Z_LAYERING:
-        virtual_led_count = current_pattern.length;
+        virtual_led_count = config.length;
 
         load_process_store(
           &leds_upper[0],
@@ -417,7 +429,7 @@ void loop() {
       break;
 
       default:
-        virtual_led_count = current_pattern.length;
+        virtual_led_count = config.length;
         current_history = histories[0];
         mainPatterns[current_pattern.pattern_1].pattern_handler();
         memcpy(hist, leds, sizeof(CRGB) * MAX_LEDS);
@@ -428,12 +440,12 @@ void loop() {
       Serial.printf("%s Visualization: %d us\n", mainPatterns[current_pattern.pattern_1].pattern_name, end - start);
     #endif
 
-    #ifdef VIRTUAL_LED_STRIP
-      for (int i = 0; i < current_pattern.length; i++) {
+    if(config.debug_mode == 2){
+      for (int i = 0; i < config.length; i++) {
         Serial.print(String(leds[i].r) + "," + String(leds[i].g) + "," + String(leds[i].b) + " ");
       }
       Serial.print("\n");
-    #endif
+    }
 
     // Set the global brightness of the LED strip.
     FastLED.setBrightness(current_pattern.brightness);
@@ -444,22 +456,19 @@ void loop() {
       smoothed_output,
       leds,
       smoothed_output,
-      current_pattern.length,
+      config.length,
       255 - current_pattern.smoothing
     );
 
     FastLED.show();
-    delay(10);
-
-#ifdef ENABLE_WEB_SERVER
-    // Some settings are updated inside a more constrained context
-    // without enough stack space for a "disk" operation so we
-    // defer the save to here.
-    if (dirty_settings) {
-        save_settings();
-        dirty_settings = false;
+  
+    if(timer_overrun() == 0){
+      while(timer_overrun() == 0){
+        update_web_server();
+      }
+    }else{
+      update_web_server();
     }
-#endif
 }
 
 // Use all the audio analysis to update every global audio analysis value

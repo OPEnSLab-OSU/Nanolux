@@ -38,6 +38,7 @@ extern int virtual_led_count;
 extern Pattern_History current_history;
 
 extern Pattern_Data current_pattern;
+extern Config_Data config; // Currently loaded config
 
 void nextPattern() {
   // add one to the current pattern number, and wrap around at the end
@@ -58,12 +59,13 @@ void setColorHSV(CRGB* leds, byte h, byte s, byte v) {
 
 
 void freq_hue_vol_brightness(){
-  #ifdef DEBUG
+  if(config.debug_mode == 1){
     Serial.print("\t pattern: freq_hue_vol_brightness\t fHue: ");
     Serial.print(fHue);
     Serial.print("\t vbrightness: ");
     Serial.println(vbrightness);
-  #endif
+  }
+
   CHSV color = CHSV(fHue, 255, vbrightness);
   fill_solid(leds, virtual_led_count, color);
 }
@@ -249,9 +251,9 @@ void classical() {
   CRGBPalette16 myPal = hue_gp;
   fill_palette(leds, virtual_led_count, sin, 255/virtual_led_count, myPal, 50, LINEARBLEND);
 
-  #ifdef DEBUG
-      Serial.print("\t Classical: ");
-  #endif
+  if(config.debug_mode == 1){
+    Serial.print("\t Classical: ");
+  }
 
   delete[] temp_formants;
 }
@@ -328,14 +330,14 @@ void send_wave() {
   }
   fadeToBlackBy(leds, virtual_led_count, 50);
 
-  #ifdef DEBUG
+  if(config.debug_mode == 1){
     Serial.print("\t sinBeat: ");
     Serial.print(sinBeat);
     Serial.print("\t sinBeat1: ");
     Serial.print(sinBeat1);
     Serial.print("\t sinBeat2: ");
     Serial.print(sinBeat2);
-  #endif
+  }
 }
 
 // Represents math rock music comprehensively on the light strip ("Waterslide" by Chon looks great)
@@ -401,7 +403,7 @@ void math() {
   }
   fadeToBlackBy(leds, virtual_led_count, 50);
 
-  #ifdef DEBUG
+  if(config.debug_mode == 1){
     Serial.print("\t Red: ");
     Serial.print(red);
     Serial.print("\t Green: ");
@@ -412,13 +414,13 @@ void math() {
     Serial.print(hue);
     Serial.print("\t vbrightness: ");
     Serial.println(brit);
-  #endif
+  }
 }
 
 // Changes the brightness of the five bands based on how much exist on the five sample split (the better one imo)
 void band_brightness() {
   double *fiveSamples = band_split_bounce();
-  #ifdef DEBUG
+  if(config.debug_mode == 1){
     Serial.print("Vol1:");
     Serial.print(fiveSamples[0]);
     Serial.print("\tVol2:");
@@ -429,7 +431,8 @@ void band_brightness() {
     Serial.print(fiveSamples[3]);
     Serial.print("\tVol5:");
     Serial.print(fiveSamples[4]);
-  #endif
+  }
+
   // Map each chunk of the Light strip to a brightness from the band sample split
   for (int i = 0; i < virtual_led_count/5; i++) {
     leds[i] = CHSV(0,255, map(fiveSamples[0], 0, 5, 0, 255));
@@ -494,7 +497,7 @@ void advanced_bands() {
 
   // Get the Five Sample Split ^
 
-  #ifdef DEBUG
+  if(config.debug_mode == 1){
     Serial.print("ADVANCED::\tAVG1:\t");
     Serial.print(avg1);
     Serial.print("\tAVG2:\t");
@@ -505,7 +508,7 @@ void advanced_bands() {
     Serial.print(avg4);
     Serial.print("\tAVG5:\t");
     Serial.print(avg5);
-  #endif
+  }
 
   // If there exists a new volume that is bigger than the falling pixel, reassign it to the top, otherwise make it fall for each band
   if (vol1 <= avg1) {
@@ -666,9 +669,9 @@ void noisy() {
   else {
     blank(); // Empty when audio is registered as periodic 
   }  
-  #ifdef DEBUG
+  if(config.debug_mode == 1){
     Serial.print("\t CheckVol: ");
-  #endif
+  }
 }
 
 // Splits up each formant as 1/3 of a band on the light strip. Proves that the formants actually work and looks pretty neat imo
@@ -679,14 +682,14 @@ void formant_band() {
   double f1Hue = remap(temp_formants[1], MIN_FREQUENCY, MAX_FREQUENCY, 0, 255);
   double f2Hue = remap(temp_formants[2], MIN_FREQUENCY, MAX_FREQUENCY, 0, 255);
 
-  #ifdef DEBUG
+  if(config.debug_mode == 1){
     Serial.print("\t f0Hue: ");
     Serial.print(temp_formants[0]);
     Serial.print("\t f1Hue: ");
     Serial.print(temp_formants[1]);
     Serial.print("\t f2Hue: ");
     Serial.print(temp_formants[2]);
-  #endif
+  }
 
   // Fill 1/3 with each formant
   for (int i = 0; i < virtual_led_count; i++) {
@@ -726,7 +729,7 @@ void alt_drums() {
   double fHue1 = map(log ( F1/7 ) / log ( 2 ), log ( MIN_FREQUENCY ) / log ( 2 ), log ( MAX_FREQUENCY ) / log ( 2 ), 0, 240);
   double fHue2 = map(log ( F2/7 ) / log ( 2 ), log ( MIN_FREQUENCY ) / log ( 2 ), log ( MAX_FREQUENCY ) / log ( 2 ), 0, 240);
 
-  #ifdef DEBUG
+  if(config.debug_mode == 1){
     Serial.print("\t pattern: Alt Drums\t \nfHue0: ");
     Serial.print(F0/7);
     Serial.print("\t fHue1: ");
@@ -735,7 +738,7 @@ void alt_drums() {
     Serial.println(F2/7);
     Serial.print("\t vbrightness: ");
     Serial.println(vbrightness);
-  #endif
+  }
   
   CHSV color = CHSV( fHue1, 255, vbrightness);
   fill_solid(leds, virtual_led_count, color);
@@ -752,12 +755,12 @@ void formant_test(){
     memcpy(smol_arr, vReal + (2*len), len-1);
     int F2 = largest(smol_arr, len);
 
-    #ifdef DEBUG
+    if(config.debug_mode == 1){
       Serial.print("\t pattern: Formant Test\t fHue: ");
       Serial.print(fHue);
       Serial.print("\t vbrightness: ");
       Serial.println(vbrightness);
-    #endif
+    }
    
     leds[0] = CHSV( fHue, F0, vbrightness);
     leds[1] = CHSV( fHue, F1, vbrightness);
@@ -1139,12 +1142,12 @@ void glitch_sections(){
 }
 
 void volume_level_middle_bar_freq_hue_with_fade_and_blur(){
-    #ifdef DEBUG   
+    if(config.debug_mode == 1){
       Serial.print("\t pattern: volume_level_middle_bar_freq_hue\t volume: ");
       Serial.print(volume);
       Serial.print("\t peak: ");
       Serial.println(peak);
-    #endif
+    }
 
     int n = remap(volume, MIN_VOLUME, MAX_VOLUME, 0, virtual_led_count/2);
     int mid_point = (int) virtual_led_count/2;

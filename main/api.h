@@ -263,7 +263,7 @@ inline void handle_smoothing_put_request(AsyncWebServerRequest* request, JsonVar
 }
 
 inline void handle_len_get_request(AsyncWebServerRequest* request) {
-    const String response = String("{ \"len\": ") +  updated_data.length + String(" }");
+    const String response = String("{ \"len\": ") +  config.length + String(" }");
     request->send(HTTP_OK, CONTENT_JSON, response);
 }
 
@@ -276,9 +276,57 @@ inline void handle_len_put_request(AsyncWebServerRequest* request, JsonVariant& 
         if(length < 30 || length > MAX_LEDS){
           request->send(HTTP_OK, CONTENT_TEXT, build_response(true, "unacceptable length: " + length, nullptr));
         }else{
-          updated_data.length = length;
-          pattern_changed = true;
+          config.length = length;
+          altered_config = true;
           request->send(HTTP_OK, CONTENT_TEXT, build_response(true, "acceptable length: " + length, nullptr));
+        }
+    }
+    else {
+        request->send(HTTP_METHOD_NOT_ALLOWED);
+    }
+}
+
+inline void handle_ms_get_request(AsyncWebServerRequest* request) {
+    const String response = String("{ \"ms\": ") +  config.loop_ms + String(" }");
+    request->send(HTTP_OK, CONTENT_JSON, response);
+}
+
+inline void handle_ms_put_request(AsyncWebServerRequest* request, JsonVariant& json) {
+    if (request->method() == HTTP_PUT) {
+        const JsonObject& payload = json.as<JsonObject>();
+        
+        int status = HTTP_OK;
+        const uint8_t loop_ms = payload["ms"];
+        if(loop_ms < MIN_REFRESH || loop_ms > MAX_REFRESH){
+          request->send(HTTP_OK, CONTENT_TEXT, build_response(true, "unacceptable loop time: " + loop_ms, nullptr));
+        }else{
+          config.loop_ms = loop_ms;
+          altered_config = true;
+          request->send(HTTP_OK, CONTENT_TEXT, build_response(true, "acceptable loop time: " + loop_ms, nullptr));
+        }
+    }
+    else {
+        request->send(HTTP_METHOD_NOT_ALLOWED);
+    }
+}
+
+inline void handle_debug_get_request(AsyncWebServerRequest* request) {
+    const String response = String("{ \"debug\": ") +  config.debug_mode + String(" }");
+    request->send(HTTP_OK, CONTENT_JSON, response);
+}
+
+inline void handle_debug_put_request(AsyncWebServerRequest* request, JsonVariant& json) {
+    if (request->method() == HTTP_PUT) {
+        const JsonObject& payload = json.as<JsonObject>();
+        
+        int status = HTTP_OK;
+        const uint8_t debug_mode = payload["debug"];
+        if(debug_mode < 0 || debug_mode > 2){
+          request->send(HTTP_OK, CONTENT_TEXT, build_response(true, "unacceptable debug: " + debug_mode, nullptr));
+        }else{
+          config.debug_mode = debug_mode;
+          altered_config = true;
+          request->send(HTTP_OK, CONTENT_TEXT, build_response(true, "acceptable loop time: " + debug_mode, nullptr));
         }
     }
     else {
@@ -296,9 +344,12 @@ APIGetHook apiGetHooks[] = {
     { "/api/mode", handle_mode_get_request},
     { "/api/brightness", handle_brightness_get_request},
     { "/api/smoothing", handle_smoothing_get_request},
-    { "/api/len", handle_len_get_request}
+    { "/api/len", handle_len_get_request},
+    { "/api/ms", handle_ms_get_request},
+    { "/api/debug", handle_debug_get_request}
+
 };
-constexpr int API_GET_HOOK_COUNT = 9;
+constexpr int API_GET_HOOK_COUNT = 11;
 
 APIPutHook apiPutHooks[] = {
     { "/api/pattern", handle_pattern_put_request},
@@ -310,6 +361,8 @@ APIPutHook apiPutHooks[] = {
     { "/api/load", handle_load_request},
     { "/api/brightness", handle_brightness_put_request},
     { "/api/smoothing", handle_smoothing_put_request},
-    { "/api/len", handle_len_put_request}
+    { "/api/len", handle_len_put_request},
+    { "/api/ms", handle_ms_put_request},
+    { "/api/debug", handle_debug_put_request}
 };
-constexpr int API_PUT_HOOK_COUNT = 10;
+constexpr int API_PUT_HOOK_COUNT = 12;

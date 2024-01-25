@@ -7,8 +7,6 @@ typedef void (*SimplePatternList[])();
 // Conditions(Comment out to disable) | LAYE, HUE, DEBUG
 //#define LAYER_PATTERNS
 #define HUE_FLAG
-#define DEBUG
-//#define VIRTUAL_LED_STRIP
 
 // Array size macro
 #define ARRAY_SIZE(A) (sizeof(A) / sizeof((A)[0]))
@@ -30,6 +28,9 @@ typedef void (*SimplePatternList[])();
 #define NOISE_GATE_THRESH   20
 #define MAX_NOISE_GATE_THRESH   100
 
+#define MAX_REFRESH 255
+#define MIN_REFRESH 15
+#define DEF_REFRESH 40
 
 // ADC2 (pins A0, A1) is not available when the WiFi radio is active,
 // so we use ADC1 (pins A2, A3). Additionally, rev 1.2 of the board

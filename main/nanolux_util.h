@@ -13,8 +13,8 @@ void IRAM_ATTR button_down();
 
 void IRAM_ATTR button_up();
 
-uint8_t topNibble(uint8_t b);
+void begin_loop_timer(long ms);
 
-uint8_t bottomNibble(uint8_t b);
+long timer_overrun();
 
 #endif
