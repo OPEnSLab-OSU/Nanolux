@@ -384,13 +384,6 @@ void loop() {
       Serial.printf("%s Visualization: %d us\n", mainPatterns[current_pattern.pattern_1].pattern_name, end - start);
     #endif
 
-    if(config.debug_mode == 2){
-      for (int i = 0; i < config.length; i++) {
-        Serial.print(String(output_buffer[i].r) + "," + String(output_buffer[i].g) + "," + String(output_buffer[i].b) + " ");
-      }
-      Serial.print("\n");
-    }
-
     // Set the global brightness of the LED strip.
     FastLED.setBrightness(current_pattern.brightness);
 
@@ -405,6 +398,13 @@ void loop() {
     );
 
     FastLED.show();
+
+    if(config.debug_mode == 2){
+      for (int i = 0; i < config.length; i++) {
+        Serial.print(String(smoothed_output[i].r) + "," + String(smoothed_output[i].g) + "," + String(smoothed_output[i].b) + " ");
+      }
+      Serial.print("\n");
+    }
   
     if(timer_overrun() == 0){
       while(timer_overrun() == 0){
