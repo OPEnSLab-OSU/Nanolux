@@ -1,8 +1,14 @@
 #ifndef PATTERNS_H
 #define PATTERNS_H
 
+#include "nanolux_types.h"
+
 typedef struct{
 
+  // Pattern Buffer for the particular history being used.
+  CRGB leds[MAX_LEDS] = {0};
+
+  // History Variables
   int frame = 0;                 // for spring mass
   double amplitude = 0;          //for spring mass 2
   int tempHue = 0;
@@ -29,88 +35,88 @@ typedef struct{
 
 void nextPattern();
 
-void setColorHSV(CRGB* leds, byte h, byte s, byte v);
+void setColorHSV(CRGB* leds, byte h, byte s, byte v, int len);
 
-void freq_hue_vol_brightness();
+void freq_hue_vol_brightness(Pattern_History * hist, int len);
 
-void freq_confetti_vol_brightness();
+void freq_confetti_vol_brightness(Pattern_History * hist, int len);
 
-void volume_level_middle_bar_freq_hue();
+void volume_level_middle_bar_freq_hue(Pattern_History * hist, int len);
 
-void freq_hue_trail();
+void freq_hue_trail(Pattern_History * hist, int len);
 
-void blank();
+void blank(Pattern_History * hist, int len);
 
-void spring_mass_1();
+void spring_mass_1(Pattern_History * hist, int len);
 
-void spring_mass_2();
+void spring_mass_2(Pattern_History * hist, int len);
 
-void spring_mass_3 ();
+void spring_mass_3(Pattern_History * hist, int len);
 
-void classical();
+void classical(Pattern_History * hist, int len);
 
-void pix_freq();
+void pix_freq(Pattern_History * hist, int len);
 
-void mirror_pix_freq();
+void mirror_pix_freq(Pattern_History * hist, int len);
 
-void send_wave();
+void send_wave(Pattern_History * hist, int len);
 
-void math();
+void math(Pattern_History * hist, int len);
 
-void band_brightness();
+void band_brightness(Pattern_History * hist, int len);
 
-void advanced_bands();
+void advanced_bands(Pattern_History * hist, int len);
 
-void basic_bands();
+void basic_bands(Pattern_History * hist, int len);
 
-void eq();
+void eq(Pattern_History * hist, int len);
 
-void show_drums();
+void show_drums(Pattern_History * hist, int len);
 
-void show_formants();
+void show_formants(Pattern_History * hist, int len);
 
-void noisy();
+void noisy(Pattern_History * hist, int len);
 
-void formant_band();
+void formant_band(Pattern_History * hist, int len);
 
-void alt_drums();
+void alt_drums(Pattern_History * hist, int len);
 
-void formant_test();
+void formant_test(Pattern_History * hist, int len);
 
-void Fire2012WithPalette();
+void Fire2012WithPalette(Pattern_History * hist, int len);
 
-void saturated_noise();
+void saturated_noise(Pattern_History * hist, int len);
 
-void saturated_noise_hue_octaves();
+void saturated_noise_hue_octaves(Pattern_History * hist, int len);
 
-void saturated_noise_hue_shift();
+void saturated_noise_hue_shift(Pattern_History * hist, int len);
 
-void saturated_noise_compression();
+void saturated_noise_compression(Pattern_History * hist, int len);
 
-void groovy_noise();
+void groovy_noise(Pattern_History * hist, int len);
 
-void groovy_noise_hue_shift_change();
+void groovy_noise_hue_shift_change(Pattern_History * hist, int len);
 
-void sin_hue_trail();
+void sin_hue_trail(Pattern_History * hist, int len);
 
-void freq_hue_trail_mid();
+void freq_hue_trail_mid(Pattern_History * hist, int len);
 
-void freq_hue_trail_mid_blur();
+void freq_hue_trail_mid_blur(Pattern_History * hist, int len);
 
-void talking_hue();
+void talking_hue(Pattern_History * hist, int len);
 
-void talking_formants();
+void talking_formants(Pattern_History * hist, int len);
 
-void talking_moving();
+void talking_moving(Pattern_History * hist, int len);
 
-void bounce_back();
+void bounce_back(Pattern_History * hist, int len);
 
-void glitch();
+void glitch(Pattern_History * hist, int len);
 
-void glitch_talk();
+void glitch_talk(Pattern_History * hist, int len);
 
-void glitch_sections();
+void glitch_sections(Pattern_History * hist, int len);
 
-void echo_ripple();
+//void echo_ripple(Pattern_History hist, int len);
 
 #endif

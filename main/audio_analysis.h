@@ -11,7 +11,7 @@ void update_max_delta();
 
 void update_peak();
 
-void update_five_band_split();
+void update_five_band_split(int len);
 
 void update_five_samples_split();
 
@@ -25,7 +25,7 @@ double* density_formant();
 
 double* band_sample_bounce();
 
-double* band_split_bounce();
+double* band_split_bounce(int len);
 
 int nvp();
 
