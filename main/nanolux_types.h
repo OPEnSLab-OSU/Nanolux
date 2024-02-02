@@ -14,7 +14,7 @@ typedef void (*SimplePatternList[])();
 #define ARRAY_SIZE(A) (sizeof(A) / sizeof((A)[0]))
 
 // FastLED
-#define NUM_LEDS    60     // Number of leds in strip.
+#define NUM_LEDS    90     // Number of leds in strip.
 #define DATA_PIN    15      // No hardware SPI pins defined for the ESP32 yet.
 #define CLK_PIN     14      // Use bitbanged output.
 #define LED_TYPE    SK9822  // Define LED protocol.
