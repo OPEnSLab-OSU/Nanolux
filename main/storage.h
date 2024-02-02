@@ -6,6 +6,19 @@
 
 typedef struct{
 
+  uint8_t pattern_idx = 0; // Index number of which pattern is current
+  uint8_t noise_thresh = 0;
+  uint8_t alpha = 0;
+  uint8_t brightness = 255;
+  uint8_t smoothing = 0;
+  uint8_t hue_min = 0;
+  uint8_t hue_max = 255;
+  bool direction_symmetry = false;
+
+} Save_Data;
+
+typedef struct{
+
   uint8_t pattern_1 = 0; // Index number of which pattern is current
   uint8_t pattern_2 = 0;
   uint8_t noise_thresh = 0;
