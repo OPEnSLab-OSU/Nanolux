@@ -32,6 +32,7 @@ const TextInput = ({
                    id="text-input"
                    type="text"
                    value={text}
+                   placeholder = "Enter a Unit name"
                    onChange={handleInputChange}
             />
             <div>
