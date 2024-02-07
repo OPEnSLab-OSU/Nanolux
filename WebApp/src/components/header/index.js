@@ -5,9 +5,9 @@ import style from './style.css';
 
 const Header = () => (
 	<header className={style.header}>
-		<a href="/" className={style.logo}>
+		<a href="https://www.cymaspace.org/" target="_blank" rel="noopener noreferrer" className={style.logo}>
 			<img src="../../assets/cymalog1.png" alt="CymaSpace Logo" height="32" />
-			<h1>AudioLux</h1>
+            <h1 className={style.name}>AudioLux</h1>
 		</a>
 		<nav>
 			<Link activeClassName={style.active} href="/">

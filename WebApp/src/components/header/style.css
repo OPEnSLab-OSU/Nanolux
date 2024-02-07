@@ -25,6 +25,7 @@
 .header a:hover,
 .header a:active {
 	background: rgba(0, 0, 0, 0.2);
+    font-family: 'Times New Roman', Times, serif;
 }
 
 .header a.logo {
@@ -48,4 +49,8 @@
 
 .header nav a.active {
 	background: rgba(0, 0, 0, 0.4);
+    
+}
+.name {
+    font-family: fantasy;
 }
