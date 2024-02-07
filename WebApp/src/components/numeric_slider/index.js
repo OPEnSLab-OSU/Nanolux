@@ -1,48 +1,21 @@
-import { h } from 'preact';
-import style from './style.css';
 import {useSignal} from "@preact/signals";
-import {useEffect, useState} from "preact/hooks";
-import { useConnectivity } from '../../context/online_context';
-import useInterval from '../../utils/use_interval';
+import style from './style.css';
 
 const NumericSlider = ({
     label,
     min,
     max,
-    getterFunction,
-    saveFunction,
-    api_key
+    initial,
+    structure_ref,
+    update
 }) => {
-    const current = useSignal(min);
-    const { isConnected } = useConnectivity();
-    const [loading, setLoading] = useState(true);
 
-    var enableRemoteUpdate = true;
-
-    // Initalization
-    useEffect(() => {
-        if (isConnected) {
-            getterFunction().then(data => current.value = data[api_key]);
-            setLoading(false);
-        }
-        
-    }, [isConnected])
-
-    // Periodic
-    useInterval(() => {
-        if (isConnected && enableRemoteUpdate) {
-            getterFunction().then(data => {current.value = data[api_key]});     
-        }
-    }, 1000);
+    const current = useSignal(initial);
 
     // Slider Updater
     const valueChanged = async event => {
-        enableRemoteUpdate = false;
         current.value = event.target.value;
-		if (isConnected) {
-			await saveFunction(current.value);
-		}
-        enableRemoteUpdate = true;
+        update(structure_ref, current.value);
     }
 
     return (

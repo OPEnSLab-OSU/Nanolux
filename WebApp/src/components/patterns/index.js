@@ -5,63 +5,46 @@ import {getPattern, getPatternList, savePattern} from "../../utils/api";
 import {useConnectivity} from "../../context/online_context";
 import useInterval from "../../utils/use_interval";
 import {LabelSpinner} from "../spinner";
+import React, { useLayoutEffect } from "react";
+import { useSignal } from '@preact/signals';
 
-const Patterns = () => {
-    const {isConnected} = useConnectivity();
-    const [patterns, setPatterns] = useState([]);
-    const [currentPattern, setCurrentPattern] = useState(-1)
-    const [loading, setLoading] = useState(true);
+const Patterns = (
+    patternList,
+    initialID,
+    structure_ref,
+    update
+) => {
 
+    const current = useSignal(initialID);
+    const [patterns, setPatterns] = useState({});
 
-    useEffect(() => {
-        if (isConnected) {
-            getPatternList().then(data => setPatterns(data));
-            getPattern().then(data => setCurrentPattern(data.index));
-            setLoading(false);
+    useLayoutEffect(() => {
+        // If patternList is null, use a list with only a blank pattern.
+        // This is useful for avoiding crashes when running in dev mode
+        // on a computer.
+        if(patternList == {}){
+            setPatterns({0 : {index: 0, name: "None"}});
+        }else{
+            setPatterns(patternList);
         }
-    }, [isConnected])
-
-    const patternOptions = patterns.map(pattern => {
-        return <option key={pattern.index} value={pattern.index}>
-            {pattern.name}
-        </option>
-    });
-
-    const refreshPattern = () => {
-        getPattern().then(data => setCurrentPattern(data.index));
-    }
-
-    useInterval(() => {
-        if (isConnected) {
-            refreshPattern();
-        }
-    }, 1000);
+    }, []);
 
     const handleSelection = async (event) => {
-        const newPattern = event.target.value;
-        setCurrentPattern(newPattern);
-        if  (isConnected) {
-            await savePattern(newPattern);
-        }
+        current.value = event.target.value;
+        update(structure_ref, current.value);
     }
 
     return (
         <div>
-            {loading ? (
-                <LabelSpinner />
-            ) : (
-                <div>
-                    <label className={style.label} htmlFor="pattern-options">Current Primary Pattern</label>
-                    <select className={style.label}
-                            id="pattern-options"
-                            value={currentPattern}
-                            onChange={handleSelection}
-                    >
-                        <option value="-1">Requesting pattern list...</option>
-                        {patternOptions}
-                    </select>
-                </div>
-                )}
+            <div>
+                <label className={style.label} htmlFor="pattern-options">Current Primary Pattern</label>
+                <select className={style.label}
+                        id="pattern-options"
+                        value={current}
+                        onChange={handleSelection}
+                >
+                </select>
+            </div>
         </div>
     );
 }
