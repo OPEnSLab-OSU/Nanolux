@@ -1,48 +1,44 @@
 import {h} from 'preact';
 import style from './style.css';
 import {useEffect, useState} from "preact/hooks";
-import {getPattern, getPatternList, savePattern} from "../../utils/api";
+import {getPatternList} from "../../utils/api";
 import {useConnectivity} from "../../context/online_context";
 import useInterval from "../../utils/use_interval";
 import {LabelSpinner} from "../spinner";
 import React, { useLayoutEffect } from "react";
 import { useSignal } from '@preact/signals';
 
-const Patterns = (
-    patternList,
+const Patterns = ({
     initialID,
     structure_ref,
-    update
-) => {
+    update,
+    patterns
+}) => {
 
-    const current = useSignal(initialID);
-    const [patterns, setPatterns] = useState({});
+    const [currentPattern, setCurrentPattern] = useState(initialID);
 
-    useLayoutEffect(() => {
-        // If patternList is null, use a list with only a blank pattern.
-        // This is useful for avoiding crashes when running in dev mode
-        // on a computer.
-        if(patternList == {}){
-            setPatterns({0 : {index: 0, name: "None"}});
-        }else{
-            setPatterns(patternList);
-        }
-    }, []);
+    const patternOptions = patterns.map(p => {
+        return <option key={p.index} value={p.index}>
+            {p.name}
+        </option>
+    });
 
     const handleSelection = async (event) => {
-        current.value = event.target.value;
-        update(structure_ref, current.value);
+        const newPattern = event.target.value;
+        setCurrentPattern(newPattern);
+        update(structure_ref, newPattern);
     }
 
     return (
         <div>
             <div>
-                <label className={style.label} htmlFor="pattern-options">Current Primary Pattern</label>
+                <label className={style.label} htmlFor="pattern-options">Current Pattern</label>
                 <select className={style.label}
                         id="pattern-options"
-                        value={current}
+                        value={currentPattern}
                         onChange={handleSelection}
                 >
+                    {patternOptions}
                 </select>
             </div>
         </div>

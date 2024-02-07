@@ -6,11 +6,14 @@ import {
 	getLoadedSubpattern,
 	updateLoadedSubpattern,
 	getLoadedPatternSettings,
-	updateLoadedPattern} from "../../utils/api";
+	updateLoadedPattern,
+	modifyLoadedSubpatternCount,
+	getPatternList,
+	getLoadedSubpatternCount} from "../../utils/api";
 import {useConnectivity} from "../../context/online_context";
 import useInterval from "../../utils/use_interval";
 
-const Subpattern = (subpattern, patternList) => {
+const Subpattern = ({subpattern, patterns}) => {
 
 	const { isConnected } = useConnectivity();
 	const [loading, setLoading] = useState(true);
@@ -30,8 +33,8 @@ const Subpattern = (subpattern, patternList) => {
 	// Manage initalization
 	useEffect(() => {
         if (isConnected) {
-            getLoadedSubpattern(subpattern).then(data => setData(data));
-            setLoading(false);
+            getLoadedSubpattern(subpattern).then(data => {setData(data)}).then();
+			setLoading(false)
         }  
     }, [isConnected])
 
@@ -45,22 +48,25 @@ const Subpattern = (subpattern, patternList) => {
 
 	// Update any parameters of the subpattern.
 	const update = (ref, value) => {
-		if(!loading){
-			var newData = data;
-			newData[ref] = value;
-			setData({data : newData});
-			setUpdated(true);
+		if(!loading){		
+			setData((oldData) => {
+				const newData = Array.from(oldData);
+				newData[ref] = value;
+				return newData;
+			})
 		}
+		setUpdated(true);
 	}
 
 	// Generate the subpattern structure.
 	return (
+		(!loading ? 
 		<div>
 			<Patterns
-				patternList={patternList}
 				initialID={data.idx}
-				structure_ref="idx"
+				structure_ref={"idx"}
 				update={update}
+				patterns={patterns}
 			/>
 			<NumericSlider
 				className={style.settings_control}
@@ -89,11 +95,12 @@ const Subpattern = (subpattern, patternList) => {
 				structure_ref="smoothing"
 				update={update}
 			/>
-		</div>
+		</div> : <div></div>
+		)
 	);
 }
 
-const CurrentPattern = (initialSubpatternCount, patternList) => {
+const CurrentPattern = ({initialSubpatternCount, patterns}) => {
 
 	const { isConnected } = useConnectivity();
 	const [loading, setLoading] = useState(true);
@@ -101,7 +108,7 @@ const CurrentPattern = (initialSubpatternCount, patternList) => {
 
 	// Subpattern data structure
 	const [data, setData] = useState({
-		subpattern_count: 1,
+		subpattern_count: initialSubpatternCount,
 		alpha: 0,
 		mode: 0
 	});
@@ -133,17 +140,21 @@ const CurrentPattern = (initialSubpatternCount, patternList) => {
 				return newData;
 			})
 		}
+		
+		setUpdated(true);
 	}
 
-	const incrementSubpatterns = () => {
+	const incrementSubpatterns = async () => {
 		if(data.subpattern_count < 4){
+			await modifyLoadedSubpatternCount(1);
 			update("subpattern_count", data.subpattern_count + 1);
 		}
 	}
 
-	const decrementSubpatterns = () => {
+	const decrementSubpatterns = async () => {
 		if(data.subpattern_count > 1){
-			update("subpattern_count", data.subpattern_count - 1);
+			await modifyLoadedSubpatternCount(-1);
+			update("subpattern_count", data.subpattern_count - 1)
 		}
 	}
 
@@ -177,31 +188,51 @@ const CurrentPattern = (initialSubpatternCount, patternList) => {
 			/>
 
 			<button type="button" onClick={incrementSubpatterns}>+</button>
-			<button type="button" onClick={decrementSubpatterns}>-</button> 
+			<button type="button" onClick={decrementSubpatterns}>-</button>
+			<br></br>
 
 			{inRange(data.subpattern_count).map((data) => {
-				return <button type="button" key={data.idx}>
-					Subpattern {data.idx}
+				return <button type="button" onClick={function() {setSubpattern(data.idx);}} key={data.idx}>
+					SP {data.idx}
 				</button>
 			})}
 
 			<Subpattern
 				subpattern={selectedSubpattern}
-				patternList={patternList}	
+				patterns={patterns}
+				key={selectedSubpattern}
 			/>
+				
 		</div>
 	);
 }
 
 const Settings = () => {
 
+	const {isConnected} = useConnectivity();
+	const [patterns, setPatterns] = useState([]);
+	const [loadingPatterns, setLoading] = useState(true);
+	const [loadingSpc, setSpcLoading] = useState(true);
+
+	const [spc, setSpc] = useState(1);
+
+	useEffect(() => {
+        if (isConnected) {
+            getPatternList().then(data => {setPatterns(data); setLoading(false);});
+			getLoadedSubpatternCount().then(data => {setSpc(data); setSpcLoading(false);})
+        }
+    }, [isConnected])
+
 	return (
-		<div>
-			<CurrentPattern
-				initialSubpatternCount="1"
-				patternList={{}}
-			/>
-		</div>
+
+		(loadingPatterns && loadingSpc ? <div></div> :
+			<div>
+				<CurrentPattern
+					initialSubpatternCount={1}
+					patterns={patterns}
+				/>
+			</div>
+		)
 	);
 };
 

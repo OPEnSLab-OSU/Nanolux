@@ -83,7 +83,7 @@ const getLoadedSubpattern = (subpattern) =>
         .then(response => response.data);
 
 const getLoadedSubpatternCount = () =>
-    axios.get(`${base_url}/api/loadedSubpatternCount?`, {headers: {'Access-Control-Allow-Origin': '*'}})
+    axios.get(`${base_url}/api/loadedSubpatternCount`, {headers: {'Access-Control-Allow-Origin': '*'}})
         .then(response => response.data);
 
 const getLoadedPatternSettings = () =>
@@ -120,10 +120,13 @@ const saveHostname = (hostname) =>
     axios.put(`${base_url}/api/hostname`,{hostname});
 
 const updateLoadedSubpattern = (subpattern, data) =>
-    axios.put(`${base_url}/api/updateLoadedSubpattern?subpattern=${subpattern}`, data)
+    axios.put(`${base_url}/api/updateLoadedSubpattern?subpattern=${subpattern}`, {data})
 
 const updateLoadedPattern = (data) =>
-    axios.put(`${base_url}/api/updateLoadedPattern`, data)
+    axios.put(`${base_url}/api/updateLoadedPattern`, {data})
+
+const modifyLoadedSubpatternCount = (data) =>
+    axios.put(`${base_url}/api/modifyLoadedSubpatternCount`, {data})
 
 export {
     getSettings,
@@ -156,5 +159,6 @@ export {
     getLoadedPatternSettings,
     updateLoadedSubpattern,
     updateLoadedPattern,
+    modifyLoadedSubpatternCount,
     base_url
 };
