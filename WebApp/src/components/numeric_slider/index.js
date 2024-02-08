@@ -31,7 +31,7 @@ const NumericSlider = ({
                     name="slider"
                     min={min}
                     max={max}
-                    value={current}
+                    value={initial}
                     onChange={valueChanged}
                 />
                 <input
@@ -41,7 +41,7 @@ const NumericSlider = ({
                     name="spinner"
                     min={min}
                     max={max}
-                    value={current}
+                    value={initial}
                     onChange={valueChanged}
                 />
             </div>

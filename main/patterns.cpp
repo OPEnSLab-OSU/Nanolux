@@ -32,12 +32,11 @@ CRGBPalette16 gPal = GMT_hot_gp; //store all palettes in array
 CRGBPalette16 gPal2 = nrwc_gp; //store all palettes in array
 bool gReverseDirection = false;
 
-extern Pattern_Data current_pattern;
 extern Config_Data config; // Currently loaded config
 
 void nextPattern() {
   // add one to the current pattern number, and wrap around at the end
-  current_pattern.pattern_1 = (current_pattern.pattern_1 + 1) % NUM_PATTERNS;
+  //current_pattern.pattern_1 = (current_pattern.pattern_1 + 1) % NUM_PATTERNS;
 }
 
 void clearLEDSegment(Pattern_History * hist, int len){

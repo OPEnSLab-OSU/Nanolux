@@ -32,22 +32,6 @@ const getSettings = () =>
 const getPatternList = () =>
     getData('patterns');
 
-
-const getPattern = () =>
-    getData('pattern');
-
-const getSecondaryPattern = () =>
-    getData('pattern2');
-
-const getNoise = () =>
-    getData('noise');
-
-const getAlpha = () =>
-    getData('alpha');
-
-const getExclusiveMode = () =>
-    getData('mode');
-
 const getWiFiList = () =>
     getData('wifis');
 
@@ -63,52 +47,9 @@ const getHostname = () =>
 const getHistory = () =>
     getData('history')
 
-const getSmoothing = () =>
-    getData('smoothing')
-
-const getBrightness = () =>
-    getData('brightness')
-
-const getLength = () =>
-    getData('len')
-
-const getMs = () =>
-    getData('ms')
-
-const getDebug = () =>
-    getData('debug')
-
-const getLoadedSubpattern = (subpattern) =>
-    axios.get(`${base_url}/api/loadedSubpatterns?sp=${subpattern}`, {headers: {'Access-Control-Allow-Origin': '*'}})
-        .then(response => response.data);
-
-const getLoadedSubpatternCount = () =>
-    axios.get(`${base_url}/api/loadedSubpatternCount`, {headers: {'Access-Control-Allow-Origin': '*'}})
-        .then(response => response.data);
-
-const getLoadedPatternSettings = () =>
-    axios.get(`${base_url}/api/loadedPatternSettings`, {headers: {'Access-Control-Allow-Origin': '*'}})
-        .then(response => response.data);
-
 const getData = (path) =>
     axios.get(`${base_url}/api/${path}`, {headers: {'Access-Control-Allow-Origin': '*'}})
         .then(response => response.data);
-
-const saveNoise = (noise) =>
-    axios.put(`${base_url}/api/noise`,{noise});
-
-const saveAlpha = (alpha) =>
-    axios.put(`${base_url}/api/alpha`,{alpha});
-
-const saveInSlot = (slot) =>
-    axios.put(`${base_url}/api/save`,{slot});
-
-const loadFromSlot = (slot) =>
-    axios.put(`${base_url}/api/load`,{slot});
-
-const saveExclusiveMode = (mode) =>
-    axios.put(`${base_url}/api/mode`,{mode});
-
 
 const saveSettings = (settings) =>
     axios.put(`${base_url}/api/settings`, {...settings}, );
@@ -119,23 +60,30 @@ const joinWiFi = (wifi) =>
 const saveHostname = (hostname) =>
     axios.put(`${base_url}/api/hostname`,{hostname});
 
+// ESSENTIAL API CALLS
+
+// handle_subpattern_update_put_request
 const updateLoadedSubpattern = (subpattern, data) =>
-    axios.put(`${base_url}/api/updateLoadedSubpattern?subpattern=${subpattern}`, {data})
+    axios.put(`${base_url}/api/updateLoadedSubpattern?subpattern=${subpattern}`, data)
 
+// handle_pattern_update_put_request
 const updateLoadedPattern = (data) =>
-    axios.put(`${base_url}/api/updateLoadedPattern`, {data})
+    axios.put(`${base_url}/api/updateLoadedPattern`, data)
 
-const modifyLoadedSubpatternCount = (data) =>
-    axios.put(`${base_url}/api/modifyLoadedSubpatternCount`, {data})
+// handle_loaded_subpattern_get_request
+const getLoadedSubpattern = (subpattern) =>
+    axios.get(`${base_url}/api/loadedSubpatterns?sp=${subpattern}`, {headers: {'Access-Control-Allow-Origin': '*'}})
+        .then(response => response.data);
+
+// handle_loaded_pattern_settings_get_request
+const getLoadedPatternSettings = () =>
+    axios.get(`${base_url}/api/loadedPatternSettings`, {headers: {'Access-Control-Allow-Origin': '*'}})
+        .then(response => response.data);
 
 export {
     getSettings,
     saveSettings,
     getPatternList,
-    getPattern,
-    getSecondaryPattern,
-    getNoise,
-    saveNoise,
     getWiFiList,
     getWiFi,
     joinWiFi,
@@ -143,22 +91,8 @@ export {
     getHostname,
     saveHostname,
     getHistory,
-    getExclusiveMode,
-    saveExclusiveMode,
-    saveAlpha,
-    getAlpha,
-    saveInSlot,
-    loadFromSlot,
-    getBrightness,
-    getSmoothing,
-    getLength,
-    getDebug,
-    getMs,
     getLoadedSubpattern,
-    getLoadedSubpatternCount,
     getLoadedPatternSettings,
     updateLoadedSubpattern,
     updateLoadedPattern,
-    modifyLoadedSubpatternCount,
-    base_url
 };

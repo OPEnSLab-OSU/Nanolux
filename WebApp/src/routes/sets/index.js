@@ -33,8 +33,7 @@ const Subpattern = ({subpattern, patterns}) => {
 	// Manage initalization
 	useEffect(() => {
         if (isConnected) {
-            getLoadedSubpattern(subpattern).then(data => {setData(data)}).then();
-			setLoading(false)
+            getLoadedSubpattern(subpattern).then(data => {setData(data)}).then(setLoading(false));
         }  
     }, [isConnected])
 
@@ -50,11 +49,12 @@ const Subpattern = ({subpattern, patterns}) => {
 	const update = (ref, value) => {
 		if(!loading){		
 			setData((oldData) => {
-				const newData = Array.from(oldData);
+				let newData = Object.assign({}, oldData);
 				newData[ref] = value;
 				return newData;
 			})
 		}
+		
 		setUpdated(true);
 	}
 
@@ -100,7 +100,7 @@ const Subpattern = ({subpattern, patterns}) => {
 	);
 }
 
-const CurrentPattern = ({initialSubpatternCount, patterns}) => {
+const CurrentPattern = ({patterns}) => {
 
 	const { isConnected } = useConnectivity();
 	const [loading, setLoading] = useState(true);
@@ -108,7 +108,7 @@ const CurrentPattern = ({initialSubpatternCount, patterns}) => {
 
 	// Subpattern data structure
 	const [data, setData] = useState({
-		subpattern_count: initialSubpatternCount,
+		subpattern_count: 1,
 		alpha: 0,
 		mode: 0
 	});
@@ -118,8 +118,9 @@ const CurrentPattern = ({initialSubpatternCount, patterns}) => {
 	// Manage initalization
 	useEffect(() => {
         if (isConnected) {
-            getLoadedPatternSettings().then(data => setData(data));
-            setLoading(false);
+            getLoadedPatternSettings()
+				.then(data => setData(data))
+				.then(setLoading(false));
         }  
     }, [isConnected])
 
@@ -135,25 +136,22 @@ const CurrentPattern = ({initialSubpatternCount, patterns}) => {
 	const update = (ref, value) => {
 		if(!loading){		
 			setData((oldData) => {
-				const newData = Array.from(oldData);
+				let newData = Object.assign({}, oldData);
 				newData[ref] = value;
 				return newData;
 			})
 		}
-		
 		setUpdated(true);
 	}
 
 	const incrementSubpatterns = async () => {
 		if(data.subpattern_count < 4){
-			await modifyLoadedSubpatternCount(1);
 			update("subpattern_count", data.subpattern_count + 1);
 		}
 	}
 
 	const decrementSubpatterns = async () => {
 		if(data.subpattern_count > 1){
-			await modifyLoadedSubpatternCount(-1);
 			update("subpattern_count", data.subpattern_count - 1)
 		}
 	}
@@ -167,72 +165,69 @@ const CurrentPattern = ({initialSubpatternCount, patterns}) => {
 	}
 
 	return (
-		<div>
-			<NumericSlider
-				className={style.settings_control}
-				label="Transparency"
-				min={0}
-				max={255}
-				initial={data.alpha}
-				structure_ref="alpha"
-				update={update}
-			/>
-			<NumericSlider
-				className={style.settings_control}
-				label="Mode"
-				min={0}
-				max={1}
-				initial={data.mode}
-				structure_ref="mode"
-				update={update}
-			/>
+		(!loading ? 
+			<div>
+				<NumericSlider
+					className={style.settings_control}
+					label="Transparency"
+					min={0}
+					max={255}
+					initial={data.alpha}
+					structure_ref="alpha"
+					update={update}
+				/>
+				<NumericSlider
+					className={style.settings_control}
+					label="Mode"
+					min={0}
+					max={1}
+					initial={data.mode}
+					structure_ref="mode"
+					update={update}
+				/>
 
-			<button type="button" onClick={incrementSubpatterns}>+</button>
-			<button type="button" onClick={decrementSubpatterns}>-</button>
-			<br></br>
+				<button type="button" onClick={incrementSubpatterns}>+</button>
+				<button type="button" onClick={decrementSubpatterns}>-</button>
+				<br></br>
 
-			{inRange(data.subpattern_count).map((data) => {
-				return <button type="button" onClick={function() {setSubpattern(data.idx);}} key={data.idx}>
-					SP {data.idx}
-				</button>
-			})}
+				{inRange(data.subpattern_count).map((data) => {
+					return <button type="button" onClick={function() {setSubpattern(data.idx);}} key={data.idx}>
+						SP {data.idx}
+					</button>
+				})}
 
-			<Subpattern
-				subpattern={selectedSubpattern}
-				patterns={patterns}
-				key={selectedSubpattern}
-			/>
-				
-		</div>
+				<Subpattern
+					subpattern={selectedSubpattern}
+					patterns={patterns}
+					key={selectedSubpattern}
+				/>	
+			</div> 
+		: {})
+		
 	);
 }
 
 const Settings = () => {
 
-	const {isConnected} = useConnectivity();
-	const [patterns, setPatterns] = useState([]);
-	const [loadingPatterns, setLoading] = useState(true);
-	const [loadingSpc, setSpcLoading] = useState(true);
-
-	const [spc, setSpc] = useState(1);
+	const { isConnected } = useConnectivity();
+	const [patterns, setPatterns] = useState([{index: 0, name: "None"}])
 
 	useEffect(() => {
         if (isConnected) {
-            getPatternList().then(data => {setPatterns(data); setLoading(false);});
-			getLoadedSubpatternCount().then(data => {setSpc(data); setSpcLoading(false);})
-        }
+            getPatternList()
+				.then(data => setPatterns(data))
+				.then();
+        }  
     }, [isConnected])
+	
+
 
 	return (
-
-		(loadingPatterns && loadingSpc ? <div></div> :
-			<div>
-				<CurrentPattern
-					initialSubpatternCount={1}
-					patterns={patterns}
-				/>
-			</div>
-		)
+		<div>
+			<CurrentPattern
+				patterns={patterns}
+			/>
+		</div>
 	);
 };
 

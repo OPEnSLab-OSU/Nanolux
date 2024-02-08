@@ -15,7 +15,7 @@ const Patterns = ({
     patterns
 }) => {
 
-    const [currentPattern, setCurrentPattern] = useState(initialID);
+    const current = useSignal(initialID);
 
     const patternOptions = patterns.map(p => {
         return <option key={p.index} value={p.index}>
@@ -24,9 +24,8 @@ const Patterns = ({
     });
 
     const handleSelection = async (event) => {
-        const newPattern = event.target.value;
-        setCurrentPattern(newPattern);
-        update(structure_ref, newPattern);
+        current.value = event.target.value;
+        update(structure_ref, current.value);
     }
 
     return (
@@ -35,7 +34,7 @@ const Patterns = ({
                 <label className={style.label} htmlFor="pattern-options">Current Pattern</label>
                 <select className={style.label}
                         id="pattern-options"
-                        value={currentPattern}
+                        value={initialID}
                         onChange={handleSelection}
                 >
                     {patternOptions}

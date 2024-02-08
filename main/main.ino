@@ -92,12 +92,15 @@ double accelerations[5] = {0,0,0,0,0};  //for spring mass 3
 int locations[5] = {70,60,50,40,30}; //for spring mass 3
 double vRealSums[5] = {0,0,0,0,0};
 
-Pattern_Data current_pattern;
-uint8_t old_mode = 0;
 volatile bool pattern_changed = false;
-Pattern_Data updated_data;
-Config_Data config; // Currently loaded config
-volatile extern bool altered_config = false;
+
+Pattern_Data current_subpatterns[NUM_SUBPATTERNS];
+Pattern_Data vol_subpatterns[NUM_SUBPATTERNS * NUM_SAVES];
+Config_Data config;
+
+uint8_t subpattern_count = 1;
+uint8_t loaded_alpha = 0;
+uint8_t loaded_mode = 0;
 
 //
 // Patterns structure.
@@ -115,9 +118,7 @@ typedef struct {
 // Pattern history array and index.
 // To switch patterns, simply change the index.
 // Primary pattern is 0.
-Pattern_History histories[2];
-Pattern_History current_history = histories[0];
-
+Pattern_History histories[NUM_SUBPATTERNS];
 
 //
 // Register all the patterns here. The index property must be sequential, but the code make sure
@@ -194,20 +195,10 @@ void runTask0(void * pvParameters) {
   }
 }
 
-uint8_t check_for_mode_change(uint8_t source, uint8_t target){
-  if(source != target){
-    memset(output_buffer, 0, sizeof(CRGB) * MAX_LEDS);
-    histories[0] = Pattern_History();
-    histories[1] = Pattern_History();
-    memset(smoothed_output, 0, sizeof(CRGB) * MAX_LEDS);
-  }
-  return source;
-}
-
 void setup() {
     pinMode(LED_BUILTIN, OUTPUT);
-    load_from_nvs();
-    updated_data = load_slot(0);
+
+
     Serial.begin(115200);               // start USB serial communication
     while(!Serial){ ; }
 
@@ -225,8 +216,6 @@ void setup() {
 
     //  initialize up led strip
     FastLED.addLeds<LED_TYPE,DATA_PIN,CLK_PIN,COLOR_ORDER>(smoothed_output, MAX_LEDS).setCorrection(TypicalLEDStrip);
-
-    current_pattern = updated_data;
 
 #ifdef ENABLE_WEB_SERVER
     initialize_web_server(apiGetHooks, API_GET_HOOK_COUNT, apiPutHooks, API_PUT_HOOK_COUNT);
@@ -326,41 +315,36 @@ void loop() {
       const int start = micros();
     #endif
 
-    // If the last run was not using strip splitting, clear all buffers
-    // and histories.
-    old_mode = check_for_mode_change(current_pattern.mode, old_mode);
-
-    if(altered_config){
-      save_config_to_nvs();
-    }
-
     // if the length has been changed, reset all buffers
     // and histories.
-    if(pattern_changed || altered_config){
+    if(pattern_changed){
       pattern_changed = false;
-      altered_config = false;
       memset(smoothed_output, 0, sizeof(CRGB) * MAX_LEDS);
       memset(output_buffer, 0, sizeof(CRGB) * MAX_LEDS);
       histories[0] = Pattern_History();
       histories[1] = Pattern_History();
-      current_pattern = updated_data;
+      histories[2] = Pattern_History();
+      histories[3] = Pattern_History();
     }
 
-    switch(current_pattern.mode){
-      case STRIP_SPLITTING:
+    int section_length = config.length/subpattern_count;
 
-        // Update pattern history
-        mainPatterns[current_pattern.pattern_1].pattern_handler(&histories[0], config.length/2);
-        mainPatterns[current_pattern.pattern_2].pattern_handler(&histories[1], config.length/2);
-
-        // Copy both patterns into the temporary output buffer
-        memcpy(&output_buffer[0], histories[0].leds, sizeof(CRGB) * config.length/2);
-        memcpy(&output_buffer[config.length/2], histories[1].leds, sizeof(CRGB) * config.length/2);
+    switch(loaded_mode){
+      case 0:
+        for(int i = 0; i < subpattern_count; i++){
+          mainPatterns[current_subpatterns[i].idx].pattern_handler(
+            &histories[i],
+            section_length
+          );
+          memcpy(&output_buffer[section_length * i], histories[i].leds, sizeof(CRGB) * config.length/2);
+        }
 
       break;
 
-      case Z_LAYERING:
+      /**
+      case 1:
 
+        
         mainPatterns[current_pattern.pattern_1].pattern_handler(&histories[0], config.length);
         mainPatterns[current_pattern.pattern_2].pattern_handler(&histories[1], config.length);
 
@@ -371,21 +355,17 @@ void loop() {
           config.length,
           current_pattern.alpha
         );
-
+      
       break;
+      **/
 
       default:
-        mainPatterns[current_pattern.pattern_1].pattern_handler(&histories[0], config.length);
-        memcpy(output_buffer, histories[0].leds, sizeof(CRGB) * config.length);
+        FastLED.setBrightness(255);
+
     }
 
-    #ifdef SHOW_TIMINGS
-      const int end = micros();
-      Serial.printf("%s Visualization: %d us\n", mainPatterns[current_pattern.pattern_1].pattern_name, end - start);
-    #endif
-
     // Set the global brightness of the LED strip.
-    FastLED.setBrightness(current_pattern.brightness);
+    // FastLED.setBrightness(current_pattern.brightness);
 
     // Smooth the light output on the LED strip using
     // the smoothing constant.
@@ -394,7 +374,7 @@ void loop() {
       output_buffer,
       smoothed_output,
       config.length,
-      255 - current_pattern.smoothing
+      255 //255 - current_pattern.smoothing
     );
 
     FastLED.show();
@@ -437,7 +417,9 @@ void audio_analysis() {
 
   update_drums();
 
-  noise_gate(current_pattern.noise_thresh);
+  noise_gate(0);
+
+  
 
 #ifdef SHOW_TIMINGS
   const int end = micros();

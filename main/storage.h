@@ -27,7 +27,7 @@ typedef struct{
 } Config_Data;
 
 
-Pattern_Data load_slot(int slot);
+void load_slot(int slot);
 
 void set_slot(int slot);
 
