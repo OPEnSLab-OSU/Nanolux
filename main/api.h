@@ -334,6 +334,31 @@ inline void handle_debug_put_request(AsyncWebServerRequest* request, JsonVariant
     }
 }
 
+typedef struct{
+
+  uint8_t idx = 0;
+  uint8_t noise_thresh = 0;
+  uint8_t brightness = 255;
+  uint8_t smoothing = 0;
+
+} Pattern_Data;
+
+inline void handle_loaded_subpattern_get_request(AsyncWebServerRequest* request) {
+
+    const uint8_t subpattern_num = request->getParam(0)->value().toInt();
+    Pattern_Data subpattern = vol_subpatterns[subpattern_num];
+
+    // Create response substrings
+    String idx = String(" \"idx\": ") + subpattern.idx;
+    String noise = String(" \"noise\": ") + subpattern.noise;
+    String bright = String(" \"brightness\": ") + subpattern.brightness;
+    String smooth = String(" \"smoothing\": ") + subpattern.smoothing;
+
+    // Build and send the final response
+    const String response = String("{") + idx + noise + bright + smooth + String(" }");
+    request->send(HTTP_OK, CONTENT_JSON, response);
+}
+
 
 APIGetHook apiGetHooks[] = {
     { "/api/patterns", handle_patterns_list_request},

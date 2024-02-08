@@ -2,28 +2,13 @@
 #ifndef STORAGE_H
 #define STORAGE_H
 
-#define NUM_SAVES  5
+#define NUM_SAVES  3
+#define NUM_SUBPATTERNS 4
 
 typedef struct{
 
-  uint8_t pattern_idx = 0; // Index number of which pattern is current
+  uint8_t idx = 0;
   uint8_t noise_thresh = 0;
-  uint8_t alpha = 0;
-  uint8_t brightness = 255;
-  uint8_t smoothing = 0;
-  uint8_t hue_min = 0;
-  uint8_t hue_max = 255;
-  bool direction_symmetry = false;
-
-} Save_Data;
-
-typedef struct{
-
-  uint8_t pattern_1 = 0; // Index number of which pattern is current
-  uint8_t pattern_2 = 0;
-  uint8_t noise_thresh = 0;
-  uint8_t alpha = 0;
-  uint8_t mode = 0;
   uint8_t brightness = 255;
   uint8_t smoothing = 0;
 
@@ -34,6 +19,9 @@ typedef struct{
   uint8_t length = 60;
   uint8_t loop_ms = 40; // approx. 10 hz
   uint8_t debug_mode = 0; // debug and simulator off
+  uint8_t spc[NUM_SUBPATTERNS] = {1, 1, 1, 1};
+  uint8_t alphas[NUM_SUBPATTERNS] = {0, 0, 0, 0};
+  uint8_t modes[NUM_SUBPATTERNS] = {0, 0, 0, 0};
   bool init = true;
 
 } Config_Data;
