@@ -215,7 +215,7 @@ void setup() {
     checkVol = 0;
 
     //  initialize up led strip
-    FastLED.addLeds<LED_TYPE,DATA_PIN,CLK_PIN,COLOR_ORDER>(smoothed_output, MAX_LEDS).setCorrection(TypicalLEDStrip);
+    FastLED.addLeds<LED_TYPE,DATA_PIN,CLK_PIN,COLOR_ORDER>(output_buffer, MAX_LEDS).setCorrection(TypicalLEDStrip);
 
 #ifdef ENABLE_WEB_SERVER
     initialize_web_server(apiGetHooks, API_GET_HOOK_COUNT, apiPutHooks, API_PUT_HOOK_COUNT);
@@ -332,11 +332,12 @@ void loop() {
     switch(loaded_mode){
       case 0:
         for(int i = 0; i < subpattern_count; i++){
+          Serial.println(current_subpatterns[i].idx);
           mainPatterns[current_subpatterns[i].idx].pattern_handler(
             &histories[i],
             section_length
           );
-          memcpy(&output_buffer[section_length * i], histories[i].leds, sizeof(CRGB) * config.length/2);
+          memcpy(&output_buffer[section_length * i], histories[i].leds, sizeof(CRGB) * section_length);
         }
 
       break;

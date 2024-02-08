@@ -120,19 +120,16 @@ inline void handle_subpattern_update_put_request(AsyncWebServerRequest* request,
         int status = HTTP_OK;
 
         const uint8_t subpattern_num = request->getParam(0)->value().toInt();
-        Pattern_Data subpattern = vol_subpatterns[subpattern_num];
 
         const uint8_t idx = payload["idx"];
         const uint8_t noise = payload["noise"];
         const uint8_t bright = payload["brightness"];
         const uint8_t smooth = payload["smoothing"];
 
-        vol_subpatterns[subpattern_num].idx = idx;
-        vol_subpatterns[subpattern_num].noise_thresh = noise;
-        vol_subpatterns[subpattern_num].brightness = bright;
-        vol_subpatterns[subpattern_num].smoothing = smooth;
-
-        Serial.println(vol_subpatterns[subpattern_num].brightness);
+        current_subpatterns[subpattern_num].idx = idx;
+        current_subpatterns[subpattern_num].noise_thresh = noise;
+        current_subpatterns[subpattern_num].brightness = bright;
+        current_subpatterns[subpattern_num].smoothing = smooth;
 
         pattern_changed = true;
 
