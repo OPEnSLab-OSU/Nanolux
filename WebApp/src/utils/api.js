@@ -78,17 +78,21 @@ const getMs = () =>
 const getDebug = () =>
     getData('debug')
 
+const getLoadedSubpattern = (subpattern) =>
+    axios.get(`${base_url}/api/loadedSubpatterns?sp=${subpattern}`, {headers: {'Access-Control-Allow-Origin': '*'}})
+        .then(response => response.data);
+
+const getLoadedSubpatternCount = () =>
+    axios.get(`${base_url}/api/loadedSubpatternCount`, {headers: {'Access-Control-Allow-Origin': '*'}})
+        .then(response => response.data);
+
+const getLoadedPatternSettings = () =>
+    axios.get(`${base_url}/api/loadedPatternSettings`, {headers: {'Access-Control-Allow-Origin': '*'}})
+        .then(response => response.data);
 
 const getData = (path) =>
     axios.get(`${base_url}/api/${path}`, {headers: {'Access-Control-Allow-Origin': '*'}})
         .then(response => response.data);
-
-const savePattern = (patternIndex) =>
-    axios.put(`${base_url}/api/pattern`,{index: patternIndex});
-
-const saveSecondaryPattern = (patternIndex) =>
-    axios.put(`${base_url}/api/pattern2`,{index: patternIndex});
-
 
 const saveNoise = (noise) =>
     axios.put(`${base_url}/api/noise`,{noise});
@@ -115,29 +119,21 @@ const joinWiFi = (wifi) =>
 const saveHostname = (hostname) =>
     axios.put(`${base_url}/api/hostname`,{hostname});
 
-const saveBrightness = (brightness) =>
-    axios.put(`${base_url}/api/brightness`,{brightness});
+const updateLoadedSubpattern = (subpattern, data) =>
+    axios.put(`${base_url}/api/updateLoadedSubpattern?subpattern=${subpattern}`, {data})
 
-const saveSmoothing = (smoothing) =>
-    axios.put(`${base_url}/api/smoothing`,{smoothing});
+const updateLoadedPattern = (data) =>
+    axios.put(`${base_url}/api/updateLoadedPattern`, {data})
 
-const saveLength = (len) =>
-    axios.put(`${base_url}/api/len`,{len});
-
-const saveDebug = (debug) =>
-    axios.put(`${base_url}/api/debug`,{debug});
-
-const saveMs = (ms) =>
-    axios.put(`${base_url}/api/ms`,{ms});
+const modifyLoadedSubpatternCount = (data) =>
+    axios.put(`${base_url}/api/modifyLoadedSubpatternCount`, {data})
 
 export {
     getSettings,
     saveSettings,
     getPatternList,
     getPattern,
-    savePattern,
     getSecondaryPattern,
-    saveSecondaryPattern,
     getNoise,
     saveNoise,
     getWiFiList,
@@ -153,15 +149,16 @@ export {
     getAlpha,
     saveInSlot,
     loadFromSlot,
-    saveBrightness,
-    saveSmoothing,
     getBrightness,
     getSmoothing,
     getLength,
-    saveLength,
-    saveDebug,
-    saveMs,
     getDebug,
     getMs,
+    getLoadedSubpattern,
+    getLoadedSubpatternCount,
+    getLoadedPatternSettings,
+    updateLoadedSubpattern,
+    updateLoadedPattern,
+    modifyLoadedSubpatternCount,
     base_url
 };
