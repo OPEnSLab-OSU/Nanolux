@@ -1,5 +1,5 @@
 import {useEffect, useState} from "preact/hooks";
-import 'preact-material-components/Switch/style.css';
+//import 'preact-material-components/Switch/style.css';
 import {getExclusiveMode, saveExclusiveMode} from "../../utils/api";
 import {useConnectivity} from "../../context/online_context";
 import {LabelSpinner} from "../spinner";

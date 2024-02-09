@@ -62,7 +62,7 @@ const Settings = () => {
 							className={style.settings_control}
 							label="LED Count"
 							min={30}
-							max={120}
+							max={200}
 							getterFunction={getLength}
 							saveFunction={saveLength}
 							api_key='len'
