@@ -120,22 +120,22 @@ td, th {
 }
 
 .background0{
-	background-color: rgb(70,25,25);
-	border-radius: 5px;
+    border: 1px solid #ffe7e9;
+  	border-radius: 5px;
 }
 .background1{
-	background-color: #3b3b3b;
+    border: 1px solid #ffe7e9;
 	border-radius: 5px;
 }
 .background2{
-	background-color: #303030;
+    border: 1px solid #ffe7e9;
 	border-radius: 5px;
 }
 .background3{
-	background-color: #262626;
+    border: 1px solid #ffe7e9;
 	border-radius: 5px;
 }
 .background4{
-	background-color: #212121;
+    border: 1px solid #ffe7e9;
 	border-radius: 5px;
 }

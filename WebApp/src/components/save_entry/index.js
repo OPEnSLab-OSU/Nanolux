@@ -18,8 +18,8 @@ const Save_Entry = ({
 
     return (
         <div >
-            <tr>
-                <th width='150'>{name}</th>
+            <tr >
+                <th width='150' style="color: white" >{name}</th>
                 <th>
                     <button onClick={handleLoad}>Load Pattern</button>
                 </th>

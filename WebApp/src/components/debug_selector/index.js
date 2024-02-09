@@ -52,9 +52,9 @@ const DebugSelector = () => {
             ) : (
                 <div>
                     <input type="checkbox" id="debug" name="debugmode" value="1" onChange={handleClick} checked={value==1}/>
-                    <label for="sp">Enable Debug</label>
+                    <label style="color: white" for="sp">Enable Debug</label>
                     <input type="checkbox" id="sim" name="debugmode" value="2" onChange={handleClick} checked={value==2}/>
-                    <label for="dp">Enable Simulator</label>
+                    <label style="color: white" for="dp">Enable Simulator</label>
                 </div>
             )}
         </div>
