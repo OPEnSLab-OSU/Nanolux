@@ -22,5 +22,4 @@ jobs:
           source: './main'
           extensions: 'h,cpp,c,ino'
           clangFormatVersion: 16
-          inplace: True
  
