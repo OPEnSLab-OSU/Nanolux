@@ -18,4 +18,9 @@ jobs:
 
       - name: clang-format lint
         uses: DoozyX/clang-format-lint-action@v0.9
+        with:
+          source: './main'
+          extensions: 'h,cpp,c,ino'
+          clangFormatVersion: 16
+          inplace: True
  
