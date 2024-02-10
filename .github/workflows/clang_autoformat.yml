@@ -23,6 +23,7 @@ jobs:
           extensions: 'h,cpp,c,ino'
 
       - uses: EndBug/add-and-commit@v9
+        if: always()
         with:
           author_name: Clang Robot
           author_email: robot@example.com
