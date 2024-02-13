@@ -55,7 +55,7 @@ inline void handle_patterns_list_request(AsyncWebServerRequest* request) {
 inline void handle_loaded_subpattern_get_request(AsyncWebServerRequest* request) {
 
     const uint8_t subpattern_num = request->getParam(0)->value().toInt();
-    Pattern_Data subpattern = vol_subpatterns[subpattern_num];
+    Pattern_Data subpattern = current_subpatterns[subpattern_num];
 
     // Create response substrings
     String idx = String(" \"idx\": ") + subpattern.idx;
@@ -95,7 +95,7 @@ inline void handle_pattern_update_put_request(AsyncWebServerRequest* request, Js
         loaded_alpha = alpha;
         loaded_mode = mode;
 
-        Serial.println(subpattern_count);
+        
 
         pattern_changed = true;
 
