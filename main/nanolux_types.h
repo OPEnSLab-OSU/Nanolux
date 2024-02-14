@@ -42,8 +42,9 @@ typedef void (*SimplePatternList[])();
 #define ANALOG_PIN          A2
 
 // Mode Constants
-#define STRIP_SPLITTING 1
-#define Z_LAYERING      2
+#define STRIP_SPLITTING 0
+#define Z_LAYERING      1
+#define MANUAL          2
 
 
 // Button Input

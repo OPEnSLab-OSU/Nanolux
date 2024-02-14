@@ -93,14 +93,10 @@ int locations[5] = { 70, 60, 50, 40, 30 };    //for spring mass 3
 double vRealSums[5] = { 0, 0, 0, 0, 0 };
 
 volatile bool pattern_changed = false;
-
-Pattern_Data current_subpatterns[NUM_SUBPATTERNS];
-Pattern_Data vol_subpatterns[NUM_SUBPATTERNS * NUM_SAVES];
+Pattern_Data loaded_pattern;
+Pattern_Data saved_patterns[NUM_SAVES];
 Config_Data config;
 
-uint8_t subpattern_count = 1;
-uint8_t loaded_alpha = 0;
-uint8_t loaded_mode = 0;
 
 //
 // Patterns structure.
@@ -230,7 +226,6 @@ void calculate_layering(CRGB *a, CRGB *b, CRGB *out, int length, uint8_t blur) {
 
 unsigned long start_millis = NULL;
 
-
 void led_on_forever() {
 
   // Clear the LED strip before moving into the forever blink
@@ -247,6 +242,7 @@ void led_on_forever() {
   }
 }
 
+
 void process_reset_button() {
 
   if (!digitalRead(BUTTON_PIN)) {
@@ -254,12 +250,10 @@ void process_reset_button() {
     if (start_millis == NULL)
       start_millis = millis();
 
-    // Only turns on the LED if the button is pressed for longer
-    // than 1.5 seconds.
-    (millis() - start_millis > 1500) ? digitalWrite(LED_BUILTIN, HIGH) : digitalWrite(LED_BUILTIN, LOW);
+    (millis() - start_millis > 1500)
+      ? digitalWrite(LED_BUILTIN, HIGH)
+      : digitalWrite(LED_BUILTIN, LOW);
 
-    // if millis is ever less than start_millis,
-    // just reset it to NULL.
     if (start_millis > millis()) {
       start_millis = NULL;
       return;
@@ -301,34 +295,111 @@ void scale_crgb_array(CRGB *arr, uint8_t len, uint8_t factor) {
   }
 }
 
-void loop() {
+/// @brief  Runs the strip splitting LED strip mode
+void run_strip_splitting() {
 
-  begin_loop_timer(config.loop_ms);
+  // Defines the length of an LED strip segment
+  uint8_t section_length = config.length / loaded_pattern.subpattern_count;
 
-  // Check to make sure the length of the strip is not 0.
-  if (config.length < 30) {
-    config.length = 30;
+  // Repeat for each subpattern
+  for (int i = 0; i < loaded_pattern.subpattern_count; i++) {
+
+    // Run the pattern handler for pattern i using history i
+    mainPatterns[loaded_pattern.subpattern[i].idx].pattern_handler(
+      &histories[i],
+      section_length);
+
+    // Copy the processed segment to the output buffer
+    memcpy(
+      &output_buffer[section_length * i],
+      histories[i].leds,
+      sizeof(CRGB) * section_length);
+
+    // Scale the LED strip light output based on brightness
+    scale_crgb_array(
+      &output_buffer[section_length * i],
+      section_length,
+      loaded_pattern.subpattern[i].brightness);
+
+    // Smooth the brightness-adjusted output and put it
+    // into the main output buffer.
+    calculate_layering(
+      &smoothed_output[section_length * i],
+      &output_buffer[section_length * i],
+      &smoothed_output[section_length * i],
+      section_length,
+      255 - loaded_pattern.subpattern[i].smoothing);
+  }
+}
+
+/// @brief Runs the pattern layering output mode
+void run_pattern_layering() {
+
+  // Create two CRGB buffers for holding LED strip data
+  // that has been light-adjusted.
+  static CRGB temps[2][MAX_LEDS];
+
+  // If there is one subpattern pattern, run strip splitting,
+  // which will output the single subpattern.
+  if (loaded_pattern.subpattern_count < 2) {
+    run_strip_splitting();
+    return;
   }
 
-  process_reset_button();
-  audio_analysis();  // sets peak and volume
+  // If there are more than two subpatterns, use the first two
+  // for pattern layering.
+  for (uint8_t i = 0; i < 2; i++) {
+    // Run the pattern handler for pattern i using history i
+    mainPatterns[loaded_pattern.subpattern[i].idx].pattern_handler(
+      &histories[i],
+      config.length);
 
-#ifdef HUE_FLAG
-  fHue = remap(log(peak) / log(2), log(MIN_FREQUENCY) / log(2), log(MAX_FREQUENCY) / log(2), 10, 240);
-#else
-  fHue = remap(maxDelt, MIN_FREQUENCY, MAX_FREQUENCY, 0, 240);
-#endif
+    // Copy the processed segment to the temp buffer
+    memcpy(
+      temps[i],
+      histories[i].leds,
+      sizeof(CRGB) * config.length);
 
-  vbrightness = remap(volume, MIN_VOLUME, MAX_VOLUME, 0, MAX_BRIGHTNESS);
+    // Scale the temp buffer light output based on brightness
+    scale_crgb_array(
+      temps[i],
+      config.length,
+      loaded_pattern.subpattern[i].brightness);
+  }
 
-  check_button_state();
+  // Combine the two temp arrays.
+  calculate_layering(
+    temps[0],
+    temps[1],
+    output_buffer,
+    config.length,
+    loaded_pattern.alpha);
 
-#ifdef SHOW_TIMINGS
-  const int start = micros();
-#endif
+  // Smooth the combined layered output buffer.
+  calculate_layering(
+    smoothed_output,
+    output_buffer,
+    smoothed_output,
+    config.length,
+    255 - loaded_pattern.subpattern[0].smoothing);
+}
 
-  // if the length has been changed, reset all buffers
-  // and histories.
+/// @brief Prints a buffer to serial.
+/// @param buf  The CRGB buffer to print.
+/// @param len  The number of RGB values to print.
+void print_buffer(CRGB *buf, uint8_t len) {
+  for (int i = 0; i < len; i++) {
+    Serial.print(String(buf[i].r) + "," + String(buf[i].g) + "," + String(buf[i].b) + " ");
+  }
+  Serial.print("\n");
+}
+
+void loop() {
+
+  begin_loop_timer(config.loop_ms);  // Begin timing this loop
+
+  // Reset buffers if pattern settings were changed since
+  // last program loop.
   if (pattern_changed) {
     pattern_changed = false;
     memset(smoothed_output, 0, sizeof(CRGB) * MAX_LEDS);
@@ -339,82 +410,50 @@ void loop() {
     histories[3] = Pattern_History();
   }
 
-  int section_length = config.length / subpattern_count;
+  check_button_state();  // Check for user button input
 
-  switch (loaded_mode) {
-    case 0:
-      for (int i = 0; i < subpattern_count; i++) {
-        Serial.println(current_subpatterns[i].idx);
-        
-        mainPatterns[current_subpatterns[i].idx].pattern_handler(
-          &histories[i],
-          section_length);
-             
-        memcpy(&output_buffer[section_length * i], histories[i].leds, sizeof(CRGB) * section_length);
+  process_reset_button();  // Manage resetting saves if button held
 
-        scale_crgb_array(
-          &output_buffer[section_length * i],
-          section_length,
-          current_subpatterns[i].brightness
-        );
+  audio_analysis();  // Run the audio analysis pipeline
 
-        calculate_layering(
-          &smoothed_output[section_length * i],
-          &output_buffer[section_length * i],
-          &smoothed_output[section_length * i],
-          section_length,
-          255 - current_subpatterns[i].smoothing
-        );
+  fHue = remap(
+    log(peak) / log(2),
+    log(MIN_FREQUENCY) / log(2),
+    log(MAX_FREQUENCY) / log(2),
+    10, 240);
 
-      }
+  vbrightness = remap(
+    volume,
+    MIN_VOLUME,
+    MAX_VOLUME,
+    0,
+    MAX_BRIGHTNESS);
 
+  switch (loaded_pattern.mode) {
+
+    case STRIP_SPLITTING:
+      run_strip_splitting();
       break;
 
-      /**
-      case 1:
-
-        
-        mainPatterns[current_pattern.pattern_1].pattern_handler(&histories[0], config.length);
-        mainPatterns[current_pattern.pattern_2].pattern_handler(&histories[1], config.length);
-
-        calculate_layering(
-          histories[1].leds,
-          histories[0].leds,
-          output_buffer,
-          config.length,
-          current_pattern.alpha
-        );
-      
+    case Z_LAYERING:
+      run_pattern_layering();
       break;
-      **/
 
     default:
-      FastLED.setBrightness(255);
+      0;
   }
 
-  // Set the global brightness of the LED strip.
-  // FastLED.setBrightness(current_pattern.brightness);
+  FastLED.show();  // Push changes from the smoothed buffer to the LED strip
 
-  // Smooth the light output on the LED strip using
-  // the smoothing constant.
-  
+  // Print the LED strip buffer if the simulator is enabled.
+  if (config.debug_mode == 2)
+    print_buffer(smoothed_output, config.length);
 
-  FastLED.show();
-
-  if (config.debug_mode == 2) {
-    for (int i = 0; i < config.length; i++) {
-      Serial.print(String(smoothed_output[i].r) + "," + String(smoothed_output[i].g) + "," + String(smoothed_output[i].b) + " ");
-    }
-    Serial.print("\n");
-  }
-
-  if (timer_overrun() == 0) {
-    while (timer_overrun() == 0) {
-      update_web_server();
-    }
-  } else {
+  // Update the web server while waiting for the current
+  // frame to complete.
+  do {
     update_web_server();
-  }
+  } while (timer_overrun() == 0);
 }
 
 // Use all the audio analysis to update every global audio analysis value
@@ -440,8 +479,6 @@ void audio_analysis() {
   update_drums();
 
   noise_gate(0);
-
-
 
 #ifdef SHOW_TIMINGS
   const int end = micros();
