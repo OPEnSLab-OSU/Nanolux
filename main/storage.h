@@ -5,12 +5,18 @@
 #define NUM_SAVES  3
 #define NUM_SUBPATTERNS 4
 
+// will need to update the idx when pattern is set
 typedef struct{
 
   uint8_t idx = 0;
+  uint8_t config =0;
   uint8_t noise_thresh = 0;
   uint8_t brightness = 255;
   uint8_t smoothing = 0;
+  uint8_t minhue =0;
+  uint8_t maxhue =0;
+  uint8_t direction;
+
 
 } Pattern_Data;
 
