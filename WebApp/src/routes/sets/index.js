@@ -9,7 +9,9 @@ import {
 	updateLoadedPattern,
 	modifyLoadedSubpatternCount,
 	getPatternList,
-	getLoadedSubpatternCount} from "../../utils/api";
+	getLoadedSubpatternCount,
+	saveToSlot,
+	loadSaveSlot} from "../../utils/api";
 import {useConnectivity} from "../../context/online_context";
 import useInterval from "../../utils/use_interval";
 
@@ -184,7 +186,7 @@ const CurrentPattern = ({patterns}) => {
 					initial={data.noise}
 					structure_ref="noise"
 					update={update}
-				/>`
+				/>
 
 				<button type="button" onClick={incrementSubpatterns}>+</button>
 				<button type="button" onClick={decrementSubpatterns}>-</button>
@@ -209,10 +211,47 @@ const CurrentPattern = ({patterns}) => {
 					key={selectedSubpattern}
 				/>	
 			</div> 
-		: {})
+		: 'loading')
 		
 	);
 }
+
+const LoadButtons = (updateKey) => {
+
+	const newKey = async (event) => {
+		await loadSaveSlot(event.target.value);
+		window.location.reload(true);
+	}
+
+	return(
+		<div>
+			<button type="button" onClick={newKey} value={0}>Load Default Save</button>
+			<button type="button" onClick={newKey} value={1}>Load Save 1</button>
+			<button type="button" onClick={newKey} value={2}>Load Save 2</button>
+		</div>
+	)
+
+}
+
+const SaveButtons = () => {
+
+	const newKey = async (event) => {
+		var success = await saveToSlot(event.target.value);
+		if(!success){
+			alert("Failed to save slot.");
+		}
+	}
+
+	return(
+		<div>
+			<button type="button" onClick={newKey} value={0}>Save as Default</button>
+			<button type="button" onClick={newKey} value={1}>Save as 1</button>
+			<button type="button" onClick={newKey} value={2}>Save as 2</button>
+		</div>
+	)
+
+}
+
 
 const Settings = () => {
 
@@ -228,12 +267,19 @@ const Settings = () => {
     }, [isConnected])
 	
 
+	const [key, updateKey] = useState(0);
+
 
 	return (
 		<div>
 			<CurrentPattern
 				patterns={patterns}
+				key={key}
 			/>
+			<LoadButtons
+				updateKey={updateKey}
+			/>
+			<SaveButtons/>
 		</div>
 	);
 };

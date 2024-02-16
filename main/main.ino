@@ -213,6 +213,11 @@ void setup() {
   //  initialize up led strip
   FastLED.addLeds<LED_TYPE, DATA_PIN, CLK_PIN, COLOR_ORDER>(smoothed_output, MAX_LEDS).setCorrection(TypicalLEDStrip);
 
+  load_from_nvs();
+  verify_saves();
+  load_slot(0);
+
+
 #ifdef ENABLE_WEB_SERVER
   initialize_web_server(apiGetHooks, API_GET_HOOK_COUNT, apiPutHooks, API_PUT_HOOK_COUNT);
 #endif
@@ -299,6 +304,7 @@ void scale_crgb_array(CRGB *arr, uint8_t len, uint8_t factor) {
 void run_strip_splitting() {
 
   // Defines the length of an LED strip segment
+  Serial.println(loaded_pattern.subpattern_count);
   uint8_t section_length = config.length / loaded_pattern.subpattern_count;
 
   // Repeat for each subpattern
@@ -396,7 +402,11 @@ void print_buffer(CRGB *buf, uint8_t len) {
 
 void loop() {
 
+  
+
   begin_loop_timer(config.loop_ms);  // Begin timing this loop
+
+  Serial.println("TEST 7");
 
   // Reset buffers if pattern settings were changed since
   // last program loop.
@@ -428,7 +438,7 @@ void loop() {
     MAX_VOLUME,
     0,
     MAX_BRIGHTNESS);
-
+  
   switch (loaded_pattern.mode) {
 
     case STRIP_SPLITTING:
@@ -443,8 +453,10 @@ void loop() {
       0;
   }
 
-  FastLED.show();  // Push changes from the smoothed buffer to the LED strip
+  
 
+  FastLED.show();  // Push changes from the smoothed buffer to the LED strip
+   
   // Print the LED strip buffer if the simulator is enabled.
   if (config.debug_mode == 2)
     print_buffer(smoothed_output, config.length);
