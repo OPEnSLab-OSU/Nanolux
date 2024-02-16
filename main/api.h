@@ -121,11 +121,14 @@ inline void handle_subpattern_update_put_request(AsyncWebServerRequest* request,
     const uint8_t bright = payload["brightness"];
     const uint8_t smooth = payload["smoothing"];
 
+    if(idx != loaded_pattern.subpattern[subpattern_num].idx)
+      pattern_changed = true;
+
     loaded_pattern.subpattern[subpattern_num].idx = idx;
     loaded_pattern.subpattern[subpattern_num].brightness = bright;
     loaded_pattern.subpattern[subpattern_num].smoothing = smooth;
 
-    pattern_changed = true;
+    
 
     request->send(
       HTTP_OK,
@@ -225,20 +228,65 @@ inline void handle_save_to_slot_put_request(AsyncWebServerRequest* request, Json
   }
 }
 
+inline void handle_system_settings_put_request(AsyncWebServerRequest* request, JsonVariant& json) {
+  if (request->method() == HTTP_PUT) {
+    const JsonObject& payload = json.as<JsonObject>();
+
+    int status = HTTP_OK;
+
+    const uint8_t length = payload["length"];
+    const uint8_t loop = payload["loop"];
+    const uint8_t debug = payload["debug"];
+
+    if(config.length != length)
+      pattern_changed = true;
+
+    config.length = length;
+    config.loop_ms = loop;
+    config.debug_mode = debug;
+
+    save_config_to_nvs();
+
+    request->send(
+      HTTP_OK,
+      CONTENT_TEXT,
+      build_response(
+        true,
+        "success",
+        nullptr));
+  } else {
+    request->send(HTTP_METHOD_NOT_ALLOWED);
+  }
+}
+
+inline void handle_system_settings_get_request(AsyncWebServerRequest* request) {
+
+  // Create response substrings
+  String length = String(" \"length\": ") + config.length;
+  String loop = String(", \"loop\": ") + config.loop_ms;
+  String debug = String(", \"debug\": ") + config.debug_mode;
+
+  // Build and send the final response
+  const String response = String("{") + length + loop + debug + String(" }");
+  request->send(HTTP_OK, CONTENT_JSON, response);
+}
+
 
 APIGetHook apiGetHooks[] = {
   { "/api/patterns", handle_patterns_list_request },
   { "/api/loadedSubpatterns", handle_loaded_subpattern_get_request },
   { "/api/loadedPatternSettings", handle_loaded_pattern_settings_get_request },
+  { "/api/getDeviceSettings", handle_system_settings_get_request },
 
 
 };
-constexpr int API_GET_HOOK_COUNT = 3;
+constexpr int API_GET_HOOK_COUNT = 4;
 
 APIPutHook apiPutHooks[] = {
   { "/api/updateLoadedSubpattern", handle_subpattern_update_put_request },
   { "/api/updateLoadedPattern", handle_pattern_update_put_request },
   { "/api/loadSaveSlot", handle_load_save_slot_put_request },
   { "/api/saveToSlot", handle_save_to_slot_put_request },
+  { "/api/updateDeviceSettings", handle_system_settings_put_request },
 };
-constexpr int API_PUT_HOOK_COUNT = 4;
+constexpr int API_PUT_HOOK_COUNT = 5;

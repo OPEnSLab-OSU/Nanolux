@@ -86,10 +86,17 @@ const loadSaveSlot = async (slot) => {
 
 }
 
-    
+const updateDeviceSettings = (data) => {
+    axios.put(`${base_url}/api/updateDeviceSettings`, data)
+}
 
 const saveToSlot = (slot) =>
-    axios.put(`${base_url}/api/saveToSlot`, {slot:slot}) 
+    axios.put(`${base_url}/api/saveToSlot`, {slot:slot}) ;
+
+const getSystemSettings = () => 
+    axios.get(`${base_url}/api/getDeviceSettings`,  {headers: {'Access-Control-Allow-Origin': '*'}})
+    .then(response => response.data);
+
 
 export {
     getSettings,
@@ -108,5 +115,7 @@ export {
     updateLoadedPattern,
     loadSaveSlot,
     saveToSlot,
+    updateDeviceSettings,
+    getSystemSettings,
     base_url
 };

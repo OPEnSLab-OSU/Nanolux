@@ -11,7 +11,9 @@ import {
 	getPatternList,
 	getLoadedSubpatternCount,
 	saveToSlot,
-	loadSaveSlot} from "../../utils/api";
+	loadSaveSlot,
+	updateDeviceSettings,
+	getSystemSettings} from "../../utils/api";
 import {useConnectivity} from "../../context/online_context";
 import useInterval from "../../utils/use_interval";
 
@@ -216,6 +218,86 @@ const CurrentPattern = ({patterns}) => {
 	);
 }
 
+const SystemControls = () => {
+
+	const { isConnected } = useConnectivity();
+	const [loading, setLoading] = useState(true);
+	const [updated, setUpdated] = useState(false);
+
+	// Subpattern data structure
+	const [data, setData] = useState({
+		length: 60,
+		loop: 40,
+		debug: 0
+	});
+
+	// Manage initalization
+	useEffect(() => {
+		if (isConnected) {
+			getSystemSettings()
+				.then(data => setData(data))
+				.then(setLoading(false));
+		}  
+	}, [isConnected])
+
+	// Send out an update whenever something is changed
+	useInterval(() => {
+		if (isConnected && updated) {
+			updateDeviceSettings(data);
+			setUpdated(false);
+		}
+	}, 100);
+
+	// Update any parameters of the subpattern.
+	const update = (ref, value) => {
+		if(!loading){		
+			setData((oldData) => {
+				let newData = Object.assign({}, oldData);
+				newData[ref] = value;
+				return newData;
+			})
+		}
+		setUpdated(true);
+	}
+
+	return (
+		(!loading ? 
+			<div>
+				<NumericSlider
+					className={style.settings_control}
+					label="LED Strip Length"
+					min={30}
+					max={200}
+					initial={data.length}
+					structure_ref="length"
+					update={update}
+				/>
+				<NumericSlider
+					className={style.settings_control}
+					label="LED Update Time (ms)"
+					min={15}
+					max={200}
+					initial={data.loop}
+					structure_ref="loop"
+					update={update}
+				/>
+				<NumericSlider
+					className={style.settings_control}
+					label="Debug Mode"
+					min={0}
+					max={2}
+					initial={data.debug}
+					structure_ref="debug"
+					update={update}
+				/>
+
+			</div> 
+		: 'loading')
+		
+	);
+
+}
+
 const LoadButtons = (updateKey) => {
 
 	const newKey = async (event) => {
@@ -272,6 +354,7 @@ const Settings = () => {
 
 	return (
 		<div>
+			<SystemControls/>
 			<CurrentPattern
 				patterns={patterns}
 				key={key}

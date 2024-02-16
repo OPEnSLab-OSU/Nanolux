@@ -466,6 +466,8 @@ void loop() {
   do {
     update_web_server();
   } while (timer_overrun() == 0);
+
+  update_web_server();
 }
 
 // Use all the audio analysis to update every global audio analysis value
