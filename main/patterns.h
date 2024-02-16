@@ -37,85 +37,20 @@ void nextPattern();
 
 void setColorHSV(CRGB* leds, byte h, byte s, byte v, int len);
 
-void freq_hue_vol_brightness(Pattern_History * hist, int len);
+void confetti(Pattern_History * hist, int len, Pattern_Data* patternData);
 
-void freq_confetti_vol_brightness(Pattern_History * hist, int len);
+void pix_freq(Pattern_History * hist, int len, Pattern_Data* patternData);
 
-void volume_level_middle_bar_freq_hue(Pattern_History * hist, int len);
+void groovy_noise(Pattern_History* hist, int len, Pattern_Data* patternData);
 
-void freq_hue_trail(Pattern_History * hist, int len);
+void hue_trail(Pattern_History* hist, int len, Pattern_Data* patternData);
 
-void blank(Pattern_History * hist, int len);
+void talking(Pattern_History *hist, int len, Pattern_Data *patternData);
 
-void spring_mass_1(Pattern_History * hist, int len);
+void glitch_effect(Pattern_History * hist, Pattern_Data * patternData , int len);
 
-void spring_mass_2(Pattern_History * hist, int len);
 
-void spring_mass_3(Pattern_History * hist, int len);
 
-void classical(Pattern_History * hist, int len);
-
-void pix_freq(Pattern_History * hist, int len);
-
-void mirror_pix_freq(Pattern_History * hist, int len);
-
-void send_wave(Pattern_History * hist, int len);
-
-void math(Pattern_History * hist, int len);
-
-void band_brightness(Pattern_History * hist, int len);
-
-void advanced_bands(Pattern_History * hist, int len);
-
-void basic_bands(Pattern_History * hist, int len);
-
-void eq(Pattern_History * hist, int len);
-
-void show_drums(Pattern_History * hist, int len);
-
-void show_formants(Pattern_History * hist, int len);
-
-void noisy(Pattern_History * hist, int len);
-
-void formant_band(Pattern_History * hist, int len);
-
-void alt_drums(Pattern_History * hist, int len);
-
-void formant_test(Pattern_History * hist, int len);
-
-void Fire2012WithPalette(Pattern_History * hist, int len);
-
-void saturated_noise(Pattern_History * hist, int len);
-
-void saturated_noise_hue_octaves(Pattern_History * hist, int len);
-
-void saturated_noise_hue_shift(Pattern_History * hist, int len);
-
-void saturated_noise_compression(Pattern_History * hist, int len);
-
-void groovy_noise(Pattern_History * hist, int len);
-
-void groovy_noise_hue_shift_change(Pattern_History * hist, int len);
-
-void sin_hue_trail(Pattern_History * hist, int len);
-
-void freq_hue_trail_mid(Pattern_History * hist, int len);
-
-void freq_hue_trail_mid_blur(Pattern_History * hist, int len);
-
-void talking_hue(Pattern_History * hist, int len);
-
-void talking_formants(Pattern_History * hist, int len);
-
-void talking_moving(Pattern_History * hist, int len);
-
-void bounce_back(Pattern_History * hist, int len);
-
-void glitch(Pattern_History * hist, int len);
-
-void glitch_talk(Pattern_History * hist, int len);
-
-void glitch_sections(Pattern_History * hist, int len);
 
 //void echo_ripple(Pattern_History hist, int len);
 

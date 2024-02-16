@@ -193,7 +193,7 @@ void hue_trail(Pattern_History* hist, int len, Pattern_Data* patternData) {
     // reverse (?)
 }
 
-void talking_combined(Pattern_History *hist, int len, Pattern_Data *patternData) {
+void talking(Pattern_History *hist, int len, Pattern_Data *patternData) {
   // Common variables
   int offsetFromVolume;
   int midpoint = len / 2;
@@ -279,6 +279,9 @@ void glitch_effect(Pattern_History * hist, Pattern_Data * patternData , int len)
     blur1d(hist->leds, len, 80);
     fadeToBlackBy(hist->leds, len, mode == 1 ? 100 : (mode == 2 ? 60 : 40)); 
 }
+
+
+
 
 /*
 void echo_ripple(){
