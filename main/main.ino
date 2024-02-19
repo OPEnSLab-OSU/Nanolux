@@ -121,7 +121,7 @@ typedef struct {
 // It will not be selectable and the loop below will not know about it.
 //..
 Pattern mainPatterns[]{
-    { 0, "Echo Ripple", true, echo_ripple},//{ 0, "None", true, blank},
+    { 0, "None", true, blank},
     { 1, "Hue Trail", true, freq_hue_trail},
     { 2, "Volume Brightness", true, freq_hue_vol_brightness},
     { 3, "Confetti", true, freq_confetti_vol_brightness},
@@ -158,9 +158,10 @@ Pattern mainPatterns[]{
     {34, "Basic Bands", true, basic_bands},
     {35, "Advanced Bands", true, advanced_bands},
     {36, "Formant Band", true, formant_band},
-    {37, "Echo Ripple", true, echo_ripple}
+    {37, "Random Raindrop", true, random_raindrop},
+    {38, "Tug O' War", true, tug_of_war}
 };
-int NUM_PATTERNS = 38; // MAKE SURE TO UPDATE THIS WITH THE ACTUAL NUMBER OF PATTERNS
+int NUM_PATTERNS = 39; // MAKE SURE TO UPDATE THIS WITH THE ACTUAL NUMBER OF PATTERNS
 
 SimplePatternList gPatterns_layer = {blank, spring_mass_1};
 

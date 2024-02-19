@@ -85,6 +85,8 @@ void glitch_talk();
 
 void glitch_sections();
 
-void echo_ripple();
+void tug_of_war();
+
+void random_raindrop();
 
 #endif
