@@ -31,6 +31,9 @@ void load_slot(int slot) {
   // Return if slot is greater than the number of patterns.
   if (slot > NUM_SAVES - 1) return;
 
+  if (loaded_pattern.subpattern_count > 4 || loaded_pattern.subpattern_count < 1)
+    loaded_pattern.subpattern_count = 1;
+
   // Copy the subpatterns into the main buffer.
   memcpy(
     &loaded_pattern,
@@ -78,30 +81,55 @@ void save_config_to_nvs() {
   storage.end();
 }
 
+void verify_saves() {
+
+  for (int i = 0; i < NUM_SAVES; i++) {
+    if (saved_patterns[i].subpattern_count > 4 || saved_patterns[i].subpattern_count == 0){
+      saved_patterns[i].subpattern_count = 1;
+    }
+  }
+
+  if(config.length == 0){
+    config.length = 60;
+  }
+
+  if(config.loop_ms == 0){
+    config.loop_ms = 40;
+  }
+}
+
 /// @brief Load all patterns from the NVS
 void load_from_nvs() {
+  Serial.println("TEST1");
   storage.begin(PATTERN_NAMESPACE, false);
+  Serial.println("TEST2");
 
   if (storage.isKey(PATTERN_KEY)) {
     storage.getBytes(
       PATTERN_KEY,
       &saved_patterns[0],
       sizeof(Pattern_Data) * NUM_SAVES);
+    Serial.println("TEST3");
   }
+
+  
 
   storage.end();
 
   storage.begin(CONFIG_NAMESPACE, false);
-
+  Serial.println("TEST4");
   if (storage.isKey(CONFIG_KEY))
     storage.getBytes(CONFIG_KEY, &config, sizeof(Config_Data));
 
   storage.end();
 
-  if (!config.init) {
+  if (config.init == false) {
     config.init = true;
     config.debug_mode = 0;
     config.length = 60;
     config.loop_ms = 40;
   }
+
+    Serial.println("TEST5");
+  
 }

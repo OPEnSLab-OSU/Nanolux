@@ -80,6 +80,24 @@ const getLoadedPatternSettings = () =>
     axios.get(`${base_url}/api/loadedPatternSettings`, {headers: {'Access-Control-Allow-Origin': '*'}})
         .then(response => response.data);
 
+const loadSaveSlot = async (slot) => {
+    
+    await axios.put(`${base_url}/api/loadSaveSlot`, {slot:slot, timeout: 1000})
+
+}
+
+const updateDeviceSettings = (data) => {
+    axios.put(`${base_url}/api/updateDeviceSettings`, data)
+}
+
+const saveToSlot = (slot) =>
+    axios.put(`${base_url}/api/saveToSlot`, {slot:slot}) ;
+
+const getSystemSettings = () => 
+    axios.get(`${base_url}/api/getDeviceSettings`,  {headers: {'Access-Control-Allow-Origin': '*'}})
+    .then(response => response.data);
+
+
 export {
     getSettings,
     saveSettings,
@@ -95,4 +113,9 @@ export {
     getLoadedPatternSettings,
     updateLoadedSubpattern,
     updateLoadedPattern,
+    loadSaveSlot,
+    saveToSlot,
+    updateDeviceSettings,
+    getSystemSettings,
+    base_url
 };

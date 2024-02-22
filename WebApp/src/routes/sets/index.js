@@ -7,11 +7,14 @@ import {
 	updateLoadedSubpattern,
 	getLoadedPatternSettings,
 	updateLoadedPattern,
-	modifyLoadedSubpatternCount,
 	getPatternList,
-	getLoadedSubpatternCount} from "../../utils/api";
+	updateDeviceSettings,
+	getSystemSettings} from "../../utils/api";
 import {useConnectivity} from "../../context/online_context";
 import useInterval from "../../utils/use_interval";
+import Save_Entry from '../../components/save_entry';
+import SimpleChooser from '../../components/single_chooser';
+import { LabelSpinner } from '../../components/spinner';
 
 const Subpattern = ({subpattern, patterns}) => {
 
@@ -61,12 +64,14 @@ const Subpattern = ({subpattern, patterns}) => {
 	return (
 		(!loading ? 
 		<div>
+			<br/>
 			<Patterns
 				initialID={data.idx}
 				structure_ref={"idx"}
 				update={update}
 				patterns={patterns}
 			/>
+			<br/>
 			<NumericSlider
 				className={style.settings_control}
 				label="Brightness"
@@ -76,6 +81,7 @@ const Subpattern = ({subpattern, patterns}) => {
 				structure_ref="brightness"
 				update={update}
 			/>
+			<br/>
 			<NumericSlider
 				className={style.settings_control}
 				label="Smoothing"
@@ -85,7 +91,7 @@ const Subpattern = ({subpattern, patterns}) => {
 				structure_ref="smoothing"
 				update={update}
 			/>
-		</div> : <div></div>
+		</div> : <LabelSpinner></LabelSpinner>
 		)
 	);
 }
@@ -158,6 +164,18 @@ const CurrentPattern = ({patterns}) => {
 	return (
 		(!loading ? 
 			<div>
+				<SimpleChooser
+					label="Mode"
+					options={[
+						{option : "Strip Splitting", idx : 0},
+						{option : "Z-Layering", idx : 1},
+					]}
+					noSelection={false}
+					initial={data.mode}
+					structure_ref="mode"
+					update={update}
+				/>
+				<br/>
 				<NumericSlider
 					className={style.settings_control}
 					label="Transparency"
@@ -167,15 +185,7 @@ const CurrentPattern = ({patterns}) => {
 					structure_ref="alpha"
 					update={update}
 				/>
-				<NumericSlider
-					className={style.settings_control}
-					label="Mode"
-					min={0}
-					max={1}
-					initial={data.mode}
-					structure_ref="mode"
-					update={update}
-				/>
+				<br/>
 				<NumericSlider
 					className={style.settings_control}
 					label="Noise Threshold"
@@ -184,11 +194,11 @@ const CurrentPattern = ({patterns}) => {
 					initial={data.noise}
 					structure_ref="noise"
 					update={update}
-				/>`
-
+				/>
+				<br/>
 				<button type="button" onClick={incrementSubpatterns}>+</button>
 				<button type="button" onClick={decrementSubpatterns}>-</button>
-				<br></br>
+				<hr></hr>
 
 				{inRange(data.subpattern_count).map((data) => {
 					if(data.idx == selectedSubpattern){
@@ -209,9 +219,94 @@ const CurrentPattern = ({patterns}) => {
 					key={selectedSubpattern}
 				/>	
 			</div> 
-		: {})
+		: <LabelSpinner></LabelSpinner>)
 		
 	);
+}
+
+const SystemControls = () => {
+
+	const { isConnected } = useConnectivity();
+	const [loading, setLoading] = useState(true);
+	const [updated, setUpdated] = useState(false);
+
+	// Subpattern data structure
+	const [data, setData] = useState({
+		length: 60,
+		loop: 40,
+		debug: 0
+	});
+
+	// Manage initalization
+	useEffect(() => {
+		if (isConnected) {
+			getSystemSettings()
+				.then(data => setData(data))
+				.then(setLoading(false));
+		}  
+	}, [isConnected])
+
+	// Send out an update whenever something is changed
+	useInterval(() => {
+		if (isConnected && updated) {
+			updateDeviceSettings(data);
+			setUpdated(false);
+		}
+	}, 100);
+
+	// Update any parameters of the subpattern.
+	const update = (ref, value) => {
+		if(!loading){		
+			setData((oldData) => {
+				let newData = Object.assign({}, oldData);
+				newData[ref] = value;
+				return newData;
+			})
+		}
+		setUpdated(true);
+	}
+
+	return (
+		(!loading ? 
+			<div>
+				<NumericSlider
+					className={style.settings_control}
+					label="LED Strip Length"
+					min={30}
+					max={200}
+					initial={data.length}
+					structure_ref="length"
+					update={update}
+				/>
+				<br/>
+				<NumericSlider
+					className={style.settings_control}
+					label="LED Update Time (ms)"
+					min={15}
+					max={200}
+					initial={data.loop}
+					structure_ref="loop"
+					update={update}
+				/>
+				<br/>
+				<SimpleChooser
+					className={style.settings_control}
+					label="Debug Mode"
+					options={[
+						{option : "Debug Out", idx : 1},
+						{option : "Simulator Out", idx : 2},
+					]}
+					noSelection={true}
+					initial={data.debug}
+					structure_ref="debug"
+					update={update}	
+				/>
+				<br/>
+			</div> 
+		: <LabelSpinner></LabelSpinner>)
+		
+	);
+
 }
 
 const Settings = () => {
@@ -228,12 +323,57 @@ const Settings = () => {
     }, [isConnected])
 	
 
+	const [key, updateKey] = useState(0);
 
 	return (
 		<div>
-			<CurrentPattern
-				patterns={patterns}
-			/>
+
+			<table>
+				<tr>
+					<th>Pattern Settings</th>
+					<th>System Settings</th>	
+				</tr>
+				<tr>
+					<td>
+						<CurrentPattern
+							patterns={patterns}
+							key={key}
+						/>
+					</td>
+					<td>
+						<SystemControls/>
+						<hr></hr>
+						<br/>
+						<div className={style.background0}>
+							<Save_Entry 
+								name="Default Pattern"
+								idx='0'
+							/>
+						</div>
+						<br></br>
+						<div className={style.background1}>
+							<Save_Entry 
+								name="Saved Pattern 1"
+								idx='1'
+							/>
+						</div>
+						<div className={style.background2}>
+							<Save_Entry
+								name="Saved Pattern 2"
+								idx='2'
+							/>
+						</div>
+					</td>
+					
+				</tr>
+			</table>
+
+
+			
+			
+
+			
+
 		</div>
 	);
 };

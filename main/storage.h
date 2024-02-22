@@ -32,7 +32,7 @@ typedef struct{
 
   uint8_t alpha = 0;
   uint8_t noise_thresh = 0;
-  uint8_t mode = 255;
+  uint8_t mode = 0;
   uint8_t subpattern_count = 1;
   Subpattern_Data subpattern[NUM_SUBPATTERNS];
 
@@ -59,5 +59,7 @@ void clear_all();
 void load_from_nvs();
 
 void save_config_to_nvs();
+
+void verify_saves();
 
 #endif

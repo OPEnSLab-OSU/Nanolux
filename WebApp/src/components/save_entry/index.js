@@ -1,5 +1,5 @@
 import {useEffect, useState} from "preact/hooks";
-import {loadFromSlot, saveInSlot} from "../../utils/api";
+import {loadFromSlot, loadSaveSlot, saveInSlot, saveToSlot} from "../../utils/api";
 import {useConnectivity} from "../../context/online_context";
 
 const Save_Entry = ({
@@ -8,23 +8,27 @@ const Save_Entry = ({
 }) => {
     const {isConnected} = useConnectivity();
 
-    const handleLoad = async => {
-        loadFromSlot(idx);
-    }
+    const save = async (event) => {
+		var success = await saveToSlot(idx);
+		if(!success){
+			alert("Failed to save slot.");
+		}
+	}
 
-    const handleSave = async => {
-        saveInSlot(idx);
-    }
+	const load = async (event) => {
+		await loadSaveSlot(idx);
+		window.location.reload(true);
+	}
 
     return (
         <div >
             <tr>
                 <th width='150'>{name}</th>
                 <th>
-                    <button onClick={handleLoad}>Load Pattern</button>
+                    <button onClick={load}>Load Pattern</button>
                 </th>
                 <th>
-                    <button onClick={handleSave}>Save Pattern</button>
+                    <button onClick={save}>Save Pattern</button>
                 </th>
                 
             </tr>
