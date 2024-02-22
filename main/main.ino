@@ -9,19 +9,14 @@
 #include "nanolux_types.h"
 #include "nanolux_util.h"
 #include "audio_analysis.h"
-
+#include "storage.h"
 
 //#define ENABLE_WEB_SERVER
 #ifdef ENABLE_WEB_SERVER
 #include "WebServer.h"
 #endif
 
-// #define DEBUG 1
 // #define SHOW_TIMINGS
-
-#ifdef DEBUG
-#pragma message "DEBUG ENABLED"
-#endif
 
 FASTLED_USING_NAMESPACE
 
@@ -30,8 +25,11 @@ arduinoFFT FFT = arduinoFFT();
 //
 // Variables touched by the API should be declared as volatile.
 //
-CRGB leds[NUM_LEDS];               // Buffer (front)
-CRGB hist[NUM_LEDS];               // Buffer (back)
+CRGB leds[MAX_LEDS];               // Buffer (front)
+CRGB hist[MAX_LEDS];               // Buffer (back)
+CRGB leds_upper[MAX_LEDS];
+CRGB smoothed_output[MAX_LEDS];
+int virtual_led_count = MAX_LEDS;
 unsigned int sampling_period_us = round(1000000/SAMPLING_FREQUENCY);
 unsigned long microseconds;
 double vReal[SAMPLES];             // Sampling buffers
@@ -40,14 +38,13 @@ double vRealHist[SAMPLES];         // Delta freq
 double delt[SAMPLES];
 double amplitude = 0;              // For spring mass 2
 bool button_pressed = false;
-volatile uint8_t gCurrentPatternNumber = 0; // Index number of which pattern is current
+bool button_held = false;
 uint8_t gHue = 0;                  // Rotating base color
 double peak = 0.;                  // Peak frequency
 uint8_t fHue = 0;                  // Hue value based on peak frequency
 double volume = 0.;       
 uint8_t vbrightness = 0;
 double maxDelt = 0.;               // Frequency with the biggest change in amp.
-volatile uint8_t gNoiseGateThreshold = NOISE_GATE_THRESH;
 
 int beats = 0;
 int frame = 0;                     // For spring mass
@@ -98,6 +95,12 @@ double accelerations[5] = {0,0,0,0,0};  //for spring mass 3
 int locations[5] = {70,60,50,40,30}; //for spring mass 3
 double vRealSums[5] = {0,0,0,0,0};
 
+Pattern_Data current_pattern;
+uint8_t old_mode = 0;
+volatile bool pattern_changed = false;
+Pattern_Data updated_data;
+Config_Data config; // Currently loaded config
+volatile extern bool altered_config = false;
 
 //
 // Patterns structure.
@@ -111,6 +114,12 @@ typedef struct {
     bool enabled;
     void (*pattern_handler)();
 } Pattern;
+
+// Pattern history array and index.
+// To switch patterns, simply change the index.
+// Primary pattern is 0.
+Pattern_History histories[2];
+Pattern_History current_history = histories[0];
 
 
 //
@@ -158,10 +167,11 @@ Pattern mainPatterns[]{
     {34, "Basic Bands", true, basic_bands},
     {35, "Advanced Bands", true, advanced_bands},
     {36, "Formant Band", true, formant_band},
-    {37, "Random Raindrop", true, random_raindrop},
-    {38, "Tug O' War", true, tug_of_war}
+    {37, "Mirrored Pixel Frequency", true, mirror_pix_freq},
+    {38, "Random Raindrop", true, random_raindrop},
+    {39, "Tug O' War", true, tug_of_war}
 };
-int NUM_PATTERNS = 39; // MAKE SURE TO UPDATE THIS WITH THE ACTUAL NUMBER OF PATTERNS
+int NUM_PATTERNS = 40; // MAKE SURE TO UPDATE THIS WITH THE ACTUAL NUMBER OF PATTERNS
 
 SimplePatternList gPatterns_layer = {blank, spring_mass_1};
 
@@ -190,7 +200,22 @@ void runTask0(void * pvParameters) {
   }
 }
 
+uint8_t check_for_mode_change(uint8_t source, uint8_t target){
+  if(source != target){
+    memset(leds, 0, sizeof(CRGB) * MAX_LEDS);
+    memset(hist, 0, sizeof(CRGB) * MAX_LEDS);
+    memset(leds_upper, 0, sizeof(CRGB) * MAX_LEDS);
+    histories[0] = Pattern_History();
+    histories[1] = Pattern_History();
+    memset(smoothed_output, 0, sizeof(CRGB) * MAX_LEDS);
+  }
+  return source;
+}
+
 void setup() {
+    pinMode(LED_BUILTIN, OUTPUT);
+    load_from_nvs();
+    updated_data = load_slot(0);
     Serial.begin(115200);               // start USB serial communication
     while(!Serial){ ; }
 
@@ -207,15 +232,114 @@ void setup() {
     checkVol = 0;
 
     //  initialize up led strip
-    FastLED.addLeds<LED_TYPE,DATA_PIN,CLK_PIN,COLOR_ORDER>(leds, NUM_LEDS).setCorrection(TypicalLEDStrip);
+    FastLED.addLeds<LED_TYPE,DATA_PIN,CLK_PIN,COLOR_ORDER>(smoothed_output, MAX_LEDS).setCorrection(TypicalLEDStrip);
     blank();
+
+    current_pattern = updated_data;
 
 #ifdef ENABLE_WEB_SERVER
     initialize_web_server(apiGetHooks, API_GET_HOOK_COUNT, apiPutHooks, API_PUT_HOOK_COUNT);
 #endif
 }
 
+/**
+* load_process_store() does 4 major actions:
+* 
+* 1) Move LED information from a buffer into the main LED buffer.
+* 2) Switch history to the history about to be used for pattern processing.
+* 3) Run the pattern handler for a given pattern index.
+* 4) If such a buffer exists, move the data in the main LED buffer to an
+*    output buffer.
+*    
+* To ensure LED data is not copied into an output buffer, leave *in as NULL.
+**/
+void load_process_store(CRGB *out, CRGB *in, int size, int p_index, int h_index){
+  memcpy(&leds[0], &out[0], sizeof(CRGB) * size);
+  current_history = histories[h_index];
+  mainPatterns[p_index].pattern_handler();
+
+  // Only copy into *in if *in exists 
+  if(in != NULL)
+    memcpy(&out[0], &leds[0], sizeof(CRGB) * size);
+}
+
+void calculate_layering(CRGB *a, CRGB *b, CRGB *out, int length, uint8_t blur){
+  for(int i = 0; i < length; i++){
+    out[i] = blend(a[i], b[i], blur);
+  }
+}
+
+unsigned long start_millis = NULL;
+
+
+void led_on_forever(){
+  
+  // Clear the LED strip before moving into the forever blink
+  // code.
+  FastLED.clear();
+  FastLED.show();
+
+  // Source: Blink example
+  while(true){
+    digitalWrite(LED_BUILTIN, LOW);  // turn the LED on (HIGH is the voltage level)
+    delay(1000);                      // wait for a second
+    digitalWrite(LED_BUILTIN, HIGH);   // turn the LED off by making the voltage LOW
+    delay(1000);   
+  }
+}
+
+void process_reset_button(){
+
+  if(!digitalRead(BUTTON_PIN)){
+
+    if(start_millis == NULL)
+      start_millis = millis();
+
+    // Only turns on the LED if the button is pressed for longer
+    // than 1.5 seconds.
+    (millis() - start_millis > 1500) ?
+      digitalWrite(LED_BUILTIN, HIGH):
+      digitalWrite(LED_BUILTIN, LOW);
+      
+    // if millis is ever less than start_millis,
+    // just reset it to NULL.
+    if(start_millis > millis()){
+      start_millis = NULL;
+      return;
+    }  
+
+    if(millis() - start_millis > RESET_TIME){
+      clear_all();
+      led_on_forever();
+    }
+  }else{
+    digitalWrite(LED_BUILTIN, LOW);
+    start_millis = NULL;
+  }
+}
+
+// Some settings are updated inside a more constrained context
+// without enough stack space for a "disk" operation so we
+// defer the save to here.
+void update_web_server(){  
+    #ifdef ENABLE_WEB_SERVER
+      if (dirty_settings) {
+          save_settings();
+          dirty_settings = false;
+      }
+    #endif
+}
+
 void loop() {
+
+    begin_loop_timer(config.loop_ms);
+
+    // Check to make sure the length of the strip is not 0.
+    if(config.length < 30){
+      config.length = 30;
+    }
+
+    process_reset_button();
     audio_analysis(); // sets peak and volume
 
     #ifdef HUE_FLAG
@@ -232,36 +356,124 @@ void loop() {
       const int start = micros();
     #endif
 
-    #ifdef LAYER_PATTERNS
-      layer_patterns();
-    #else
-      mainPatterns[gCurrentPatternNumber].pattern_handler();
-    #endif
+    // If the last run was not using strip splitting, clear all buffers
+    // and histories.
+    old_mode = check_for_mode_change(current_pattern.mode, old_mode);
+
+    if(altered_config){
+      save_config_to_nvs();
+    }
+
+    // if the length has been changed, reset all buffers
+    // and histories.
+    if(pattern_changed || altered_config){
+      pattern_changed = false;
+      altered_config = false;
+      memset(leds, 0, sizeof(CRGB) * MAX_LEDS);
+      memset(hist, 0, sizeof(CRGB) * MAX_LEDS);
+      memset(leds_upper, 0, sizeof(CRGB) * MAX_LEDS);
+      memset(smoothed_output, 0, sizeof(CRGB) * MAX_LEDS);
+      histories[0] = Pattern_History();
+      histories[1] = Pattern_History();
+      current_pattern = updated_data;
+    }
+
+    switch(current_pattern.mode){
+      case STRIP_SPLITTING:
+        // Set the virtual LED strip length to half of the real length.
+        virtual_led_count = config.length/2;
+
+        load_process_store(
+          &leds[virtual_led_count],
+          &leds[virtual_led_count],
+          virtual_led_count,
+          current_pattern.pattern_2,
+          1
+        );
+
+        load_process_store(
+          &hist[0],
+          NULL,
+          virtual_led_count,
+          current_pattern.pattern_1,
+          0
+        );
+
+        // Copy the main LED array into a long-term storage buffer.
+        memcpy(hist, leds, sizeof(CRGB) * MAX_LEDS);
+
+      break;
+
+      case Z_LAYERING:
+        virtual_led_count = config.length;
+
+        load_process_store(
+          &leds_upper[0],
+          &leds_upper[0],
+          virtual_led_count,
+          current_pattern.pattern_2,
+          1
+        );
+
+        load_process_store(
+          &hist[0],
+          &hist[0],
+          virtual_led_count,
+          current_pattern.pattern_1,
+          0
+        );
+
+        calculate_layering(
+          &leds_upper[0],
+          &hist[0],
+          &leds[0],
+          virtual_led_count,
+          current_pattern.alpha
+        );
+
+      break;
+
+      default:
+        virtual_led_count = config.length;
+        current_history = histories[0];
+        mainPatterns[current_pattern.pattern_1].pattern_handler();
+        memcpy(hist, leds, sizeof(CRGB) * MAX_LEDS);
+    }
 
     #ifdef SHOW_TIMINGS
       const int end = micros();
-      Serial.printf("%s Visualization: %d us\n", mainPatterns[gCurrentPatternNumber].pattern_name, end - start);
+      Serial.printf("%s Visualization: %d us\n", mainPatterns[current_pattern.pattern_1].pattern_name, end - start);
     #endif
 
-    #ifdef VIRTUAL_LED_STRIP
-      for (int i = 0; i < NUM_LEDS-1; i++) {
+    if(config.debug_mode == 2){
+      for (int i = 0; i < config.length; i++) {
         Serial.print(String(leds[i].r) + "," + String(leds[i].g) + "," + String(leds[i].b) + " ");
       }
       Serial.print("\n");
-    #endif
+    }
+
+    // Set the global brightness of the LED strip.
+    FastLED.setBrightness(current_pattern.brightness);
+
+    // Smooth the light output on the LED strip using
+    // the smoothing constant.
+    calculate_layering(
+      smoothed_output,
+      leds,
+      smoothed_output,
+      config.length,
+      255 - current_pattern.smoothing
+    );
 
     FastLED.show();
-    delay(10);
-
-#ifdef ENABLE_WEB_SERVER
-    // Some settings are updated inside a more constrained context
-    // without enough stack space for a "disk" operation so we
-    // defer the save to here.
-    if (dirty_settings) {
-        save_settings();
-        dirty_settings = false;
+  
+    if(timer_overrun() == 0){
+      while(timer_overrun() == 0){
+        update_web_server();
+      }
+    }else{
+      update_web_server();
     }
-#endif
 }
 
 // Use all the audio analysis to update every global audio analysis value
@@ -288,7 +500,7 @@ void audio_analysis() {
 
   update_drums();
 
-  noise_gate(gNoiseGateThreshold);
+  noise_gate(current_pattern.noise_thresh);
 
 #ifdef SHOW_TIMINGS
   const int end = micros();

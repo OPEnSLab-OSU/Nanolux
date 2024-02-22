@@ -11,11 +11,9 @@
 #include <WebResponseImpl.h>
 
 
-#ifdef DEBUG
-#define DEBUG_PRINTF(...) Serial.printf(__VA_ARGS__)
-#else
+//#define DEBUG_PRINTF(...) Serial.printf(__VA_ARGS__)
 #define DEBUG_PRINTF(...)
-#endif
+
 #define ALWAYS_PRINTF(...) Serial.printf(__VA_ARGS__)
 
 
@@ -38,7 +36,7 @@ typedef struct {
 } CurrentWifi;
 static CurrentWifi current_wifi;
 static CurrentWifi candidate_wifi;
-
+extern Config_Data config; // Currently loaded config
 
 /*
  * Artifacts used to manage the async WiFi join process.

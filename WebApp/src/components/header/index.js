@@ -2,6 +2,7 @@ import { h } from 'preact';
 import { Link } from 'preact-router/match';
 import style from './style.css';
 
+
 const Header = () => (
 	<header className={style.header}>
 		<a href="/" className={style.logo}>
@@ -18,6 +19,7 @@ const Header = () => (
 			<Link activeClassName={style.active} href="/wifi">
 				Wifi
 			</Link>
+			
 		</nav>
 	</header>
 );

@@ -1,26 +1,48 @@
 import { h } from 'preact';
 import style from './style.css';
 import {useSignal} from "@preact/signals";
-import {useEffect} from "preact/hooks";
+import {useEffect, useState} from "preact/hooks";
+import { useConnectivity } from '../../context/online_context';
+import useInterval from '../../utils/use_interval';
 
 const NumericSlider = ({
     label,
-    savedValue,
     min,
     max,
-    onValueChanged
+    getterFunction,
+    saveFunction,
+    api_key
 }) => {
-    const current = useSignal(savedValue);
+    const current = useSignal(min);
+    const { isConnected } = useConnectivity();
+    const [loading, setLoading] = useState(true);
 
+    var enableRemoteUpdate = true;
+
+    // Initalization
     useEffect(() => {
-        if (savedValue) {
-            current.value = savedValue;
+        if (isConnected) {
+            getterFunction().then(data => current.value = data[api_key]);
+            setLoading(false);
         }
-    }, [savedValue])
+        
+    }, [isConnected])
 
-    const valueChanged = event => {
+    // Periodic
+    useInterval(() => {
+        if (isConnected && enableRemoteUpdate) {
+            getterFunction().then(data => {current.value = data[api_key]});     
+        }
+    }, 1000);
+
+    // Slider Updater
+    const valueChanged = async event => {
+        enableRemoteUpdate = false;
         current.value = event.target.value;
-        onValueChanged(current.value);
+		if (isConnected) {
+			await saveFunction(current.value);
+		}
+        enableRemoteUpdate = true;
     }
 
     return (
@@ -37,7 +59,7 @@ const NumericSlider = ({
                     min={min}
                     max={max}
                     value={current}
-                    onInput={valueChanged}
+                    onChange={valueChanged}
                 />
                 <input
                     className={style.spin_button}
