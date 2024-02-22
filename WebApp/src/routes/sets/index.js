@@ -27,7 +27,6 @@ const Subpattern = ({subpattern, patterns}) => {
 		brightness: 255,
 		smoothing: 0,
 		direction: 0,
-		noise: 20
 	});
 
 	// Manage initalization
@@ -70,15 +69,6 @@ const Subpattern = ({subpattern, patterns}) => {
 			/>
 			<NumericSlider
 				className={style.settings_control}
-				label="Noise Threshold"
-				min={0}
-				max={100}
-				initial={data.noise}
-				structure_ref="noise"
-				update={update}
-			/>
-			<NumericSlider
-				className={style.settings_control}
 				label="Brightness"
 				min={0}
 				max={255}
@@ -110,7 +100,8 @@ const CurrentPattern = ({patterns}) => {
 	const [data, setData] = useState({
 		subpattern_count: 1,
 		alpha: 0,
-		mode: 0
+		mode: 0,
+		noise: 20
 	});
 
 	const [selectedSubpattern, setSubpattern] = useState(0);
@@ -185,15 +176,31 @@ const CurrentPattern = ({patterns}) => {
 					structure_ref="mode"
 					update={update}
 				/>
+				<NumericSlider
+					className={style.settings_control}
+					label="Noise Threshold"
+					min={0}
+					max={100}
+					initial={data.noise}
+					structure_ref="noise"
+					update={update}
+				/>`
 
 				<button type="button" onClick={incrementSubpatterns}>+</button>
 				<button type="button" onClick={decrementSubpatterns}>-</button>
 				<br></br>
 
 				{inRange(data.subpattern_count).map((data) => {
-					return <button type="button" onClick={function() {setSubpattern(data.idx);}} key={data.idx}>
-						SP {data.idx}
-					</button>
+					if(data.idx == selectedSubpattern){
+						return <button type="button" onClick={function() {setSubpattern(data.idx);}} key={data.idx} style="border-style:inset;">
+							SP {data.idx}
+						</button>
+					}else{
+						return <button type="button" onClick={function() {setSubpattern(data.idx);}} key={data.idx}>
+							SP {data.idx}
+						</button>
+					}
+					
 				})}
 
 				<Subpattern

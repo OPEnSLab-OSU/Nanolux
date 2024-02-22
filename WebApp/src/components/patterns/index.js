@@ -24,7 +24,7 @@ const Patterns = ({
     });
 
     const handleSelection = async (event) => {
-        current.value = event.target.value;
+        current.value = Number(event.target.value);
         update(structure_ref, current.value);
     }
 

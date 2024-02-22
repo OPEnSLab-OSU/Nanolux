@@ -9,14 +9,32 @@
 typedef struct{
 
   uint8_t idx = 0;
-  uint8_t config =0;
-  uint8_t noise_thresh = 0;
   uint8_t brightness = 255;
   uint8_t smoothing = 0;
   uint8_t minhue =0;
   uint8_t maxhue =0;
   uint8_t direction;
 
+
+} Subpattern_Data;
+
+typedef struct{
+
+  uint8_t alpha = 0;
+  uint8_t noise_thresh = 0;
+  uint8_t mode = 255;
+  uint8_t subpattern_count = 1;
+  Subpattern_Data subpattern[NUM_SUBPATTERNS];
+
+} Subpattern_Data;
+
+typedef struct{
+
+  uint8_t alpha = 0;
+  uint8_t noise_thresh = 0;
+  uint8_t mode = 255;
+  uint8_t subpattern_count = 1;
+  Subpattern_Data subpattern[NUM_SUBPATTERNS];
 
 } Pattern_Data;
 
@@ -25,9 +43,6 @@ typedef struct{
   uint8_t length = 60;
   uint8_t loop_ms = 40; // approx. 10 hz
   uint8_t debug_mode = 0; // debug and simulator off
-  uint8_t spc[NUM_SUBPATTERNS] = {1, 1, 1, 1};
-  uint8_t alphas[NUM_SUBPATTERNS] = {0, 0, 0, 0};
-  uint8_t modes[NUM_SUBPATTERNS] = {0, 0, 0, 0};
   bool init = true;
 
 } Config_Data;
