@@ -7,11 +7,7 @@ import {
 	updateLoadedSubpattern,
 	getLoadedPatternSettings,
 	updateLoadedPattern,
-	modifyLoadedSubpatternCount,
 	getPatternList,
-	getLoadedSubpatternCount,
-	saveToSlot,
-	loadSaveSlot,
 	updateDeviceSettings,
 	getSystemSettings} from "../../utils/api";
 import {useConnectivity} from "../../context/online_context";
