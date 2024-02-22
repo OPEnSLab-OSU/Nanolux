@@ -25,7 +25,6 @@ extern uint8_t fHue;                      // hue value based on peak frequency
 extern double volume;                     //  NOOOOTEEEE:  static?? 
 extern uint8_t vbrightness;
 extern double maxDelt;                    // Frequency with the biggest change in amp.
-extern int beats;
 extern bool vol_show; // A boolean to change if not wanting to see the color changing pixel in pix_freq()
 extern int advanced_size;
 CRGBPalette16 gPal = GMT_hot_gp; //store all palettes in array

@@ -406,8 +406,6 @@ void loop() {
 
   begin_loop_timer(config.loop_ms);  // Begin timing this loop
 
-  Serial.println("TEST 7");
-
   // Reset buffers if pattern settings were changed since
   // last program loop.
   if (pattern_changed) {

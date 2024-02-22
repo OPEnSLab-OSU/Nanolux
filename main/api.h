@@ -128,8 +128,6 @@ inline void handle_subpattern_update_put_request(AsyncWebServerRequest* request,
     loaded_pattern.subpattern[subpattern_num].brightness = bright;
     loaded_pattern.subpattern[subpattern_num].smoothing = smooth;
 
-    
-
     request->send(
       HTTP_OK,
       CONTENT_TEXT,
