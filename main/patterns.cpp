@@ -279,6 +279,56 @@ void glitch_effect(Pattern_History * hist, Pattern_Data * patternData , int len)
     fadeToBlackBy(hist->leds, len, mode == 1 ? 100 : (mode == 2 ? 60 : 40)); 
 }
 
+// need to add edge case thingy for ODD lens
+// Function to process the direction of the LED buffer
+void processDirection(Pattern_History* hist, Subpattern_Data * patternData, int len) {
+    // reverse buffer direction
+    if (patternData->direction == 1) {
+        // Reverse the buffer
+        // use half the len to ensure values only swapped once
+        for (int i = 0; i < len / 2; i++) {
+            CRGB temp = hist->leds[i];
+            hist->leds[i] = hist->leds[len - 1 - i];
+            hist->leds[len - 1 - i] = temp;
+        }
+    // from the middle mirror
+    } else if (patternData->direction == 2) {
+        // Temporary buffer to hold the condensed pattern and its mirrored counterpart
+        CRGB temp[len]; // Ensure this is large enough for your LED strip
+
+        // Condense the pattern to the right half of the strip
+        for (int i = 0; i < len / 2; i++) {
+            // Map the full strip's indices to half its length, focusing on the right side
+            temp[len / 2 + i] = hist->leds[map(i, 0, len / 2 - 1, 0, len - 1)];
+        }
+        // Mirror this condensed pattern onto the left side in reverse
+        for (int i = 0; i < len / 2; i++) {
+            temp[i] = temp[len - 1 - i];
+        }
+
+        // Copy the temp buffer back to the original LED buffer
+        for (int i = 0; i < len; i++) {
+            hist->leds[i] = temp[i];
+        }
+      // from the ends mirror
+    } else if (patternData->direction == 3 ){ 
+        // Temporary buffer to hold the condensed pattern
+        CRGB temp[len / 2];
+        // Condense the pattern onto the first half of the temp buffer
+        for (int i = 0; i < len / 2; i++) {
+            // This effectively maps the full range of LEDs to half, condensing the pattern
+            temp[i] = hist->leds[map(i, 0, len / 2 - 1, 0, len - 1)];
+        }
+        // Now mirror this condensed pattern onto the second half of the temp buffer
+        for (int i = 0; i < len / 2; i++) {
+            temp[len / 2 + i] = temp[len / 2 - 1 - i];
+        }
+        
+        // Copy the temp buffer back to the original LED buffer
+        for (int i = 0; i < len; i++) {
+            hist->leds[i] = temp[i % (len / 2)];
+    }
+}
 
 
 
