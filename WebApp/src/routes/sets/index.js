@@ -1,6 +1,7 @@
 import style from './style.css';
 import Patterns from "../../components/patterns";
 import NumericSlider from "../../components/numeric_slider";
+import NumericSliderDouble from "../../components/numeric_slider_double";
 import {useState, useEffect} from "preact/hooks";
 import {
 	getLoadedSubpattern,
@@ -91,6 +92,21 @@ const Subpattern = ({subpattern, patterns}) => {
 				structure_ref="smoothing"
 				update={update}
 			/>
+            <br/>
+            <div className={style.settings_control}>
+                <label className={style.label} htmlFor="pattern-options">pattern direction</label>
+                <select className={style.label}>
+                    <option value="default">default</option>
+                    <option value="reverse">reverse</option>
+                    <option value="middle">middle</option>
+
+                </select>
+            </div>
+            <br/>
+            
+
+            
+            
 		</div> : <LabelSpinner></LabelSpinner>
 		)
 	);

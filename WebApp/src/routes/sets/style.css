@@ -141,3 +141,7 @@ td, th {
 	background-color: #212121;
 	border-radius: 5px;
 }
+.label {
+    display: inline;
+    padding-right: 4px;
+}
