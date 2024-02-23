@@ -96,7 +96,7 @@ volatile bool pattern_changed = false;
 Pattern_Data loaded_pattern;
 Pattern_Data saved_patterns[NUM_SAVES];
 Config_Data config;
-
+Subpattern_Data params;
 
 //
 // Patterns structure.
@@ -108,7 +108,7 @@ typedef struct {
   int index;
   const char *pattern_name;
   bool enabled;
-  void (*pattern_handler)(Pattern_History *, int);
+  void (*pattern_handler)(Pattern_History *, int, Subpattern_Data *);
 } Pattern;
 
 // Pattern history array and index.
@@ -135,7 +135,7 @@ Pattern mainPatterns[]{
 
     //{38, "Echo Ripple", true, echo_ripple}
 };
-int NUM_PATTERNS = 38;  // MAKE SURE TO UPDATE THIS WITH THE ACTUAL NUMBER OF PATTERNS (+1 last array pos)
+int NUM_PATTERNS = 7;  // MAKE SURE TO UPDATE THIS WITH THE ACTUAL NUMBER OF PATTERNS (+1 last array pos)
 
 
 /**********************************************************
@@ -284,7 +284,8 @@ void run_strip_splitting() {
     // Run the pattern handler for pattern i using history i
     mainPatterns[loaded_pattern.subpattern[i].idx].pattern_handler(
       &histories[i],
-      section_length);
+      section_length,
+      &params[i]);
 
     // Copy the processed segment to the output buffer
     memcpy(
@@ -329,7 +330,8 @@ void run_pattern_layering() {
     // Run the pattern handler for pattern i using history i
     mainPatterns[loaded_pattern.subpattern[i].idx].pattern_handler(
       &histories[i],
-      config.length);
+      config.length
+      &params[i]);
 
     // Copy the processed segment to the temp buffer
     memcpy(
