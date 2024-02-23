@@ -42,7 +42,7 @@ void clearLEDSegment(Pattern_History * hist, int len);
 
 void setColorHSV(CRGB* leds, byte h, byte s, byte v, int len);
 
-void blank(Pattern_History * hist, int len);
+void blank(Pattern_History * hist, int len, Subpattern_Data* params);
 
 
 void confetti(Pattern_History * hist, int len, Subpattern_Data* params);

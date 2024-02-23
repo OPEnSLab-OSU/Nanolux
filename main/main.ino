@@ -96,7 +96,8 @@ volatile bool pattern_changed = false;
 Pattern_Data loaded_pattern;
 Pattern_Data saved_patterns[NUM_SAVES];
 Config_Data config;
-Subpattern_Data params;
+
+
 
 //
 // Patterns structure.
@@ -130,7 +131,7 @@ Pattern mainPatterns[]{
     { 3, "Groovy Noise", true, groovy_noise},
     { 4, "Hue Trail", true, hue_trail},
     { 5, "Talking", true, talking},
-    { 6, "Glitch Effect", true, glitch_effect},
+    { 6, "Glitch Effect", true, glitch_effect}
 
 
     //{38, "Echo Ripple", true, echo_ripple}
@@ -285,7 +286,7 @@ void run_strip_splitting() {
     mainPatterns[loaded_pattern.subpattern[i].idx].pattern_handler(
       &histories[i],
       section_length,
-      &params[i]);
+      &loaded_pattern.subpattern[i]);
 
     // Copy the processed segment to the output buffer
     memcpy(
@@ -298,6 +299,8 @@ void run_strip_splitting() {
       &output_buffer[section_length * i],
       section_length,
       loaded_pattern.subpattern[i].brightness);
+
+    
 
     // Smooth the brightness-adjusted output and put it
     // into the main output buffer.
@@ -330,8 +333,8 @@ void run_pattern_layering() {
     // Run the pattern handler for pattern i using history i
     mainPatterns[loaded_pattern.subpattern[i].idx].pattern_handler(
       &histories[i],
-      config.length
-      &params[i]);
+      config.length,
+      &loaded_pattern.subpattern[i]);
 
     // Copy the processed segment to the temp buffer
     memcpy(

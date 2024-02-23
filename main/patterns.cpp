@@ -44,7 +44,7 @@ void clearLEDSegment(Pattern_History * hist, int len){
     hist->leds[i] = CRGB(0,0,0);
 }
 
-void blank(Pattern_History * hist, int len){
+void blank(Pattern_History * hist, int len, Subpattern_Data * params){
   clearLEDSegment(hist, len);
 }
 
