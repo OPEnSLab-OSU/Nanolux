@@ -29,6 +29,7 @@ get_base_url().then(_ => console.log(`base_url: ${base_url}`));
 const getSettings = () =>
     getData('settings');
 
+
 const getPatternList = () =>
     getData('patterns');
 
@@ -36,17 +37,9 @@ const getPatternList = () =>
 const getPattern = () =>
     getData('pattern');
 
-const getSecondaryPattern = () =>
-    getData('pattern2');
 
 const getNoise = () =>
     getData('noise');
-
-const getAlpha = () =>
-    getData('alpha');
-
-const getExclusiveMode = () =>
-    getData('mode');
 
 const getWiFiList = () =>
     getData('wifis');
@@ -63,21 +56,6 @@ const getHostname = () =>
 const getHistory = () =>
     getData('history')
 
-const getSmoothing = () =>
-    getData('smoothing')
-
-const getBrightness = () =>
-    getData('brightness')
-
-const getLength = () =>
-    getData('len')
-
-const getMs = () =>
-    getData('ms')
-
-const getDebug = () =>
-    getData('debug')
-
 
 const getData = (path) =>
     axios.get(`${base_url}/api/${path}`, {headers: {'Access-Control-Allow-Origin': '*'}})
@@ -86,24 +64,9 @@ const getData = (path) =>
 const savePattern = (patternIndex) =>
     axios.put(`${base_url}/api/pattern`,{index: patternIndex});
 
-const saveSecondaryPattern = (patternIndex) =>
-    axios.put(`${base_url}/api/pattern2`,{index: patternIndex});
-
 
 const saveNoise = (noise) =>
     axios.put(`${base_url}/api/noise`,{noise});
-
-const saveAlpha = (alpha) =>
-    axios.put(`${base_url}/api/alpha`,{alpha});
-
-const saveInSlot = (slot) =>
-    axios.put(`${base_url}/api/save`,{slot});
-
-const loadFromSlot = (slot) =>
-    axios.put(`${base_url}/api/load`,{slot});
-
-const saveExclusiveMode = (mode) =>
-    axios.put(`${base_url}/api/mode`,{mode});
 
 
 const saveSettings = (settings) =>
@@ -115,29 +78,12 @@ const joinWiFi = (wifi) =>
 const saveHostname = (hostname) =>
     axios.put(`${base_url}/api/hostname`,{hostname});
 
-const saveBrightness = (brightness) =>
-    axios.put(`${base_url}/api/brightness`,{brightness});
-
-const saveSmoothing = (smoothing) =>
-    axios.put(`${base_url}/api/smoothing`,{smoothing});
-
-const saveLength = (len) =>
-    axios.put(`${base_url}/api/len`,{len});
-
-const saveDebug = (debug) =>
-    axios.put(`${base_url}/api/debug`,{debug});
-
-const saveMs = (ms) =>
-    axios.put(`${base_url}/api/ms`,{ms});
-
 export {
     getSettings,
     saveSettings,
     getPatternList,
     getPattern,
     savePattern,
-    getSecondaryPattern,
-    saveSecondaryPattern,
     getNoise,
     saveNoise,
     getWiFiList,
@@ -147,21 +93,5 @@ export {
     getHostname,
     saveHostname,
     getHistory,
-    getExclusiveMode,
-    saveExclusiveMode,
-    saveAlpha,
-    getAlpha,
-    saveInSlot,
-    loadFromSlot,
-    saveBrightness,
-    saveSmoothing,
-    getBrightness,
-    getSmoothing,
-    getLength,
-    saveLength,
-    saveDebug,
-    saveMs,
-    getDebug,
-    getMs,
     base_url
 };
