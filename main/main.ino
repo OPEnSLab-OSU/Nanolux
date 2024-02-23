@@ -402,8 +402,6 @@ void print_buffer(CRGB *buf, uint8_t len) {
 
 void loop() {
 
-  
-
   begin_loop_timer(config.loop_ms);  // Begin timing this loop
 
   // Reset buffers if pattern settings were changed since
@@ -450,8 +448,6 @@ void loop() {
     default:
       0;
   }
-
-  
 
   FastLED.show();  // Push changes from the smoothed buffer to the LED strip
    

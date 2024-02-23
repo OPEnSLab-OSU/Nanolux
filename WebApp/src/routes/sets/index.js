@@ -15,6 +15,7 @@ import useInterval from "../../utils/use_interval";
 import Save_Entry from '../../components/save_entry';
 import SimpleChooser from '../../components/single_chooser';
 import { LabelSpinner } from '../../components/spinner';
+import RANGE_CONSTANTS from '../../utils/constants';
 
 const Subpattern = ({subpattern, patterns}) => {
 
@@ -75,8 +76,8 @@ const Subpattern = ({subpattern, patterns}) => {
 			<NumericSlider
 				className={style.settings_control}
 				label="Brightness"
-				min={0}
-				max={255}
+				min={RANGE_CONSTANTS.BRIGHTNESS_MIN}
+				max={RANGE_CONSTANTS.BRIGHTNESS_MAX}
 				initial={data.brightness}
 				structure_ref="brightness"
 				update={update}
@@ -85,8 +86,8 @@ const Subpattern = ({subpattern, patterns}) => {
 			<NumericSlider
 				className={style.settings_control}
 				label="Smoothing"
-				min={0}
-				max={175}
+				min={RANGE_CONSTANTS.SMOOTHING_MIN}
+				max={RANGE_CONSTANTS.SMOOTHING_MAX}
 				initial={data.smoothing}
 				structure_ref="smoothing"
 				update={update}
@@ -142,7 +143,7 @@ const CurrentPattern = ({patterns}) => {
 	}
 
 	const incrementSubpatterns = async () => {
-		if(data.subpattern_count < 4){
+		if(data.subpattern_count < RANGE_CONSTANTS.SUBPATTERN_MAX){
 			update("subpattern_count", data.subpattern_count + 1);
 		}
 	}
@@ -167,8 +168,8 @@ const CurrentPattern = ({patterns}) => {
 				<SimpleChooser
 					label="Mode"
 					options={[
-						{option : "Strip Splitting", idx : 0},
-						{option : "Z-Layering", idx : 1},
+						{option : "Strip Splitting", idx : RANGE_CONSTANTS.STRIP_SPLITTING_ID},
+						{option : "Z-Layering", idx : RANGE_CONSTANTS.Z_LAYERING_ID},
 					]}
 					noSelection={false}
 					initial={data.mode}
@@ -179,8 +180,8 @@ const CurrentPattern = ({patterns}) => {
 				<NumericSlider
 					className={style.settings_control}
 					label="Transparency"
-					min={0}
-					max={255}
+					min={RANGE_CONSTANTS.ALPHA_MIN}
+					max={RANGE_CONSTANTS.ALPHA_MAX}
 					initial={data.alpha}
 					structure_ref="alpha"
 					update={update}
@@ -189,8 +190,8 @@ const CurrentPattern = ({patterns}) => {
 				<NumericSlider
 					className={style.settings_control}
 					label="Noise Threshold"
-					min={0}
-					max={100}
+					min={RANGE_CONSTANTS.NOISE_MIN}
+					max={RANGE_CONSTANTS.NOISE_MAX}
 					initial={data.noise}
 					structure_ref="noise"
 					update={update}
@@ -272,8 +273,8 @@ const SystemControls = () => {
 				<NumericSlider
 					className={style.settings_control}
 					label="LED Strip Length"
-					min={30}
-					max={200}
+					min={RANGE_CONSTANTS.LENGTH_MIN}
+					max={RANGE_CONSTANTS.LENGTH_MAX}
 					initial={data.length}
 					structure_ref="length"
 					update={update}
@@ -282,8 +283,8 @@ const SystemControls = () => {
 				<NumericSlider
 					className={style.settings_control}
 					label="LED Update Time (ms)"
-					min={15}
-					max={200}
+					min={RANGE_CONSTANTS.LOOP_MIN}
+					max={RANGE_CONSTANTS.LOOP_MAX}
 					initial={data.loop}
 					structure_ref="loop"
 					update={update}
