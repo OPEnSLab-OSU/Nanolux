@@ -1,4 +1,5 @@
 import { useSignal } from "@preact/signals";
+import { useEffect } from "preact/hooks";
 
 const SimpleChooser = ({
     label,
@@ -10,6 +11,24 @@ const SimpleChooser = ({
 }) => {
 
     const current = useSignal(initial);
+
+    // Check if the initial input is greater than allowed.
+    useEffect(() => {
+        var max = 0;
+        options.map((option) => {
+            if(option.idx > max){
+                max = option.idx;
+            }
+        })
+        if(max > initial){
+            current.value = max;
+            update(structure_ref, current.value);
+        }
+        if(initial < 0){
+            current.value = 0;
+            update(structure_ref, current.value);
+        }
+    }, [])
 
     const changeSelection = async (event) => {
 

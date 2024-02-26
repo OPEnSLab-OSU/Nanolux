@@ -1,5 +1,6 @@
 import {useSignal} from "@preact/signals";
 import style from './style.css';
+import { useEffect } from "preact/hooks";
 
 const NumericSlider = ({
     label,
@@ -11,6 +12,18 @@ const NumericSlider = ({
 }) => {
 
     const current = useSignal(initial);
+
+    // Check bounds and change them if data is out of bounds.
+    useEffect(() => {
+        if(current.value < min){
+            current.value = min;
+            update(structure_ref, current.value);
+        }
+        if(current.value > max){
+            current.value = max;
+            update(structure_ref, current.value);
+        }
+    }, [])
 
     // Slider Updater
     const valueChanged = async event => {
