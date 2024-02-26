@@ -54,7 +54,9 @@ inline void handle_patterns_list_request(AsyncWebServerRequest* request) {
 
 inline void handle_loaded_subpattern_get_request(AsyncWebServerRequest* request) {
 
-  const uint8_t subpattern_num = request->getParam(0)->value().toInt();
+  uint8_t subpattern_num = request->getParam(0)->value().toInt();
+  bound_byte(&subpattern_num, 0, NUM_SUBPATTERNS);
+
   Subpattern_Data subpattern = loaded_pattern.subpattern[subpattern_num];
 
   // Create response substrings
@@ -85,10 +87,16 @@ inline void handle_pattern_update_put_request(AsyncWebServerRequest* request, Js
     const JsonObject& payload = json.as<JsonObject>();
 
     int status = HTTP_OK;
-    const uint8_t count = payload["subpattern_count"];
-    const uint8_t alpha = payload["alpha"];
-    const uint8_t mode = payload["mode"];
-    const uint8_t noise = payload["noise"];
+
+    uint8_t count = payload["subpattern_count"];
+    uint8_t alpha = payload["alpha"];
+    uint8_t mode = payload["mode"];
+    uint8_t noise = payload["noise"];
+
+    bound_byte(&count, 1, 4);
+    bound_byte(&alpha, 0, 255);
+    bound_byte(&mode, 0, 1);
+    bound_byte(&noise, 0, 100);
 
     loaded_pattern.subpattern_count = count;
     loaded_pattern.alpha = alpha;
@@ -115,11 +123,17 @@ inline void handle_subpattern_update_put_request(AsyncWebServerRequest* request,
 
     int status = HTTP_OK;
 
-    const uint8_t subpattern_num = request->getParam(0)->value().toInt();
+    uint8_t subpattern_num = request->getParam(0)->value().toInt();
 
-    const uint8_t idx = payload["idx"];
-    const uint8_t bright = payload["brightness"];
-    const uint8_t smooth = payload["smoothing"];
+    bound_byte(&subpattern_num, 0, NUM_SUBPATTERNS);
+
+    uint8_t idx = payload["idx"];
+    uint8_t bright = payload["brightness"];
+    uint8_t smooth = payload["smoothing"];
+
+    bound_byte(&idx, 0, NUM_PATTERNS-1);
+    bound_byte(&bright, 0, 255);
+    bound_byte(&smooth, 0, 175);
 
     if(idx != loaded_pattern.subpattern[subpattern_num].idx)
       pattern_changed = true;
@@ -232,9 +246,13 @@ inline void handle_system_settings_put_request(AsyncWebServerRequest* request, J
 
     int status = HTTP_OK;
 
-    const uint8_t length = payload["length"];
-    const uint8_t loop = payload["loop"];
-    const uint8_t debug = payload["debug"];
+    uint8_t length = payload["length"];
+    uint8_t loop = payload["loop"];
+    uint8_t debug = payload["debug"];
+
+    bound_byte(&length, 30, MAX_LEDS);
+    bound_byte(&loop, 15, 100);
+    bound_byte(&debug, 0, 2);
 
     if(config.length != length)
       pattern_changed = true;

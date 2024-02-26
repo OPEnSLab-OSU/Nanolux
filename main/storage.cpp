@@ -1,9 +1,11 @@
 #include <string>
 #include <Preferences.h>
 #include "storage.h"
+#include "nanolux_util.h"
 
 extern Pattern_Data loaded_pattern;
 extern Pattern_Data saved_patterns[NUM_SAVES];
+extern int NUM_PATTERNS;
 
 // NVS STORAGE
 char* PATTERN_NAMESPACE = "p";
@@ -20,6 +22,26 @@ void clear_nvs() {
   storage.begin(PATTERN_NAMESPACE, false);
   storage.clear();
   storage.end();
+}
+
+void bound_user_data() {
+  // Loaded pattern:
+  bound_byte(&loaded_pattern.subpattern_count, 0, NUM_SUBPATTERNS);
+  bound_byte(&loaded_pattern.alpha, 0, 255);
+  bound_byte(&loaded_pattern.mode, 0, 1);
+  bound_byte(&loaded_pattern.noise_thresh, 0, 100);
+
+  for(int i = 0; i < NUM_SUBPATTERNS; i++){
+    bound_byte(&loaded_pattern.subpattern[i].brightness, 0, 255);
+    bound_byte(&loaded_pattern.subpattern[i].smoothing, 0, 175);
+    bound_byte(&loaded_pattern.subpattern[i].idx, 0, NUM_PATTERNS);
+  }
+}
+
+void bound_system_settings() {
+  bound_byte(&config.debug_mode, 0, 2);
+  bound_byte(&config.length, 30, 200);
+  bound_byte(&config.loop_ms, 15, 100);
 }
 
 // PUBLIC FUNCTIONS:
@@ -52,6 +74,8 @@ void set_slot(int slot) {
     &saved_patterns[slot],
     &loaded_pattern,
     sizeof(Pattern_Data));
+  
+  bound_user_data();
 }
 
 /// @brief Saves all currently-loaded patterns to NVS
@@ -76,6 +100,7 @@ void clear_all() {
 
 /// @brief Saves configuration data to the NVS
 void save_config_to_nvs() {
+  bound_system_settings();
   storage.begin(CONFIG_NAMESPACE, false);
   storage.putBytes(CONFIG_KEY, &config, sizeof(Config_Data));
   storage.end();
@@ -100,24 +125,20 @@ void verify_saves() {
 
 /// @brief Load all patterns from the NVS
 void load_from_nvs() {
-  Serial.println("TEST1");
+
   storage.begin(PATTERN_NAMESPACE, false);
-  Serial.println("TEST2");
 
   if (storage.isKey(PATTERN_KEY)) {
     storage.getBytes(
       PATTERN_KEY,
       &saved_patterns[0],
       sizeof(Pattern_Data) * NUM_SAVES);
-    Serial.println("TEST3");
   }
-
-  
 
   storage.end();
 
   storage.begin(CONFIG_NAMESPACE, false);
-  Serial.println("TEST4");
+
   if (storage.isKey(CONFIG_KEY))
     storage.getBytes(CONFIG_KEY, &config, sizeof(Config_Data));
 
@@ -130,6 +151,6 @@ void load_from_nvs() {
     config.loop_ms = 40;
   }
 
-    Serial.println("TEST5");
+  bound_system_settings();
   
 }

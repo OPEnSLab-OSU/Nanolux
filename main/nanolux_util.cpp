@@ -45,6 +45,16 @@ void check_button_state(){
   }
 }
 
+void bound_byte(uint8_t * val, int upper, int lower){
+
+  if(*val > upper){
+    *val = upper;
+  }else if(*val < lower){
+    *val = lower;
+  }
+
+}
+
 int remap( double x,double oMin,double oMax,double nMin,double nMax ){
   // range check
   if (oMin == oMax){
