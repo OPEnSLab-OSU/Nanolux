@@ -32,10 +32,16 @@ CRGBPalette16 gPal2 = nrwc_gp; //store all palettes in array
 bool gReverseDirection = false;
 
 extern Config_Data config; // Currently loaded config
+extern uint8_t manual_pattern_idx;
+extern volatile bool manual_control_enabled;
 
 void nextPattern() {
   // add one to the current pattern number, and wrap around at the end
-  //current_pattern.pattern_1 = (current_pattern.pattern_1 + 1) % NUM_PATTERNS;
+  if(manual_control_enabled){
+    manual_pattern_idx = (manual_pattern_idx + 1) % NUM_PATTERNS;
+  }else{
+    manual_control_enabled = true;
+  }
 }
 
 void clearLEDSegment(Pattern_History * hist, int len){

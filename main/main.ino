@@ -97,6 +97,10 @@ Pattern_Data loaded_pattern;
 Pattern_Data saved_patterns[NUM_SAVES];
 Config_Data config;
 
+// Manual Control
+uint8_t manual_pattern_idx = 0;
+volatile bool manual_control_enabled = false;
+
 
 //
 // Patterns structure.
@@ -434,23 +438,39 @@ void loop() {
     MAX_VOLUME,
     0,
     MAX_BRIGHTNESS);
-  
-  switch (loaded_pattern.mode) {
 
-    case STRIP_SPLITTING:
-      run_strip_splitting();
-      break;
+  if (manual_control_enabled) {
 
-    case Z_LAYERING:
-      run_pattern_layering();
-      break;
+    mainPatterns[manual_pattern_idx].pattern_handler(
+      &histories[0],
+      config.length);
 
-    default:
-      0;
+    calculate_layering(
+      smoothed_output,
+      histories[0].leds,
+      smoothed_output,
+      config.length,
+      155);
+
+  } else {
+    switch (loaded_pattern.mode) {
+
+      case STRIP_SPLITTING:
+        run_strip_splitting();
+        break;
+
+      case Z_LAYERING:
+        run_pattern_layering();
+        break;
+
+      default:
+        0;
+    }
   }
 
+
   FastLED.show();  // Push changes from the smoothed buffer to the LED strip
-   
+
   // Print the LED strip buffer if the simulator is enabled.
   if (config.debug_mode == 2)
     print_buffer(smoothed_output, config.length);

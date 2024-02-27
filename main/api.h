@@ -104,6 +104,7 @@ inline void handle_pattern_update_put_request(AsyncWebServerRequest* request, Js
     loaded_pattern.mode = mode;
 
     pattern_changed = true;
+    manual_control_enabled = false;
 
     request->send(
       HTTP_OK,
@@ -142,6 +143,8 @@ inline void handle_subpattern_update_put_request(AsyncWebServerRequest* request,
     loaded_pattern.subpattern[subpattern_num].brightness = bright;
     loaded_pattern.subpattern[subpattern_num].smoothing = smooth;
 
+    manual_control_enabled = false;
+
     request->send(
       HTTP_OK,
       CONTENT_TEXT,
@@ -176,7 +179,8 @@ inline void handle_load_save_slot_put_request(AsyncWebServerRequest* request, Js
 
       load_slot(slot);
       pattern_changed = true;
-
+      manual_control_enabled = false;
+      
       request->send(
         HTTP_OK,
         CONTENT_TEXT,
