@@ -17,6 +17,6 @@ void begin_loop_timer(long ms);
 
 long timer_overrun();
 
-void bound_byte(uint8_t * val, int upper, int lower);
+void bound_byte(uint8_t * val, int lower, int upper);
 
 #endif

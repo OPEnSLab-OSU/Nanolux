@@ -45,7 +45,7 @@ void check_button_state(){
   }
 }
 
-void bound_byte(uint8_t * val, int upper, int lower){
+void bound_byte(uint8_t * val, int lower, int upper){
 
   if(*val > upper){
     *val = upper;
