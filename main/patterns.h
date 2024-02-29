@@ -2,6 +2,7 @@
 #define PATTERNS_H
 
 #include "nanolux_types.h"
+#include "storage.h"
 
 typedef struct{
 
@@ -33,23 +34,30 @@ typedef struct{
 
 } Pattern_History;
 
+extern Subpattern_Data params;
+
 void nextPattern();
+
+void clearLEDSegment(Pattern_History * hist, int len);
 
 void setColorHSV(CRGB* leds, byte h, byte s, byte v, int len);
 
-void confetti(Pattern_History * hist, int len, Pattern_Data* patternData);
-
-void pix_freq(Pattern_History * hist, int len, Pattern_Data* patternData);
-
-void groovy_noise(Pattern_History* hist, int len, Pattern_Data* patternData);
-
-void hue_trail(Pattern_History* hist, int len, Pattern_Data* patternData);
-
-void talking(Pattern_History *hist, int len, Pattern_Data *patternData);
-
-void glitch_effect(Pattern_History * hist, Pattern_Data * patternData , int len);
+void blank(Pattern_History * hist, int len, Subpattern_Data* params);
 
 
+void confetti(Pattern_History * hist, int len, Subpattern_Data* params);
+
+void pix_freq(Pattern_History * hist, int len, Subpattern_Data* params);
+
+void groovy_noise(Pattern_History* hist, int len, Subpattern_Data* params);
+
+void hue_trail(Pattern_History* hist, int len, Subpattern_Data* params);
+
+void talking(Pattern_History *hist, int len, Subpattern_Data *params);
+
+void glitch_effect(Pattern_History * hist, int len, Subpattern_Data * params);
+
+void processDirection(Pattern_History* hist, Subpattern_Data * params, int len);
 
 
 //void echo_ripple(Pattern_History hist, int len);

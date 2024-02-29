@@ -32,6 +32,7 @@ CRGBPalette16 gPal2 = nrwc_gp; //store all palettes in array
 bool gReverseDirection = false;
 
 extern Config_Data config; // Currently loaded config
+extern Subpattern_Data params;
 
 void nextPattern() {
   // add one to the current pattern number, and wrap around at the end
@@ -41,6 +42,10 @@ void nextPattern() {
 void clearLEDSegment(Pattern_History * hist, int len){
   for(int i = 0; i < len; i++)
     hist->leds[i] = CRGB(0,0,0);
+}
+
+void blank(Pattern_History * hist, int len, Subpattern_Data * params){
+  clearLEDSegment(hist, len);
 }
 
 void setColorHSV(CRGB* leds, byte h, byte s, byte v, int len) {
@@ -54,11 +59,11 @@ void setColorHSV(CRGB* leds, byte h, byte s, byte v, int len) {
 
 
 // uses freq and brightness
-void confetti(Pattern_History * hist, int len, Pattern_Data* patternData){
+void confetti(Pattern_History * hist, int len, Subpattern_Data* params){
   // colored speckles based on frequency that blink in and fade smoothly
   fadeToBlackBy(hist->leds, len, 20);
   int pos = random16(len);
-  switch(patternData->config){
+  switch(params->config){
       case 0:
       default:
       hist->leds[pos] += CHSV( fHue + random8(10), 255, vbrightness);
@@ -67,8 +72,8 @@ void confetti(Pattern_History * hist, int len, Pattern_Data* patternData){
 }
 
 // Based on a sufficient volume, a pixel will float to some position on the light strip and fall down (vol_show adds another threshold)
-void pix_freq(Pattern_History * hist, int len, Pattern_Data* patternData) {
-    switch(patternData->config){
+void pix_freq(Pattern_History * hist, int len, Subpattern_Data* params) {
+    switch(params->config){
       case 0:
       default:
         fadeToBlackBy(hist->leds, len, 50);
@@ -97,9 +102,9 @@ void pix_freq(Pattern_History * hist, int len, Pattern_Data* patternData) {
 
 
 
-void groovy_noise(Pattern_History* hist, int len, Pattern_Data* patternData) {
+void groovy_noise(Pattern_History* hist, int len, Subpattern_Data* params) {
     // Assume global access to necessary variables like volume, or pass them as parameters
-    switch (patternData->config) {
+    switch (params->config) {
         case 0: // groovy_noise (also default case)
         default:
             {
@@ -142,13 +147,13 @@ void groovy_noise(Pattern_History* hist, int len, Pattern_Data* patternData) {
     // Common post-processing, if necessary, can be added here
 }
 
-void hue_trail(Pattern_History* hist, int len, Pattern_Data* patternData) {
+void hue_trail(Pattern_History* hist, int len, Subpattern_Data* params) {
     // Assume fHue and vbrightness are accessible globally or passed as parameters
-    switch (patternData->config) {
+    switch (params->config) {
         case 0: // freq_hue_trail (also default case)
         default: // Default case set to execute the freq_hue_trail pattern
-            hist->leds[0] = CHSV(fHue, 255, patternData->brightness);
-            hist->leds[1] = CHSV(fHue, 255, patternData->brightness);
+            hist->leds[0] = CHSV(fHue, 255, params->brightness);
+            hist->leds[1] = CHSV(fHue, 255, params->brightness);
             for (int i = len - 1; i > 1; i -= 2) {
                 hist->leds[i] = hist->leds[i - 2];
                 hist->leds[i - 1] = hist->leds[i - 2];
@@ -158,14 +163,14 @@ void hue_trail(Pattern_History* hist, int len, Pattern_Data* patternData) {
         case 1: // sin_hue_trail
             {
                 uint16_t sinBeat0 = beatsin16(12, 0, len - 1);
-                hist->leds[sinBeat0] = CHSV(fHue, 255, patternData->brightness);
+                hist->leds[sinBeat0] = CHSV(fHue, 255, params->brightness);
                 fadeToBlackBy(hist->leds, len, 5);
             }
             break;
 
         case 2: // freq_hue_trail_mid
-            hist->leds[len / 2 - 1] = CHSV(fHue, 255, patternData->brightness);
-            hist->leds[len / 2] = CHSV(fHue, 255, patternData->brightness);
+            hist->leds[len / 2 - 1] = CHSV(fHue, 255, params->brightness);
+            hist->leds[len / 2] = CHSV(fHue, 255, params->brightness);
             for (int i = len - 1; i > len / 2; i -= 2) {
                 hist->leds[i] = hist->leds[i - 2];
                 hist->leds[i - 1] = hist->leds[i - 2];
@@ -176,8 +181,8 @@ void hue_trail(Pattern_History* hist, int len, Pattern_Data* patternData) {
             break;
 
         case 3: // freq_hue_trail_mid_blur
-            hist->leds[len / 2 - 1] = CHSV(fHue, 255, patternData->brightness);
-            hist->leds[len / 2] = CHSV(fHue, 255, patternData->brightness);
+            hist->leds[len / 2 - 1] = CHSV(fHue, 255, params->brightness);
+            hist->leds[len / 2] = CHSV(fHue, 255, params->brightness);
             for (int i = len - 1; i > len / 2; i -= 2) {
                 hist->leds[i] = hist->leds[i - 2];
                 hist->leds[i - 1] = hist->leds[i - 2];
@@ -192,13 +197,13 @@ void hue_trail(Pattern_History* hist, int len, Pattern_Data* patternData) {
     // reverse (?)
 }
 
-void talking(Pattern_History *hist, int len, Pattern_Data *patternData) {
+void talking(Pattern_History *hist, int len, Subpattern_Data *params) {
   // Common variables
   int offsetFromVolume;
   int midpoint = len / 2;
 
-  // Use the config field from patternData to determine the pattern
-  switch (patternData->config) {
+  // Use the config field from params to determine the pattern
+  switch (params->config) {
     case 1: { // talking_formants pattern
       // Assume density_formant and other relevant functions/variables are defined elsewhere
       double *formants = density_formant();
@@ -240,18 +245,19 @@ void talking(Pattern_History *hist, int len, Pattern_Data *patternData) {
   // Common effects for all modes
   blur1d(hist->leds, len, 80);
   // Adjust fade value based on the pattern
-  int fadeValue = (patternData->config == 0 || patternData->config == 2) ? 150 : (patternData->config == 1) ? 200 : 100;
+  int fadeValue = (params->config == 0 || params->config == 2) ? 150 : (params->config == 1) ? 200 : 100;
   fadeToBlackBy(hist->leds, len, fadeValue);
+  // direction to process
 }
 
-void glitch_effect(Pattern_History * hist, Pattern_Data * patternData , int len) {
+void glitch_effect(Pattern_History * hist, int len, Subpattern_Data * params ) {
     int offsetFromVolume, speedFromVolume;
     uint16_t sinBeat[4]; 
     double *formants;
     double f0Hue;
     
-    speedFromVolume = remap(volume, MIN_VOLUME, MAX_VOLUME, 5, mode == 0 ? 25 : 20);
-    switch (mode) {
+    speedFromVolume = remap(volume, MIN_VOLUME, MAX_VOLUME, 5, params->config == 0 ? 25 : 20);
+    switch (params->config) {
         case 0:
             sinBeat[0] = beatsin16(speedFromVolume, 0, len-1, 0, 0);
             sinBeat[1] = beatsin16(speedFromVolume, 0, len-1, 0, 32767);
@@ -271,19 +277,16 @@ void glitch_effect(Pattern_History * hist, Pattern_Data * patternData , int len)
             }
             break;
     }
-
-    hist->leds[sinBeat[i]] = CHSV((mode == 0 && i == 1) ? f0Hue : fHue * (mode == 1 && i == 0 ? 2 : 1), 255, MAX_BRIGHTNESS);
-    
     // Common effects: blur and fade
     blur1d(hist->leds, len, 80);
-    fadeToBlackBy(hist->leds, len, mode == 1 ? 100 : (mode == 2 ? 60 : 40)); 
+    fadeToBlackBy(hist->leds, len, params->config == 1 ? 100 : (params->config == 2 ? 60 : 40)); 
 }
 
 // need to add edge case thingy for ODD lens
 // Function to process the direction of the LED buffer
-void processDirection(Pattern_History* hist, Subpattern_Data * patternData, int len) {
+void processDirection(Pattern_History* hist, int len, Subpattern_Data * params) {
     // reverse buffer direction
-    if (patternData->direction == 1) {
+    if (params->direction == 1) {
         // Reverse the buffer
         // use half the len to ensure values only swapped once
         for (int i = 0; i < len / 2; i++) {
@@ -292,7 +295,7 @@ void processDirection(Pattern_History* hist, Subpattern_Data * patternData, int 
             hist->leds[len - 1 - i] = temp;
         }
     // from the middle mirror
-    } else if (patternData->direction == 2) {
+    } else if (params->direction == 2) {
         // Temporary buffer to hold the condensed pattern and its mirrored counterpart
         CRGB temp[len]; // Ensure this is large enough for your LED strip
 
@@ -311,7 +314,7 @@ void processDirection(Pattern_History* hist, Subpattern_Data * patternData, int 
             hist->leds[i] = temp[i];
         }
       // from the ends mirror
-    } else if (patternData->direction == 3 ){ 
+    } else if (params->direction == 3 ){ 
         // Temporary buffer to hold the condensed pattern
         CRGB temp[len / 2];
         // Condense the pattern onto the first half of the temp buffer
@@ -328,6 +331,7 @@ void processDirection(Pattern_History* hist, Subpattern_Data * patternData, int 
         for (int i = 0; i < len; i++) {
             hist->leds[i] = temp[i % (len / 2)];
     }
+  }
 }
 
 

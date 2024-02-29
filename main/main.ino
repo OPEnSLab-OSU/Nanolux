@@ -98,6 +98,7 @@ Pattern_Data saved_patterns[NUM_SAVES];
 Config_Data config;
 
 
+
 //
 // Patterns structure.
 //
@@ -108,7 +109,7 @@ typedef struct {
   int index;
   const char *pattern_name;
   bool enabled;
-  void (*pattern_handler)(Pattern_History *, int);
+  void (*pattern_handler)(Pattern_History *, int, Subpattern_Data *);
 } Pattern;
 
 // Pattern history array and index.
@@ -130,12 +131,12 @@ Pattern mainPatterns[]{
     { 3, "Groovy Noise", true, groovy_noise},
     { 4, "Hue Trail", true, hue_trail},
     { 5, "Talking", true, talking},
-    { 6, "Glitch Effect", true, glitch_effect},
+    { 6, "Glitch Effect", true, glitch_effect}
 
 
     //{38, "Echo Ripple", true, echo_ripple}
 };
-int NUM_PATTERNS = 38;  // MAKE SURE TO UPDATE THIS WITH THE ACTUAL NUMBER OF PATTERNS (+1 last array pos)
+int NUM_PATTERNS = 7;  // MAKE SURE TO UPDATE THIS WITH THE ACTUAL NUMBER OF PATTERNS (+1 last array pos)
 
 
 /**********************************************************
@@ -284,7 +285,8 @@ void run_strip_splitting() {
     // Run the pattern handler for pattern i using history i
     mainPatterns[loaded_pattern.subpattern[i].idx].pattern_handler(
       &histories[i],
-      section_length);
+      section_length,
+      &loaded_pattern.subpattern[i]);
 
     // Copy the processed segment to the output buffer
     memcpy(
@@ -297,6 +299,8 @@ void run_strip_splitting() {
       &output_buffer[section_length * i],
       section_length,
       loaded_pattern.subpattern[i].brightness);
+
+    
 
     // Smooth the brightness-adjusted output and put it
     // into the main output buffer.
@@ -329,7 +333,8 @@ void run_pattern_layering() {
     // Run the pattern handler for pattern i using history i
     mainPatterns[loaded_pattern.subpattern[i].idx].pattern_handler(
       &histories[i],
-      config.length);
+      config.length,
+      &loaded_pattern.subpattern[i]);
 
     // Copy the processed segment to the temp buffer
     memcpy(
