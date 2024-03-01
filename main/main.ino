@@ -504,7 +504,7 @@ void audio_analysis() {
 
   update_drums();
 
-  noise_gate(0);
+  noise_gate(loaded_pattern.noise_thresh);
 
 #ifdef SHOW_TIMINGS
   const int end = micros();

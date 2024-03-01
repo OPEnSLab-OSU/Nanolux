@@ -26,12 +26,16 @@ const SimpleChooser = ({
 
         const selection = Number(event.target.value);
 
-        if(initial == selection){
+        if(initial != selection){
+            update(structure_ref, selection);
+            event.target.checked = true;
+        }else{
             if(noSelection){
                 update(structure_ref, 0);
+                event.target.checked = false;
+            }else{
+                event.target.checked = true;
             }
-        }else{
-            update(structure_ref, selection);
         }
 
     }
