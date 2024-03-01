@@ -98,12 +98,17 @@ inline void handle_pattern_update_put_request(AsyncWebServerRequest* request, Js
     bound_byte(&mode, 0, 1);
     bound_byte(&noise, 0, 100);
 
+    if(count != loaded_pattern.subpattern_count)
+      pattern_changed = true;
+    
+    if(mode != loaded_pattern.mode)
+      pattern_changed = true;
+
     loaded_pattern.subpattern_count = count;
     loaded_pattern.alpha = alpha;
     loaded_pattern.noise_thresh = noise;
     loaded_pattern.mode = mode;
 
-    pattern_changed = true;
     manual_control_enabled = false;
 
     request->send(

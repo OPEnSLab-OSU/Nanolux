@@ -307,7 +307,6 @@ void scale_crgb_array(CRGB *arr, uint8_t len, uint8_t factor) {
 void run_strip_splitting() {
 
   // Defines the length of an LED strip segment
-  Serial.println(loaded_pattern.subpattern_count);
   uint8_t section_length = config.length / loaded_pattern.subpattern_count;
 
   // Repeat for each subpattern

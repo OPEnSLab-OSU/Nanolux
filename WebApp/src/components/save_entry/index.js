@@ -1,21 +1,35 @@
-import {useEffect, useState} from "preact/hooks";
-import {loadFromSlot, loadSaveSlot, saveInSlot, saveToSlot} from "../../utils/api";
-import {useConnectivity} from "../../context/online_context";
+import {loadSaveSlot, saveToSlot} from "../../utils/api";
 
+/**
+ * @brief A UI element that allows a user to save or load a pattern 
+ * to/from a particular slot ID.
+ * 
+ * @param name The displayed name of the save slot.
+ * @param idx The ID of the slot to save/load to/from.
+ * 
+ * @returns The UI element itself.
+ */
 const Save_Entry = ({
     name,
     idx
 }) => {
-    const {isConnected} = useConnectivity();
 
-    const save = async (event) => {
+    /**
+     * @brief Forces the NanoLux device to save the currently loaded
+     * pattern to the save slot given by the parameter "idx."
+     */
+    const save = async () => {
 		var success = await saveToSlot(idx);
 		if(!success){
 			alert("Failed to save slot.");
 		}
 	}
 
-	const load = async (event) => {
+    /**
+     * @brief Forces the NanoLux device to load the pattern saved in
+     * the save slot given by the parameter "idx."
+     */
+	const load = async () => {
 		await loadSaveSlot(idx);
 		window.location.reload(true);
 	}
