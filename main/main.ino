@@ -11,7 +11,7 @@
 #include "audio_analysis.h"
 #include "storage.h"
 
-//#define ENABLE_WEB_SERVER
+#define ENABLE_WEB_SERVER
 #ifdef ENABLE_WEB_SERVER
 #include "WebServer.h"
 #endif
@@ -169,9 +169,10 @@ Pattern mainPatterns[]{
     {36, "Formant Band", true, formant_band},
     {37, "Mirrored Pixel Frequency", true, mirror_pix_freq},
     {38, "Random Raindrop", true, random_raindrop},
-    {39, "Tug O' War", true, tug_of_war}
+    {39, "Tug O' War Frequency", true, tug_of_war_frequency},
+    {40, "Tug O' War Volume", true, tug_of_war_volume}
 };
-int NUM_PATTERNS = 40; // MAKE SURE TO UPDATE THIS WITH THE ACTUAL NUMBER OF PATTERNS
+int NUM_PATTERNS = 41; // MAKE SURE TO UPDATE THIS WITH THE ACTUAL NUMBER OF PATTERNS
 
 SimplePatternList gPatterns_layer = {blank, spring_mass_1};
 

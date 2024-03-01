@@ -1161,7 +1161,7 @@ void volume_level_middle_bar_freq_hue_with_fade_and_blur(){
     fadeToBlackBy( leds, virtual_led_count, 20);
 }
 
-void tug_of_war() {
+void tug_of_war_frequency() {
     double *formants = density_formant();
     double f0 = formants[0];
     delete[] formants;
@@ -1174,6 +1174,19 @@ void tug_of_war() {
             leds[i] = CRGB::Blue; 
         } else {
             leds[i] = CRGB::Red;
+        }
+    }
+}
+
+void tug_of_war_volume() {
+    int splitPosition = remap(volume, MIN_VOLUME, MAX_VOLUME, 0, virtual_led_count);
+    //use this function with smoothing for better results
+    // red is on the left, blue is on the right
+    for (int i = 0; i < virtual_led_count; i++) {
+        if (i < splitPosition) {
+            leds[i] = CRGB::Green; 
+        } else {
+            leds[i] = CRGB::Blue;
         }
     }
 }

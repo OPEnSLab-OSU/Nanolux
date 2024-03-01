@@ -111,7 +111,9 @@ void glitch_talk();
 
 void glitch_sections();
 
-void tug_of_war();
+void tug_of_war_frequency();
+
+void tug_of_war_volume();
 
 void random_raindrop();
 
