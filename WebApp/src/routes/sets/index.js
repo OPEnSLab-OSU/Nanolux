@@ -1,7 +1,6 @@
 import style from './style.css';
 import Patterns from "../../components/patterns";
 import NumericSlider from "../../components/numeric_slider";
-import NumericSliderDouble from "../../components/numeric_slider_double";
 import {useState, useEffect} from "preact/hooks";
 import {
 	getLoadedSubpattern,
@@ -16,6 +15,7 @@ import useInterval from "../../utils/use_interval";
 import Save_Entry from '../../components/save_entry';
 import SimpleChooser from '../../components/single_chooser';
 import { LabelSpinner } from '../../components/spinner';
+import MultiRangeSlider from "multi-range-slider-react";
 
 const Subpattern = ({subpattern, patterns}) => {
 
@@ -60,6 +60,13 @@ const Subpattern = ({subpattern, patterns}) => {
 		
 		setUpdated(true);
 	}
+    // multi range slider
+    const [minValue, set_minValue] = useState(25);
+    const [maxValue, set_maxValue] = useState(75);
+    const handleInput = (e) => {
+        set_minValue(e.minValue);
+        set_maxValue(e.maxValue);
+    };
 
 	// Generate the subpattern structure.
 	return (
@@ -99,11 +106,21 @@ const Subpattern = ({subpattern, patterns}) => {
                     <option value="default">default</option>
                     <option value="reverse">reverse</option>
                     <option value="middle">middle</option>
-
                 </select>
             </div>
             <br/>
-            
+            <MultiRangeSlider
+                min={0}
+                max={100}
+                step={5}
+                minValue={minValue}
+                maxValue={maxValue}
+                onInput={(e) => {
+                    handleInput(e);
+                }}
+            />
+            <br/>
+
 
             
             
