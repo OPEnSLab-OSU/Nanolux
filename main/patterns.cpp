@@ -57,7 +57,7 @@ void setColorHSV(CRGB* leds, byte h, byte s, byte v, int len) {
 
 
 
-
+/*
 // uses freq and brightness
 void confetti(Pattern_History * hist, int len, Subpattern_Data* params){
   // colored speckles based on frequency that blink in and fade smoothly
@@ -70,12 +70,20 @@ void confetti(Pattern_History * hist, int len, Subpattern_Data* params){
       hist->leds[pos] += CHSV( fHue + random8(10), 255, vbrightness);
 }
 }
+*/
 
 // Based on a sufficient volume, a pixel will float to some position on the light strip and fall down (vol_show adds another threshold)
 void pix_freq(Pattern_History * hist, int len, Subpattern_Data* params) {
-    switch(params->config){
-      case 0:
-      default:
+    //switch(params->config){
+      //case 0:
+      //default:
+          // new fhue
+    fHue = remap(
+      log(peak) / log(2),
+      log(MIN_FREQUENCY) / log(2),
+      log(MAX_FREQUENCY) / log(2),
+      params->minhue, params->maxhue );
+
         fadeToBlackBy(hist->leds, len, 50);
         if (volume > 200) {
           hist->pix_pos = map(peak, MIN_FREQUENCY, MAX_FREQUENCY, 0, len-1);
@@ -97,11 +105,10 @@ void pix_freq(Pattern_History * hist, int len, Subpattern_Data* params) {
           hist->leds[hist->vol_pos] = hist->vol_pos < len ? CRGB(255, 255, 255):CRGB(0, 0, 0);
         }
         hist->leds[hist->pix_pos] = hist->pix_pos < len ? CHSV(hist->tempHue, 255, 255):CRGB(0, 0, 0);
-      }
 }
 
 
-
+/*
 void groovy_noise(Pattern_History* hist, int len, Subpattern_Data* params) {
     // Assume global access to necessary variables like volume, or pass them as parameters
     switch (params->config) {
@@ -148,7 +155,6 @@ void groovy_noise(Pattern_History* hist, int len, Subpattern_Data* params) {
 }
 
 void hue_trail(Pattern_History* hist, int len, Subpattern_Data* params) {
-    // Assume fHue and vbrightness are accessible globally or passed as parameters
     switch (params->config) {
         case 0: // freq_hue_trail (also default case)
         default: // Default case set to execute the freq_hue_trail pattern
@@ -202,10 +208,8 @@ void talking(Pattern_History *hist, int len, Subpattern_Data *params) {
   int offsetFromVolume;
   int midpoint = len / 2;
 
-  // Use the config field from params to determine the pattern
   switch (params->config) {
     case 1: { // talking_formants pattern
-      // Assume density_formant and other relevant functions/variables are defined elsewhere
       double *formants = density_formant();
       double f0Hue = remap(formants[0], MIN_FREQUENCY, MAX_FREQUENCY, 0, 255);
       double f1Hue = remap(formants[1], MIN_FREQUENCY, MAX_FREQUENCY, 0, 255);
@@ -282,9 +286,11 @@ void glitch_effect(Pattern_History * hist, int len, Subpattern_Data * params ) {
     fadeToBlackBy(hist->leds, len, params->config == 1 ? 100 : (params->config == 2 ? 60 : 40)); 
 }
 
+*/
+/*
 // need to add edge case thingy for ODD lens
 // Function to process the direction of the LED buffer
-void processDirection(Pattern_History* hist, int len, Subpattern_Data * params) {
+void process_direction(Pattern_History* hist, int len, Subpattern_Data * params) {
     // reverse buffer direction
     if (params->direction == 1) {
         // Reverse the buffer
@@ -297,7 +303,7 @@ void processDirection(Pattern_History* hist, int len, Subpattern_Data * params) 
     // from the middle mirror
     } else if (params->direction == 2) {
         // Temporary buffer to hold the condensed pattern and its mirrored counterpart
-        CRGB temp[len]; // Ensure this is large enough for your LED strip
+        CRGB temp[len];
 
         // Condense the pattern to the right half of the strip
         for (int i = 0; i < len / 2; i++) {
@@ -319,7 +325,6 @@ void processDirection(Pattern_History* hist, int len, Subpattern_Data * params) 
         CRGB temp[len / 2];
         // Condense the pattern onto the first half of the temp buffer
         for (int i = 0; i < len / 2; i++) {
-            // This effectively maps the full range of LEDs to half, condensing the pattern
             temp[i] = hist->leds[map(i, 0, len / 2 - 1, 0, len - 1)];
         }
         // Now mirror this condensed pattern onto the second half of the temp buffer
@@ -334,9 +339,20 @@ void processDirection(Pattern_History* hist, int len, Subpattern_Data * params) 
   }
 }
 
+void run_reverse(Pattern_History* hist, int len) {
+    // Reverse the buffer
+        // use half the len to ensure values only swapped once
+        for (int i = 0; i < len / 2; i++) {
+            CRGB temp = hist->leds[i];
+            hist->leds[i] = hist->leds[len - 1 - i];
+            hist->leds[len - 1 - i] = temp;
+        }
+}
 
 
-/*
+
+
+*//*
 void echo_ripple(){
     //prevents dead pixels from staying
     for (int i = 0; i < NUM_LEDS; i++) {

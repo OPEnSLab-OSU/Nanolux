@@ -44,11 +44,11 @@ void setColorHSV(CRGB* leds, byte h, byte s, byte v, int len);
 
 void blank(Pattern_History * hist, int len, Subpattern_Data* params);
 
-
+/*
 void confetti(Pattern_History * hist, int len, Subpattern_Data* params);
-
+*/
 void pix_freq(Pattern_History * hist, int len, Subpattern_Data* params);
-
+/*
 void groovy_noise(Pattern_History* hist, int len, Subpattern_Data* params);
 
 void hue_trail(Pattern_History* hist, int len, Subpattern_Data* params);
@@ -56,7 +56,7 @@ void hue_trail(Pattern_History* hist, int len, Subpattern_Data* params);
 void talking(Pattern_History *hist, int len, Subpattern_Data *params);
 
 void glitch_effect(Pattern_History * hist, int len, Subpattern_Data * params);
-
+*/
 void processDirection(Pattern_History* hist, Subpattern_Data * params, int len);
 
 

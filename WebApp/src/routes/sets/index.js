@@ -14,8 +14,8 @@ import {useConnectivity} from "../../context/online_context";
 import useInterval from "../../utils/use_interval";
 import Save_Entry from '../../components/save_entry';
 import SimpleChooser from '../../components/single_chooser';
+import MultiRangeSliderWrapper from '../../components/multi_range_slider';
 import { LabelSpinner } from '../../components/spinner';
-import MultiRangeSlider from "multi-range-slider-react";
 
 const Subpattern = ({subpattern, patterns}) => {
 
@@ -26,11 +26,12 @@ const Subpattern = ({subpattern, patterns}) => {
 	// Subpattern data structure
 	const [data, setData] = useState({
 		idx: 0,
-		hue_max: 0,
-		hue_min: 255,
+		hue_min: 0,
+		hue_max: 255,
 		brightness: 255,
 		smoothing: 0,
-		direction: 0,
+		reversed: false,
+		mirrored: false
 	});
 
 	// Manage initalization
@@ -60,13 +61,6 @@ const Subpattern = ({subpattern, patterns}) => {
 		
 		setUpdated(true);
 	}
-    // multi range slider
-    const [minValue, set_minValue] = useState(25);
-    const [maxValue, set_maxValue] = useState(75);
-    const handleInput = (e) => {
-        set_minValue(e.minValue);
-        set_maxValue(e.maxValue);
-    };
 
 	// Generate the subpattern structure.
 	return (
@@ -101,24 +95,43 @@ const Subpattern = ({subpattern, patterns}) => {
 			/>
             <br/>
             <div className={style.settings_control}>
-                <label className={style.label} htmlFor="pattern-options">pattern direction</label>
-                <select className={style.label}>
-                    <option value="default">default</option>
-                    <option value="reverse">reverse</option>
-                    <option value="middle">middle</option>
-                </select>
+                <label for="reverse">
+					Reverse
+				</label>
+				<input 
+					type="checkbox" 
+					id="reverse" 
+					name="reverse" 
+					checked={data.reversed}
+					onChange={() => {
+						update("reversed", !data.reversed)
+					}}
+				/>
+				
+				<label for="mirror">
+					Mirror
+				</label>
+				<input 
+						type="checkbox" 
+						id="mirror" 
+						name="mirror" 
+						checked={data.mirrored}
+						onChange={() => {
+							update("mirrored", !data.mirrored)
+
+						}}
+					/>
             </div>
             <br/>
-            <MultiRangeSlider
-                min={0}
-                max={100}
-                step={5}
-                minValue={minValue}
-                maxValue={maxValue}
-                onInput={(e) => {
-                    handleInput(e);
-                }}
-            />
+				<MultiRangeSliderWrapper
+					min={0}
+					max={255}
+					selectedLow={data.hue_min}
+					selectedHigh={data.hue_max}
+					minRef={"hue_min"}
+					maxRef={"hue_max"}
+					update={update}
+				/>
             <br/>
 
 

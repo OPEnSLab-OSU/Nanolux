@@ -13,7 +13,8 @@ typedef struct{
   uint8_t minhue =0;
   uint8_t maxhue =255;
   uint8_t config = 0;
-  uint8_t direction = 0;
+  bool reversed = false;
+  bool mirrored = false;
 
 } Subpattern_Data;
 

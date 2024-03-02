@@ -1,3 +1,39 @@
+
+void run_direction(){
+  // Run the pattern handler for pattern i using history i
+    CRGB reversetemp[NUM_LEDS/2];
+    // reverse the halftemp for reversetemp
+    for (int i = 0; i < NUM_LEDS / 2; i++) {
+      reversetemp[i] = halftemp[(NUM_LEDS / 2 - 1) - i];
+    }
+
+    // dont know how to access this properly either
+  switch (loaded_pattern.subpattern[i].direction) {
+        case 1:
+            // Process reverse without condensing anything
+            process_reverse();
+            break;
+        case 2:
+            // Make both patterns start from the middle
+            // left half, reversetemp
+            // right half, halftemp
+            process_middle(*reversetemp, *halftemp);
+            break;
+        case 3:
+            // Make both sides start at the ends and approach the middle
+            // left half, halftemp
+            // right half, reversetemp
+            process_middle(*halftemp, *reversetemp);
+            break;
+        default:
+            // Do nothing, keep the original pattern
+            break;
+    } 
+}
+
+
+
+
 void glitch_effect(Pattern_History * hist, Pattern_Data * patternData , int len) {
     int offsetFromVolume, speedFromVolume;
     uint16_t sinBeat[4]; 

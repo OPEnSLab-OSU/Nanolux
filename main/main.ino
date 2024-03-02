@@ -126,17 +126,18 @@ Pattern_History histories[NUM_SUBPATTERNS];
 //
 Pattern mainPatterns[]{
     { 0, "None", true, blank},
-    { 1, "Confetti", true, confetti},
-    { 2, "Pixel Frequency", pix_freq},
-    { 3, "Groovy Noise", true, groovy_noise},
-    { 4, "Hue Trail", true, hue_trail},
-    { 5, "Talking", true, talking},
-    { 6, "Glitch Effect", true, glitch_effect}
+    { 1, "Pixel Frequency", pix_freq},
+    //{ 1, "Confetti", true, confetti},
+    //{ 2, "Pixel Frequency", pix_freq},
+    //{ 3, "Groovy Noise", true, groovy_noise},
+    //{ 4, "Hue Trail", true, hue_trail},
+    //{ 5, "Talking", true, talking},
+    //{ 6, "Glitch Effect", true, glitch_effect}
 
 
     //{38, "Echo Ripple", true, echo_ripple}
 };
-int NUM_PATTERNS = 7;  // MAKE SURE TO UPDATE THIS WITH THE ACTUAL NUMBER OF PATTERNS (+1 last array pos)
+int NUM_PATTERNS = 2;  // MAKE SURE TO UPDATE THIS WITH THE ACTUAL NUMBER OF PATTERNS (+1 last array pos)
 
 
 /**********************************************************
@@ -272,21 +273,67 @@ void scale_crgb_array(CRGB *arr, uint8_t len, uint8_t factor) {
   }
 }
 
+void reverse_buffer(CRGB buf, uint8_t len){
+
+    CRGB temp[MAX_LEDS];
+    memcpy(temp, buf, len * sizeof(CRGB));
+
+    for (int i = 0; i < len; i++) {
+      memcpy(buf[i],temp[len - 1 - i], sizeof(CRGB));
+    }
+}
+
+void unfold_buffer(CRGB buf, uint8_t len, bool even){
+
+  uint8_t offset = 0;
+
+  // If this is not an even case, increase our array offset by 1 and
+  // make the pixel at len equal to the pixel at len-1
+  if(!even){
+    buf[len] = buf[len-1];
+    offset = 1;
+  }
+
+  // Unfold the array following the set offset.
+  for(int i = 0; i < len; i++){
+    buf[len + i + offset] = buf[len-i-1];
+  }
+}
+
+void process_pattern(uint8_t idx, uint8_t len){
+
+  // Calculate the length to process
+  uint8_t processed_len = (loaded_pattern.subpattern[idx].mirrored) ? len/2 : len;
+
+  // Reverse the buffer to make it normal if it is reversed.
+  if(loaded_pattern.subpattern[idx].reversed) reverse_buffer(&histories[idx].leds, processed_len);
+
+  // Process the pattern.
+  mainPatterns[loaded_pattern.subpattern[idx].idx].pattern_handler(
+      &histories[idx],
+      processed_len,
+      &loaded_pattern.subpattern[idx]);
+  
+  // Re-invert the buffer if we need the output to be reversed.
+  if(params.reversed) reverse_buffer(&histories[idx].leds, processed_len);
+
+  // Unfold the buffer if needed.
+  if(loaded_pattern.subpattern[idx].mirrored) 
+    unfold_buffer(histories[idx].leds, processed_len, (len == processed_len * 2));
+}
+
+
 /// @brief  Runs the strip splitting LED strip mode
 void run_strip_splitting() {
 
   // Defines the length of an LED strip segment
-  Serial.println(loaded_pattern.subpattern_count);
   uint8_t section_length = config.length / loaded_pattern.subpattern_count;
 
   // Repeat for each subpattern
   for (int i = 0; i < loaded_pattern.subpattern_count; i++) {
 
     // Run the pattern handler for pattern i using history i
-    mainPatterns[loaded_pattern.subpattern[i].idx].pattern_handler(
-      &histories[i],
-      section_length,
-      &loaded_pattern.subpattern[i]);
+    process_pattern(i, section_length);
 
     // Copy the processed segment to the output buffer
     memcpy(
@@ -329,12 +376,10 @@ void run_pattern_layering() {
 
   // If there are more than two subpatterns, use the first two
   // for pattern layering.
+  uint8_t section_length = config.length;
   for (uint8_t i = 0; i < 2; i++) {
     // Run the pattern handler for pattern i using history i
-    mainPatterns[loaded_pattern.subpattern[i].idx].pattern_handler(
-      &histories[i],
-      config.length,
-      &loaded_pattern.subpattern[i]);
+    process_pattern(i, section_length);
 
     // Copy the processed segment to the temp buffer
     memcpy(
@@ -406,6 +451,8 @@ void loop() {
     log(MAX_FREQUENCY) / log(2),
     10, 240);
 
+
+
   vbrightness = remap(
     volume,
     MIN_VOLUME,
@@ -413,6 +460,8 @@ void loop() {
     0,
     MAX_BRIGHTNESS);
   
+  // run_direction();
+
   switch (loaded_pattern.mode) {
 
     case STRIP_SPLITTING:
