@@ -12,7 +12,7 @@ typedef struct{
   uint8_t smoothing = 0;
   uint8_t minhue =0;
   uint8_t maxhue =255;
-  uint8_t config = 0;
+  uint8_t config = 0; // diffrent configs
   bool reversed = false;
   bool mirrored = false;
 

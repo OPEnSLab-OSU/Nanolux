@@ -273,17 +273,17 @@ void scale_crgb_array(CRGB *arr, uint8_t len, uint8_t factor) {
   }
 }
 
-void reverse_buffer(CRGB buf, uint8_t len){
+void reverse_buffer(CRGB* buf, uint8_t len){
 
     CRGB temp[MAX_LEDS];
     memcpy(temp, buf, len * sizeof(CRGB));
 
     for (int i = 0; i < len; i++) {
-      memcpy(buf[i],temp[len - 1 - i], sizeof(CRGB));
+      memcpy(&buf[i], &temp[len - 1 - i], sizeof(CRGB));
     }
 }
 
-void unfold_buffer(CRGB buf, uint8_t len, bool even){
+void unfold_buffer(CRGB* buf, uint8_t len, bool even){
 
   uint8_t offset = 0;
 
@@ -306,7 +306,7 @@ void process_pattern(uint8_t idx, uint8_t len){
   uint8_t processed_len = (loaded_pattern.subpattern[idx].mirrored) ? len/2 : len;
 
   // Reverse the buffer to make it normal if it is reversed.
-  if(loaded_pattern.subpattern[idx].reversed) reverse_buffer(&histories[idx].leds, processed_len);
+  if(loaded_pattern.subpattern[idx].reversed) reverse_buffer(histories[idx].leds, processed_len);
 
   // Process the pattern.
   mainPatterns[loaded_pattern.subpattern[idx].idx].pattern_handler(
@@ -315,7 +315,7 @@ void process_pattern(uint8_t idx, uint8_t len){
       &loaded_pattern.subpattern[idx]);
   
   // Re-invert the buffer if we need the output to be reversed.
-  if(params.reversed) reverse_buffer(&histories[idx].leds, processed_len);
+  if(loaded_pattern.subpattern[idx].reversed) reverse_buffer(histories[idx].leds, processed_len);
 
   // Unfold the buffer if needed.
   if(loaded_pattern.subpattern[idx].mirrored) 
