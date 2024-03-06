@@ -16,6 +16,7 @@ import Save_Entry from '../../components/save_entry';
 import SimpleChooser from '../../components/single_chooser';
 import MultiRangeSliderWrapper from '../../components/multi_range_slider';
 import { LabelSpinner } from '../../components/spinner';
+import ConfigDropDown from '../../components/config_drop_down';
 
 const Subpattern = ({subpattern, patterns}) => {
 
@@ -31,7 +32,8 @@ const Subpattern = ({subpattern, patterns}) => {
 		brightness: 255,
 		smoothing: 0,
 		reversed: false,
-		mirrored: false
+		mirrored: false,
+		config: 0
 	});
 
 	// Manage initalization
@@ -94,6 +96,13 @@ const Subpattern = ({subpattern, patterns}) => {
 				update={update}
 			/>
             <br/>
+			<ConfigDropDown
+				patternIdx={data.idx}
+				structureRef={"config"}
+				update={update}
+				initial={data.config}
+			/>
+			<br/>
             <div className={style.settings_control}>
                 <label for="reverse">
 					Reverse
