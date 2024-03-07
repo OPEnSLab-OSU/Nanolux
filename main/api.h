@@ -61,9 +61,14 @@ inline void handle_loaded_subpattern_get_request(AsyncWebServerRequest* request)
   String idx = String(" \"idx\": ") + subpattern.idx;
   String bright = String(", \"brightness\": ") + subpattern.brightness;
   String smooth = String(", \"smoothing\": ") + subpattern.smoothing;
+  String minhue = String(", \"hue_min\": ") + subpattern.minhue;
+  String maxhue = String(", \"hue_max\": ") + subpattern.maxhue;
+  String conf = String(", \"config\": ") + subpattern.config;
+  String reversed = String(", \"reversed\": ") + subpattern.config;
+  String mirrored = String(", \"mirrored\": ") + subpattern.config;
 
   // Build and send the final response
-  const String response = String("{") + idx + bright + smooth + String(" }");
+  const String response = String("{") + idx + bright + smooth + minhue + maxhue + conf + reversed + mirrored + String(" }");
   request->send(HTTP_OK, CONTENT_JSON, response);
 }
 
@@ -121,12 +126,24 @@ inline void handle_subpattern_update_put_request(AsyncWebServerRequest* request,
     const uint8_t bright = payload["brightness"];
     const uint8_t smooth = payload["smoothing"];
 
+    const uint8_t hue_min = payload["hue_min"];
+    const uint8_t hue_max = payload["hue_max"];
+    const uint8_t conf = payload["config"];
+    const uint8_t reversed = payload["reversed"];
+    const uint8_t mirrored = payload["mirrored"];
+
     if(idx != loaded_pattern.subpattern[subpattern_num].idx)
       pattern_changed = true;
 
     loaded_pattern.subpattern[subpattern_num].idx = idx;
     loaded_pattern.subpattern[subpattern_num].brightness = bright;
     loaded_pattern.subpattern[subpattern_num].smoothing = smooth;
+
+    loaded_pattern.subpattern[subpattern_num].minhue = hue_min;
+    loaded_pattern.subpattern[subpattern_num].maxhue = hue_max;
+    loaded_pattern.subpattern[subpattern_num].config = conf;
+    loaded_pattern.subpattern[subpattern_num].reversed = reversed;
+    loaded_pattern.subpattern[subpattern_num].mirrored = mirrored;
 
     request->send(
       HTTP_OK,
