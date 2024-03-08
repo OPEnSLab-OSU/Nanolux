@@ -38,9 +38,9 @@ bool button_pressed = false;
 bool button_held = false;
 uint8_t gHue = 0;  // Rotating base color
 double peak = 0.;  // Peak frequency
-uint8_t fHue = 0;  // Hue value based on peak frequency
+// uint8_t fHue = 0;  // Hue value based on peak frequency
 double volume = 0.;
-uint8_t vbrightness = 0;
+// uint8_t vbrightness = 0;
 double maxDelt = 0.;  // Frequency with the biggest change in amp.
 
 int beats = 0;
@@ -126,8 +126,8 @@ Pattern_History histories[NUM_SUBPATTERNS];
 //
 Pattern mainPatterns[]{
     { 0, "None", true, blank},
-    { 1, "Pixel Frequency", pix_freq},
-    //{ 1, "Confetti", true, confetti},
+    { 1, "Pixel Frequency", true, pix_freq},
+    { 2, "Confetti", true, confetti},
     //{ 2, "Pixel Frequency", pix_freq},
     //{ 3, "Groovy Noise", true, groovy_noise},
     //{ 4, "Hue Trail", true, hue_trail},
@@ -273,6 +273,9 @@ void scale_crgb_array(CRGB *arr, uint8_t len, uint8_t factor) {
   }
 }
 
+/// @brief Reverses the LED buffer supplied given a length.
+/// @param buf The LED buffer to reverse.
+/// @param len The length of the buffer to reverse.
 void reverse_buffer(CRGB* buf, uint8_t len){
 
     CRGB temp[MAX_LEDS];
@@ -283,6 +286,11 @@ void reverse_buffer(CRGB* buf, uint8_t len){
     }
 }
 
+/// @brief Unfolds the buffer by mirroring it across the right side.
+/// @param buf The buffer to unfold.
+/// @param len The length to unfold.
+/// @param even If the LED strip length is even/odd. When odd, duplicates
+/// the middle pixel a second time to fill space.
 void unfold_buffer(CRGB* buf, uint8_t len, bool even){
 
   uint8_t offset = 0;
@@ -301,7 +309,8 @@ void unfold_buffer(CRGB* buf, uint8_t len, bool even){
 }
 
 void process_pattern(uint8_t idx, uint8_t len){
-
+  getFhue(loaded_pattern.subpattern[idx].minhue, loaded_pattern.subpattern[idx].maxhue);
+  getVbrightness();
   // Calculate the length to process
   uint8_t processed_len = (loaded_pattern.subpattern[idx].mirrored) ? len/2 : len;
 
@@ -445,22 +454,8 @@ void loop() {
 
   audio_analysis();  // Run the audio analysis pipeline
 
-  fHue = remap(
-    log(peak) / log(2),
-    log(MIN_FREQUENCY) / log(2),
-    log(MAX_FREQUENCY) / log(2),
-    10, 240);
-
-
-
-  vbrightness = remap(
-    volume,
-    MIN_VOLUME,
-    MAX_VOLUME,
-    0,
-    MAX_BRIGHTNESS);
   
-  // run_direction();
+
 
   switch (loaded_pattern.mode) {
 

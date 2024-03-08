@@ -21,9 +21,9 @@ extern int NUM_PATTERNS;
 extern SimplePatternList gPatterns_layer;
 extern uint8_t gHue;                      // rotating base color
 extern double peak;                       //  peak frequency
-extern uint8_t fHue;                      // hue value based on peak frequency
+uint8_t fHue;                      // hue value based on peak frequency
 extern double volume;                     //  NOOOOTEEEE:  static?? 
-extern uint8_t vbrightness;
+uint8_t vbrightness;
 extern double maxDelt;                    // Frequency with the biggest change in amp.
 extern bool vol_show; // A boolean to change if not wanting to see the color changing pixel in pix_freq()
 extern int advanced_size;
@@ -33,6 +33,26 @@ bool gReverseDirection = false;
 
 extern Config_Data config; // Currently loaded config
 extern Subpattern_Data params;
+
+// get frequency hue
+void getFhue(uint8_t min_hue, uint8_t max_hue){
+    fHue = remap(
+    log(peak) / log(2),
+    log(MIN_FREQUENCY) / log(2),
+    log(MAX_FREQUENCY) / log(2),
+    min_hue, max_hue);
+}
+
+/// get vol brightness
+void getVbrightness(){
+    vbrightness = remap(
+    volume,
+    MIN_VOLUME,
+    MAX_VOLUME,
+    0,
+    MAX_BRIGHTNESS);
+}
+
 
 void nextPattern() {
   // add one to the current pattern number, and wrap around at the end
@@ -57,7 +77,7 @@ void setColorHSV(CRGB* leds, byte h, byte s, byte v, int len) {
 
 
 
-/*
+
 // uses freq and brightness
 void confetti(Pattern_History * hist, int len, Subpattern_Data* params){
   // colored speckles based on frequency that blink in and fade smoothly
@@ -70,43 +90,35 @@ void confetti(Pattern_History * hist, int len, Subpattern_Data* params){
       hist->leds[pos] += CHSV( fHue + random8(10), 255, vbrightness);
 }
 }
-*/
+
 
 // Based on a sufficient volume, a pixel will float to some position on the light strip and fall down (vol_show adds another threshold)
 void pix_freq(Pattern_History * hist, int len, Subpattern_Data* params) {
     //switch(params->config){
       //case 0:
       //default:
-          // new fhue
-    fHue = remap(
-      log(peak) / log(2),
-      log(MIN_FREQUENCY) / log(2),
-      log(MAX_FREQUENCY) / log(2),
-      params->minhue, params->maxhue );
+    fadeToBlackBy(hist->leds, len, 50);
+    if (volume > 200) {
+      hist->pix_pos = map(peak, MIN_FREQUENCY, MAX_FREQUENCY, 0, len-1);
+      hist->tempHue = fHue;
+    }
+    else {
+      hist->pix_pos--;
+      hist->tempHue--;
+      hist->vol_pos--;
+    }
+    if (vol_show) {
+      if (volume > 100) {
+        hist->vol_pos = map(volume, MIN_VOLUME, MAX_VOLUME, 0, len-1);
+        hist->tempHue = fHue;
+      } else {
+        hist->vol_pos--;
+      }
 
-        fadeToBlackBy(hist->leds, len, 50);
-        if (volume > 200) {
-          hist->pix_pos = map(peak, MIN_FREQUENCY, MAX_FREQUENCY, 0, len-1);
-          hist->tempHue = fHue;
-        }
-        else {
-          hist->pix_pos--;
-          hist->tempHue--;
-          hist->vol_pos--;
-        }
-        if (vol_show) {
-          if (volume > 100) {
-            hist->vol_pos = map(volume, MIN_VOLUME, MAX_VOLUME, 0, len-1);
-            hist->tempHue = fHue;
-          } else {
-            hist->vol_pos--;
-          }
-
-          hist->leds[hist->vol_pos] = hist->vol_pos < len ? CRGB(255, 255, 255):CRGB(0, 0, 0);
-        }
-        hist->leds[hist->pix_pos] = hist->pix_pos < len ? CHSV(hist->tempHue, 255, 255):CRGB(0, 0, 0);
+      hist->leds[hist->vol_pos] = hist->vol_pos < len ? CRGB(255, 255, 255):CRGB(0, 0, 0);
+    }
+    hist->leds[hist->pix_pos] = hist->pix_pos < len ? CHSV(hist->tempHue, 255, 255):CRGB(0, 0, 0);
 }
-
 
 /*
 void groovy_noise(Pattern_History* hist, int len, Subpattern_Data* params) {

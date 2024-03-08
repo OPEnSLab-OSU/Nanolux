@@ -44,9 +44,12 @@ void setColorHSV(CRGB* leds, byte h, byte s, byte v, int len);
 
 void blank(Pattern_History * hist, int len, Subpattern_Data* params);
 
-/*
+void getFhue(uint8_t min_hue, uint8_t max_hue);
+
+void getVbrightness();
+
 void confetti(Pattern_History * hist, int len, Subpattern_Data* params);
-*/
+
 void pix_freq(Pattern_History * hist, int len, Subpattern_Data* params);
 /*
 void groovy_noise(Pattern_History* hist, int len, Subpattern_Data* params);
