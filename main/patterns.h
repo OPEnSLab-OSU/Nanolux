@@ -117,6 +117,10 @@ void glitch_talk(Pattern_History * hist, int len);
 
 void glitch_sections(Pattern_History * hist, int len);
 
-//void echo_ripple(Pattern_History hist, int len);
+void tug_of_war_frequency(Pattern_History * hist, int len);
+
+void tug_of_war_volume(Pattern_History * hist, int len);
+
+void random_raindrop(Pattern_History * hist, int len);
 
 #endif

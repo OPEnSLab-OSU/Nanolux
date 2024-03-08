@@ -165,10 +165,12 @@ Pattern mainPatterns[]{
   { 34, "Basic Bands", true, basic_bands },
   { 35, "Advanced Bands", true, advanced_bands },
   { 36, "Formant Band", true, formant_band },
-  { 37, "Mirrored Pixel Frequency", true, mirror_pix_freq }
-  //{38, "Echo Ripple", true, echo_ripple}
+  { 37, "Mirrored Pixel Frequency", true, mirror_pix_freq },
+  { 38, "Tug O' War Frequency", true, tug_of_war_frequency },
+  { 39, "Tug O' War Volume", true, tug_of_war_volume },
+  { 40, "Random Raindrop", true, random_raindrop }
 };
-int NUM_PATTERNS = 38;  // MAKE SURE TO UPDATE THIS WITH THE ACTUAL NUMBER OF PATTERNS (+1 last array pos)
+int NUM_PATTERNS = 41;  // MAKE SURE TO UPDATE THIS WITH THE ACTUAL NUMBER OF PATTERNS (+1 last array pos)
 
 
 /**********************************************************

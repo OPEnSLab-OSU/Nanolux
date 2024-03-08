@@ -1160,110 +1160,46 @@ void volume_level_middle_bar_freq_hue_with_fade_and_blur(Pattern_History * hist,
     fadeToBlackBy( hist->leds, len, 20);
 }
 
-/*
-void echo_ripple(){
-    //prevents dead pixels from staying
-    for (int i = 0; i < NUM_LEDS; i++) {
-      hist->leds[i] = CRGB::Black;  // Set to black (off)
+void tug_of_war_frequency(Pattern_History * hist, int len) {
+    double *formants = density_formant();
+    double f0 = formants[0];
+    delete[] formants;
+
+    int splitPosition = remap(f0, MIN_FREQUENCY, MAX_FREQUENCY, 0, len);
+
+    // red is on the left, blue is on the right
+    for (int i = 0; i < len; i++) {
+        if (i < splitPosition) {
+            hist->leds[i] = CRGB::Blue; 
+        } else {
+            hist->leds[i] = CRGB::Red;
+        }
     }
-    FastLED.show();
-    
-    //used to get the frequency info
-    double* formants = density_formant();
-    double f0 = remap(formants[0], MIN_FREQUENCY, MAX_FREQUENCY, 0, 255);
-    double f1 = remap(formants[1], MIN_FREQUENCY, MAX_FREQUENCY, 0, 255);
-    double f2 = remap(formants[2], MIN_FREQUENCY, MAX_FREQUENCY, 0, 255);
-
-    // //color based off the formant hues
-    CRGB ripple_color = CRGB(f0, f1, f2);
-
-    int randomPixel1 = random(NUM_LEDS);
-    int randomPixel2 = random(NUM_LEDS);
-    int randomPixel3 = random(NUM_LEDS);
-
-    //255/5 is 51, where the goal is to fade in slowly 51 times
-    double brightness_inc1 = f0/51;
-    double brightness_inc2 = f1/51;
-    double brightness_inc3 = f2/51;
-    double brightness1 = 0, brightness2 = 0, brightness3 = 0;
-
-    //increments the brightness for each formant color
-    for (; brightness1 <= f1; brightness1 += brightness_inc1, brightness2 += brightness_inc2, brightness3 += brightness_inc3) {
-      hist->leds[randomPixel1] = CRGB(brightness1, 0, brightness3); // Set the color 
-      hist->leds[randomPixel2] = CRGB(brightness1, brightness2, 0); 
-      hist->leds[randomPixel3] = CRGB(0, brightness2, brightness3); 
-
-      hist->leds[randomPixel1 + 1] = CRGB(brightness1, 0, brightness3);
-      hist->leds[randomPixel2 + 1] = CRGB(brightness1, brightness2, 0);
-      hist->leds[randomPixel3 + 1] = CRGB(0, brightness2, brightness3);
-
-      hist->leds[randomPixel1 - 1] = CRGB(brightness1, 0, brightness3);
-      hist->leds[randomPixel2 - 1] = CRGB(brightness1, brightness2, 0);
-      hist->leds[randomPixel3 - 1] = CRGB(0, brightness2, brightness3);
-
-      FastLED.show();
-      delay(10); // Adjust the delay for the fade-in speed
-    }
-
-    // Wait for a few seconds
-    delay(400); // Adjust the delay as needed
-
-    //fades out formant colors
-    for (; brightness1 >= 0; brightness1 -= brightness_inc1, brightness2 -= brightness_inc2, brightness3 -= brightness_inc3) {
-      hist->leds[randomPixel1] = CRGB(brightness1, 0, brightness3); // Set the color 
-      hist->leds[randomPixel2] = CRGB(brightness1, brightness2, 0); 
-      hist->leds[randomPixel3] = CRGB(0, brightness2, brightness3); 
-
-      hist->leds[randomPixel1 + 1] = CRGB(brightness1, 0, brightness3);
-      hist->leds[randomPixel2 + 1] = CRGB(brightness1, brightness2, 0);
-      hist->leds[randomPixel3 + 1] = CRGB(0, brightness2, brightness3);
-
-      hist->leds[randomPixel1 - 1] = CRGB(brightness1, 0, brightness3);
-      hist->leds[randomPixel2 - 1] = CRGB(brightness1, brightness2, 0);
-      hist->leds[randomPixel3 - 1] = CRGB(0, brightness2, brightness3);
-
-      FastLED.show();
-      delay(20); // Adjust the delay for the fade-out speed
-    }
-  
-    hist->leds[randomPixel1] = CRGB::Black;
-    hist->leds[randomPixel2] = CRGB::Black;
-    hist->leds[randomPixel3] = CRGB::Black;
-
-    int distance = static_cast<int>(f0)+1;
-    brightness1 = 0, brightness2 = 0, brightness3 = 0;
-
-    for (int cur_iter = 1; cur_iter < distance; cur_iter++, brightness1 += brightness_inc1, brightness2 += brightness_inc2, brightness3 += brightness_inc3) {
-      // Fade out the previous pixels
-      for (int i = 0; i < NUM_LEDS; i++) {
-        hist->leds[i].fadeToBlackBy(15); // Adjust the fade value as needed
-      }
-
-      // changes color after half way point of distance and allows for color blending
-      int fade_out_brightness = (cur_iter >= distance/2) ? brightness_inc1 * (distance - cur_iter) : brightness_inc1;
-
-      hist->leds[randomPixel1 + cur_iter] = CRGB(fade_out_brightness, 0, brightness3);
-      hist->leds[randomPixel2 + cur_iter] = CRGB(fade_out_brightness, brightness2, 0);
-      hist->leds[randomPixel3 + cur_iter] = CRGB(0, brightness2, brightness3);
-
-      hist->leds[randomPixel1 - cur_iter] = CRGB(fade_out_brightness, 0, brightness3);
-      hist->leds[randomPixel2 - cur_iter] = CRGB(fade_out_brightness, brightness2, 0);
-      hist->leds[randomPixel3 - cur_iter] = CRGB(0, brightness2, brightness3);
-
-      delay(30);
-      FastLED.show();
-    }
-
-    // fade out all pixels before patten ends
-    for (int fade_out_value = 255; fade_out_value >= 0; fade_out_value--) {
-      for (int i = 0; i < NUM_LEDS; i++) {
-        hist->leds[i].fadeToBlackBy(3);  // Adjust fade value as needed
-      }
-      FastLED.show();
-      delay(10);  // Adjusted delay for the fade-out speed
-    }
-
-  //release formants alloc memory
-  delete[] formants;
 }
-*/
+
+void tug_of_war_volume(Pattern_History * hist, int len) {
+    int splitPosition = remap(volume, MIN_VOLUME, MAX_VOLUME, 0, len);
+    //use this function with smoothing for better results
+    // red is on the left, blue is on the right
+    for (int i = 0; i < len; i++) {
+        if (i < splitPosition) {
+            hist->leds[i] = CRGB::Green; 
+        } else {
+            hist->leds[i] = CRGB::Blue;
+        }
+    }
+}
+
+void random_raindrop(Pattern_History * hist, int len){
+    int startIdx = random(len);
+
+    hist->leds[startIdx] = CHSV(fHue, 255, vbrightness);
+    
+    for(int i = len-1; i > 0; i--) {
+      if (i != startIdx) {
+        hist->leds[i] = hist->leds[i-1];
+      }
+    }
+
+    hist->leds[0] = CRGB::Black;
+}
