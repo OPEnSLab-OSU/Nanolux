@@ -11,6 +11,13 @@
 #include "audio_analysis.h"
 #include "storage.h"
 
+/**********************************************************
+ *
+ * We need to deal with loading from NVS before loading the
+ * web server.
+ *
+ **********************************************************/
+
 #define ENABLE_WEB_SERVER
 #ifdef ENABLE_WEB_SERVER
 #include "WebServer.h"
@@ -170,7 +177,6 @@ Pattern mainPatterns[]{
 };
 int NUM_PATTERNS = 38;  // MAKE SURE TO UPDATE THIS WITH THE ACTUAL NUMBER OF PATTERNS (+1 last array pos)
 
-
 /**********************************************************
  *
  * We want the API to be included after the globals.
@@ -218,11 +224,14 @@ void setup() {
   FastLED.addLeds<LED_TYPE, DATA_PIN, CLK_PIN, COLOR_ORDER>(smoothed_output, MAX_LEDS).setCorrection(TypicalLEDStrip);
 
   load_from_nvs();
-  verify_saves();
-  load_slot(0);
+
+  if(config.init){
+    verify_saves();
+    load_slot(0);
+  }
 
 #ifdef ENABLE_WEB_SERVER
-  initialize_web_server(apiGetHooks, API_GET_HOOK_COUNT, apiPutHooks, API_PUT_HOOK_COUNT);
+  initialize_web_server(apiGetHooks, API_GET_HOOK_COUNT, apiPutHooks, API_PUT_HOOK_COUNT, NULL, "test");
 #endif
 }
 

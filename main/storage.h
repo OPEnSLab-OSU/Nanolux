@@ -28,7 +28,10 @@ typedef struct{
   uint8_t length = 60;
   uint8_t loop_ms = 40; // approx. 10 hz
   uint8_t debug_mode = 0; // debug and simulator off
-  bool init = true;
+
+  // Device settings
+  bool init = false;
+  uint8_t id = 0;
 
 } Config_Data;
 
