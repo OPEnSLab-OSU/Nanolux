@@ -228,11 +228,14 @@ void setup() {
   if(config.init){
     verify_saves();
     load_slot(0);
+    #ifdef ENABLE_WEB_SERVER
+      initialize_web_server(apiGetHooks, API_GET_HOOK_COUNT, apiPutHooks, API_PUT_HOOK_COUNT, config.device_name, config.device_password);
+    #endif
+  }else{
+    #ifdef ENABLE_WEB_SERVER
+      initialize_web_server(apiGetHooks, API_GET_HOOK_COUNT, apiPutHooks, API_PUT_HOOK_COUNT, NULL, "test");
+    #endif
   }
-
-#ifdef ENABLE_WEB_SERVER
-  initialize_web_server(apiGetHooks, API_GET_HOOK_COUNT, apiPutHooks, API_PUT_HOOK_COUNT, NULL, "test");
-#endif
 }
 
 void calculate_layering(CRGB *a, CRGB *b, CRGB *out, int length, uint8_t blur) {
@@ -411,6 +414,8 @@ void print_buffer(CRGB *buf, uint8_t len) {
   Serial.print("\n");
 }
 
+char serial_buf[32];
+
 void loop() {
 
   begin_loop_timer(config.loop_ms);  // Begin timing this loop
@@ -489,6 +494,15 @@ void loop() {
   } while (timer_overrun() == 0);
 
   update_web_server();
+  if(Serial.available() > 0){
+      for(uint8_t i = 0; Serial.available() > 0; i++){
+        serial_buf[i] = Serial.read();
+        Serial.print(serial_buf[i]);
+      }
+      memcpy(config.device_name, serial_buf, 32*sizeof(char));
+      save_config_to_nvs();
+    }
+    
 }
 
 // Use all the audio analysis to update every global audio analysis value

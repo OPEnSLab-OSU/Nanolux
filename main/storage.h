@@ -31,7 +31,8 @@ typedef struct{
 
   // Device settings
   bool init = false;
-  uint8_t id = 0;
+  char device_name[32];
+  char device_password[32];
 
 } Config_Data;
 

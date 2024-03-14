@@ -647,9 +647,12 @@ inline void setup_networking(const char* user_ssid, const char* user_password)
 
     // If the main program has supplied a device name and password, use it.
     // Else, generate a random name and use a blank password.
-    WiFi.softAP(generate_random_name());
-
-    
+    if(user_ssid == NULL){
+      WiFi.softAP(generate_random_name());
+    }else{
+      WiFi.softAP(user_ssid, user_password);
+    }
+     
     delay(1000);
     const IPAddress ap_ip = WiFi.softAPIP();
 

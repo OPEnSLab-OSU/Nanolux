@@ -7,6 +7,8 @@
 
 using namespace ARDUINOJSON_NAMESPACE;
 
+#include <string>
+
 
 /*
  * HTTP_OK, etc.
@@ -294,6 +296,29 @@ inline void handle_system_settings_get_request(AsyncWebServerRequest* request) {
   // Build and send the final response
   const String response = String("{") + length + loop + debug + String(" }");
   request->send(HTTP_OK, CONTENT_JSON, response);
+}
+
+inline void handle_user_settings_put_request(AsyncWebServerRequest* request, JsonVariant& json) {
+  if (request->method() == HTTP_PUT) {
+    const JsonObject& payload = json.as<JsonObject>();
+
+    int status = HTTP_OK;
+
+    strcpy(config.device_name, payload["ap_name"].as<String>().c_str());
+    strcpy(config.device_password, payload["ap_pass"].as<String>().c_str());
+
+    save_config_to_nvs();
+
+    request->send(
+      HTTP_OK,
+      CONTENT_TEXT,
+      build_response(
+        true,
+        "success",
+        nullptr));
+  } else {
+    request->send(HTTP_METHOD_NOT_ALLOWED);
+  }
 }
 
 
