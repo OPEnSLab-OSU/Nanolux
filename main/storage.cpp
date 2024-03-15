@@ -22,6 +22,9 @@ void clear_nvs() {
   storage.begin(PATTERN_NAMESPACE, false);
   storage.clear();
   storage.end();
+  storage.begin(CONFIG_NAMESPACE, false);
+  storage.clear();
+  storage.end();
 }
 
 void bound_user_data() {
@@ -96,6 +99,9 @@ void clear_all() {
     0,
     sizeof(Pattern_Data) * NUM_SAVES);
   save_to_nvs();
+  config = Config_Data();
+  memset(config.device_name, '\0', sizeof(char) * 32);
+  save_config_to_nvs();
 }
 
 /// @brief Saves configuration data to the NVS
