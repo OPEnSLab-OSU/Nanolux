@@ -42,25 +42,31 @@ void clearLEDSegment(Pattern_History * hist, int len);
 
 void setColorHSV(CRGB* leds, byte h, byte s, byte v, int len);
 
-void blank(Pattern_History * hist, int len, Subpattern_Data* params);
-
 void getFhue(uint8_t min_hue, uint8_t max_hue);
 
 void getVbrightness();
 
+void blank(Pattern_History * hist, int len, Subpattern_Data* params);
+
 void confetti(Pattern_History * hist, int len, Subpattern_Data* params);
 
 void pix_freq(Pattern_History * hist, int len, Subpattern_Data* params);
-/*
-void groovy_noise(Pattern_History* hist, int len, Subpattern_Data* params);
+
+void eq(Pattern_History * hist, int len, Subpattern_Data* params);
+
+void tug_of_war(Pattern_History * hist, int len, Subpattern_Data* params);
+
+void random_raindrop(Pattern_History * hist, int len, Subpattern_Data* params);
+
 
 void hue_trail(Pattern_History* hist, int len, Subpattern_Data* params);
-
+/*
+void groovy_noise(Pattern_History* hist, int len, Subpattern_Data* params);
 void talking(Pattern_History *hist, int len, Subpattern_Data *params);
 
 void glitch_effect(Pattern_History * hist, int len, Subpattern_Data * params);
 */
-void processDirection(Pattern_History* hist, Subpattern_Data * params, int len);
+// void processDirection(Pattern_History* hist, Subpattern_Data * params, int len);
 
 
 //void echo_ripple(Pattern_History hist, int len);

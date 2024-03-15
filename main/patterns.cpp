@@ -64,7 +64,7 @@ void clearLEDSegment(Pattern_History * hist, int len){
     hist->leds[i] = CRGB(0,0,0);
 }
 
-void blank(Pattern_History * hist, int len, Subpattern_Data * params){
+void blank(Pattern_History * hist, int len, Subpattern_Data* params){
   clearLEDSegment(hist, len);
 }
 
@@ -120,51 +120,46 @@ void pix_freq(Pattern_History * hist, int len, Subpattern_Data* params) {
     hist->leds[hist->pix_pos] = hist->pix_pos < len ? CHSV(hist->tempHue, 255, 255):CRGB(0, 0, 0);
 }
 
-/*
-void groovy_noise(Pattern_History* hist, int len, Subpattern_Data* params) {
-    // Assume global access to necessary variables like volume, or pass them as parameters
-    switch (params->config) {
-        case 0: // groovy_noise (also default case)
-        default:
-            {
-                uint8_t octaves = 1;
-                uint16_t x = 0;
-                int scale = 100;
-                uint8_t hue_octaves = 1;
-                uint16_t hue_x = 1;
-                int hue_scale = 50;
-                uint16_t ntime = millis() / 3;
-                uint8_t hue_shift =  5;
+void tug_of_war(Pattern_History * hist, int len, Subpattern_Data* params) {
+    int splitPosition = remap(volume, MIN_VOLUME, MAX_VOLUME, 0, len);
+    //use this function with smoothing for better results
+    // red is on the left, blue is on the right
+    for (int i = 0; i < len; i++) {
+        if (i < splitPosition) {
+            hist->leds[i] = CRGB::Green; 
+        } else {
+            hist->leds[i] = CRGB::Blue;
+        }
+    }
+}
+
+void eq(Pattern_History * hist, int len, Subpattern_Data* params) {
   
-                fill_noise16(hist->leds, len, octaves, x, scale, hue_octaves, hue_x, hue_scale, ntime, hue_shift);
-                blur1d(hist->leds, len, 80);
-            }
-            break;
+  for (int i = 0; i < len; i++) {
+    int brit = map(vReal[i], MIN_FREQUENCY, MAX_FREQUENCY, 0, 255); // The brightness is based on HOW MUCH of the frequency exists
+    int hue = map(i, 0, len, 0, 255); // The fue is based on position on the light strip, ergo, what frequency it is at
+    if (vReal[i] > 200) { // An extra gate because the frequency array is really messy without it
+      hist->leds[i] = CHSV(hue, 255, brit);
+    }
+  }
+}
 
-        case 1: // groovy_noise_hue_shift_change
-            {
-                int shiftFromVolume = remap(volume, MIN_VOLUME, MAX_VOLUME, 5, 220);
-                int xFromVolume = remap(volume, MIN_VOLUME, MAX_VOLUME, 1, 2);
+void random_raindrop(Pattern_History * hist, int len, Subpattern_Data* params){
+    int startIdx = random(len);
 
-                uint8_t octaves = 1;
-                uint16_t x = 0;
-                int scale = 100;
-                uint8_t hue_octaves = 1;
-                uint16_t hue_x = xFromVolume;
-                int hue_scale = 20;
-                uint16_t ntime = millis() / 3;
-                uint8_t hue_shift =  shiftFromVolume;
-
-                fill_noise16(hist->leds, len, octaves, x, scale, hue_octaves, hue_x, hue_scale, ntime, hue_shift);
-                blur1d(hist->leds, len, 80);
-            }
-            break;
-
-        
+    hist->leds[startIdx] = CHSV(fHue, 255, vbrightness);
+    
+    for(int i = len-1; i > 0; i--) {
+      if (i != startIdx) {
+        hist->leds[i] = hist->leds[i-1];
+      }
     }
 
-    // Common post-processing, if necessary, can be added here
+    hist->leds[0] = CRGB::Black;
 }
+
+
+
 
 void hue_trail(Pattern_History* hist, int len, Subpattern_Data* params) {
     switch (params->config) {
@@ -213,6 +208,52 @@ void hue_trail(Pattern_History* hist, int len, Subpattern_Data* params) {
     }
 
     // reverse (?)
+}
+
+/*
+void groovy_noise(Pattern_History* hist, int len, Subpattern_Data* params) {
+    // Assume global access to necessary variables like volume, or pass them as parameters
+    switch (params->config) {
+        case 0: // groovy_noise (also default case)
+        default:
+            {
+                uint8_t octaves = 1;
+                uint16_t x = 0;
+                int scale = 100;
+                uint8_t hue_octaves = 1;
+                uint16_t hue_x = 1;
+                int hue_scale = 50;
+                uint16_t ntime = millis() / 3;
+                uint8_t hue_shift =  5;
+  
+                fill_noise16(hist->leds, len, octaves, x, scale, hue_octaves, hue_x, hue_scale, ntime, hue_shift);
+                blur1d(hist->leds, len, 80);
+            }
+            break;
+
+        case 1: // groovy_noise_hue_shift_change
+            {
+                int shiftFromVolume = remap(volume, MIN_VOLUME, MAX_VOLUME, 5, 220);
+                int xFromVolume = remap(volume, MIN_VOLUME, MAX_VOLUME, 1, 2);
+
+                uint8_t octaves = 1;
+                uint16_t x = 0;
+                int scale = 100;
+                uint8_t hue_octaves = 1;
+                uint16_t hue_x = xFromVolume;
+                int hue_scale = 20;
+                uint16_t ntime = millis() / 3;
+                uint8_t hue_shift =  shiftFromVolume;
+
+                fill_noise16(hist->leds, len, octaves, x, scale, hue_octaves, hue_x, hue_scale, ntime, hue_shift);
+                blur1d(hist->leds, len, 80);
+            }
+            break;
+
+        
+    }
+
+    // Common post-processing, if necessary, can be added here
 }
 
 void talking(Pattern_History *hist, int len, Subpattern_Data *params) {

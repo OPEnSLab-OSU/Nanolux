@@ -128,16 +128,19 @@ Pattern mainPatterns[]{
     { 0, "None", true, blank},
     { 1, "Pixel Frequency", true, pix_freq},
     { 2, "Confetti", true, confetti},
+    { 3, "Hue Trail", true, hue_trail},
+    { 4, "Equalizer", true, eq},
+    { 5, "Tug of War", true, tug_of_war},
+    { 6, "Rain Drop", true, random_raindrop}
     //{ 2, "Pixel Frequency", pix_freq},
     //{ 3, "Groovy Noise", true, groovy_noise},
-    //{ 4, "Hue Trail", true, hue_trail},
     //{ 5, "Talking", true, talking},
     //{ 6, "Glitch Effect", true, glitch_effect}
 
 
     //{38, "Echo Ripple", true, echo_ripple}
 };
-int NUM_PATTERNS = 2;  // MAKE SURE TO UPDATE THIS WITH THE ACTUAL NUMBER OF PATTERNS (+1 last array pos)
+int NUM_PATTERNS = 7;  // MAKE SURE TO UPDATE THIS WITH THE ACTUAL NUMBER OF PATTERNS (+1 last array pos)
 
 
 /**********************************************************
