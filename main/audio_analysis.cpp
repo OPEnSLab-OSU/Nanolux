@@ -269,7 +269,7 @@ double* band_split_bounce(int len) {
 }
 
 // Checks if the audio is noisi or periodic
-int nvp() {
+bool nvp() {
   int noise = 0;
   myTime = millis(); // Get the time every millis
 
@@ -281,14 +281,7 @@ int nvp() {
   }
 
   // If the noise is sufficient or not
-  if (abs(checkVol-volume) >= 100) {  // Ideally, the inequality should be switched, but it turns out to work when >= over <= so we'll go with it
-    noise = 1;
-  } else {
-    noise = 0;
-  }
-
-  // Output the result as an int
-  return noise;
+  return abs(checkVol-volume) >= 100;
 }
 
 // Identifies the drum being played amongst KICK, SNARE, & CYMBAL
@@ -322,16 +315,16 @@ int* drum_identify() {
     int snare = 0;
     int cymbal = 0;
 
-      if (vol1 >= vol5 && vol1 >= vol3) { // Only lights when kick
-        kick = 1;
-      }
-      if (((vol5 > vol1 && vol5 > vol3) || (vol1 > vol5 && vol1 > vol3)) && kick != 1) { // Only lights when snare
-        snare = 1;
-      }
-      if (vol5 > vol1 && vol5 > vol3) { // Only lights when cymbal
-        cymbal = 1;
-        snare = 0;
-      }
+    if (vol1 >= vol5 && vol1 >= vol3) { // Only lights when kick
+      kick = 1;
+    }
+    if (((vol5 > vol1 && vol5 > vol3) || (vol1 > vol5 && vol1 > vol3)) && kick != 1) { // Only lights when snare
+      snare = 1;
+    }
+    if (vol5 > vol1 && vol5 > vol3) { // Only lights when cymbal
+      cymbal = 1;
+      snare = 0;
+    }
 
     // Create, store, and output the result
     int *drumsArr = new int[3];
@@ -344,7 +337,7 @@ int* drum_identify() {
 
 // An update method for updating the global noise variable
 void update_noise() {
-  noise = nvp() == 1 ? true:false; // Ternary operator that assigns true if nvp returns 1, else false
+  noise = nvp(); // Ternary operator that assigns true if nvp returns 1, else false
 }
 
 // An update method that updates the global drums array also an example of how to call and use the audio functions if not using the globals
@@ -358,32 +351,16 @@ void update_drums() {
 
 // An update method that updates the global formants array also an example of how to call and use the audio functions if not using the globals
 void update_formants() {
-  double* temp = density_formant();
-  formants[0] = temp[0];
-  formants[1] = temp[1];
-  formants[2] = temp[2];
-  delete[] temp;    
+  formants[0] = density_formant();   
 }
 
 // An update method that updates the global five band split array also an example of how to call and use the audio functions if not using the globals
 void update_five_band_split(int len) {
-  double *fiveSplits = band_split_bounce(len);
-  fbs[0] = fiveSplits[0];
-  fbs[1] = fiveSplits[1];
-  fbs[2] = fiveSplits[2];
-  fbs[3] = fiveSplits[3];
-  fbs[4] = fiveSplits[4];
-  delete [] fiveSplits;
+  fbs = band_split_bounce(len);
 }
 
 // An update method that updates the global five sample split array also an example of how to call and use the audio functions if not using the globals
 void update_five_samples_split() {
-  double *fiveSamples = band_sample_bounce();
-  fss[0] = fiveSamples[0];
-  fss[1] = fiveSamples[1];
-  fss[2] = fiveSamples[2];
-  fss[3] = fiveSamples[3];
-  fss[4] = fiveSamples[4];
-  delete [] fiveSamples;
+  fss = band_sample_bounce();
 } 
 

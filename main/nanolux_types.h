@@ -72,4 +72,6 @@ typedef void (*SimplePatternList[])();
 // The time the button must be pressed to reset the ESP32 is 10 seconds.
 #define RESET_TIME 10000
 
+#define VOL_SHOW true
+
 #endif

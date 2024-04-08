@@ -8,7 +8,6 @@
 #include "audio_analysis.h"
 #include "storage.h"
 
-extern unsigned int sampling_period_us;
 extern unsigned long microseconds;
 extern double vReal[SAMPLES];      // Sampling buffers
 extern double vImag[SAMPLES];
@@ -19,13 +18,11 @@ extern bool button_pressed;
 extern SimplePatternList gPatterns;
 extern int NUM_PATTERNS;
 extern SimplePatternList gPatterns_layer;
-extern uint8_t gHue;                      // rotating base color
 extern double peak;                       //  peak frequency
 extern uint8_t fHue;                      // hue value based on peak frequency
 extern double volume;                     //  NOOOOTEEEE:  static?? 
 extern uint8_t vbrightness;
 extern double maxDelt;                    // Frequency with the biggest change in amp.
-extern bool vol_show; // A boolean to change if not wanting to see the color changing pixel in pix_freq()
 extern int advanced_size;
 CRGBPalette16 gPal = GMT_hot_gp; //store all palettes in array
 CRGBPalette16 gPal2 = nrwc_gp; //store all palettes in array
@@ -269,7 +266,7 @@ void pix_freq(Pattern_History * hist, int len) {
     hist->tempHue--;
     hist->vol_pos--;
   }
-  if (vol_show) {
+  if (VOL_SHOW) {
     if (volume > 100) {
       hist->vol_pos = map(volume, MIN_VOLUME, MAX_VOLUME, 0, len-1);
       hist->tempHue = fHue;
@@ -294,7 +291,7 @@ void mirror_pix_freq(Pattern_History * hist, int len) {
     hist->pix_pos--;
     hist->vol_pos--;
   }
-  if (vol_show) {
+  if (VOL_SHOW) {
     if (volume > 75) {
       hist->vol_pos = (len / 2) + map(volume, MIN_VOLUME, MAX_VOLUME, len/2 , len / 2);
       hist->tempHue = fHue;
