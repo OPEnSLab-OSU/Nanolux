@@ -340,27 +340,47 @@ void update_noise() {
   noise = nvp(); // Ternary operator that assigns true if nvp returns 1, else false
 }
 
-// An update method that updates the global drums array also an example of how to call and use the audio functions if not using the globals
+/// @brief An update method that updates the global drums array.
+///
+/// Also an example of how to call and use the audio functions
+/// if not using global variables.
 void update_drums() {
   int* temp = drum_identify();
-  drums[0] = temp[0] == 1 ? true:false;
-  drums[1] = temp[1] == 1 ? true:false;
-  drums[2] = temp[2] == 1 ? true:false;
+  // C++ int -> bool conversion is implicit.
+  drums[0] = temp[0];
+  drums[1] = temp[1];
+  drums[2] = temp[2];
+  delete[] temp;
+}
+
+/// @brief Used for moving a temporary pointer into
+/// another pointer.
+///
+/// @param temp The temporary pointer to copy from.
+/// @param arr  The global pointer to copy to.
+/// @param len  The number of elements to copy.
+///
+/// Automatically deletes temp after copy is finished.
+///
+/// Intended to be used to copy temporary audio analysis
+/// pointer data into global arrays.
+void temp_to_array(double * temp, double * arr, int len){
+  memcpy(arr, temp, sizeof(double) * len);
   delete[] temp;
 }
 
 // An update method that updates the global formants array also an example of how to call and use the audio functions if not using the globals
 void update_formants() {
-  formants[0] = density_formant();   
+  temp_to_array(density_formant(), formants, 3);
 }
 
 // An update method that updates the global five band split array also an example of how to call and use the audio functions if not using the globals
 void update_five_band_split(int len) {
-  fbs = band_split_bounce(len);
+  temp_to_array(band_split_bounce(len), fbs, 5);
 }
 
 // An update method that updates the global five sample split array also an example of how to call and use the audio functions if not using the globals
 void update_five_samples_split() {
-  fss = band_sample_bounce();
+  temp_to_array(band_sample_bounce(), fss, 5);
 } 
 

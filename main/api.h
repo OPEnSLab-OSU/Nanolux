@@ -1,3 +1,12 @@
+/**@file
+ *
+ * This file contains most of the web request API, in particular
+ * pertaining to pattern and subpattern settings.
+ * 
+ * For the remaining parts of the API, see webServer.h
+ *
+**/
+
 #pragma once
 
 /*
@@ -17,6 +26,10 @@ using namespace ARDUINOJSON_NAMESPACE;
 constexpr int PATTERN_BUFFER_SIZE = 4096;
 static char patterns_list[PATTERN_BUFFER_SIZE];
 
+/// @brief Creates a JSON file with the list of patterns.
+///
+/// This file is intended to be sent to connecting devices in order
+/// to present a list of patterns to the user.
 inline void initialize_pattern_list() {
   // Holds roughly 50 patterns.
   DynamicJsonDocument patterns(PATTERN_BUFFER_SIZE);
@@ -34,6 +47,9 @@ inline void initialize_pattern_list() {
  * Handle Settings request
  * (Simple value list API example.)
  */
+
+/// @brief Handles sending the JSON of patterns to other devices.
+/// @param request The incoming request for data.
 inline void handle_patterns_list_request(AsyncWebServerRequest* request) {
   static bool initialized = false;
 
@@ -52,6 +68,13 @@ inline void handle_patterns_list_request(AsyncWebServerRequest* request) {
   * { "patten": "<80-char-max-string>" }
   */
 
+/// @brief Handler function for getting subpattern data.
+/// @param request The incoming request for data.
+///
+/// This handler is responsible for sending data from a particular subpattern.
+/// The web request contains the particular subpattern to get through a string
+/// query. Once that subpattern has been requested, the device sends back information
+/// like the currently selected subpattern id, the pattern brightness, and the smoothing.
 inline void handle_loaded_subpattern_get_request(AsyncWebServerRequest* request) {
 
   uint8_t subpattern_num = request->getParam(0)->value().toInt();
@@ -69,6 +92,12 @@ inline void handle_loaded_subpattern_get_request(AsyncWebServerRequest* request)
   request->send(HTTP_OK, CONTENT_JSON, response);
 }
 
+/// @brief Handler function for getting pattern data.
+/// @param request The incoming request for data.
+///
+/// This handler is responsible for sending "pattern-level" data.
+/// The device device sends back information like the subpattern count, pattern
+/// transparancy, and the current mode (Z-layering or Strip Splitting)
 inline void handle_loaded_pattern_settings_get_request(AsyncWebServerRequest* request) {
 
   // Create response substrings
@@ -82,6 +111,12 @@ inline void handle_loaded_pattern_settings_get_request(AsyncWebServerRequest* re
   request->send(HTTP_OK, CONTENT_JSON, response);
 }
 
+/// @brief Handler function for updating pattern data.
+/// @param request The incoming put request
+/// @param json    The incoming JSON file holding new data.
+///
+/// This handler is responsible for updating pattern-level data from a 
+/// web request.
 inline void handle_pattern_update_put_request(AsyncWebServerRequest* request, JsonVariant& json) {
   if (request->method() == HTTP_PUT) {
     const JsonObject& payload = json.as<JsonObject>();
@@ -123,6 +158,13 @@ inline void handle_pattern_update_put_request(AsyncWebServerRequest* request, Js
   }
 }
 
+/// @brief Handler function for updating subpattern data.
+/// @param request The incoming put request
+/// @param json    The incoming JSON file holding new data.
+///
+/// This handler is responsible for updating subpattern-level data from a 
+/// web request.
+/// The specific subpattern to update is obtained from a string query.
 inline void handle_subpattern_update_put_request(AsyncWebServerRequest* request, JsonVariant& json) {
   if (request->method() == HTTP_PUT) {
     const JsonObject& payload = json.as<JsonObject>();
@@ -162,6 +204,12 @@ inline void handle_subpattern_update_put_request(AsyncWebServerRequest* request,
   }
 }
 
+/// @brief Handler function for loading a saved pattern.
+/// @param request The incoming put request
+/// @param json    The incoming JSON file holding the slot to load.
+///
+/// If the save slot to load is less than 0 or above NUM_SAVES, send
+/// a failure response and don't load anything.
 inline void handle_load_save_slot_put_request(AsyncWebServerRequest* request, JsonVariant& json) {
   if (request->method() == HTTP_PUT) {
     const JsonObject& payload = json.as<JsonObject>();
@@ -206,6 +254,12 @@ inline void handle_load_save_slot_put_request(AsyncWebServerRequest* request, Js
   }
 }
 
+/// @brief Handler function for saving the currently-running pattern.
+/// @param request The incoming put request
+/// @param json    The incoming JSON file holding the slot to save to.
+///
+/// If the save slot to load is less than 0 or above NUM_SAVES, send
+/// a failure response and don't load anything.
 inline void handle_save_to_slot_put_request(AsyncWebServerRequest* request, JsonVariant& json) {
   if (request->method() == HTTP_PUT) {
     const JsonObject& payload = json.as<JsonObject>();
@@ -249,6 +303,11 @@ inline void handle_save_to_slot_put_request(AsyncWebServerRequest* request, Json
   }
 }
 
+/// @brief Handler function for updating system settings.
+/// @param request The incoming put request
+/// @param json    The incoming JSON file holding the new system settings to save
+///
+/// Includes data such as strip length, loop times, and debug mode.
 inline void handle_system_settings_put_request(AsyncWebServerRequest* request, JsonVariant& json) {
   if (request->method() == HTTP_PUT) {
     const JsonObject& payload = json.as<JsonObject>();
@@ -284,6 +343,10 @@ inline void handle_system_settings_put_request(AsyncWebServerRequest* request, J
   }
 }
 
+/// @brief Handler function for getting system settings.
+/// @param request The incoming get request
+///
+/// Includes data such as strip length, loop times, and debug mode.
 inline void handle_system_settings_get_request(AsyncWebServerRequest* request) {
 
   // Create response substrings
@@ -296,7 +359,7 @@ inline void handle_system_settings_get_request(AsyncWebServerRequest* request) {
   request->send(HTTP_OK, CONTENT_JSON, response);
 }
 
-
+/// The currently active get requests.
 APIGetHook apiGetHooks[] = {
   { "/api/patterns", handle_patterns_list_request },
   { "/api/loadedSubpatterns", handle_loaded_subpattern_get_request },
@@ -307,6 +370,7 @@ APIGetHook apiGetHooks[] = {
 };
 constexpr int API_GET_HOOK_COUNT = 4;
 
+/// The currently active put requests.
 APIPutHook apiPutHooks[] = {
   { "/api/updateLoadedSubpattern", handle_subpattern_update_put_request },
   { "/api/updateLoadedPattern", handle_pattern_update_put_request },
