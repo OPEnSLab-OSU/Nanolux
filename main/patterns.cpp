@@ -4,9 +4,10 @@
 #include "patterns.h"
 #include "nanolux_types.h"
 #include "nanolux_util.h"
-#include "palettes.h"
-#include "audio_analysis.h"
 #include "storage.h"
+#include "core_analysis.h"
+#include "ext_analysis.h"
+#include "palettes.h"
 
 extern unsigned long microseconds;
 extern double vReal[SAMPLES];      // Sampling buffers
@@ -25,7 +26,6 @@ extern uint8_t vbrightness;
 extern double maxDelt;                    // Frequency with the biggest change in amp.
 extern int advanced_size;
 CRGBPalette16 gPal = GMT_hot_gp; //store all palettes in array
-CRGBPalette16 gPal2 = nrwc_gp; //store all palettes in array
 bool gReverseDirection = false;
 
 extern Config_Data config; // Currently loaded config
@@ -762,7 +762,7 @@ void formant_test(Pattern_History * hist, int len){
   hist->leds[1] = CHSV( fHue, F1, vbrightness);
   CRGB temp;
   
-  for(int i = NUM_LEDS-1; i > 1; i-=2) {
+  for(int i = config.length-1; i > 1; i-=2) {
       hist->leds[i] = hist->leds[i-2];
       hist->leds[i-1] = hist->leds[i-2];
   } 
@@ -776,15 +776,15 @@ void Fire2012WithPalette(Pattern_History * hist, int len){
   
   
   // Array of temperature readings at each simulation cell
-  static byte heat[NUM_LEDS];
+  static byte heat[MAX_LEDS];
 
 // Step 1.  Cool down every cell a little
-  for( int i = 0; i < NUM_LEDS; i++) {
-    heat[i] = qsub8( heat[i],  random8(0, ((COOLING * 10) / NUM_LEDS) + 2));
+  for( int i = 0; i < config.length; i++) {
+    heat[i] = qsub8( heat[i],  random8(0, ((COOLING * 10) / config.length) + 2));
   }
 
   // Step 2.  Heat from each cell drifts 'up' and diffuses a little
-  for( int k= NUM_LEDS - 1; k >= 2; k--) {
+  for( int k= config.length - 1; k >= 2; k--) {
     heat[k] = (heat[k - 1] + heat[k - 2] + heat[k - 2] ) / 3;
   }
   
@@ -800,7 +800,7 @@ void Fire2012WithPalette(Pattern_History * hist, int len){
   memcpy(smol_arr, vReal, l-1);
     
   // Step 4.  Map from heat cells to LED colors
-  for( int j = 0; j < NUM_LEDS; j++) {
+  for( int j = 0; j < config.length; j++) {
     // Scale the heat value from 0-255 down to 0-240
     // for best results with color palettes.
   
@@ -809,7 +809,7 @@ void Fire2012WithPalette(Pattern_History * hist, int len){
     CRGB color = ColorFromPalette( gPal, colorindex);
     int pixelnumber;
     if( gReverseDirection ) {
-      pixelnumber = (NUM_LEDS-1) - j;
+      pixelnumber = (config.length-1) - j;
     } else {
       pixelnumber = j;
     }

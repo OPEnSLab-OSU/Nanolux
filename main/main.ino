@@ -11,9 +11,11 @@
 #include "patterns.h"
 #include "nanolux_types.h"
 #include "nanolux_util.h"
-#include "audio_analysis.h"
+#include "core_analysis.h"
+#include "ext_analysis.h"
 #include "storage.h"
 #include "globals.h"
+
 
 FASTLED_USING_NAMESPACE
 
@@ -383,8 +385,6 @@ void audio_analysis() {
   update_volume();
 
   update_max_delta();
-
-  update_five_samples_split();
 
   update_formants();
 
