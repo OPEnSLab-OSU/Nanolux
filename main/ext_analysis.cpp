@@ -21,11 +21,12 @@ extern bool drums[3]; // Master drums array that stores whether a KICK, SNARE, o
 extern double fbs[5]; // Master FIVE BAND SPLIT which stores changing bands based on raw frequencies
 extern double fss[5]; // Master FIVE SAMPLE SPLIT which stores changing bands based on splitting up the samples
 
-
-// NOTE: Rest of Updates at bottom of file
-
-// Calculates the first 3 formant frequencies and outputs them as a dynamic array
-// Calculates based on the density of frequencies
+/// @brief Calculates the frequency bands with the highest density.
+/// @returns An array of the highest density formants.
+///
+/// This is intended to be used for functions like vowel detection, and
+/// is used in a couple patterns.
+/// For any nontrivial applications, do not use this.
 double* density_formant(){
   // Define the Formants to fill with values
   int F0 = 0;
@@ -133,7 +134,8 @@ double* band_split_bounce(int len) {
     return vol;
 }
 
-// Checks if the audio is noisi or periodic
+/// @brief Returns a boolean signifying if the audio signal is
+/// noisy or periodic.
 bool nvp() {
   int noise = 0;
   myTime = millis(); // Get the time every millis
@@ -149,7 +151,12 @@ bool nvp() {
   return abs(checkVol-volume) >= 100;
 }
 
-// Identifies the drum being played amongst KICK, SNARE, & CYMBAL
+/// @brief Returns an integer array containing what type of drums
+/// the Nanolux device believes it is hearing.
+///
+/// drumsArr[0] = kick;
+/// drumsArr[1] = snare;
+/// drumsArr[2] = cymbal;
 int* drum_identify() {
 
   double vol1 = 0;

@@ -394,6 +394,8 @@ void audio_analysis() {
 
   noise_gate(loaded_pattern.noise_thresh);
 
+  Serial.println(volume);
+
 #ifdef SHOW_TIMINGS
   const int end = micros();
   Serial.printf("Audio analysis: %d ms\n", (end - start) / 1000);
