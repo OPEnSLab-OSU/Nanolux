@@ -38,9 +38,9 @@ bool button_pressed = false;
 bool button_held = false;
 uint8_t gHue = 0;  // Rotating base color
 double peak = 0.;  // Peak frequency
-// uint8_t fHue = 0;  // Hue value based on peak frequency
+uint8_t fHue = 0;  // Hue value based on peak frequency
 double volume = 0.;
-// uint8_t vbrightness = 0;
+uint8_t vbrightness = 0;
 double maxDelt = 0.;  // Frequency with the biggest change in amp.
 
 int beats = 0;
@@ -129,18 +129,17 @@ Pattern mainPatterns[]{
     { 1, "Pixel Frequency", true, pix_freq},
     { 2, "Confetti", true, confetti},
     { 3, "Hue Trail", true, hue_trail},
-    { 4, "Equalizer", true, eq},
-    { 5, "Tug of War", true, tug_of_war},
-    { 6, "Rain Drop", true, random_raindrop}
-    //{ 2, "Pixel Frequency", pix_freq},
-    //{ 3, "Groovy Noise", true, groovy_noise},
-    //{ 5, "Talking", true, talking},
-    //{ 6, "Glitch Effect", true, glitch_effect}
-
-
-    //{38, "Echo Ripple", true, echo_ripple}
+    { 4, "Saturated", true, saturated},
+    { 5, "Groovy", true, groovy},
+    { 6, "Talking", true, talking}
+    { 7, "Glitch", true, glitch},
+    { 8, "Bands", true, bands},
+    { 9, "Equalizer", true, eq},
+    { 10, "Tug of War", true, tug_of_war},
+    { 11, "Rain Drop", true, random_raindrop}
+    
 };
-int NUM_PATTERNS = 7;  // MAKE SURE TO UPDATE THIS WITH THE ACTUAL NUMBER OF PATTERNS (+1 last array pos)
+int NUM_PATTERNS = 12;  // MAKE SURE TO UPDATE THIS WITH THE ACTUAL NUMBER OF PATTERNS (+1 last array pos)
 
 
 /**********************************************************
@@ -312,8 +311,8 @@ void unfold_buffer(CRGB* buf, uint8_t len, bool even){
 }
 
 void process_pattern(uint8_t idx, uint8_t len){
-  getFhue(loaded_pattern.subpattern[idx].minhue, loaded_pattern.subpattern[idx].maxhue);
-  getVbrightness();
+  //getFhue(loaded_pattern.subpattern[idx].minhue, loaded_pattern.subpattern[idx].maxhue);
+  //getVbrightness();
   // Calculate the length to process
   uint8_t processed_len = (loaded_pattern.subpattern[idx].mirrored) ? len/2 : len;
 
@@ -457,7 +456,18 @@ void loop() {
 
   audio_analysis();  // Run the audio analysis pipeline
 
-  
+    fHue = remap(
+    log(peak) / log(2),
+    log(MIN_FREQUENCY) / log(2),
+    log(MAX_FREQUENCY) / log(2),
+    10, 240);
+
+  vbrightness = remap(
+    volume,
+    MIN_VOLUME,
+    MAX_VOLUME,
+    0,
+    MAX_BRIGHTNESS);
 
 
   switch (loaded_pattern.mode) {
