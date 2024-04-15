@@ -1,4 +1,4 @@
-/**@file
+/** @file
  *
  * This file contains functions that interface with the
  * phyiscal on-board hardware, such as encoders or buttons.

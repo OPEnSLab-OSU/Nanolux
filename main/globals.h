@@ -1,3 +1,16 @@
+/** @file
+  *
+  * This file contains global variables.
+  *
+  * Many of the variables in the NanoLux project are global.
+  * However, this means that thare are many variables defined
+  * that have limited use outside of a few files.
+  *
+  * Variables that don't make sense to define in main.ino
+  * but are used globally should be first defined here.
+  *
+*/
+
 #ifndef GLOBALS_H
 #define GLOBALS_H
 

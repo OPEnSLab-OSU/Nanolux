@@ -1,3 +1,12 @@
+/**@file
+ *
+ * This file contains all defined pattern handlers.
+ *
+ * The pattern refactor is still in-progress, so this file
+ * currently has little in-line documentation.
+ *
+**/
+
 #include <FastLED.h>
 #include <Arduino.h>
 #include "arduinoFFT.h"

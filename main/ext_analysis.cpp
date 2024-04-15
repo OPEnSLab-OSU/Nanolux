@@ -1,3 +1,12 @@
+/** @file
+  *
+  * This file's functions perform advanced audio processing.
+  *
+  * Many of the functions defined here use values calculated
+  * from core_analysis.h to perform more complex audio analysis.
+  *
+*/
+
 #include <FastLED.h>
 #include <Arduino.h>
 #include "patterns.h"

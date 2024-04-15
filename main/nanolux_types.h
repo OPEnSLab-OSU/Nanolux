@@ -1,3 +1,10 @@
+/** @file
+ *
+ * This file contains defined macros and constants
+ * that are used in many places in the Nanolux codebase.
+ *
+**/
+
 #ifndef NANOLUX_TYPES_H
 #define NANOLUX_TYPES_H
 
