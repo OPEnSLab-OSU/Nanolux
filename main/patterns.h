@@ -31,7 +31,6 @@ typedef struct{
   double accelerations[5] = {0,0,0,0,0};
   int locations[5] = {70,60,50,40,30};
   double vRealSums[5] = {0,0,0,0,0};
-
 } Pattern_History;
 
 extern Subpattern_Data params;
@@ -42,7 +41,9 @@ void clearLEDSegment(Pattern_History * hist, int len);
 
 void setColorHSV(CRGB* leds, byte h, byte s, byte v, int len);
 
-void getFhue(uint8_t min_hue, uint8_t max_hue);
+// void getFhue(uint8_t min_hue, uint8_t max_hue);
+
+void getFhue();
 
 void getVbrightness();
 
@@ -55,6 +56,10 @@ void pix_freq(Pattern_History * hist, int len, Subpattern_Data* params);
 void eq(Pattern_History * hist, int len, Subpattern_Data* params);
 
 void tug_of_war(Pattern_History * hist, int len, Subpattern_Data* params);
+
+void tug_of_war(Pattern_History * hist, int len, Subpattern_Data* params);
+
+void saturated(Pattern_History * hist, int len, Subpattern_Data* params);
 
 void random_raindrop(Pattern_History * hist, int len, Subpattern_Data* params);
 

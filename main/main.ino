@@ -131,12 +131,12 @@ Pattern mainPatterns[]{
     { 3, "Hue Trail", true, hue_trail},
     { 4, "Saturated", true, saturated},
     { 5, "Groovy", true, groovy},
-    { 6, "Talking", true, talking}
+    { 6, "Talking", true, talking},
     { 7, "Glitch", true, glitch},
     { 8, "Bands", true, bands},
     { 9, "Equalizer", true, eq},
     { 10, "Tug of War", true, tug_of_war},
-    { 11, "Rain Drop", true, random_raindrop}
+    { 11, "Rain Drop", true, random_raindrop},
     
 };
 int NUM_PATTERNS = 12;  // MAKE SURE TO UPDATE THIS WITH THE ACTUAL NUMBER OF PATTERNS (+1 last array pos)
@@ -456,7 +456,7 @@ void loop() {
 
   audio_analysis();  // Run the audio analysis pipeline
 
-    fHue = remap(
+  fHue = remap(
     log(peak) / log(2),
     log(MIN_FREQUENCY) / log(2),
     log(MAX_FREQUENCY) / log(2),

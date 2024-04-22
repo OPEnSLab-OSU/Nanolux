@@ -35,12 +35,20 @@ extern Config_Data config; // Currently loaded config
 extern Subpattern_Data params;
 
 // get frequency hue
-void getFhue(uint8_t min_hue, uint8_t max_hue){
+// void getFhue(uint8_t min_hue, uint8_t max_hue){
+//     fHue = remap(
+//     log(peak) / log(2),
+//     log(MIN_FREQUENCY) / log(2),
+//     log(MAX_FREQUENCY) / log(2),
+//     min_hue, max_hue);
+// }
+
+void getFhue(){
     fHue = remap(
     log(peak) / log(2),
     log(MIN_FREQUENCY) / log(2),
     log(MAX_FREQUENCY) / log(2),
-    min_hue, max_hue);
+    10, 240);
 }
 
 /// get vol brightness
@@ -85,6 +93,7 @@ void pix_freq(Pattern_History * hist, int len, Subpattern_Data* params) {
     //switch(params->config){
       //case 0:
       //default:
+    getFhue();
     fadeToBlackBy(hist->leds, len, 50);
     if (volume > 200) {
       hist->pix_pos = map(peak, MIN_FREQUENCY, MAX_FREQUENCY, 0, len-1);
@@ -166,7 +175,7 @@ void hue_trail(Pattern_History* hist, int len, Subpattern_Data* params) {
 /// @param hist Pointer to the Pattern_History structure, holds LED buffer and history variables.
 /// @param len The length of LEDs to process
 /// @param params Pointer to Subpattern_Data structure containing configuration options.
-void saturated(Pattern_History * hist, int len){
+void saturated(Pattern_History* hist, int len, Subpattern_Data* params){
   //Set params for fill_noise16()
   uint8_t octaves = 1;
   uint16_t x = 0;
@@ -354,210 +363,8 @@ void glitch(Pattern_History * hist, int len, Subpattern_Data * params ) {
 /// @param hist Pointer to the Pattern_History structure, holds LED buffer and history variables.
 /// @param len The length of LEDs to process
 /// @param params Pointer to Subpattern_Data structure containing configuration options.
-void bands(Pattern_History * hist, int len) {
+void bands(Pattern_History* hist, int len, Subpattern_Data* params) {
   
-  switch(params->config){
-      case 0: // default basic bands
-        fadeToBlackBy(hist->leds, len, 85);
-
-          // double *fiveSamples = band_sample_bounce();
-          double *fiveSamples = band_split_bounce(len); // Maybe use above if you want, but its generally agreed this one looks better
-
-          double vol1 = fiveSamples[0];
-          double vol2 = fiveSamples[1];
-          double vol3 = fiveSamples[2];
-          double vol4 = fiveSamples[3];
-          double vol5 = fiveSamples[4];
-
-          // Fill each chunk of the light strip with the volume of each band
-          for (int i = 0; i < vol1; i++) {
-            hist->leds[i] = CRGB(255,0,0);
-          }
-          for (int i = len/5; i < len/5+vol2; i++) {
-            hist->leds[i] = CRGB(255,255,0);
-          }
-          for (int i = 2*len/5; i < 2*len/5+vol3; i++) {
-            hist->leds[i] = CRGB(0,255,0);
-          }
-          for (int i = 3*len/5; i < 3*len/5+vol4; i++) {
-            hist->leds[i] = CRGB(0,255,255);
-          }
-          for (int i = 4*len/5; i < 4*len/5+vol5; i++) {
-            hist->leds[i] = CRGB(0,0,255);
-          }
-
-          delete [] fiveSamples;
-          break;
-      case 1: // Advanced bands
-          double avg1 = 0;
-          double avg2 = 0;
-          double avg3 = 0;
-          double avg4 = 0;
-          double avg5 = 0;
-
-
-          // Calculate the volume of each band
-          for (int i = 0; i < advanced_size; i++) {
-            avg1 += hist->max1[i];    
-          }
-          avg1 /= advanced_size;
-          for (int i = 0; i < advanced_size; i++) {
-            avg2 += hist->max2[i];
-          }
-          avg2 /= advanced_size;
-          for (int i = 0; i < advanced_size; i++) {
-            avg3 += hist->max3[i];
-          }
-          avg3 /= advanced_size;
-          for (int i = 0; i < advanced_size; i++) {
-            avg4 += hist->max4[i];
-          }
-          avg4 /= advanced_size;
-          for (int i = 0; i < advanced_size; i++) {
-            avg5 += hist->max5[i];
-          }
-          avg5 /= advanced_size;
-
-          double *fiveSamples = band_split_bounce(len);
-
-          double vol1 = fiveSamples[0];
-          double vol2 = fiveSamples[1];
-          double vol3 = fiveSamples[2];
-          double vol4 = fiveSamples[3];
-          double vol5 = fiveSamples[4]; 
-
-          // Get the Five Sample Split ^
-
-          if(config.debug_mode == 1){
-            Serial.print("ADVANCED::\tAVG1:\t");
-            Serial.print(avg1);
-            Serial.print("\tAVG2:\t");
-            Serial.print(avg2);
-            Serial.print("\tAVG3:\t");
-            Serial.print(avg3);
-            Serial.print("\tAVG4:\t");
-            Serial.print(avg4);
-            Serial.print("\tAVG5:\t");
-            Serial.print(avg5);
-          }
-
-          // If there exists a new volume that is bigger than the falling pixel, reassign it to the top, otherwise make it fall for each band
-          if (vol1 <= avg1) {
-            hist->max1[hist->maxIter] = 0;
-          }
-          else {
-              for (int i = 0; i < 5; i++) {
-                hist->max1[i] = vol1;
-              }
-          }
-            
-          if (vol2 <= avg2) {
-            hist->max2[hist->maxIter] = 0;
-          }
-          else {
-              for (int i = 0; i < 5; i++) {
-                hist->max2[i] = vol2;
-              }
-          }
-
-          if (vol3 <= avg3) {
-            hist->max3[hist->maxIter] = 0;
-          }
-          else {
-              for (int i = 0; i < 5; i++) {
-                hist->max3[i] = vol3;
-              }
-          }
-
-          if (vol4 <= avg4) {
-            hist->max4[hist->maxIter] = 0;
-          }
-          else {
-              for (int i = 0; i < 5; i++) {
-                hist->max4[i] = vol4;
-              }
-          }
-
-          if (vol5 <= avg5) {
-            hist->max5[hist->maxIter] = 0;
-          }
-          else {
-              for (int i = 0; i < 5; i++) {
-                hist->max5[i] = vol5;
-              }
-          }
-
-          // Get this smoothed array to loop to beginning again once it is at teh end of the falling pixel smoothing
-          if (hist->maxIter == advanced_size-1) {
-            hist->maxIter = 0;
-          } else {
-            hist->maxIter++;
-          }
-
-          // Fill the respective chunks of the light strip with the color based on above^
-          for (int i = 0; i < vol1-1; i++) {
-            hist->leds[i] = CRGB(255,0,0);
-          }
-          for (int i = len/5; i < len/5+vol2-1; i++) {
-            hist->leds[i] = CRGB(255,255,0);
-          }
-          for (int i = 2*len/5; i < 2*len/5+vol3-1; i++) {
-            hist->leds[i] = CRGB(0,255,0);
-          }
-          for (int i = 3*len/5; i < 3*len/5+vol4-1; i++) {
-            hist->leds[i] = CRGB(0,255,255);
-          }
-          for (int i = 4*len/5; i < 4*len/5+vol5-1; i++) {
-            hist->leds[i] = CRGB(0,0,255);
-          }
-          
-          // Assign the values for the pixel to goto
-          hist->leds[(int) avg1+ (int) vol1] = CRGB(255,255,255);
-          hist->leds[(int) len/5 + (int) avg2+ (int) vol2] = CRGB(255,255,255);
-          hist->leds[(int) 2*len/5+(int) avg3+ (int) vol3] = CRGB(255,255,255);
-          hist->leds[(int) 3*len/5+(int) avg4+ (int) vol4] = CRGB(255,255,255);
-          hist->leds[(int) 4*len/5+(int) avg5+ (int) vol5] = CRGB(255,255,255);
-          fadeToBlackBy(hist->leds, len, 90);
-
-          delete [] fiveSamples;
-          break;
-      case 2: // Formant bands
-          // Grab the formants
-          double *temp_formants = density_formant();
-          double f0Hue = remap(temp_formants[0], MIN_FREQUENCY, MAX_FREQUENCY, 0, 255);
-          double f1Hue = remap(temp_formants[1], MIN_FREQUENCY, MAX_FREQUENCY, 0, 255);
-          double f2Hue = remap(temp_formants[2], MIN_FREQUENCY, MAX_FREQUENCY, 0, 255);
-
-          if(config.debug_mode == 1){
-            Serial.print("\t f0Hue: ");
-            Serial.print(temp_formants[0]);
-            Serial.print("\t f1Hue: ");
-            Serial.print(temp_formants[1]);
-            Serial.print("\t f2Hue: ");
-            Serial.print(temp_formants[2]);
-          }
-
-          // Fill 1/3 with each formant
-          for (int i = 0; i < len; i++) {
-            if (i < len/3) {
-              hist->leds[i] = CHSV(f0Hue, 255, 255);
-            }
-            else if (len/3 <= i && i < 2*len/3) {
-              hist->leds[i] = CHSV(f1Hue, 255, 255);
-            } 
-            else {
-              hist->leds[i] = CHSV(f2Hue, 255, 255);
-            }
-          }
-
-          // Smooth out the result
-          for (int i = 0; i < 5; i++) {
-            blur1d(hist->leds, len, 50);
-          }
-          delete[] temp_formants;
-          break;
-
-  }
 }
 
 /// @brief Short and sweet function. Each pixel corresponds to a value from vReal, 
