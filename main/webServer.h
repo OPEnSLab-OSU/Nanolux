@@ -11,7 +11,7 @@
 #include <WebResponseImpl.h>
 
 
-//#define DEBUG_PRINTF(...) Serial.printf(__VA_ARGS__)
+//#define DEBUG_PRINTF(...) Serial.printf(__VA_ARGS__) 
 #define DEBUG_PRINTF(...)
 
 #define ALWAYS_PRINTF(...) Serial.printf(__VA_ARGS__)
