@@ -1,5 +1,5 @@
 import {h} from 'preact';
-import {joinWiFi, getHostname, saveHostname} from "../../utils/api";
+import {joinWiFi, getHostname, saveHostname, updateLocalPassword} from "../../utils/api";
 import style from "./style.css";
 import WifiSelector from "../../components/wifi_selector";
 import {useEffect, useState} from "preact/hooks";
@@ -25,6 +25,8 @@ const Wifi = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
 
     const {isConnected} = useConnectivity();
+
+    const [pass, setPass] = useState("");
 
     function loadHostname() {
         getHostname()
@@ -127,12 +129,45 @@ const Wifi = () => {
         }
     }
 
+    const handleLocalPasswordChange = async (newValue) => {
+
+        if(newValue.length < 8){
+            alert("Password is too short! Must be between 8 and 15 characters.")
+            return
+        }
+
+        if(newValue.length > 15){
+            alert("Password is too long! Must be between 8 and 15 characters.")
+            return
+        }
+
+        setPass(newValue);
+        if (isConnected) {
+            await updateLocalPassword(newValue);
+        }
+    }
+
     const closeModal = () => {
         setIsModalOpen(false);
     }
 
     return (
         <div className={style.home}>
+            <div className={style.settingsControl}>
+                <div className={style.centeredContainer}>
+                    <TextInput
+                        inputPrompt="New Local WiFi Password: "
+                        commmitPrompt="Set Password"
+                        textValue={pass}
+                        onTextCommit={handleLocalPasswordChange}
+                    />
+                </div>
+                <div className={style.centeredContainer}>
+                    <div className={style.fqdn}>
+                        Once it joins a WiFi, AudioLux can be found in the network with this name: {fqdn}
+                    </div>
+                </div>
+            </div>
             <div className={style.settingsControl}>
                 <div className={style.centeredContainer}>
                     <TextInput

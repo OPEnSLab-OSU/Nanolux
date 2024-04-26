@@ -125,7 +125,7 @@ void setup() {
   load_slot(0);
 
 #ifdef ENABLE_WEB_SERVER
-  initialize_web_server(apiGetHooks, API_GET_HOOK_COUNT, apiPutHooks, API_PUT_HOOK_COUNT);
+  initialize_web_server(apiGetHooks, API_GET_HOOK_COUNT, apiPutHooks, API_PUT_HOOK_COUNT, config.pass);
 #endif
 }
 
@@ -393,8 +393,6 @@ void audio_analysis() {
   update_drums();
 
   noise_gate(loaded_pattern.noise_thresh);
-
-  Serial.println(volume);
 
 #ifdef SHOW_TIMINGS
   const int end = micros();

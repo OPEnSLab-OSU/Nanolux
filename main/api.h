@@ -1,3 +1,6 @@
+#include <iterator>
+#include <algorithm>
+
 /**@file
  *
  * This file contains most of the web request API, in particular
@@ -359,6 +362,72 @@ inline void handle_system_settings_get_request(AsyncWebServerRequest* request) {
   request->send(HTTP_OK, CONTENT_JSON, response);
 }
 
+inline void handle_new_password_put_request(AsyncWebServerRequest* request, JsonVariant& json){
+
+  if (request->method() == HTTP_PUT) {
+    const JsonObject& payload = json.as<JsonObject>();
+
+    int status = HTTP_OK;
+
+    const char * new_password = payload["new_password"];
+
+    // Reject if password is under 8 characters.
+    bool over = true;
+    for(uint8_t i = 0; i < 7; i++){
+      if(new_password[i] == 0)
+        over = false;
+    }
+
+    // Fail if under 8 characters
+    if(!over){
+      request->send(
+      HTTP_OK,
+      CONTENT_TEXT,
+      build_response(
+        false,
+        "too short",
+        nullptr));
+    }
+
+    // Reject if over 15 characters
+    bool under = false;
+    for(uint8_t i = 0; i < 16; i++){
+      if(new_password[i] == 0)
+        under = true;
+    }
+
+    // Send a fail message if over 15 characters
+    if(!under){
+      request->send(
+      HTTP_OK,
+      CONTENT_TEXT,
+      build_response(
+        false,
+        "too long",
+        nullptr));
+    }
+
+    for(uint8_t i = 0; i < 16; i++){
+      config.pass[i] = new_password[i];
+      if(new_password[i] == '\0')
+        break;
+    }
+    Serial.println(config.pass);
+    save_config_to_nvs();
+
+    request->send(
+      HTTP_OK,
+      CONTENT_TEXT,
+      build_response(
+        true,
+        "success",
+        nullptr));
+  } else {
+    request->send(HTTP_METHOD_NOT_ALLOWED);
+  }
+
+}
+
 /// The currently active get requests.
 APIGetHook apiGetHooks[] = {
   { "/api/patterns", handle_patterns_list_request },
@@ -377,5 +446,6 @@ APIPutHook apiPutHooks[] = {
   { "/api/loadSaveSlot", handle_load_save_slot_put_request },
   { "/api/saveToSlot", handle_save_to_slot_put_request },
   { "/api/updateDeviceSettings", handle_system_settings_put_request },
+  { "/api/updatePassword", handle_new_password_put_request },
 };
-constexpr int API_PUT_HOOK_COUNT = 5;
+constexpr int API_PUT_HOOK_COUNT = 6;

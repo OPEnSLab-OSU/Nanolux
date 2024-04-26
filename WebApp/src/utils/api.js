@@ -60,6 +60,9 @@ const joinWiFi = (wifi) =>
 const saveHostname = (hostname) =>
     axios.put(`${base_url}/api/hostname`,{hostname});
 
+const updateLocalPassword = (pass) =>
+    axios.put(`${base_url}/api/updatePassword`,{new_password: pass});
+
 // ESSENTIAL API CALLS
 
 // handle_subpattern_update_put_request
@@ -117,5 +120,6 @@ export {
     saveToSlot,
     updateDeviceSettings,
     getSystemSettings,
+    updateLocalPassword,
     base_url
 };

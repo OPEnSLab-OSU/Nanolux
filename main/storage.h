@@ -63,6 +63,7 @@ typedef struct{
   uint8_t loop_ms = 40; /// The number of milliseconds one program loop takes.
   uint8_t debug_mode = 0; /// The currently selected debug output mode.
   bool init = true; /// If the loaded config data is valid.
+  char pass[16] = ""; // The current device password
 
 } Config_Data;
 

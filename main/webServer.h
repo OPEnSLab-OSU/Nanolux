@@ -608,7 +608,7 @@ inline void save_url(const String& url) {
 }
 
 
-inline void setup_networking()
+inline void setup_networking(const char * password)
 {
     initialize_file_system();
 
@@ -638,7 +638,7 @@ inline void setup_networking()
 
     // AP mode is always active.
     WiFi.mode(WIFI_MODE_APSTA);
-    WiFi.softAP(ap_ssid, ap_password);
+    WiFi.softAP(ap_ssid, password);
     delay(1000);
     const IPAddress ap_ip = WiFi.softAPIP();
 
@@ -657,7 +657,7 @@ inline void setup_networking()
 }
 
 
-inline void initialize_web_server(const APIGetHook api_get_hooks[], const int get_hook_count, APIPutHook api_put_hooks[], const int put_hook_count) {
+inline void initialize_web_server(const APIGetHook api_get_hooks[], const int get_hook_count, APIPutHook api_put_hooks[], const int put_hook_count, const char * password) {
     // Mutex to make join status globals thread safe.
     // The timer below runs on a different context than the web server,
     // so we need to properly marshall access between contexts.
@@ -680,7 +680,7 @@ inline void initialize_web_server(const APIGetHook api_get_hooks[], const int ge
         on_join_timer
     );
 
-    setup_networking();
+    setup_networking(password);
 
     // Register the main process API handlers.
     DEBUG_PRINTF("Registering main APIs.\n");
