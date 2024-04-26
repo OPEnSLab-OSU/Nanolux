@@ -30,7 +30,7 @@ typedef struct{
   CRGB leds[MAX_LEDS] = {0};
 
   // History Variables
-  int frame = 0;                 // for spring mass
+  int frame = 0;                 // for spring mass 
   double amplitude = 0;          //for spring mass 2
   int tempHue = 0;
   int vol_pos = 0;
