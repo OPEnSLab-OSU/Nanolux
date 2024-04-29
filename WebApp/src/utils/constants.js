@@ -1,0 +1,31 @@
+
+const RANGE_CONSTANTS = {
+    BRIGHTNESS_MAX : 255,
+    BRIGHTNESS_MIN : 0,
+
+    SMOOTHING_MAX : 175,
+    SMOOTHING_MIN : 0,
+
+    STRIP_SPLITTING_ID : 0,
+    Z_LAYERING_ID : 1,
+
+    ALPHA_MAX : 255,
+    ALPHA_MIN : 0,
+
+    NOISE_MAX : 100,
+    NOISE_MIN : 0,
+
+    DEBUG_MIN : 0,
+    DEBUG_MAX : 2,
+
+    LOOP_MAX : 100,
+    LOOP_MIN : 15,
+
+    LENGTH_MIN : 30,
+    LENGTH_MAX : 200,
+
+    SAVE_COUNT : 3,
+    SUBPATTERN_MAX : 4,
+}
+
+export default RANGE_CONSTANTS;
