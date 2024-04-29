@@ -19,29 +19,38 @@ jobs:
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
+
     # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
     - uses: actions/checkout@v2
         
-    - name: Doxygen Action
+    - name: Doxygen Action_dev
       uses: mattnotmitt/doxygen-action@v1.1.0
       with:
         # Path to Doxyfile
         doxyfile-path: "./docs/deviceDoxyfile" # default is ./Doxyfile
         # Working directory
-        working-directory: "./device" # default is .
+        working-directory: "." # default is .
+    
+    - name: Deploy_dev
+      uses: peaceiris/actions-gh-pages@v3
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        # Default Doxyfile build documentation to html directory. 
+        # Change the directory if changes in Doxyfile
+        publish_dir: ./dev
     
     # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
     - uses: actions/checkout@v2
         
-    - name: Doxygen Action
+    - name: Doxygen Action_web
       uses: mattnotmitt/doxygen-action@v1.1.0
       with:
         # Path to Doxyfile
         doxyfile-path: "./docs/webDoxyfile" # default is ./Doxyfile
         # Working directory
-        working-directory: "./web" # default is .
-    
-    - name: Deploy
+        working-directory: "." # default is .
+
+    - name: Deploy_web
       uses: peaceiris/actions-gh-pages@v3
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
