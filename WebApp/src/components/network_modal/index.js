@@ -1,6 +1,13 @@
 import { h } from 'preact';
 import style from './style.css';
 
+/** 
+ * @brief Returns a Modal object to display as a pop-up.
+ * 
+ * @param isOpen If the Modal should be displayed.
+ * @param onClose Should the Modal close if clicked.
+ * @return The Modal HTML object. 
+**/
 const Modal = ({ isOpen, onClose }) => {
     if (!isOpen) {
         return null;
