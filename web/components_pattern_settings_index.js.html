@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: components/pattern_settings/index.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: components/pattern_settings/index.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import RANGE_CONSTANTS from '../../utils/constants';
+import Subpattern from '../subpattern_settings';
+import NumericSlider from "../../components/numeric_slider";
+import {useState, useEffect} from "preact/hooks";
+import {
+	getLoadedPatternSettings,
+	updateLoadedPattern} from "../../utils/api";
+import {useConnectivity} from "../../context/online_context";
+import useInterval from "../../utils/use_interval";
+import { LabelSpinner } from '../../components/spinner';
+import SimpleChooser from '../single_chooser';
+import style from './style.css';
+
+const CurrentPattern = ({patterns}) => {
+
+	// Checks if the web app is connected to the device.
+	const { isConnected } = useConnectivity();
+
+	// Flag representing if initial data has been obtained from
+	// the device.
+	const [loading, setLoading] = useState(true);
+
+	// Flag that tells the object to update the NanoLux device with new data.
+	const [updated, setUpdated] = useState(false);
+
+	// Stores the subpattern currently selected as an object state.
+	const [selectedSubpattern, setSubpattern] = useState(0);
+
+	// Pattern-level data structure
+	const [data, setData] = useState({
+		subpattern_count: 1,
+		alpha: 0,
+		mode: 0,
+		noise: 20
+	});
+
+	/**
+	 * @brief Manages initial querying of the data from the NanoLux device.
+	 * 		  Sets the loading flag to false when done.
+	 */
+	useEffect(() => {
+        if (isConnected) {
+            getLoadedPatternSettings()
+				.then(data => setData(data))
+				.then(setLoading(false));
+        }  
+    }, [isConnected])
+
+	/**
+	 * @brief Updates the pattern on the Nanolux device 
+	 * if it is connected and has modified data,
+	 * then flags the data structure.
+	 */
+	useInterval(() => {
+        if (isConnected &amp;&amp; updated) {
+            updateLoadedPattern(data);
+			setUpdated(false);
+        }
+    }, 100);
+
+	/**
+	 * @brief Updates a parameter in the subpattern data structure with a new value.
+	 * @param ref The string reference to update in the data structure
+	 * @param value The new value to update the data structure with
+	 */
+	const update = (ref, value) => {
+		if(!loading){		
+			setData((oldData) => {
+				let newData = Object.assign({}, oldData);
+				newData[ref] = value;
+				return newData;
+			})
+		}
+		setUpdated(true);
+	}
+
+	/**
+	 * @brief Increments the amount of subpatterns displayed. If the pattern is at
+	 * maximum subpatterns, the function will refuse to increment.
+	 */
+	const incrementSubpatterns = async () => {
+		if(data.subpattern_count &lt; RANGE_CONSTANTS.SUBPATTERN_MAX){
+			update("subpattern_count", data.subpattern_count + 1);
+		}
+	}
+
+	/**
+	 * @brief Decrements the amount of subpatterns displayed. If the pattern is at
+	 * 1 subpattern, the function will refuse to decrement. Moves to the
+	 * previous subpattern if the existing one is deleted.
+	 */
+	const decrementSubpatterns = async () => {
+		if(data.subpattern_count > 1){
+			if(data.subpattern_count == selectedSubpattern + 1){
+				setSubpattern(data.subpattern_count - 1);
+			}
+			update("subpattern_count", data.subpattern_count - 1);
+		}
+	}
+
+	/**
+	 * @brief Generates a list from 0 to end. Analagous to Python's
+	 * range() function.
+	 * @param end The value to end at.
+	 */
+	function inRange(end){
+		var l = [];
+		for(var i = 0; i &lt; end; i++){
+			l.push({idx: i});
+		}
+		return l;
+	}
+
+	/**
+	 * @brief Generates the Pattern UI element and it's selected subpattern.
+	 */
+	return (
+		(!loading ? 
+			&lt;div>
+				&lt;SimpleChooser
+					label="Mode"
+					options={[
+						{option : "Strip Splitting", idx : RANGE_CONSTANTS.STRIP_SPLITTING_ID},
+						{option : "Z-Layering", idx : RANGE_CONSTANTS.Z_LAYERING_ID},
+					]}
+					noSelection={false}
+					initial={data.mode}
+					structure_ref="mode"
+					update={update}
+				/>
+				&lt;br/>
+				&lt;NumericSlider
+					className={style.settings_control}
+					label="Transparency"
+					min={RANGE_CONSTANTS.ALPHA_MIN}
+					max={RANGE_CONSTANTS.ALPHA_MAX}
+					initial={data.alpha}
+					structure_ref="alpha"
+					update={update}
+				/>
+				&lt;br/>
+				&lt;NumericSlider
+					className={style.settings_control}
+					label="Noise Threshold"
+					min={RANGE_CONSTANTS.NOISE_MIN}
+					max={RANGE_CONSTANTS.NOISE_MAX}
+					initial={data.noise}
+					structure_ref="noise"
+					update={update}
+				/>
+				&lt;br/>
+				&lt;button type="button" onClick={incrementSubpatterns}>+&lt;/button>
+				&lt;button type="button" onClick={decrementSubpatterns}>-&lt;/button>
+				&lt;hr>&lt;/hr>
+
+				{inRange(data.subpattern_count).map((data) => {
+					if(data.idx == selectedSubpattern){
+						return &lt;button type="button" onClick={function() {setSubpattern(data.idx);}} key={data.idx} style="border-style:inset;">
+							SP {data.idx}
+						&lt;/button>
+					}else{
+						return &lt;button type="button" onClick={function() {setSubpattern(data.idx);}} key={data.idx}>
+							SP {data.idx}
+						&lt;/button>
+					}
+					
+				})}
+
+				&lt;Subpattern
+					subpattern={selectedSubpattern}
+					patterns={patterns}
+					key={selectedSubpattern}
+				/>	
+			&lt;/div> 
+		: &lt;LabelSpinner>&lt;/LabelSpinner>)
+		
+	);
+}
+
+export default CurrentPattern;</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#Header">Header</a></li><li><a href="global.html#Modal">Modal</a></li><li><a href="global.html#NumericSlider">NumericSlider</a></li><li><a href="global.html#Password">Password</a></li><li><a href="global.html#Patterns">Patterns</a></li><li><a href="global.html#Save_Entry">Save_Entry</a></li><li><a href="global.html#Settings">Settings</a></li><li><a href="global.html#SimpleChooser">SimpleChooser</a></li><li><a href="global.html#Subpattern">Subpattern</a></li><li><a href="global.html#SystemControls">SystemControls</a></li><li><a href="global.html#useInterval">useInterval</a></li><li><a href="global.html#Wifi">Wifi</a></li><li><a href="global.html#WiFiModal">WiFiModal</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.7</a> on Mon Apr 29 2024 17:03:52 GMT+0000 (Coordinated Universal Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
