@@ -32,13 +32,12 @@ jobs:
         working-directory: "." # default is .
     
         
-    - name: Doxygen Action_web
-      uses: mattnotmitt/doxygen-action@v1.1.0
+    - name: Build_web
+      uses: andstor/jsdoc-action@v1
       with:
-        # Path to Doxyfile
-        doxyfile-path: "./docs/webDoxyfile" # default is ./Doxyfile
-        # Working directory
-        working-directory: "." # default is .
+        source_dir: ./WebApp/src
+        recurse: true
+        output_dir: ./docs/web
     
     - name: Deploy
       uses: peaceiris/actions-gh-pages@v3
