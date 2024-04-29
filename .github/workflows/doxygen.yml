@@ -38,9 +38,6 @@ jobs:
         # Default Doxyfile build documentation to html directory. 
         # Change the directory if changes in Doxyfile
         publish_dir: ./dev
-    
-    # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-    - uses: actions/checkout@v2
         
     - name: Doxygen Action_web
       uses: mattnotmitt/doxygen-action@v1.1.0
