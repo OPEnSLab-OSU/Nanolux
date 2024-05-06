@@ -1,17 +1,21 @@
-import RANGE_CONSTANTS from '../../utils/constants';
-import Subpattern from '../subpattern_settings';
+import Patterns from "../../components/patterns";
 import NumericSlider from "../../components/numeric_slider";
 import {useState, useEffect} from "preact/hooks";
 import {
-	getLoadedPatternSettings,
-	updateLoadedPattern} from "../../utils/api";
+	getPattern,
+	updatePattern} from "../../utils/api";
 import {useConnectivity} from "../../context/online_context";
 import useInterval from "../../utils/use_interval";
 import { LabelSpinner } from '../../components/spinner';
-import SimpleChooser from '../single_chooser';
+import RANGE_CONSTANTS from '../../utils/constants';
 import style from './style.css';
 
-const CurrentPattern = ({patterns}) => {
+/**
+ * @brief An object meant to hold and display settings for a specific subpattern.
+ * @param subpattern The ID of the subpattern to display
+ * @param patterns	 A list of patterns and their IDs
+ */
+const Pattern = ({num, patterns}) => {
 
 	// Checks if the web app is connected to the device.
 	const { isConnected } = useConnectivity();
@@ -23,15 +27,14 @@ const CurrentPattern = ({patterns}) => {
 	// Flag that tells the object to update the NanoLux device with new data.
 	const [updated, setUpdated] = useState(false);
 
-	// Stores the subpattern currently selected as an object state.
-	const [selectedSubpattern, setSubpattern] = useState(0);
-
-	// Pattern-level data structure
+	// Subpattern data structure
 	const [data, setData] = useState({
-		subpattern_count: 1,
-		alpha: 0,
-		mode: 0,
-		noise: 20
+		idx: 0,
+		hue_max: 0,
+		hue_min: 255,
+		brightness: 255,
+		smoothing: 0,
+		direction: 0,
 	});
 
 	/**
@@ -40,9 +43,9 @@ const CurrentPattern = ({patterns}) => {
 	 */
 	useEffect(() => {
         if (isConnected) {
-            getLoadedPatternSettings()
-				.then(data => setData(data))
-				.then(setLoading(false));
+            getPattern(num)
+			.then(data => {setData(data)})
+			.then(setLoading(false));
         }  
     }, [isConnected])
 
@@ -53,13 +56,13 @@ const CurrentPattern = ({patterns}) => {
 	 */
 	useInterval(() => {
         if (isConnected && updated) {
-            updateLoadedPattern(data);
+            updatePattern(num, data);
 			setUpdated(false);
         }
     }, 100);
 
 	/**
-	 * @brief Updates a parameter in the subpattern data structure with a new value.
+	 * @brief Updates a parameter in the pattern data structure with a new value.
 	 * @param ref The string reference to update in the data structure
 	 * @param value The new value to update the data structure with
 	 */
@@ -71,110 +74,47 @@ const CurrentPattern = ({patterns}) => {
 				return newData;
 			})
 		}
+		
 		setUpdated(true);
 	}
 
 	/**
-	 * @brief Increments the amount of subpatterns displayed. If the pattern is at
-	 * maximum subpatterns, the function will refuse to increment.
-	 */
-	const incrementSubpatterns = async () => {
-		if(data.subpattern_count < RANGE_CONSTANTS.SUBPATTERN_MAX){
-			update("subpattern_count", data.subpattern_count + 1);
-		}
-	}
-
-	/**
-	 * @brief Decrements the amount of subpatterns displayed. If the pattern is at
-	 * 1 subpattern, the function will refuse to decrement. Moves to the
-	 * previous subpattern if the existing one is deleted.
-	 */
-	const decrementSubpatterns = async () => {
-		if(data.subpattern_count > 1){
-			if(data.subpattern_count == selectedSubpattern + 1){
-				setSubpattern(data.subpattern_count - 1);
-			}
-			update("subpattern_count", data.subpattern_count - 1);
-		}
-	}
-
-	/**
-	 * @brief Generates a list from 0 to end. Analagous to Python's
-	 * range() function.
-	 * @param end The value to end at.
-	 */
-	function inRange(end){
-		var l = [];
-		for(var i = 0; i < end; i++){
-			l.push({idx: i});
-		}
-		return l;
-	}
-
-	/**
-	 * @brief Generates the Pattern UI element and it's selected subpattern.
+	 * @brief Generates the Subpattern UI element itself. If initial data is not
+	 * loaded, show a spinner instead.
 	 */
 	return (
 		(!loading ? 
-			<div>
-				<SimpleChooser
-					label="Mode"
-					options={[
-						{option : "Strip Splitting", idx : RANGE_CONSTANTS.STRIP_SPLITTING_ID},
-						{option : "Z-Layering", idx : RANGE_CONSTANTS.Z_LAYERING_ID},
-					]}
-					noSelection={false}
-					initial={data.mode}
-					structure_ref="mode"
-					update={update}
-				/>
-				<br/>
-				<NumericSlider
-					className={style.settings_control}
-					label="Transparency"
-					min={RANGE_CONSTANTS.ALPHA_MIN}
-					max={RANGE_CONSTANTS.ALPHA_MAX}
-					initial={data.alpha}
-					structure_ref="alpha"
-					update={update}
-				/>
-				<br/>
-				<NumericSlider
-					className={style.settings_control}
-					label="Noise Threshold"
-					min={RANGE_CONSTANTS.NOISE_MIN}
-					max={RANGE_CONSTANTS.NOISE_MAX}
-					initial={data.noise}
-					structure_ref="noise"
-					update={update}
-				/>
-				<br/>
-				<button type="button" onClick={incrementSubpatterns}>+</button>
-				<button type="button" onClick={decrementSubpatterns}>-</button>
-				<hr></hr>
-
-				{inRange(data.subpattern_count).map((data) => {
-					if(data.idx == selectedSubpattern){
-						return <button type="button" onClick={function() {setSubpattern(data.idx);}} key={data.idx} style="border-style:inset;">
-							SP {data.idx}
-						</button>
-					}else{
-						return <button type="button" onClick={function() {setSubpattern(data.idx);}} key={data.idx}>
-							SP {data.idx}
-						</button>
-					}
-					
-				})}
-
-				<Subpattern
-					subpattern={selectedSubpattern}
-					patterns={patterns}
-					key={selectedSubpattern}
-				/>	
-			</div> 
-		: <LabelSpinner></LabelSpinner>)
-		
+		<div>
+			<br/>
+			<Patterns
+				initialID={data.idx}
+				structure_ref={"idx"}
+				update={update}
+				patterns={patterns}
+			/>
+			<br/>
+			<NumericSlider
+				className={style.settings_control}
+				label="Brightness"
+				min={RANGE_CONSTANTS.BRIGHTNESS_MIN}
+				max={RANGE_CONSTANTS.BRIGHTNESS_MAX}
+				initial={data.brightness}
+				structure_ref="brightness"
+				update={update}
+			/>
+			<br/>
+			<NumericSlider
+				className={style.settings_control}
+				label="Smoothing"
+				min={RANGE_CONSTANTS.SMOOTHING_MIN}
+				max={RANGE_CONSTANTS.SMOOTHING_MAX}
+				initial={data.smoothing}
+				structure_ref="smoothing"
+				update={update}
+			/>
+		</div> : <LabelSpinner></LabelSpinner>
+		)
 	);
 }
 
-export default CurrentPattern;
+export default Pattern;

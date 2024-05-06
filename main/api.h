@@ -362,9 +362,9 @@ inline void handle_system_settings_get_request(AsyncWebServerRequest* request) {
 /// The currently active get requests.
 APIGetHook apiGetHooks[] = {
   { "/api/patterns", handle_patterns_list_request },
-  { "/api/loadedSubpatterns", handle_pattern_get_request },
-  { "/api/loadedPatternSettings", handle_strip_get_request },
-  { "/api/getDeviceSettings", handle_system_settings_get_request },
+  { "/api/getPattern", handle_pattern_get_request },
+  { "/api/getStrip", handle_strip_get_request },
+  { "/api/getSettings", handle_system_settings_get_request },
 
 
 };
@@ -372,10 +372,10 @@ constexpr int API_GET_HOOK_COUNT = 4;
 
 /// The currently active put requests.
 APIPutHook apiPutHooks[] = {
-  { "/api/updateLoadedSubpattern", handle_pattern_put_request },
-  { "/api/updateLoadedPattern", handle_strip_put_request },
-  { "/api/loadSaveSlot", handle_load_save_slot_put_request },
-  { "/api/saveToSlot", handle_save_to_slot_put_request },
-  { "/api/updateDeviceSettings", handle_system_settings_put_request },
+  { "/api/putPattern", handle_pattern_put_request },
+  { "/api/putStrip", handle_strip_put_request },
+  { "/api/load", handle_load_save_slot_put_request },
+  { "/api/save", handle_save_to_slot_put_request },
+  { "/api/putSettings", handle_system_settings_put_request },
 };
 constexpr int API_PUT_HOOK_COUNT = 5;

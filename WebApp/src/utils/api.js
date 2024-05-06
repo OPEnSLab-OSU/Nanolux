@@ -62,39 +62,39 @@ const saveHostname = (hostname) =>
 
 // ESSENTIAL API CALLS
 
-// handle_subpattern_update_put_request
-const updateLoadedSubpattern = (subpattern, data) =>
-    axios.put(`${base_url}/api/updateLoadedSubpattern?subpattern=${subpattern}`, data)
+// handle_pattern_put_request
+const updatePattern = (patternNum, data) =>
+    axios.put(`${base_url}/api/putPattern?p=${patternNum}`, data)
 
-// handle_pattern_update_put_request
-const updateLoadedPattern = (data) =>
-    axios.put(`${base_url}/api/updateLoadedPattern`, data)
+// handle_strip_put_request
+const updateStripSettings = (data) =>
+    axios.put(`${base_url}/api/putStrip`, data)
 
 // handle_loaded_subpattern_get_request
-const getLoadedSubpattern = (subpattern) =>
-    axios.get(`${base_url}/api/loadedSubpatterns?sp=${subpattern}`, {headers: {'Access-Control-Allow-Origin': '*'}})
+const getPattern = (patternNum) =>
+    axios.get(`${base_url}/api/getPattern?p=${patternNum}`, {headers: {'Access-Control-Allow-Origin': '*'}})
         .then(response => response.data);
 
 // handle_loaded_pattern_settings_get_request
-const getLoadedPatternSettings = () =>
-    axios.get(`${base_url}/api/loadedPatternSettings`, {headers: {'Access-Control-Allow-Origin': '*'}})
+const getStripSettings = () =>
+    axios.get(`${base_url}/api/getStrip`, {headers: {'Access-Control-Allow-Origin': '*'}})
         .then(response => response.data);
 
-const loadSaveSlot = async (slot) => {
-    
-    await axios.put(`${base_url}/api/loadSaveSlot`, {slot:slot, timeout: 1000})
+// handle_load_save_slot_put_request
+const loadSaveSlot = async (slot) =>
+    await axios.put(`${base_url}/api/load`, {slot:slot, timeout: 1000})
 
-}
-
-const updateDeviceSettings = (data) => {
-    axios.put(`${base_url}/api/updateDeviceSettings`, data)
-}
-
+// handle_save_to_slot_put_request
 const saveToSlot = (slot) =>
-    axios.put(`${base_url}/api/saveToSlot`, {slot:slot}) ;
+    axios.put(`${base_url}/api/save`, {slot:slot}) ;
 
-const getSystemSettings = () => 
-    axios.get(`${base_url}/api/getDeviceSettings`,  {headers: {'Access-Control-Allow-Origin': '*'}})
+// handle_system_settings_put_request
+const updateDeviceSettings = (data) => 
+    axios.put(`${base_url}/api/putSettings`, data)
+
+// handle_system_settings_get_request
+const getDeviceSettings = () => 
+    axios.get(`${base_url}/api/getSettings`,  {headers: {'Access-Control-Allow-Origin': '*'}})
     .then(response => response.data);
 
 
@@ -109,13 +109,13 @@ export {
     getHostname,
     saveHostname,
     getHistory,
-    getLoadedSubpattern,
-    getLoadedPatternSettings,
-    updateLoadedSubpattern,
-    updateLoadedPattern,
+    getPattern,
+    getStripSettings,
+    updatePattern,
+    updateStripSettings,
     loadSaveSlot,
     saveToSlot,
     updateDeviceSettings,
-    getSystemSettings,
+    getDeviceSettings,
     base_url
 };
