@@ -59,11 +59,11 @@ double checkVol;
 /// Updated to "true" when the web server changes significant pattern settings.
 volatile bool pattern_changed = false;
 
-/// The current pattern being ran by the device.
-Pattern_Data loaded_pattern;
+/// The current strip configuration being ran by the device.
+Strip_Data loaded_patterns;
 
-/// All patterns currently loaded from storage.
-Pattern_Data saved_patterns[NUM_SAVES];
+/// All patterns and strip configuration currently loaded from storage.
+Strip_Data saved_patterns[NUM_SAVES];
 
 /// The currently-loaded device config.
 Config_Data config;
@@ -75,7 +75,7 @@ uint8_t manual_pattern_idx = 0;
 volatile bool manual_control_enabled = false;
 
 /// History of all currently-running subpatterns.
-Pattern_History histories[NUM_SUBPATTERNS];
+Pattern_History histories[PATTERN_LIMIT];
 
 /// The current list of patterns, externed from globals.h.
 extern Pattern mainPatterns[];
@@ -171,8 +171,8 @@ void scale_crgb_array(CRGB *arr, uint8_t len, uint8_t factor) {
 
 /// @brief  Runs the strip splitting LED strip mode
 ///
-/// This function allocates a number of LEDs per subpattern, then
-/// moves LED data from the subpattern's history buffer to the
+/// This function allocates a number of LEDs per pattern, then
+/// moves LED data from the pattern's history buffer to the
 /// unsmoothed output buffer.
 ///
 /// Once the data is in the unsmoothed buffer, the buffer is
@@ -180,13 +180,13 @@ void scale_crgb_array(CRGB *arr, uint8_t len, uint8_t factor) {
 void run_strip_splitting() {
 
   // Defines the length of an LED strip segment
-  uint8_t section_length = config.length / loaded_pattern.subpattern_count;
+  uint8_t section_length = config.length / loaded_patterns.pattern_count;
 
-  // Repeat for each subpattern
-  for (int i = 0; i < loaded_pattern.subpattern_count; i++) {
+  // Repeat for each pattern
+  for (int i = 0; i < loaded_patterns.pattern_count; i++) {
 
     // Run the pattern handler for pattern i using history i
-    mainPatterns[loaded_pattern.subpattern[i].idx].pattern_handler(
+    mainPatterns[loaded_patterns.pattern[i].idx].pattern_handler(
       &histories[i],
       section_length);
 
@@ -200,7 +200,7 @@ void run_strip_splitting() {
     scale_crgb_array(
       &output_buffer[section_length * i],
       section_length,
-      loaded_pattern.subpattern[i].brightness);
+      loaded_patterns.pattern[i].brightness);
 
     // Smooth the brightness-adjusted output and put it
     // into the main output buffer.
@@ -209,7 +209,7 @@ void run_strip_splitting() {
       &output_buffer[section_length * i],
       &smoothed_output[section_length * i],
       section_length,
-      255 - loaded_pattern.subpattern[i].smoothing);
+      255 - loaded_patterns.pattern[i].smoothing);
   }
 }
 
@@ -218,8 +218,8 @@ void run_strip_splitting() {
 /// This function layers two subpatterns onto each other,
 /// covering the entire length of the LED strip.
 ///
-/// Each subpattern buffer is moved into a temp buffer, which
-/// scales the brightness of each subpattern according to user
+/// Each pattern buffer is moved into a temp buffer, which
+/// scales the brightness of each pattern according to user
 /// settings.
 ///
 /// Then, the subpatterns are merged into the unsmoothed buffer,
@@ -230,9 +230,9 @@ void run_pattern_layering() {
   // that has been light-adjusted.
   static CRGB temps[2][MAX_LEDS];
 
-  // If there is one subpattern pattern, run strip splitting,
-  // which will output the single subpattern.
-  if (loaded_pattern.subpattern_count < 2) {
+  // If there is one pattern pattern, run strip splitting,
+  // which will output the single pattern.
+  if (loaded_patterns.pattern_count < 2) {
     run_strip_splitting();
     return;
   }
@@ -241,7 +241,7 @@ void run_pattern_layering() {
   // for pattern layering.
   for (uint8_t i = 0; i < 2; i++) {
     // Run the pattern handler for pattern i using history i
-    mainPatterns[loaded_pattern.subpattern[i].idx].pattern_handler(
+    mainPatterns[loaded_patterns.pattern[i].idx].pattern_handler(
       &histories[i],
       config.length);
 
@@ -255,7 +255,7 @@ void run_pattern_layering() {
     scale_crgb_array(
       temps[i],
       config.length,
-      loaded_pattern.subpattern[i].brightness);
+      loaded_patterns.pattern[i].brightness);
   }
 
   // Combine the two temp arrays.
@@ -264,7 +264,7 @@ void run_pattern_layering() {
     temps[1],
     output_buffer,
     config.length,
-    loaded_pattern.alpha);
+    loaded_patterns.alpha);
 
   // Smooth the combined layered output buffer.
   calculate_layering(
@@ -272,7 +272,7 @@ void run_pattern_layering() {
     output_buffer,
     smoothed_output,
     config.length,
-    255 - loaded_pattern.subpattern[0].smoothing);
+    255 - loaded_patterns.pattern[0].smoothing);
 }
 
 /// @brief Prints a buffer to serial.
@@ -338,7 +338,7 @@ void loop() {
       155);
 
   } else {
-    switch (loaded_pattern.mode) {
+    switch (loaded_patterns.mode) {
 
       case STRIP_SPLITTING:
         run_strip_splitting();
@@ -392,7 +392,7 @@ void audio_analysis() {
 
   update_drums();
 
-  noise_gate(loaded_pattern.noise_thresh);
+  noise_gate(loaded_patterns.noise_thresh);
 
   Serial.println(volume);
 
