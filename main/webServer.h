@@ -638,7 +638,7 @@ inline void setup_networking()
 
     // AP mode is always active.
     WiFi.mode(WIFI_MODE_APSTA);
-    WiFi.softAP(ap_ssid, ap_password);
+    WiFi.softAP(ap_ssid);
     delay(1000);
     const IPAddress ap_ip = WiFi.softAPIP();
 

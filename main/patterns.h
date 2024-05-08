@@ -43,7 +43,7 @@ void setColorHSV(CRGB* leds, byte h, byte s, byte v, int len);
 
 // void getFhue(uint8_t min_hue, uint8_t max_hue);
 
-void getFhue();
+void getFhue(uint8_t min_hue, uint8_t max_hue);
 
 void getVbrightness();
 
@@ -73,5 +73,6 @@ void glitch(Pattern_History * hist, int len, Subpattern_Data * params);
 
 void bands(Pattern_History * hist, int len, Subpattern_Data * params);
 
+void Fire2012(Pattern_History * hist, int len, Subpattern_Data* params);
 
 #endif

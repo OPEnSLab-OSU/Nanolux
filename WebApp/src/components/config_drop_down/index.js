@@ -15,7 +15,7 @@ const ConfigDropDown = ({
         ["None"],
         ["Default"],
         ["Default"],
-        ["Default", "Blur"],
+        ["Default", "Blur", "Shift"],
         ["Default", "Octaves", "Shift", "Compression"],
         ["Default", "Shift"],
         ["Hue", "Formants", "Moving"],
@@ -24,6 +24,7 @@ const ConfigDropDown = ({
         ["Default"],
         ["Default"],
         ["Frequency", "Volume"],
+        ["Default"]
     ]
 
     const current = useSignal(initial);

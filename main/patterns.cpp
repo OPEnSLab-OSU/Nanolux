@@ -35,21 +35,21 @@ extern Config_Data config; // Currently loaded config
 extern Subpattern_Data params;
 
 // get frequency hue
-// void getFhue(uint8_t min_hue, uint8_t max_hue){
-//     fHue = remap(
-//     log(peak) / log(2),
-//     log(MIN_FREQUENCY) / log(2),
-//     log(MAX_FREQUENCY) / log(2),
-//     min_hue, max_hue);
-// }
-
-void getFhue(){
+void getFhue(uint8_t min_hue, uint8_t max_hue){
     fHue = remap(
     log(peak) / log(2),
     log(MIN_FREQUENCY) / log(2),
     log(MAX_FREQUENCY) / log(2),
-    10, 240);
+    min_hue, max_hue);
 }
+
+// void getFhue(){
+//     fHue = remap(
+//     log(peak) / log(2),
+//     log(MIN_FREQUENCY) / log(2),
+//     log(MAX_FREQUENCY) / log(2),
+//     10, 240);
+// }
 
 /// get vol brightness
 void getVbrightness(){
@@ -93,7 +93,7 @@ void pix_freq(Pattern_History * hist, int len, Subpattern_Data* params) {
     //switch(params->config){
       //case 0:
       //default:
-    getFhue();
+    //getFhue();
     fadeToBlackBy(hist->leds, len, 50);
     if (volume > 200) {
       hist->pix_pos = map(peak, MIN_FREQUENCY, MAX_FREQUENCY, 0, len-1);
@@ -162,7 +162,17 @@ void hue_trail(Pattern_History* hist, int len, Subpattern_Data* params) {
             }
             blur1d(hist->leds, len, 20);
             break;
-    }
+            }
+        case 2: //sin_hue
+        {
+        //Create sin beat
+        uint16_t sinBeat0  = beatsin16(12, 0, len-1, 0, 0);
+        
+        //Given the sinBeat and fHue, color the LEDS and fade
+        hist->leds[sinBeat0]  = CHSV(fHue, 255, MAX_BRIGHTNESS);
+        fadeToBlackBy(hist->leds, len, 5);
+        break;
+      }
 
   }
 }
@@ -288,7 +298,8 @@ void talking(Pattern_History *hist, int len, Subpattern_Data *params) {
 
       // Reset formant array for next loop, assuming dynamic allocation
       delete[] formants;
-    } break;
+      break;
+    } 
 
     case 2: { // Moving
       offsetFromVolume = remap(volume, MIN_VOLUME, MAX_VOLUME, 0, 12500);
@@ -300,7 +311,8 @@ void talking(Pattern_History *hist, int len, Subpattern_Data *params) {
       hist->leds[sinBeat0] = CHSV(fHue + 100, 255, MAX_BRIGHTNESS);
       hist->leds[sinBeat1] = CHSV(fHue, 255, MAX_BRIGHTNESS);
       hist->leds[sinBeat2] = CHSV(fHue, 255, MAX_BRIGHTNESS);
-    } break;
+      break;
+    } 
 
     default: // Talking Hue
     case 0: 
@@ -364,7 +376,215 @@ void glitch(Pattern_History * hist, int len, Subpattern_Data * params ) {
 /// @param len The length of LEDs to process
 /// @param params Pointer to Subpattern_Data structure containing configuration options.
 void bands(Pattern_History* hist, int len, Subpattern_Data* params) {
-  
+    // double *fiveSamples = band_sample_bounce();
+    double *fiveSamples = band_split_bounce(len); // Maybe use above if you want, but its generally agreed this one looks better
+    
+    double avg1 = 0;
+    double avg2 = 0;
+    double avg3 = 0;
+    double avg4 = 0;
+    double avg5 = 0;
+
+    double vol1 = fiveSamples[0];
+    double vol2 = fiveSamples[1];
+    double vol3 = fiveSamples[2];
+    double vol4 = fiveSamples[3];
+    double vol5 = fiveSamples[4]; 
+
+
+      switch (params->config) {
+        case 0 : 
+        {
+            vol1 = fiveSamples[0];
+            vol2 = fiveSamples[1];
+            vol3 = fiveSamples[2];
+            vol4 = fiveSamples[3];
+            vol5 = fiveSamples[4];
+
+            // Fill each chunk of the light strip with the volume of each band
+            for (int i = 0; i < vol1; i++) {
+              hist->leds[i] = CRGB(255,0,0);
+            }
+            for (int i = len/5; i < len/5+vol2; i++) {
+              hist->leds[i] = CRGB(255,255,0);
+            }
+            for (int i = 2*len/5; i < 2*len/5+vol3; i++) {
+              hist->leds[i] = CRGB(0,255,0);
+            }
+            for (int i = 3*len/5; i < 3*len/5+vol4; i++) {
+              hist->leds[i] = CRGB(0,255,255);
+            }
+            for (int i = 4*len/5; i < 4*len/5+vol5; i++) {
+              hist->leds[i] = CRGB(0,0,255);
+            }
+
+            delete [] fiveSamples;
+        }
+          case 1:{
+          // Calculate the volume of each band
+          for (int i = 0; i < advanced_size; i++) {
+            avg1 += hist->max1[i];    
+          }
+          avg1 /= advanced_size;
+          for (int i = 0; i < advanced_size; i++) {
+            avg2 += hist->max2[i];
+          }
+          avg2 /= advanced_size;
+          for (int i = 0; i < advanced_size; i++) {
+            avg3 += hist->max3[i];
+          }
+          avg3 /= advanced_size;
+          for (int i = 0; i < advanced_size; i++) {
+            avg4 += hist->max4[i];
+          }
+          avg4 /= advanced_size;
+          for (int i = 0; i < advanced_size; i++) {
+            avg5 += hist->max5[i];
+          }
+          avg5 /= advanced_size;
+
+          double *fiveSamples = band_split_bounce(len);
+
+          vol1 = fiveSamples[0];
+          vol2 = fiveSamples[1];
+          vol3 = fiveSamples[2];
+          vol4 = fiveSamples[3];
+          vol5 = fiveSamples[4]; 
+
+          // Get the Five Sample Split ^
+
+          if(config.debug_mode == 1){
+            Serial.print("ADVANCED::\tAVG1:\t");
+            Serial.print(avg1);
+            Serial.print("\tAVG2:\t");
+            Serial.print(avg2);
+            Serial.print("\tAVG3:\t");
+            Serial.print(avg3);
+            Serial.print("\tAVG4:\t");
+            Serial.print(avg4);
+            Serial.print("\tAVG5:\t");
+            Serial.print(avg5);
+          }
+
+          // If there exists a new volume that is bigger than the falling pixel, reassign it to the top, otherwise make it fall for each band
+          if (vol1 <= avg1) {
+            hist->max1[hist->maxIter] = 0;
+          }
+          else {
+              for (int i = 0; i < 5; i++) {
+                hist->max1[i] = vol1;
+              }
+          }
+            
+          if (vol2 <= avg2) {
+            hist->max2[hist->maxIter] = 0;
+          }
+          else {
+              for (int i = 0; i < 5; i++) {
+                hist->max2[i] = vol2;
+              }
+          }
+
+          if (vol3 <= avg3) {
+            hist->max3[hist->maxIter] = 0;
+          }
+          else {
+              for (int i = 0; i < 5; i++) {
+                hist->max3[i] = vol3;
+              }
+          }
+
+          if (vol4 <= avg4) {
+            hist->max4[hist->maxIter] = 0;
+          }
+          else {
+              for (int i = 0; i < 5; i++) {
+                hist->max4[i] = vol4;
+              }
+          }
+
+          if (vol5 <= avg5) {
+            hist->max5[hist->maxIter] = 0;
+          }
+          else {
+              for (int i = 0; i < 5; i++) {
+                hist->max5[i] = vol5;
+              }
+          }
+
+          // Get this smoothed array to loop to beginning again once it is at teh end of the falling pixel smoothing
+          if (hist->maxIter == advanced_size-1) {
+            hist->maxIter = 0;
+          } else {
+            hist->maxIter++;
+          }
+
+          // Fill the respective chunks of the light strip with the color based on above^
+          for (int i = 0; i < vol1-1; i++) {
+            hist->leds[i] = CRGB(255,0,0);
+          }
+          for (int i = len/5; i < len/5+vol2-1; i++) {
+            hist->leds[i] = CRGB(255,255,0);
+          }
+          for (int i = 2*len/5; i < 2*len/5+vol3-1; i++) {
+            hist->leds[i] = CRGB(0,255,0);
+          }
+          for (int i = 3*len/5; i < 3*len/5+vol4-1; i++) {
+            hist->leds[i] = CRGB(0,255,255);
+          }
+          for (int i = 4*len/5; i < 4*len/5+vol5-1; i++) {
+            hist->leds[i] = CRGB(0,0,255);
+          }
+          
+          // Assign the values for the pixel to goto
+          hist->leds[(int) avg1+ (int) vol1] = CRGB(255,255,255);
+          hist->leds[(int) len/5 + (int) avg2+ (int) vol2] = CRGB(255,255,255);
+          hist->leds[(int) 2*len/5+(int) avg3+ (int) vol3] = CRGB(255,255,255);
+          hist->leds[(int) 3*len/5+(int) avg4+ (int) vol4] = CRGB(255,255,255);
+          hist->leds[(int) 4*len/5+(int) avg5+ (int) vol5] = CRGB(255,255,255);
+          fadeToBlackBy(hist->leds, len, 90);
+
+          delete [] fiveSamples;
+          break;
+        }
+        case 2 :
+        {
+            // Grab the formants
+            double *temp_formants = density_formant();
+            double f0Hue = remap(temp_formants[0], MIN_FREQUENCY, MAX_FREQUENCY, 0, 255);
+            double f1Hue = remap(temp_formants[1], MIN_FREQUENCY, MAX_FREQUENCY, 0, 255);
+            double f2Hue = remap(temp_formants[2], MIN_FREQUENCY, MAX_FREQUENCY, 0, 255);
+
+            if(config.debug_mode == 1){
+              Serial.print("\t f0Hue: ");
+              Serial.print(temp_formants[0]);
+              Serial.print("\t f1Hue: ");
+              Serial.print(temp_formants[1]);
+              Serial.print("\t f2Hue: ");
+              Serial.print(temp_formants[2]);
+            }
+
+            // Fill 1/3 with each formant
+            for (int i = 0; i < len; i++) {
+              if (i < len/3) {
+                hist->leds[i] = CHSV(f0Hue, 255, 255);
+              }
+              else if (len/3 <= i && i < 2*len/3) {
+                hist->leds[i] = CHSV(f1Hue, 255, 255);
+              } 
+              else { 
+                hist->leds[i] = CHSV(f2Hue, 255, 255);
+              }
+            }
+
+            // Smooth out the result
+            for (int i = 0; i < 5; i++) {
+              blur1d(hist->leds, len, 50);
+            }
+            delete[] temp_formants;
+            break;
+          }
+      }
 }
 
 /// @brief Short and sweet function. Each pixel corresponds to a value from vReal, 
@@ -407,18 +627,112 @@ void random_raindrop(Pattern_History * hist, int len, Subpattern_Data* params){
 /// @param len The length of LEDs to process
 /// @param params Pointer to Subpattern_Data structure containing configuration options.
 void tug_of_war(Pattern_History * hist, int len, Subpattern_Data* params) {
-    int splitPosition = remap(volume, MIN_VOLUME, MAX_VOLUME, 0, len);
+    int splitPosition;
     //use this function with smoothing for better results
     // red is on the left, blue is on the right
-    for (int i = 0; i < len; i++) {
-        if (i < splitPosition) {
-            hist->leds[i] = CRGB::Green; 
-        } else {
-            hist->leds[i] = CRGB::Blue;
+    switch(params->config) {
+      case 0: // frequency
+        {
+          
+        double *formants = density_formant();
+        double f0 = formants[0];
+        delete[] formants;
+        splitPosition = remap(f0, MIN_FREQUENCY, MAX_FREQUENCY, 0, len);
+
+        // red is on the left, blue is on the right
+        for (int i = 0; i < len; i++) {
+            if (i < splitPosition) {
+                hist->leds[i] = CRGB::Blue; 
+            } else {
+                hist->leds[i] = CRGB::Red;
+            }
+        }
+    
+        }
+      case 1: // volume
+        {
+        splitPosition = remap(volume, MIN_VOLUME, MAX_VOLUME, 0, len);
+        for (int i = 0; i < len; i++) {
+            if (i < splitPosition) {
+                hist->leds[i] = CRGB::Green; 
+            } else {
+                hist->leds[i] = CRGB::Blue;
+            }
+        }
         }
     }
 }
 
+void tug_of_war_frequency(Pattern_History * hist, int len) {
+    double *formants = density_formant();
+    double f0 = formants[0];
+    delete[] formants;
+
+    int splitPosition = remap(f0, MIN_FREQUENCY, MAX_FREQUENCY, 0, len);
+
+    // red is on the left, blue is on the right
+    for (int i = 0; i < len; i++) {
+        if (i < splitPosition) {
+            hist->leds[i] = CRGB::Blue; 
+        } else {
+            hist->leds[i] = CRGB::Red;
+        }
+    }
+}
+
+
+/// @brief Fire2012 pattern utilizing heating and cooling
+/// @param hist Pointer to the Pattern_History structure, holds LED buffer and history variables.
+/// @param len The length of LEDs to process
+/// @param params Pointer to Subpattern_Data structure containing configuration options.
+void Fire2012(Pattern_History * hist, int len, Subpattern_Data* params){
+  
+  int sparkVolume = remap(volume, MIN_VOLUME, MAX_VOLUME, 10,200);
+  //int coolingVolume = remap(volume, MIN_VOLUME, MAX_VOLUME, 60, 40);
+  //Serial.println(sparkVolume);
+  
+  
+  // Array of temperature readings at each simulation cell
+  static byte heat[NUM_LEDS];
+
+// Step 1.  Cool down every cell a little
+  for( int i = 0; i < NUM_LEDS; i++) {
+    heat[i] = qsub8( heat[i],  random8(0, ((COOLING * 10) / NUM_LEDS) + 2));
+  }
+
+  // Step 2.  Heat from each cell drifts 'up' and diffuses a little
+  for( int k= NUM_LEDS - 1; k >= 2; k--) {
+    heat[k] = (heat[k - 1] + heat[k - 2] + heat[k - 2] ) / 3;
+  }
+  
+  // Step 3.  Randomly ignite new 'sparks' of heat near the bottom
+  if( random8() < sparkVolume ) {
+    int y = random8(7);
+    heat[y] = qadd8( heat[y], random8(160,255) );
+  }
+
+  //Step 3.5. Calcualate Brightness from low frequencies
+  int l = (sizeof(vReal)/sizeof(vReal[0])) / 7;
+  double smol_arr[l];
+  memcpy(smol_arr, vReal, l-1);
+    
+  // Step 4.  Map from heat cells to LED colors
+  for( int j = 0; j < NUM_LEDS; j++) {
+    // Scale the heat value from 0-255 down to 0-240
+    // for best results with color palettes.
+  
+    byte colorindex = scale8( heat[j], 240);
+    //byte colorindex = scale8( heat[j], smol_arr);
+    CRGB color = ColorFromPalette( gPal, colorindex);
+    int pixelnumber;
+    if( gReverseDirection ) {
+      pixelnumber = (NUM_LEDS-1) - j;
+    } else {
+      pixelnumber = j;
+    }
+    hist->leds[pixelnumber] = color;
+  }
+}
 
 
 

@@ -137,9 +137,10 @@ Pattern mainPatterns[]{
     { 9, "Equalizer", true, eq},
     { 10, "Tug of War", true, tug_of_war},
     { 11, "Rain Drop", true, random_raindrop},
+    { 12, "Fire 2012", true, Fire2012},
     
 };
-int NUM_PATTERNS = 12;  // MAKE SURE TO UPDATE THIS WITH THE ACTUAL NUMBER OF PATTERNS (+1 last array pos)
+int NUM_PATTERNS = 13;  // MAKE SURE TO UPDATE THIS WITH THE ACTUAL NUMBER OF PATTERNS (+1 last array pos)
 
 
 /**********************************************************
@@ -311,8 +312,8 @@ void unfold_buffer(CRGB* buf, uint8_t len, bool even){
 }
 
 void process_pattern(uint8_t idx, uint8_t len){
-  //getFhue(loaded_pattern.subpattern[idx].minhue, loaded_pattern.subpattern[idx].maxhue);
-  //getVbrightness();
+  getFhue(loaded_pattern.subpattern[idx].minhue, loaded_pattern.subpattern[idx].maxhue);
+  getVbrightness();
   // Calculate the length to process
   uint8_t processed_len = (loaded_pattern.subpattern[idx].mirrored) ? len/2 : len;
 
@@ -456,18 +457,18 @@ void loop() {
 
   audio_analysis();  // Run the audio analysis pipeline
 
-  fHue = remap(
-    log(peak) / log(2),
-    log(MIN_FREQUENCY) / log(2),
-    log(MAX_FREQUENCY) / log(2),
-    10, 240);
+  // fHue = remap(
+  //   log(peak) / log(2),
+  //   log(MIN_FREQUENCY) / log(2),
+  //   log(MAX_FREQUENCY) / log(2),
+  //   10, 240);
 
-  vbrightness = remap(
-    volume,
-    MIN_VOLUME,
-    MAX_VOLUME,
-    0,
-    MAX_BRIGHTNESS);
+  // vbrightness = remap(
+  //   volume,
+  //   MIN_VOLUME,
+  //   MAX_VOLUME,
+  //   0,
+  //   MAX_BRIGHTNESS);
 
 
   switch (loaded_pattern.mode) {
