@@ -54,7 +54,7 @@ typedef struct{
   double vRealSums[5] = {0,0,0,0,0};
 } Pattern_History;
 
-extern Subpattern_Data params;
+extern Pattern_Data params;
 
 void nextPattern();
 
@@ -68,33 +68,33 @@ void getFhue(uint8_t min_hue, uint8_t max_hue);
 
 void getVbrightness();
 
-void blank(Pattern_History * hist, int len, Subpattern_Data* params);
+void blank(Pattern_History * hist, int len, Pattern_Data* params);
 
-void confetti(Pattern_History * hist, int len, Subpattern_Data* params);
+void confetti(Pattern_History * hist, int len, Pattern_Data* params);
 
-void pix_freq(Pattern_History * hist, int len, Subpattern_Data* params);
+void pix_freq(Pattern_History * hist, int len, Pattern_Data* params);
 
-void eq(Pattern_History * hist, int len, Subpattern_Data* params);
+void eq(Pattern_History * hist, int len, Pattern_Data* params);
 
-void tug_of_war(Pattern_History * hist, int len, Subpattern_Data* params);
+void tug_of_war(Pattern_History * hist, int len, Pattern_Data* params);
 
-void tug_of_war(Pattern_History * hist, int len, Subpattern_Data* params);
+void tug_of_war(Pattern_History * hist, int len, Pattern_Data* params);
 
-void saturated(Pattern_History * hist, int len, Subpattern_Data* params);
+void saturated(Pattern_History * hist, int len, Pattern_Data* params);
 
-void random_raindrop(Pattern_History * hist, int len, Subpattern_Data* params);
+void random_raindrop(Pattern_History * hist, int len, Pattern_Data* params);
 
-void hue_trail(Pattern_History* hist, int len, Subpattern_Data* params);
+void hue_trail(Pattern_History* hist, int len, Pattern_Data* params);
 
-void groovy(Pattern_History* hist, int len, Subpattern_Data* params);
+void groovy(Pattern_History* hist, int len, Pattern_Data* params);
 
-void talking(Pattern_History *hist, int len, Subpattern_Data *params);
+void talking(Pattern_History *hist, int len, Pattern_Data *params);
 
-void glitch(Pattern_History * hist, int len, Subpattern_Data * params);
+void glitch(Pattern_History * hist, int len, Pattern_Data * params);
 
-void bands(Pattern_History * hist, int len, Subpattern_Data * params);
+void bands(Pattern_History * hist, int len, Pattern_Data * params);
 
-void Fire2012(Pattern_History * hist, int len, Subpattern_Data* params);
+void Fire2012(Pattern_History * hist, int len, Pattern_Data* params);
 
 
 #endif

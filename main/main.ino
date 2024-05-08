@@ -3,6 +3,7 @@
  * This file is the main driver of the NanoLux codebase.
  *
 **/
+
 #include <ArduinoJson.h>
 #include <ArduinoJson.hpp>
 #include <FastLED.h>
@@ -75,7 +76,7 @@ uint8_t manual_pattern_idx = 0;
 /// Contains if manual control is enabled or not.
 volatile bool manual_control_enabled = false;
 
-/// History of all currently-running subpatterns.
+/// History of all currently-running patterns.
 Pattern_History histories[PATTERN_LIMIT];
 
 /// The current list of patterns, externed from globals.h.
@@ -206,25 +207,25 @@ void unfold_buffer(CRGB* buf, uint8_t len, bool even){
 }
 
 void process_pattern(uint8_t idx, uint8_t len){
-  getFhue(loaded_pattern.subpattern[idx].minhue, loaded_pattern.subpattern[idx].maxhue);
+  getFhue(loaded_patterns.pattern[idx].minhue, loaded_patterns.pattern[idx].maxhue);
   getVbrightness();
   // Calculate the length to process
-  uint8_t processed_len = (loaded_pattern.subpattern[idx].mirrored) ? len/2 : len;
+  uint8_t processed_len = (loaded_patterns.pattern[idx].mirrored) ? len/2 : len;
 
   // Reverse the buffer to make it normal if it is reversed.
-  if(loaded_pattern.subpattern[idx].reversed) reverse_buffer(histories[idx].leds, processed_len);
+  if(loaded_patterns.pattern[idx].reversed) reverse_buffer(histories[idx].leds, processed_len);
 
   // Process the pattern.
-  mainPatterns[loaded_pattern.subpattern[idx].idx].pattern_handler(
+  mainPatterns[loaded_patterns.pattern[idx].idx].pattern_handler(
       &histories[idx],
       processed_len,
-      &loaded_pattern.subpattern[idx]);
+      &loaded_patterns.pattern[idx]);
   
   // Re-invert the buffer if we need the output to be reversed.
-  if(loaded_pattern.subpattern[idx].reversed) reverse_buffer(histories[idx].leds, processed_len);
+  if(loaded_patterns.pattern[idx].reversed) reverse_buffer(histories[idx].leds, processed_len);
 
   // Unfold the buffer if needed.
-  if(loaded_pattern.subpattern[idx].mirrored) 
+  if(loaded_patterns.pattern[idx].mirrored) 
     unfold_buffer(histories[idx].leds, processed_len, (len == processed_len * 2));
 }
 
@@ -277,14 +278,14 @@ void run_strip_splitting() {
 
 /// @brief Runs the pattern layering output mode
 ///
-/// This function layers two subpatterns onto each other,
+/// This function layers two patterns onto each other,
 /// covering the entire length of the LED strip.
 ///
 /// Each pattern buffer is moved into a temp buffer, which
 /// scales the brightness of each pattern according to user
 /// settings.
 ///
-/// Then, the subpatterns are merged into the unsmoothed buffer,
+/// Then, the patterns are merged into the unsmoothed buffer,
 /// which then is combined with the smoothed buffer.
 void run_pattern_layering() {
 
@@ -299,7 +300,7 @@ void run_pattern_layering() {
     return;
   }
 
-  // If there are more than two subpatterns, use the first two
+  // If there are more than two patterns, use the first two
   // for pattern layering.
   uint8_t section_length = config.length;
   for (uint8_t i = 0; i < 2; i++) {
@@ -386,7 +387,7 @@ void loop() {
   //   MAX_BRIGHTNESS);
 
 
-  switch (loaded_pattern.mode) {
+  switch (loaded_patterns.mode) {
 
       case STRIP_SPLITTING:
         run_strip_splitting();

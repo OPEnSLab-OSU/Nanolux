@@ -45,7 +45,7 @@ typedef struct {
   int index;
   const char *pattern_name;
   bool enabled;
-  void (*pattern_handler)(Pattern_History *, int);
+  void (*pattern_handler)(Pattern_History * hist, int len, Pattern_Data* params);
 } Pattern;
 
 //
@@ -56,48 +56,21 @@ typedef struct {
 // It will not be selectable and the loop below will not know about it.
 //
 Pattern mainPatterns[]{
-  { 0, "None", true, blank },
-  { 1, "Hue Trail", true, freq_hue_trail },
-  { 2, "Volume Brightness", true, freq_hue_vol_brightness },
-  { 3, "Confetti", true, freq_confetti_vol_brightness },
-  { 4, "Volume Level Bar", true, volume_level_middle_bar_freq_hue },
-  { 5, "Saturated Noise", true, saturated_noise },
-  { 6, "Saturated Noise Octaves", true, saturated_noise_hue_octaves },
-  { 7, "Saturated Noise Shift", true, saturated_noise_hue_shift },
-  { 8, "Saturated Noise Compression", true, saturated_noise_compression },
-  { 9, "Groovy Noise", true, groovy_noise },
-  { 10, "Groovy Noise Shift", true, groovy_noise_hue_shift_change },
-  { 11, "Sine Wave Trail", true, sin_hue_trail },
-  { 12, "Hue Trail Mid", true, freq_hue_trail_mid },
-  { 13, "Hue Trail Mid Blur", true, freq_hue_trail_mid_blur },
-  { 14, "Talking Hue", true, talking_hue },
-  { 15, "Talking Formants", true, talking_formants },
-  { 16, "Talking Moving", true, talking_moving },
-  { 17, "Bounce Back", true, bounce_back },
-  { 18, "Glitch Sections", true, glitch_sections },
-  { 19, "Glitch", true, glitch },
-  { 20, "Glitch Talk", true, glitch_talk },
-  { 21, "Spring Mass 1", true, spring_mass_1 },
-  { 22, "Spring Mass 2", true, spring_mass_2 },
-  { 23, "Spring Mass 3", true, spring_mass_3 },
-  { 24, "Formant Test", true, formant_test },
-  { 25, "Show Formants", true, show_formants },
-  { 26, "Band Brightness", true, band_brightness },
-  { 27, "Noisy", true, noisy },
-  { 28, "Alt Drums", true, alt_drums },
-  { 29, "Show Drums", true, show_drums },
-  { 30, "Pixel Frequency", true, pix_freq },
-  { 31, "Equalizer", true, eq },
-  { 32, "Math", true, math },
-  { 33, "Classical", true, classical },
-  { 34, "Basic Bands", true, basic_bands },
-  { 35, "Advanced Bands", true, advanced_bands },
-  { 36, "Formant Band", true, formant_band },
-  { 37, "Mirrored Pixel Frequency", true, mirror_pix_freq },
-  { 38, "Tug O' War Frequency", true, tug_of_war_frequency },
-  { 39, "Tug O' War Volume", true, tug_of_war_volume },
-  { 40, "Random Raindrop", true, random_raindrop }
+    { 0, "None", true, blank},
+    { 1, "Pixel Frequency", true, pix_freq},
+    { 2, "Confetti", true, confetti},
+    { 3, "Hue Trail", true, hue_trail},
+    { 4, "Saturated", true, saturated},
+    { 5, "Groovy", true, groovy},
+    { 6, "Talking", true, talking},
+    { 7, "Glitch", true, glitch},
+    { 8, "Bands", true, bands},
+    { 9, "Equalizer", true, eq},
+    { 10, "Tug of War", true, tug_of_war},
+    { 11, "Rain Drop", true, random_raindrop},
+    { 12, "Fire 2012", true, Fire2012},
+    
 };
-int NUM_PATTERNS = 41;  // MAKE SURE TO UPDATE THIS WITH THE ACTUAL NUMBER OF PATTERNS (+1 last array pos)
+int NUM_PATTERNS = 13;  // MAKE SURE TO UPDATE THIS WITH THE ACTUAL NUMBER OF PATTERNS (+1 last array pos)
 
 #endif

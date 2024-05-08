@@ -17,6 +17,7 @@
 #include "core_analysis.h"
 #include "ext_analysis.h"
 #include "palettes.h"
+#include "globals.h"
 
 extern unsigned long microseconds;
 extern double vReal[SAMPLES];      // Sampling buffers
@@ -38,7 +39,10 @@ CRGBPalette16 gPal = GMT_hot_gp; //store all palettes in array
 bool gReverseDirection = false;
 
 extern Config_Data config; // Currently loaded config
-extern Subpattern_Data params;
+extern Pattern_Data params;
+
+extern uint8_t manual_pattern_idx;
+extern bool manual_control_enabled;
 
 // get frequency hue
 void getFhue(uint8_t min_hue, uint8_t max_hue){
@@ -82,7 +86,7 @@ void clearLEDSegment(Pattern_History * hist, int len){
     hist->leds[i] = CRGB(0,0,0);
 }
 
-void blank(Pattern_History * hist, int len, Subpattern_Data* params){
+void blank(Pattern_History * hist, int len, Pattern_Data* params){
   clearLEDSegment(hist, len);
 }
 
@@ -98,8 +102,8 @@ void setColorHSV(CRGB* leds, byte h, byte s, byte v, int len) {
 ///        and fall down (vol_show adds another threshold)
 /// @param hist Pointer to the Pattern_History structure, holds LED buffer and history variables.
 /// @param len The length of LEDs to process
-/// @param params Pointer to Subpattern_Data structure containing configuration options.
-void pix_freq(Pattern_History * hist, int len, Subpattern_Data* params) {
+/// @param params Pointer to Pattern_Data structure containing configuration options.
+void pix_freq(Pattern_History * hist, int len, Pattern_Data* params) {
     //switch(params->config){
       //case 0:
       //default:
@@ -114,7 +118,7 @@ void pix_freq(Pattern_History * hist, int len, Subpattern_Data* params) {
       hist->tempHue--;
       hist->vol_pos--;
     }
-    if (vol_show) {
+    if (VOL_SHOW) {
       if (volume > 100) {
         hist->vol_pos = map(volume, MIN_VOLUME, MAX_VOLUME, 0, len-1);
         hist->tempHue = fHue;
@@ -131,8 +135,8 @@ void pix_freq(Pattern_History * hist, int len, Subpattern_Data* params) {
 ///        Colored speckles that blink and fade smoothly are scattered across the strip.
 /// @param hist Pointer to the Pattern_History structure, holds LED buffer and history variables.
 /// @param len The length of LEDs to process
-/// @param params Pointer to Subpattern_Data structure containing configuration options.
-void confetti(Pattern_History * hist, int len, Subpattern_Data* params){
+/// @param params Pointer to Pattern_Data structure containing configuration options.
+void confetti(Pattern_History * hist, int len, Pattern_Data* params){
   // colored speckles based on frequency that blink in and fade smoothly
   fadeToBlackBy(hist->leds, len, 20);
   int pos = random16(len);
@@ -149,8 +153,8 @@ void confetti(Pattern_History * hist, int len, Subpattern_Data* params){
 ///           blur configuration adds blur
 /// @param hist Pointer to the Pattern_History structure, holds LED buffer and history variables.
 /// @param len The length of LEDs to process
-/// @param params Pointer to Subpattern_Data structure containing configuration options.
-void hue_trail(Pattern_History* hist, int len, Subpattern_Data* params) {
+/// @param params Pointer to Pattern_Data structure containing configuration options.
+void hue_trail(Pattern_History* hist, int len, Pattern_Data* params) {
     switch (params->config) {
         case 0: // freq_hue_trail (also default case)
         default: // Default case set to execute the freq_hue_trail pattern
@@ -194,8 +198,8 @@ void hue_trail(Pattern_History* hist, int len, Subpattern_Data* params) {
 ///         Noise Compression config rremaps volume as hue_x parameter
 /// @param hist Pointer to the Pattern_History structure, holds LED buffer and history variables.
 /// @param len The length of LEDs to process
-/// @param params Pointer to Subpattern_Data structure containing configuration options.
-void saturated(Pattern_History* hist, int len, Subpattern_Data* params){
+/// @param params Pointer to Pattern_Data structure containing configuration options.
+void saturated(Pattern_History* hist, int len, Pattern_Data* params){
   //Set params for fill_noise16()
   uint8_t octaves = 1;
   uint16_t x = 0;
@@ -238,8 +242,8 @@ void saturated(Pattern_History* hist, int len, Subpattern_Data* params){
 ///       Hue Shift Change configuration remaps volume variable as hue_shift.
 /// @param hist Pointer to the Pattern_History structure, holds LED buffer and history variables.
 /// @param len The length of LEDs to process
-/// @param params Pointer to Subpattern_Data structure containing configuration options.
-void groovy(Pattern_History* hist, int len, Subpattern_Data* params) {
+/// @param params Pointer to Pattern_Data structure containing configuration options.
+void groovy(Pattern_History* hist, int len, Pattern_Data* params) {
     // Assume global access to necessary variables like volume, or pass them as parameters
     switch (params->config) {
         case 0: // groovy_noise (also default case)
@@ -286,8 +290,8 @@ void groovy(Pattern_History* hist, int len, Subpattern_Data* params) {
 ///         Moving configuration, the three clusters move up and down according to sine wave motion.
 /// @param hist Pointer to the Pattern_History structure, holds LED buffer and history variables.
 /// @param len The length of LEDs to process
-/// @param params Pointer to Subpattern_Data structure containing configuration options.
-void talking(Pattern_History *hist, int len, Subpattern_Data *params) {
+/// @param params Pointer to Pattern_Data structure containing configuration options.
+void talking(Pattern_History *hist, int len, Pattern_Data *params) {
   // Common variables
   int offsetFromVolume;
   int midpoint = len / 2;
@@ -345,8 +349,8 @@ void talking(Pattern_History *hist, int len, Subpattern_Data *params) {
 ///         Sections configuration creates 4 seperate sine wave clusters.
 /// @param hist Pointer to the Pattern_History structure, holds LED buffer and history variables.
 /// @param len The length of LEDs to process
-/// @param params Pointer to Subpattern_Data structure containing configuration options.
-void glitch(Pattern_History * hist, int len, Subpattern_Data * params ) {
+/// @param params Pointer to Pattern_Data structure containing configuration options.
+void glitch(Pattern_History * hist, int len, Pattern_Data * params ) {
     int offsetFromVolume, speedFromVolume;
     uint16_t sinBeat[4]; 
     double *formants;
@@ -384,8 +388,8 @@ void glitch(Pattern_History * hist, int len, Subpattern_Data * params ) {
 ///         Fomant bands config: emonstrates the formant feature of the audio analysis code. Each of the three formant values correspond to a third of the entire LED strip, where the individual formant values determine the hue of each third.
 /// @param hist Pointer to the Pattern_History structure, holds LED buffer and history variables.
 /// @param len The length of LEDs to process
-/// @param params Pointer to Subpattern_Data structure containing configuration options.
-void bands(Pattern_History* hist, int len, Subpattern_Data* params) {
+/// @param params Pointer to Pattern_Data structure containing configuration options.
+void bands(Pattern_History* hist, int len, Pattern_Data* params) {
     // double *fiveSamples = band_sample_bounce();
     double *fiveSamples = band_split_bounce(len); // Maybe use above if you want, but its generally agreed this one looks better
     
@@ -601,8 +605,8 @@ void bands(Pattern_History* hist, int len, Subpattern_Data* params) {
 ///         where the volume at each pitch determines the brightness of each pixel. Hue is locked in to a rainbow.
 /// @param hist Pointer to the Pattern_History structure, holds LED buffer and history variables.
 /// @param len The length of LEDs to process
-/// @param params Pointer to Subpattern_Data structure containing configuration options.
-void eq(Pattern_History * hist, int len, Subpattern_Data* params) {
+/// @param params Pointer to Pattern_Data structure containing configuration options.
+void eq(Pattern_History * hist, int len, Pattern_Data* params) {
   
   for (int i = 0; i < len; i++) {
     int brit = map(vReal[i], MIN_FREQUENCY, MAX_FREQUENCY, 0, 255); // The brightness is based on HOW MUCH of the frequency exists
@@ -616,8 +620,8 @@ void eq(Pattern_History * hist, int len, Subpattern_Data* params) {
 /// @brief A random spot is chosen along the length and does a ripple based on frequency
 /// @param hist Pointer to the Pattern_History structure, holds LED buffer and history variables.
 /// @param len The length of LEDs to process
-/// @param params Pointer to Subpattern_Data structure containing configuration options.
-void random_raindrop(Pattern_History * hist, int len, Subpattern_Data* params){
+/// @param params Pointer to Pattern_Data structure containing configuration options.
+void random_raindrop(Pattern_History * hist, int len, Pattern_Data* params){
     int startIdx = random(len);
 
     hist->leds[startIdx] = CHSV(fHue, 255, vbrightness);
@@ -635,8 +639,8 @@ void random_raindrop(Pattern_History * hist, int len, Subpattern_Data* params){
 ///         based on either frequency or volume
 /// @param hist Pointer to the Pattern_History structure, holds LED buffer and history variables.
 /// @param len The length of LEDs to process
-/// @param params Pointer to Subpattern_Data structure containing configuration options.
-void tug_of_war(Pattern_History * hist, int len, Subpattern_Data* params) {
+/// @param params Pointer to Pattern_Data structure containing configuration options.
+void tug_of_war(Pattern_History * hist, int len, Pattern_Data* params) {
     int splitPosition;
     //use this function with smoothing for better results
     // red is on the left, blue is on the right
@@ -694,8 +698,8 @@ void tug_of_war_frequency(Pattern_History * hist, int len) {
 /// @brief Fire2012 pattern utilizing heating and cooling
 /// @param hist Pointer to the Pattern_History structure, holds LED buffer and history variables.
 /// @param len The length of LEDs to process
-/// @param params Pointer to Subpattern_Data structure containing configuration options.
-void Fire2012(Pattern_History * hist, int len, Subpattern_Data* params){
+/// @param params Pointer to Pattern_Data structure containing configuration options.
+void Fire2012(Pattern_History * hist, int len, Pattern_Data* params){
   
   int sparkVolume = remap(volume, MIN_VOLUME, MAX_VOLUME, 10,200);
   //int coolingVolume = remap(volume, MIN_VOLUME, MAX_VOLUME, 60, 40);

@@ -1,7 +1,7 @@
 /**@file
  *
  * This file contains most of the web request API, in particular
- * pertaining to pattern and subpattern settings.
+ * pertaining to pattern and pattern settings.
  * 
  * For the remaining parts of the API, see webServer.h
  *
@@ -68,7 +68,7 @@ inline void handle_patterns_list_request(AsyncWebServerRequest* request) {
   * { "patten": "<80-char-max-string>" }
   */
 
-/// @brief Handler function for getting subpattern data.
+/// @brief Handler function for getting pattern data.
 /// @param request The incoming request for data.
 ///
 /// This handler is responsible for sending data from a particular pattern.
@@ -86,11 +86,11 @@ inline void handle_pattern_get_request(AsyncWebServerRequest* request) {
   String idx = String(" \"idx\": ") + p.idx;
   String bright = String(", \"brightness\": ") + p.brightness;
   String smooth = String(", \"smoothing\": ") + p.smoothing;
-  String minhue = String(", \"hue_min\": ") + subpattern.minhue;
-  String maxhue = String(", \"hue_max\": ") + subpattern.maxhue;
-  String conf = String(", \"config\": ") + subpattern.config;
-  String reversed = String(", \"reversed\": ") + subpattern.config;
-  String mirrored = String(", \"mirrored\": ") + subpattern.config;
+  String minhue = String(", \"hue_min\": ") + p.minhue;
+  String maxhue = String(", \"hue_max\": ") + p.maxhue;
+  String conf = String(", \"config\": ") + p.config;
+  String reversed = String(", \"reversed\": ") + p.config;
+  String mirrored = String(", \"mirrored\": ") + p.config;
 
   // Build and send the final response
   const String response = String("{") + idx + bright + smooth + minhue + maxhue + conf + reversed + mirrored + String(" }");
@@ -106,7 +106,7 @@ inline void handle_pattern_get_request(AsyncWebServerRequest* request) {
 inline void handle_strip_get_request(AsyncWebServerRequest* request) {
 
   // Create response substrings
-  String count = String(" \"subpattern_count\": ") + loaded_patterns.pattern_count;
+  String count = String(" \"count\": ") + loaded_patterns.pattern_count;
   String alpha = String(", \"alpha\": ") + loaded_patterns.alpha;
   String mode = String(", \"mode\": ") + loaded_patterns.mode;
   String noise = String(", \"noise\": ") + loaded_patterns.noise_thresh;
@@ -128,7 +128,7 @@ inline void handle_strip_put_request(AsyncWebServerRequest* request, JsonVariant
 
     int status = HTTP_OK;
 
-    uint8_t count = payload["subpattern_count"];
+    uint8_t count = payload["count"];
     uint8_t alpha = payload["alpha"];
     uint8_t mode = payload["mode"];
     uint8_t noise = payload["noise"];
@@ -185,9 +185,9 @@ inline void handle_pattern_put_request(AsyncWebServerRequest* request, JsonVaria
     if(idx != loaded_patterns.pattern[pattern_num].idx)
       pattern_changed = true;
 
-    loaded_pattern.subpattern[subpattern_num].idx = idx;
-    loaded_pattern.subpattern[subpattern_num].brightness = bright;
-    loaded_pattern.subpattern[subpattern_num].smoothing = smooth;
+    loaded_patterns.pattern[pattern_num].idx = idx;
+    loaded_patterns.pattern[pattern_num].brightness = bright;
+    loaded_patterns.pattern[pattern_num].smoothing = smooth;
 
     request->send(
       HTTP_OK,
