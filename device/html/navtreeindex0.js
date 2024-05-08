@@ -157,7 +157,8 @@ var NAVTREEINDEX0 =
 "struct_pattern___history.html":[0,0,6],
 "struct_subpattern___data.html":[0,0,7],
 "struct_subpattern___data.html#a2c068a7b5030cb6ee86ade32ca005c9c":[0,0,7,0],
-"struct_subpattern___data.html#a87d761a1c9ef574aea5371d0a3fdae13":[0,0,7,1],
+"struct_subpattern___data.html#a31c5e68aabf39747362efc6d07ad985a":[0,0,7,1],
+"struct_subpattern___data.html#a87d761a1c9ef574aea5371d0a3fdae13":[0,0,7,2],
 "struct_wi_fi_network.html":[0,0,8],
 "struct_wl_status_to_string.html":[0,0,9],
 "web_server_8h_source.html":[1,0,0,15]
