@@ -42,6 +42,7 @@ typedef struct{
   uint8_t idx = 0; /// The selected pattern name to run.
   uint8_t brightness = 255; /// The subpattern's brightness.
   uint8_t smoothing = 0; /// How smoothed subpattern light changes are.
+  uint8_t postprocessing_mode = 0; // The current mode for postprocessing
 
 } Subpattern_Data;
 
