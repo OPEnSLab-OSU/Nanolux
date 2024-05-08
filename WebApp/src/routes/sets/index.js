@@ -1,17 +1,6 @@
 import style from './style.css';
-import Patterns from "../../components/patterns";
-import NumericSlider from "../../components/numeric_slider";
 import {useState, useEffect} from "preact/hooks";
-import {
-	getLoadedSubpattern,
-	updateLoadedSubpattern,
-	getLoadedPatternSettings,
-	updateLoadedPattern,
-	getPatternList,
-	updateDeviceSettings,
-	getSystemSettings} from "../../utils/api";
 import {useConnectivity} from "../../context/online_context";
-import useInterval from "../../utils/use_interval";
 import Save_Entry from '../../components/save_entry';
 import SimpleChooser from '../../components/single_chooser';
 import MultiRangeSliderWrapper from '../../components/multi_range_slider';
@@ -366,9 +355,15 @@ const SystemControls = () => {
 
 const Settings = () => {
 
+	// Object that returns if the app is connected to the device.
 	const { isConnected } = useConnectivity();
+
+	// Stores the list of patterns obtained from the device.
 	const [patterns, setPatterns] = useState([{index: 0, name: "None"}])
 
+	/**
+	 * @brief Obtains the list of patterns from the NanoLux device.
+	 */
 	useEffect(() => {
         if (isConnected) {
             getPatternList()
@@ -376,13 +371,9 @@ const Settings = () => {
 				.then();
         }  
     }, [isConnected])
-	
-
-	const [key, updateKey] = useState(0);
 
 	return (
 		<div>
-
 			<table>
 				<tr>
 					<th>Pattern Settings</th>
@@ -390,9 +381,8 @@ const Settings = () => {
 				</tr>
 				<tr>
 					<td>
-						<CurrentPattern
+						<Strip
 							patterns={patterns}
-							key={key}
 						/>
 					</td>
 					<td>
@@ -407,7 +397,7 @@ const Settings = () => {
 						</div>
 						<br></br>
 						<div className={style.background1}>
-							<Save_Entry 
+							<Save_Entry
 								name="Saved Pattern 1"
 								idx='1'
 							/>
@@ -422,13 +412,6 @@ const Settings = () => {
 					
 				</tr>
 			</table>
-
-
-			
-			
-
-			
-
 		</div>
 	);
 };

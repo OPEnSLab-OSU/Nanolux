@@ -1,3 +1,12 @@
+/**@file
+ *
+ * This file contains most of the web request API, in particular
+ * pertaining to pattern and subpattern settings.
+ * 
+ * For the remaining parts of the API, see webServer.h
+ *
+**/
+
 #pragma once
 
 /*
@@ -17,6 +26,10 @@ using namespace ARDUINOJSON_NAMESPACE;
 constexpr int PATTERN_BUFFER_SIZE = 4096;
 static char patterns_list[PATTERN_BUFFER_SIZE];
 
+/// @brief Creates a JSON file with the list of patterns.
+///
+/// This file is intended to be sent to connecting devices in order
+/// to present a list of patterns to the user.
 inline void initialize_pattern_list() {
   // Holds roughly 50 patterns.
   DynamicJsonDocument patterns(PATTERN_BUFFER_SIZE);
@@ -34,6 +47,9 @@ inline void initialize_pattern_list() {
  * Handle Settings request
  * (Simple value list API example.)
  */
+
+/// @brief Handles sending the JSON of patterns to other devices.
+/// @param request The incoming request for data.
 inline void handle_patterns_list_request(AsyncWebServerRequest* request) {
   static bool initialized = false;
 
@@ -52,15 +68,24 @@ inline void handle_patterns_list_request(AsyncWebServerRequest* request) {
   * { "patten": "<80-char-max-string>" }
   */
 
-inline void handle_loaded_subpattern_get_request(AsyncWebServerRequest* request) {
+/// @brief Handler function for getting subpattern data.
+/// @param request The incoming request for data.
+///
+/// This handler is responsible for sending data from a particular pattern.
+/// The web request contains the particular pattern to get through a string
+/// query. Once that pattern has been requested, the device sends back information
+/// like the currently selected pattern id, the pattern brightness, and the smoothing.
+inline void handle_pattern_get_request(AsyncWebServerRequest* request) {
 
-  const uint8_t subpattern_num = request->getParam(0)->value().toInt();
-  Subpattern_Data subpattern = loaded_pattern.subpattern[subpattern_num];
+  uint8_t pattern_num = request->getParam(0)->value().toInt();
+  bound_byte(&pattern_num, 0, PATTERN_LIMIT);
+
+  Pattern_Data p = loaded_patterns.pattern[pattern_num];
 
   // Create response substrings
-  String idx = String(" \"idx\": ") + subpattern.idx;
-  String bright = String(", \"brightness\": ") + subpattern.brightness;
-  String smooth = String(", \"smoothing\": ") + subpattern.smoothing;
+  String idx = String(" \"idx\": ") + p.idx;
+  String bright = String(", \"brightness\": ") + p.brightness;
+  String smooth = String(", \"smoothing\": ") + p.smoothing;
   String minhue = String(", \"hue_min\": ") + subpattern.minhue;
   String maxhue = String(", \"hue_max\": ") + subpattern.maxhue;
   String conf = String(", \"config\": ") + subpattern.config;
@@ -72,35 +97,59 @@ inline void handle_loaded_subpattern_get_request(AsyncWebServerRequest* request)
   request->send(HTTP_OK, CONTENT_JSON, response);
 }
 
-inline void handle_loaded_pattern_settings_get_request(AsyncWebServerRequest* request) {
+/// @brief Handler function for getting pattern data.
+/// @param request The incoming request for data.
+///
+/// This handler is responsible for sending strip configuration data.
+/// The device device sends back information like the pattern count, pattern
+/// transparancy, and the current mode (Z-layering or Strip Splitting)
+inline void handle_strip_get_request(AsyncWebServerRequest* request) {
 
   // Create response substrings
-  String count = String(" \"subpattern_count\": ") + loaded_pattern.subpattern_count;
-  String alpha = String(", \"alpha\": ") + loaded_pattern.alpha;
-  String mode = String(", \"mode\": ") + loaded_pattern.mode;
-  String noise = String(", \"noise\": ") + loaded_pattern.noise_thresh;
+  String count = String(" \"subpattern_count\": ") + loaded_patterns.pattern_count;
+  String alpha = String(", \"alpha\": ") + loaded_patterns.alpha;
+  String mode = String(", \"mode\": ") + loaded_patterns.mode;
+  String noise = String(", \"noise\": ") + loaded_patterns.noise_thresh;
 
   // Build and send the final response
   const String response = String("{") + count + alpha + mode + String(" }");
   request->send(HTTP_OK, CONTENT_JSON, response);
 }
 
-inline void handle_pattern_update_put_request(AsyncWebServerRequest* request, JsonVariant& json) {
+/// @brief Handler function for updating strip data.
+/// @param request The incoming put request
+/// @param json    The incoming JSON file holding new data.
+///
+/// This handler is responsible for updating strip-level data from a 
+/// web request.
+inline void handle_strip_put_request(AsyncWebServerRequest* request, JsonVariant& json) {
   if (request->method() == HTTP_PUT) {
     const JsonObject& payload = json.as<JsonObject>();
 
     int status = HTTP_OK;
-    const uint8_t count = payload["subpattern_count"];
-    const uint8_t alpha = payload["alpha"];
-    const uint8_t mode = payload["mode"];
-    const uint8_t noise = payload["noise"];
 
-    loaded_pattern.subpattern_count = count;
-    loaded_pattern.alpha = alpha;
-    loaded_pattern.noise_thresh = noise;
-    loaded_pattern.mode = mode;
+    uint8_t count = payload["subpattern_count"];
+    uint8_t alpha = payload["alpha"];
+    uint8_t mode = payload["mode"];
+    uint8_t noise = payload["noise"];
 
-    pattern_changed = true;
+    bound_byte(&count, 1, 4);
+    bound_byte(&alpha, 0, 255);
+    bound_byte(&mode, 0, 1);
+    bound_byte(&noise, 0, 100);
+
+    if(count != loaded_patterns.pattern_count)
+      pattern_changed = true;
+    
+    if(mode != loaded_patterns.mode)
+      pattern_changed = true;
+
+    loaded_patterns.pattern_count = count;
+    loaded_patterns.alpha = alpha;
+    loaded_patterns.noise_thresh = noise;
+    loaded_patterns.mode = mode;
+
+    manual_control_enabled = false;
 
     request->send(
       HTTP_OK,
@@ -114,37 +163,32 @@ inline void handle_pattern_update_put_request(AsyncWebServerRequest* request, Js
   }
 }
 
-inline void handle_subpattern_update_put_request(AsyncWebServerRequest* request, JsonVariant& json) {
+/// @brief Handler function for updating pattern data.
+/// @param request The incoming put request
+/// @param json    The incoming JSON file holding new data.
+///
+/// This handler is responsible for updating pattern-level data from a 
+/// web request.
+/// The specific pattern to update is obtained from a string query.
+inline void handle_pattern_put_request(AsyncWebServerRequest* request, JsonVariant& json) {
   if (request->method() == HTTP_PUT) {
     const JsonObject& payload = json.as<JsonObject>();
 
     int status = HTTP_OK;
 
-    const uint8_t subpattern_num = request->getParam(0)->value().toInt();
+    uint8_t pattern_num = request->getParam(0)->value().toInt();
 
     const uint8_t idx = payload["idx"];
     const uint8_t bright = payload["brightness"];
     const uint8_t smooth = payload["smoothing"];
 
-    const uint8_t hue_min = payload["hue_min"];
-    const uint8_t hue_max = payload["hue_max"];
-    const uint8_t conf = payload["config"];
-    const uint8_t reversed = payload["reversed"];
-    const uint8_t mirrored = payload["mirrored"];
-
-    if(idx != loaded_pattern.subpattern[subpattern_num].idx)
+    if(idx != loaded_patterns.pattern[pattern_num].idx)
       pattern_changed = true;
 
     loaded_pattern.subpattern[subpattern_num].idx = idx;
     loaded_pattern.subpattern[subpattern_num].brightness = bright;
     loaded_pattern.subpattern[subpattern_num].smoothing = smooth;
 
-    loaded_pattern.subpattern[subpattern_num].minhue = hue_min;
-    loaded_pattern.subpattern[subpattern_num].maxhue = hue_max;
-    loaded_pattern.subpattern[subpattern_num].config = conf;
-    loaded_pattern.subpattern[subpattern_num].reversed = reversed;
-    loaded_pattern.subpattern[subpattern_num].mirrored = mirrored;
-
     request->send(
       HTTP_OK,
       CONTENT_TEXT,
@@ -157,6 +201,12 @@ inline void handle_subpattern_update_put_request(AsyncWebServerRequest* request,
   }
 }
 
+/// @brief Handler function for loading a saved pattern.
+/// @param request The incoming put request
+/// @param json    The incoming JSON file holding the slot to load.
+///
+/// If the save slot to load is less than 0 or above NUM_SAVES, send
+/// a failure response and don't load anything.
 inline void handle_load_save_slot_put_request(AsyncWebServerRequest* request, JsonVariant& json) {
   if (request->method() == HTTP_PUT) {
     const JsonObject& payload = json.as<JsonObject>();
@@ -179,7 +229,8 @@ inline void handle_load_save_slot_put_request(AsyncWebServerRequest* request, Js
 
       load_slot(slot);
       pattern_changed = true;
-
+      manual_control_enabled = false;
+      
       request->send(
         HTTP_OK,
         CONTENT_TEXT,
@@ -200,6 +251,12 @@ inline void handle_load_save_slot_put_request(AsyncWebServerRequest* request, Js
   }
 }
 
+/// @brief Handler function for saving the currently-running pattern.
+/// @param request The incoming put request
+/// @param json    The incoming JSON file holding the slot to save to.
+///
+/// If the save slot to load is less than 0 or above NUM_SAVES, send
+/// a failure response and don't load anything.
 inline void handle_save_to_slot_put_request(AsyncWebServerRequest* request, JsonVariant& json) {
   if (request->method() == HTTP_PUT) {
     const JsonObject& payload = json.as<JsonObject>();
@@ -243,15 +300,24 @@ inline void handle_save_to_slot_put_request(AsyncWebServerRequest* request, Json
   }
 }
 
+/// @brief Handler function for updating system settings.
+/// @param request The incoming put request
+/// @param json    The incoming JSON file holding the new system settings to save
+///
+/// Includes data such as strip length, loop times, and debug mode.
 inline void handle_system_settings_put_request(AsyncWebServerRequest* request, JsonVariant& json) {
   if (request->method() == HTTP_PUT) {
     const JsonObject& payload = json.as<JsonObject>();
 
     int status = HTTP_OK;
 
-    const uint8_t length = payload["length"];
-    const uint8_t loop = payload["loop"];
-    const uint8_t debug = payload["debug"];
+    uint8_t length = payload["length"];
+    uint8_t loop = payload["loop"];
+    uint8_t debug = payload["debug"];
+
+    bound_byte(&length, 30, MAX_LEDS);
+    bound_byte(&loop, 15, 100);
+    bound_byte(&debug, 0, 2);
 
     if(config.length != length)
       pattern_changed = true;
@@ -274,6 +340,10 @@ inline void handle_system_settings_put_request(AsyncWebServerRequest* request, J
   }
 }
 
+/// @brief Handler function for getting system settings.
+/// @param request The incoming get request
+///
+/// Includes data such as strip length, loop times, and debug mode.
 inline void handle_system_settings_get_request(AsyncWebServerRequest* request) {
 
   // Create response substrings
@@ -286,22 +356,23 @@ inline void handle_system_settings_get_request(AsyncWebServerRequest* request) {
   request->send(HTTP_OK, CONTENT_JSON, response);
 }
 
-
+/// The currently active get requests.
 APIGetHook apiGetHooks[] = {
   { "/api/patterns", handle_patterns_list_request },
-  { "/api/loadedSubpatterns", handle_loaded_subpattern_get_request },
-  { "/api/loadedPatternSettings", handle_loaded_pattern_settings_get_request },
-  { "/api/getDeviceSettings", handle_system_settings_get_request },
+  { "/api/getPattern", handle_pattern_get_request },
+  { "/api/getStrip", handle_strip_get_request },
+  { "/api/getSettings", handle_system_settings_get_request },
 
 
 };
 constexpr int API_GET_HOOK_COUNT = 4;
 
+/// The currently active put requests.
 APIPutHook apiPutHooks[] = {
-  { "/api/updateLoadedSubpattern", handle_subpattern_update_put_request },
-  { "/api/updateLoadedPattern", handle_pattern_update_put_request },
-  { "/api/loadSaveSlot", handle_load_save_slot_put_request },
-  { "/api/saveToSlot", handle_save_to_slot_put_request },
-  { "/api/updateDeviceSettings", handle_system_settings_put_request },
+  { "/api/putPattern", handle_pattern_put_request },
+  { "/api/putStrip", handle_strip_put_request },
+  { "/api/load", handle_load_save_slot_put_request },
+  { "/api/save", handle_save_to_slot_put_request },
+  { "/api/putSettings", handle_system_settings_put_request },
 };
 constexpr int API_PUT_HOOK_COUNT = 5;

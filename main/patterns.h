@@ -1,16 +1,37 @@
+/**@file
+ *
+ * This file contains function headers for patterns.cpp
+ * along with the Pattern_History struct definition.
+ *
+**/
+
 #ifndef PATTERNS_H
 #define PATTERNS_H
 
 #include "nanolux_types.h"
 #include "storage.h"
 
+/// @brief Holds persistent data for currently-running patterns.
+///
+/// This structure contains both persistent variables that can
+/// be reused on a per-subpattern basis.
+///
+/// It also contains the LED buffer for that subpattern. The main
+/// advantage of defining it here is that each subpattern can have
+/// an independent pattern buffer separate from the main ones
+/// in main.ino.
+///
+/// When a subpattern is modified in a way that requires a reset
+/// (changing the subpattern name, changing LED length), the
+/// existing pattern history should be replaced with the default
+/// structure.
 typedef struct{
 
   // Pattern Buffer for the particular history being used.
   CRGB leds[MAX_LEDS] = {0};
 
   // History Variables
-  int frame = 0;                 // for spring mass
+  int frame = 0;                 // for spring mass 
   double amplitude = 0;          //for spring mass 2
   int tempHue = 0;
   int vol_pos = 0;
@@ -74,5 +95,6 @@ void glitch(Pattern_History * hist, int len, Subpattern_Data * params);
 void bands(Pattern_History * hist, int len, Subpattern_Data * params);
 
 void Fire2012(Pattern_History * hist, int len, Subpattern_Data* params);
+
 
 #endif

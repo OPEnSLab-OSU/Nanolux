@@ -1,14 +1,23 @@
+/**@file
+ *
+ * This file contains all defined pattern handlers.
+ *
+ * The pattern refactor is still in-progress, so this file
+ * currently has little in-line documentation.
+ *
+**/
+
 #include <FastLED.h>
 #include <Arduino.h>
 #include "arduinoFFT.h"
 #include "patterns.h"
 #include "nanolux_types.h"
 #include "nanolux_util.h"
-#include "palettes.h"
-#include "audio_analysis.h"
 #include "storage.h"
+#include "core_analysis.h"
+#include "ext_analysis.h"
+#include "palettes.h"
 
-extern unsigned int sampling_period_us;
 extern unsigned long microseconds;
 extern double vReal[SAMPLES];      // Sampling buffers
 extern double vImag[SAMPLES];
@@ -19,16 +28,13 @@ extern bool button_pressed;
 extern SimplePatternList gPatterns;
 extern int NUM_PATTERNS;
 extern SimplePatternList gPatterns_layer;
-extern uint8_t gHue;                      // rotating base color
 extern double peak;                       //  peak frequency
 extern uint8_t fHue;                      // hue value based on peak frequency
 extern double volume;                     //  NOOOOTEEEE:  static?? 
 extern uint8_t vbrightness;
 extern double maxDelt;                    // Frequency with the biggest change in amp.
-extern bool vol_show; // A boolean to change if not wanting to see the color changing pixel in pix_freq()
 extern int advanced_size;
 CRGBPalette16 gPal = GMT_hot_gp; //store all palettes in array
-CRGBPalette16 gPal2 = nrwc_gp; //store all palettes in array
 bool gReverseDirection = false;
 
 extern Config_Data config; // Currently loaded config
@@ -64,7 +70,11 @@ void getVbrightness(){
 
 void nextPattern() {
   // add one to the current pattern number, and wrap around at the end
-  //current_pattern.pattern_1 = (current_pattern.pattern_1 + 1) % NUM_PATTERNS;
+  if(manual_control_enabled){
+    manual_pattern_idx = (manual_pattern_idx + 1) % NUM_PATTERNS;
+  }else{
+    manual_control_enabled = true;
+  }
 }
 
 void clearLEDSegment(Pattern_History * hist, int len){
@@ -693,15 +703,15 @@ void Fire2012(Pattern_History * hist, int len, Subpattern_Data* params){
   
   
   // Array of temperature readings at each simulation cell
-  static byte heat[NUM_LEDS];
+  static byte heat[MAX_LEDS];
 
 // Step 1.  Cool down every cell a little
-  for( int i = 0; i < NUM_LEDS; i++) {
-    heat[i] = qsub8( heat[i],  random8(0, ((COOLING * 10) / NUM_LEDS) + 2));
+  for( int i = 0; i < config.length; i++) {
+    heat[i] = qsub8( heat[i],  random8(0, ((COOLING * 10) / config.length) + 2));
   }
 
   // Step 2.  Heat from each cell drifts 'up' and diffuses a little
-  for( int k= NUM_LEDS - 1; k >= 2; k--) {
+  for( int k= config.length - 1; k >= 2; k--) {
     heat[k] = (heat[k - 1] + heat[k - 2] + heat[k - 2] ) / 3;
   }
   
@@ -717,7 +727,7 @@ void Fire2012(Pattern_History * hist, int len, Subpattern_Data* params){
   memcpy(smol_arr, vReal, l-1);
     
   // Step 4.  Map from heat cells to LED colors
-  for( int j = 0; j < NUM_LEDS; j++) {
+  for( int j = 0; j < config.length; j++) {
     // Scale the heat value from 0-255 down to 0-240
     // for best results with color palettes.
   
@@ -726,7 +736,7 @@ void Fire2012(Pattern_History * hist, int len, Subpattern_Data* params){
     CRGB color = ColorFromPalette( gPal, colorindex);
     int pixelnumber;
     if( gReverseDirection ) {
-      pixelnumber = (NUM_LEDS-1) - j;
+      pixelnumber = (config.length-1) - j;
     } else {
       pixelnumber = j;
     }

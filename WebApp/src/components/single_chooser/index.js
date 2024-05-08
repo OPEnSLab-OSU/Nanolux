@@ -1,5 +1,14 @@
-import { useSignal } from "@preact/signals";
 
+/**
+ * @brief A simple single-choice checkbox selector
+ * 
+ * @param label The string label to show alongside the selector.
+ * @param options The list of options and their IDs.
+ * @param noSelection If unchecking a box is allowed. Produces an ID of 0.
+ * @param initial The initial ID to select.
+ * @param structure_ref The string reference to store values at.
+ * @param update A function to update an external data structure.
+ */
 const SimpleChooser = ({
     label,
     options,
@@ -9,41 +18,48 @@ const SimpleChooser = ({
     update
 }) => {
 
-    const current = useSignal(initial);
-
+    /**
+     * @brief A function to update an external structure with a new value.
+     * @param event The calling event, which contains the ID of the clicked checkbox.
+     */
     const changeSelection = async (event) => {
 
         const selection = Number(event.target.value);
 
-        if(current.value == selection){
-            if(noSelection){
-                current.value = 0;
-            }
+        if(initial != selection){
+            update(structure_ref, selection);
+            event.target.checked = true;
         }else{
-            current.value = selection;
+            if(noSelection){
+                update(structure_ref, 0);
+                event.target.checked = false;
+            }else{
+                event.target.checked = true;
+            }
         }
-        update(structure_ref, current.value);
 
     }
 
+    /**
+     * @brief An object that holds a list of HTML option inputs and labels.
+     */
     const options_list = options.map((option) => {
         return <span>
             <input
                 type="checkbox"
                 id={option.option}
-                name="list"
+                name={option.option}
                 value={option.idx}
                 onChange={changeSelection}
-                checked={current.value==option.idx}
+                checked={initial===option.idx}
             />
             <label for={option.option}>{option.option}</label>
-
         </span>
-        
-       
-        
     });
 
+    /**
+     * @brief Creates the chooser UI element.
+     */
     return (
         <div>
             {label}:

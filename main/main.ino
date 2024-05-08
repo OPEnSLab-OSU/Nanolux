@@ -1,5 +1,8 @@
-// #include <ESPmDNS.h>
-
+/**@file
+ *
+ * This file is the main driver of the NanoLux codebase.
+ *
+**/
 #include <ArduinoJson.h>
 #include <ArduinoJson.hpp>
 #include <FastLED.h>
@@ -8,8 +11,13 @@
 #include "patterns.h"
 #include "nanolux_types.h"
 #include "nanolux_util.h"
-#include "audio_analysis.h"
+#include "core_analysis.h"
+#include "ext_analysis.h"
 #include "storage.h"
+#include "globals.h"
+
+
+FASTLED_USING_NAMESPACE
 
 #define ENABLE_WEB_SERVER
 #ifdef ENABLE_WEB_SERVER
@@ -18,130 +26,60 @@
 
 // #define SHOW_TIMINGS
 
-FASTLED_USING_NAMESPACE
+/// Unprocessed output buffer.
+CRGB output_buffer[MAX_LEDS]; 
 
+/// Postprocessed output buffer.
+CRGB smoothed_output[MAX_LEDS];
+
+/// FFT used for processing audio.
 arduinoFFT FFT = arduinoFFT();
 
-//
-// Variables touched by the API should be declared as volatile.
-//
-CRGB output_buffer[MAX_LEDS];
-CRGB smoothed_output[MAX_LEDS];
-unsigned int sampling_period_us = round(1000000 / SAMPLING_FREQUENCY);
-unsigned long microseconds;
-double vReal[SAMPLES];  // Sampling buffers
-double vImag[SAMPLES];
-double vRealHist[SAMPLES];  // Delta freq
-double delt[SAMPLES];
-double amplitude = 0;  // For spring mass 2
+/// Contains the current state of the button (true is pressed).
 bool button_pressed = false;
-bool button_held = false;
-uint8_t gHue = 0;  // Rotating base color
-double peak = 0.;  // Peak frequency
-uint8_t fHue = 0;  // Hue value based on peak frequency
+
+/// Contains the peak frequency detected by the FFT.
+double peak = 0.;
+
+/// Contains the "base" hue, calculated from the peak frequency.
+uint8_t fHue = 0;
+
+/// Contains the current volume detected by the FFT.
 double volume = 0.;
+
+/// Contains the "base" brightness value, calculated from the current volume.
 uint8_t vbrightness = 0;
-double maxDelt = 0.;  // Frequency with the biggest change in amp.
 
-int beats = 0;
-int frame = 0;  // For spring mass
+/// TODO: Refactor and move.
+unsigned long checkTime;
 
-int F0arr[20];
-int F1arr[20];
-int F2arr[20];
-int formant_pose = 0;
+/// TODO: Refactor and move.
+double checkVol;
 
-uint8_t genre_smoothing[10] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
-int genre_pose = 0;
-
-unsigned long myTime;     // For nvp
-unsigned long checkTime;  // For nvp
-double checkVol;          // For nvp
-
-int pix_pos = 0;
-int tempHue = 0;
-int vol_pos = 0;
-bool vol_show = true;
-
-int advanced_size = 20;
-double max1[20] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
-double max2[20] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
-double max3[20] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
-double max4[20] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
-double max5[20] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
-int maxIter = 0;
-
-
-hw_timer_t *My_timer = NULL;
-TaskHandle_t Task1;
-
-
-double formants[3];  // Master formants array that constantly changes;
-bool noise;          // Master Noisiness versus Periodic flag that is TRUE when noisy, FALSE when periodic;
-bool drums[3];       // Master drums array that stores whether a KICK, SNARE, or CYMBAL is happening in each element of the array;
-double fbs[5];       // Master FIVE BAND SPLIT which stores changing bands based on raw frequencies
-double fss[5];       // Master FIVE SAMPLE SPLIT which stores changing bands based on splitting up the samples
-
-double velocity = 0;                                            //for spring mass 2
-double acceleration = 0;                                        //for spring mass 2
-double smoothing_value[10] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };  //for spring mass 2
-int location = 70;                                              //for spring mass 2
-
-double velocities[5] = { 0, 0, 0, 0, 0 };     //for spring mass 3
-double accelerations[5] = { 0, 0, 0, 0, 0 };  //for spring mass 3
-int locations[5] = { 70, 60, 50, 40, 30 };    //for spring mass 3
-double vRealSums[5] = { 0, 0, 0, 0, 0 };
-
+/// Updated to "true" when the web server changes significant pattern settings.
 volatile bool pattern_changed = false;
-Pattern_Data loaded_pattern;
-Pattern_Data saved_patterns[NUM_SAVES];
+
+/// The current strip configuration being ran by the device.
+Strip_Data loaded_patterns;
+
+/// All patterns and strip configuration currently loaded from storage.
+Strip_Data saved_patterns[NUM_SAVES];
+
+/// The currently-loaded device config.
 Config_Data config;
 
 
+/// The pattern ID displayed when manual control is enabled.
+uint8_t manual_pattern_idx = 0;
 
-//
-// Patterns structure.
-//
-// Describes a pattern by name, whether it will be presented to the user in the
-// web application and the function that implements the pattern.
-//
-typedef struct {
-  int index;
-  const char *pattern_name;
-  bool enabled;
-  void (*pattern_handler)(Pattern_History *, int, Subpattern_Data *);
-} Pattern;
+/// Contains if manual control is enabled or not.
+volatile bool manual_control_enabled = false;
 
-// Pattern history array and index.
-// To switch patterns, simply change the index.
-// Primary pattern is 0.
-Pattern_History histories[NUM_SUBPATTERNS];
+/// History of all currently-running subpatterns.
+Pattern_History histories[PATTERN_LIMIT];
 
-//
-// Register all the patterns here. The index property must be sequential, but the code make sure
-// that constraint is satisfied. The name is arbitrary, but keep it relatively short as it will be
-// presented in a UI to the user. The enabled flag indicates whether the pattern will be shown
-// in the UI or not. If not shown, it i snot selectable. If a pattern is not registered here,
-// It will not be selectable and the loop below will not know about it.
-//
-Pattern mainPatterns[]{
-    { 0, "None", true, blank},
-    { 1, "Pixel Frequency", true, pix_freq},
-    { 2, "Confetti", true, confetti},
-    { 3, "Hue Trail", true, hue_trail},
-    { 4, "Saturated", true, saturated},
-    { 5, "Groovy", true, groovy},
-    { 6, "Talking", true, talking},
-    { 7, "Glitch", true, glitch},
-    { 8, "Bands", true, bands},
-    { 9, "Equalizer", true, eq},
-    { 10, "Tug of War", true, tug_of_war},
-    { 11, "Rain Drop", true, random_raindrop},
-    { 12, "Fire 2012", true, Fire2012},
-    
-};
-int NUM_PATTERNS = 13;  // MAKE SURE TO UPDATE THIS WITH THE ACTUAL NUMBER OF PATTERNS (+1 last array pos)
-
+/// The current list of patterns, externed from globals.h.
+extern Pattern mainPatterns[];
 
 /**********************************************************
  *
@@ -152,26 +90,20 @@ int NUM_PATTERNS = 13;  // MAKE SURE TO UPDATE THIS WITH THE ACTUAL NUMBER OF PA
 #include "api.h"
 #endif
 
+void setup();
+void loop();
 void audio_analysis();
 
-void IRAM_ATTR onTimer() {
-  audio_analysis();
-}
-
-void runTask0(void *pvParameters) {
-  while (true) {
-    My_timer = timerBegin(0, 80, true);
-    timerAttachInterrupt(My_timer, &onTimer, true);
-    timerAlarmWrite(My_timer, 1000000, true);
-    timerAlarmEnable(My_timer);
-  }
-}
-
+/// @brief Sets up various objects needed by the device.
+///
+/// Initalizes the button pin, serial, pattern index, the FastLED
+/// object, and all stored saves.
 void setup() {
+
   pinMode(LED_BUILTIN, OUTPUT);
 
-
-  Serial.begin(115200);  // start USB serial communication
+  // Start USB serial communication
+  Serial.begin(115200);  
   while (!Serial) { ; }
 
   // Reindex mainPatterns, to make sure it is consistent.
@@ -193,66 +125,29 @@ void setup() {
   verify_saves();
   load_slot(0);
 
-
 #ifdef ENABLE_WEB_SERVER
   initialize_web_server(apiGetHooks, API_GET_HOOK_COUNT, apiPutHooks, API_PUT_HOOK_COUNT);
 #endif
 }
 
+/// @brief Layers two CRGB arrays together and places the result in another array.
+/// @param a      The first array to layer.
+/// @param b      The second array to layer.
+/// @param out    The array to output to.
+/// @param length The number of pixels to layer.
+/// @param blur   The ratio between the first and second array in the output. 0-255.
 void calculate_layering(CRGB *a, CRGB *b, CRGB *out, int length, uint8_t blur) {
   for (int i = 0; i < length; i++) {
     out[i] = blend(a[i], b[i], blur);
   }
 }
 
-unsigned long start_millis = NULL;
-
-void led_on_forever() {
-
-  // Clear the LED strip before moving into the forever blink
-  // code.
-  FastLED.clear();
-  FastLED.show();
-
-  // Source: Blink example
-  while (true) {
-    digitalWrite(LED_BUILTIN, LOW);   // turn the LED on (HIGH is the voltage level)
-    delay(1000);                      // wait for a second
-    digitalWrite(LED_BUILTIN, HIGH);  // turn the LED off by making the voltage LOW
-    delay(1000);
-  }
-}
-
-
-void process_reset_button() {
-
-  if (!digitalRead(BUTTON_PIN)) {
-
-    if (start_millis == NULL)
-      start_millis = millis();
-
-    (millis() - start_millis > 1500)
-      ? digitalWrite(LED_BUILTIN, HIGH)
-      : digitalWrite(LED_BUILTIN, LOW);
-
-    if (start_millis > millis()) {
-      start_millis = NULL;
-      return;
-    }
-
-    if (millis() - start_millis > RESET_TIME) {
-      clear_all();
-      led_on_forever();
-    }
-  } else {
-    digitalWrite(LED_BUILTIN, LOW);
-    start_millis = NULL;
-  }
-}
-
-// Some settings are updated inside a more constrained context
-// without enough stack space for a "disk" operation so we
-// defer the save to here.
+/// @brief Checks if the web server has new data,
+/// and marks settings as dirty if required.
+/// 
+/// Some settings are updated inside a more constrained context
+/// without enough stack space for a "disk" operation so we
+/// defer the save to here.
 void update_web_server() {
 #ifdef ENABLE_WEB_SERVER
   if (dirty_settings) {
@@ -261,7 +156,6 @@ void update_web_server() {
   }
 #endif
 }
-
 
 /// @brief Scales all LEDs in a CRGB array by (factor)/255
 /// @param arr    The array to scale
@@ -336,13 +230,20 @@ void process_pattern(uint8_t idx, uint8_t len){
 
 
 /// @brief  Runs the strip splitting LED strip mode
+///
+/// This function allocates a number of LEDs per pattern, then
+/// moves LED data from the pattern's history buffer to the
+/// unsmoothed output buffer.
+///
+/// Once the data is in the unsmoothed buffer, the buffer is
+/// "smoothed" into the output smoothed buffer.
 void run_strip_splitting() {
 
   // Defines the length of an LED strip segment
-  uint8_t section_length = config.length / loaded_pattern.subpattern_count;
+  uint8_t section_length = config.length / loaded_patterns.pattern_count;
 
-  // Repeat for each subpattern
-  for (int i = 0; i < loaded_pattern.subpattern_count; i++) {
+  // Repeat for each pattern
+  for (int i = 0; i < loaded_patterns.pattern_count; i++) {
 
     // Run the pattern handler for pattern i using history i
     process_pattern(i, section_length);
@@ -357,7 +258,9 @@ void run_strip_splitting() {
     scale_crgb_array(
       &output_buffer[section_length * i],
       section_length,
-      loaded_pattern.subpattern[i].brightness);
+      loaded_patterns.pattern[i].brightness);
+
+    
 
     
 
@@ -368,20 +271,30 @@ void run_strip_splitting() {
       &output_buffer[section_length * i],
       &smoothed_output[section_length * i],
       section_length,
-      255 - loaded_pattern.subpattern[i].smoothing);
+      255 - loaded_patterns.pattern[i].smoothing);
   }
 }
 
 /// @brief Runs the pattern layering output mode
+///
+/// This function layers two subpatterns onto each other,
+/// covering the entire length of the LED strip.
+///
+/// Each pattern buffer is moved into a temp buffer, which
+/// scales the brightness of each pattern according to user
+/// settings.
+///
+/// Then, the subpatterns are merged into the unsmoothed buffer,
+/// which then is combined with the smoothed buffer.
 void run_pattern_layering() {
 
   // Create two CRGB buffers for holding LED strip data
   // that has been light-adjusted.
   static CRGB temps[2][MAX_LEDS];
 
-  // If there is one subpattern pattern, run strip splitting,
-  // which will output the single subpattern.
-  if (loaded_pattern.subpattern_count < 2) {
+  // If there is one pattern pattern, run strip splitting,
+  // which will output the single pattern.
+  if (loaded_patterns.pattern_count < 2) {
     run_strip_splitting();
     return;
   }
@@ -403,7 +316,7 @@ void run_pattern_layering() {
     scale_crgb_array(
       temps[i],
       config.length,
-      loaded_pattern.subpattern[i].brightness);
+      loaded_patterns.pattern[i].brightness);
   }
 
   // Combine the two temp arrays.
@@ -412,7 +325,7 @@ void run_pattern_layering() {
     temps[1],
     output_buffer,
     config.length,
-    loaded_pattern.alpha);
+    loaded_patterns.alpha);
 
   // Smooth the combined layered output buffer.
   calculate_layering(
@@ -420,7 +333,7 @@ void run_pattern_layering() {
     output_buffer,
     smoothed_output,
     config.length,
-    255 - loaded_pattern.subpattern[0].smoothing);
+    255 - loaded_patterns.pattern[0].smoothing);
 }
 
 /// @brief Prints a buffer to serial.
@@ -433,9 +346,11 @@ void print_buffer(CRGB *buf, uint8_t len) {
   Serial.print("\n");
 }
 
+/// @brief Runs the main program loop.
+///
+/// Carries out functions related to timing and updating the
+/// LED strip.
 void loop() {
-
-  
 
   begin_loop_timer(config.loop_ms);  // Begin timing this loop
 
@@ -451,7 +366,7 @@ void loop() {
     histories[3] = Pattern_History();
   }
 
-  check_button_state();  // Check for user button input
+  reset_button_state();  // Check for user button input
 
   process_reset_button();  // Manage resetting saves if button held
 
@@ -473,22 +388,21 @@ void loop() {
 
   switch (loaded_pattern.mode) {
 
-    case STRIP_SPLITTING:
-      run_strip_splitting();
-      break;
+      case STRIP_SPLITTING:
+        run_strip_splitting();
+        break;
 
-    case Z_LAYERING:
-      run_pattern_layering();
-      break;
+      case Z_LAYERING:
+        run_pattern_layering();
+        break;
 
-    default:
-      0;
+      default:
+        0;
+    }
   }
 
-  
-
   FastLED.show();  // Push changes from the smoothed buffer to the LED strip
-   
+
   // Print the LED strip buffer if the simulator is enabled.
   if (config.debug_mode == 2)
     print_buffer(smoothed_output, config.length);
@@ -502,7 +416,11 @@ void loop() {
   update_web_server();
 }
 
-// Use all the audio analysis to update every global audio analysis value
+/// @brief Performs audio analysis by running audio_analysis.cpp's
+/// audio processing functions.
+///
+/// If the macro SHOW_TIMINGS is defined, it will print out the amount
+/// of time audio processing takes via serial.
 void audio_analysis() {
 #ifdef SHOW_TIMINGS
   const int start = micros();
@@ -516,15 +434,15 @@ void audio_analysis() {
 
   update_max_delta();
 
-  update_five_samples_split();
-
   update_formants();
 
   update_noise();
 
   update_drums();
 
-  noise_gate(0);
+  noise_gate(loaded_patterns.noise_thresh);
+
+  Serial.println(volume);
 
 #ifdef SHOW_TIMINGS
   const int end = micros();

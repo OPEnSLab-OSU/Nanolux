@@ -1,8 +1,17 @@
+/** @file
+ *
+ * This file contains defined macros and constants
+ * that are used in many places in the Nanolux codebase.
+ *
+**/
+
 #ifndef NANOLUX_TYPES_H
 #define NANOLUX_TYPES_H
 
 // Pattern list function pointers
 typedef void (*SimplePatternList[])();
+
+#define VOL_SHOW true
 
 // Conditions(Comment out to disable) | LAYE, HUE, DEBUG
 //#define LAYER_PATTERNS
@@ -12,7 +21,6 @@ typedef void (*SimplePatternList[])();
 #define ARRAY_SIZE(A) (sizeof(A) / sizeof((A)[0]))
 
 // FastLED
-#define NUM_LEDS    60     // Number of leds in strip.
 #define MAX_LEDS    200
 #define DATA_PIN    15      // No hardware SPI pins defined for the ESP32 yet.
 #define CLK_PIN     14      // Use bitbanged output.
@@ -20,7 +28,6 @@ typedef void (*SimplePatternList[])();
 #define COLOR_ORDER BGR     // Define color color order.
 #define MAX_BRIGHTNESS     255
 #define FRAMES_PER_SECOND  120
-#define HALF_NUM_LEDS      NUM_LEDS/2
 
 // arduinoFFT
 #define SAMPLES             128     // Must be a power of 2  // 128 - 1024

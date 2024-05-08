@@ -2,6 +2,14 @@ import {h} from 'preact';
 import style from './style.css';
 import {useState} from "preact/hooks";
 
+/**
+ * @brief Object that handles new Wifi password entry and API calls.
+ * 
+ * @param prompt The prompt that explains utilization to the user.
+ * @param password The currently entered password.
+ * @param onPasswordChange A function that updates the parent object with
+ * the new user-entered password.
+ */
 const Password = ({ prompt, password, onPasswordChange }) => {
     const [showPassword, setShowPassword] = useState(false);
 

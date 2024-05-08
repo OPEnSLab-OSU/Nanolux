@@ -1,13 +1,17 @@
-import {h} from 'preact';
 import style from './style.css';
-import {useEffect, useState} from "preact/hooks";
-import {getPatternList} from "../../utils/api";
-import {useConnectivity} from "../../context/online_context";
-import useInterval from "../../utils/use_interval";
-import {LabelSpinner} from "../spinner";
-import React, { useLayoutEffect } from "react";
+import React from "react";
 import { useSignal } from '@preact/signals';
 
+/**
+ * @brief Displays a selectable drop down list of LED strip patterns
+ * 
+ * @param initialID The pattern ID to display initially.
+ * @param structure_ref The string reference to store values at.
+ * @param update A function to update an external data structure.
+ * @param patterns A list of patterns and their IDs.
+ * 
+ * @returns The UI element itself.
+ */
 const Patterns = ({
     initialID,
     structure_ref,
@@ -15,14 +19,22 @@ const Patterns = ({
     patterns
 }) => {
 
+    // An object to store the current selected ID of the drop down.
     const current = useSignal(initialID);
 
+    /**
+     * @brief Creates a list of HTML list options based on the "patterns" parameter.
+     */
     const patternOptions = patterns.map(p => {
         return <option key={p.index} value={p.index}>
             {p.name}
         </option>
     });
 
+    /**
+     * @brief Updates the selected ID and sends it to an external data structure.
+     * @param event The event that stored the newly selected ID.
+     */
     const handleSelection = async (event) => {
         current.value = Number(event.target.value);
         update(structure_ref, current.value);
