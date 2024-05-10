@@ -77,6 +77,7 @@ var menudata={children:[
 {text:"n",url:"globals_vars.html#index_n"},
 {text:"o",url:"globals_vars.html#index_o"},
 {text:"p",url:"globals_vars.html#index_p"},
+{text:"r",url:"globals_vars.html#index_r"},
 {text:"s",url:"globals_vars.html#index_s"},
 {text:"v",url:"globals_vars.html#index_v"}]},
 {text:"Macros",url:"globals_defs.html"}]}]}]}

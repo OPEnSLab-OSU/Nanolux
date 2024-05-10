@@ -111,11 +111,21 @@ $(function(){initNavTree('main_8ino.html',''); initResizable(); });
 <code>#include &quot;ext_analysis.h&quot;</code><br />
 <code>#include &quot;<a class="el" href="storage_8h_source.html">storage.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="globals_8h_source.html">globals.h</a>&quot;</code><br />
+<code>#include &quot;AiEsp32RotaryEncoder.h&quot;</code><br />
 <code>#include &quot;WebServer.h&quot;</code><br />
 <code>#include &quot;<a class="el" href="api_8h_source.html">api.h</a>&quot;</code><br />
 </div><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
+<tr class="memitem:a2ee6e0402eedef40fdf5b4cd941d7c2a" id="r_a2ee6e0402eedef40fdf5b4cd941d7c2a"><td class="memItemLeft" align="right" valign="top"><a id="a2ee6e0402eedef40fdf5b4cd941d7c2a" name="a2ee6e0402eedef40fdf5b4cd941d7c2a"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>rotary_onButtonClick</b> ()</td></tr>
+<tr class="separator:a2ee6e0402eedef40fdf5b4cd941d7c2a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afd063f1076dd403edb14e6d69cabb78f" id="r_afd063f1076dd403edb14e6d69cabb78f"><td class="memItemLeft" align="right" valign="top"><a id="afd063f1076dd403edb14e6d69cabb78f" name="afd063f1076dd403edb14e6d69cabb78f"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>rotary_loop</b> ()</td></tr>
+<tr class="separator:afd063f1076dd403edb14e6d69cabb78f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad3f3ddd6424eb42b167daf9b2ee0e1e9" id="r_ad3f3ddd6424eb42b167daf9b2ee0e1e9"><td class="memItemLeft" align="right" valign="top"><a id="ad3f3ddd6424eb42b167daf9b2ee0e1e9" name="ad3f3ddd6424eb42b167daf9b2ee0e1e9"></a>
+void IRAM_ATTR&#160;</td><td class="memItemRight" valign="bottom"><b>readEncoderISR</b> ()</td></tr>
+<tr class="separator:ad3f3ddd6424eb42b167daf9b2ee0e1e9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4fc01d736fe50cf5b977f755b675f11d" id="r_a4fc01d736fe50cf5b977f755b675f11d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a4fc01d736fe50cf5b977f755b675f11d">setup</a> ()</td></tr>
 <tr class="memdesc:a4fc01d736fe50cf5b977f755b675f11d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets up various objects needed by the device.  <br /></td></tr>
 <tr class="separator:a4fc01d736fe50cf5b977f755b675f11d"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -206,6 +216,10 @@ uint8_t&#160;</td><td class="memItemRight" valign="bottom"><b>manual_pattern_idx
 volatile bool&#160;</td><td class="memItemRight" valign="bottom"><b>manual_control_enabled</b> = false</td></tr>
 <tr class="memdesc:ab2f12c6a03e526949d9492da9c0287bb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Contains if manual control is enabled or not. <br /></td></tr>
 <tr class="separator:ab2f12c6a03e526949d9492da9c0287bb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aeb9dab4ac60efe499b640c4a778d437c" id="r_aeb9dab4ac60efe499b640c4a778d437c"><td class="memItemLeft" align="right" valign="top"><a id="aeb9dab4ac60efe499b640c4a778d437c" name="aeb9dab4ac60efe499b640c4a778d437c"></a>
+uint8_t&#160;</td><td class="memItemRight" valign="bottom"><b>rotary_encoder_pattern_idx</b> = 0</td></tr>
+<tr class="memdesc:aeb9dab4ac60efe499b640c4a778d437c"><td class="mdescLeft">&#160;</td><td class="mdescRight">The current rotary encoder pattern index. <br /></td></tr>
+<tr class="separator:aeb9dab4ac60efe499b640c4a778d437c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a74bfc71123c6d3e9d987c33e17e8ccf9" id="r_a74bfc71123c6d3e9d987c33e17e8ccf9"><td class="memItemLeft" align="right" valign="top"><a id="a74bfc71123c6d3e9d987c33e17e8ccf9" name="a74bfc71123c6d3e9d987c33e17e8ccf9"></a>
 <a class="el" href="struct_pattern___history.html">Pattern_History</a>&#160;</td><td class="memItemRight" valign="bottom"><b>histories</b> [<a class="el" href="storage_8h.html#af93e972195f0ec4f57c19936445e58b8">NUM_SUBPATTERNS</a>]</td></tr>
 <tr class="memdesc:a74bfc71123c6d3e9d987c33e17e8ccf9"><td class="mdescLeft">&#160;</td><td class="mdescRight">History of all currently-running subpatterns. <br /></td></tr>
@@ -214,6 +228,8 @@ volatile bool&#160;</td><td class="memItemRight" valign="bottom"><b>manual_contr
 <a class="el" href="struct_pattern.html">Pattern</a>&#160;</td><td class="memItemRight" valign="bottom"><b>mainPatterns</b> []</td></tr>
 <tr class="memdesc:a7e3d635edcf09480b85dff9c73c76ca3"><td class="mdescLeft">&#160;</td><td class="mdescRight">The current list of patterns, externed from <a class="el" href="globals_8h.html">globals.h</a>. <br /></td></tr>
 <tr class="separator:a7e3d635edcf09480b85dff9c73c76ca3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae4c0a1f49c789cbce567eab5beb5abe8" id="r_ae4c0a1f49c789cbce567eab5beb5abe8"><td class="memItemLeft" align="right" valign="top">AiEsp32RotaryEncoder&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae4c0a1f49c789cbce567eab5beb5abe8">rotaryEncoder</a></td></tr>
+<tr class="separator:ae4c0a1f49c789cbce567eab5beb5abe8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>This file is the main driver of the NanoLux codebase. </p>
@@ -505,6 +521,25 @@ volatile bool&#160;</td><td class="memItemRight" valign="bottom"><b>manual_contr
 <p>The current pattern being ran by the device. </p>
 <p>The currently loaded pattern, externed from <a class="el" href="main_8ino.html">main.ino</a>. </p>
 
+</div>
+</div>
+<a id="ae4c0a1f49c789cbce567eab5beb5abe8" name="ae4c0a1f49c789cbce567eab5beb5abe8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae4c0a1f49c789cbce567eab5beb5abe8">&#9670;&#160;</a></span>rotaryEncoder</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">AiEsp32RotaryEncoder rotaryEncoder</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<b>Initial value:</b><div class="fragment"><div class="line">= AiEsp32RotaryEncoder(ROTARY_ENCODER_A_PIN,</div>
+<div class="line"> ROTARY_ENCODER_B_PIN,</div>
+<div class="line"> ROTARY_ENCODER_BUTTON_PIN,</div>
+<div class="line"> ROTARY_ENCODER_VCC_PIN, </div>
+<div class="line"> ROTARY_ENCODER_STEPS)</div>
+</div><!-- fragment -->
 </div>
 </div>
 <a id="a2c41856e6233425fdbfd5a320ecdcef8" name="a2c41856e6233425fdbfd5a320ecdcef8"></a>
