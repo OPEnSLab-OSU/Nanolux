@@ -45,7 +45,7 @@ typedef struct {
   int index;
   const char *pattern_name;
   bool enabled;
-  void (*pattern_handler)(Pattern_History * hist, int len, Pattern_Data* params);
+  void (*pattern_handler)(Strip_Buffer * buf, int len, Pattern_Data* params);
 } Pattern;
 
 //

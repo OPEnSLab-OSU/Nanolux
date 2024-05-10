@@ -43,8 +43,8 @@ typedef struct{
   uint8_t idx = 0; /// The selected pattern name to run.
   uint8_t brightness = 255; /// The pattern's brightness.
   uint8_t smoothing = 0; /// How smoothed pattern light changes are.
-  uint8_t minhue =0;
-  uint8_t maxhue =255;
+  uint8_t minhue = 0;
+  uint8_t maxhue = 255;
   uint8_t config = 0; // diffrent configs
   bool reversed = false;
   bool mirrored = false;

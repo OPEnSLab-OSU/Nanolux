@@ -77,7 +77,7 @@ uint8_t manual_pattern_idx = 0;
 volatile bool manual_control_enabled = false;
 
 /// History of all currently-running patterns.
-Pattern_History histories[PATTERN_LIMIT];
+Strip_Buffer histories[PATTERN_LIMIT];
 
 /// The current list of patterns, externed from globals.h.
 extern Pattern mainPatterns[];
@@ -352,7 +352,6 @@ void print_buffer(CRGB *buf, uint8_t len) {
 /// Carries out functions related to timing and updating the
 /// LED strip.
 void loop() {
-
   begin_loop_timer(config.loop_ms);  // Begin timing this loop
 
   // Reset buffers if pattern settings were changed since
@@ -361,10 +360,10 @@ void loop() {
     pattern_changed = false;
     memset(smoothed_output, 0, sizeof(CRGB) * MAX_LEDS);
     memset(output_buffer, 0, sizeof(CRGB) * MAX_LEDS);
-    histories[0] = Pattern_History();
-    histories[1] = Pattern_History();
-    histories[2] = Pattern_History();
-    histories[3] = Pattern_History();
+    histories[0] = Strip_Buffer();
+    histories[1] = Strip_Buffer();
+    histories[2] = Strip_Buffer();
+    histories[3] = Strip_Buffer();
   }
 
   reset_button_state();  // Check for user button input
@@ -399,7 +398,7 @@ void loop() {
 
       default:
         0;
-    }
+    
   }
 
   FastLED.show();  // Push changes from the smoothed buffer to the LED strip

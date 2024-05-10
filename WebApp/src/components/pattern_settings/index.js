@@ -9,13 +9,14 @@ import useInterval from "../../utils/use_interval";
 import { LabelSpinner } from '../../components/spinner';
 import RANGE_CONSTANTS from '../../utils/constants';
 import style from './style.css';
+import MultiRangeSliderWrapper from '../../components/multi_range_slider';
 
 /**
  * @brief An object meant to hold and display settings for a specific subpattern.
  * @param subpattern The ID of the subpattern to display
  * @param patterns	 A list of patterns and their IDs
  */
-const Pattern = ({num, patterns}) => {
+const PatternSettings = ({num, patterns}) => {
 
 	// Checks if the web app is connected to the device.
 	const { isConnected } = useConnectivity();
@@ -30,11 +31,12 @@ const Pattern = ({num, patterns}) => {
 	// Subpattern data structure
 	const [data, setData] = useState({
 		idx: 0,
-		hue_max: 0,
-		hue_min: 255,
+		hue_max: 255,
+		hue_min: 0,
 		brightness: 255,
 		smoothing: 0,
-		direction: 0,
+		reversed: false,
+		mirrored: false
 	});
 
 	/**
@@ -112,9 +114,41 @@ const Pattern = ({num, patterns}) => {
 				structure_ref="smoothing"
 				update={update}
 			/>
+			<div className={style.settings_control}>
+                <label for="reverse">Reverse</label>
+				<input 
+					type="checkbox" 
+					id="reverse" 
+					name="reverse" 
+					checked={data.reversed}
+					onChange={() => {
+						update("reversed", !data.reversed)
+					}}
+				/>
+				<label for="mirror">Mirror</label>
+				<input 
+					type="checkbox" 
+					id="mirror" 
+					name="mirror" 
+					checked={data.mirrored}
+					onChange={() => {
+						update("mirrored", !data.mirrored)
+						alert("test")
+					}}
+				/>
+            </div>
+			<MultiRangeSliderWrapper
+				min={0}
+				max={255}
+				selectedLow={data.hue_min}
+				selectedHigh={data.hue_max}
+				minRef={"hue_min"}
+				maxRef={"hue_max"}
+				update={update}
+			/>
 		</div> : <LabelSpinner></LabelSpinner>
 		)
 	);
 }
 
-export default Pattern;
+export default PatternSettings;

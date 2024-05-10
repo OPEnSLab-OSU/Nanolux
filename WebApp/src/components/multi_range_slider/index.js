@@ -38,7 +38,7 @@ const MultiRangeSliderWrapper = ({
             step={50}
             minValue={selectedLow}
             maxValue={selectedHigh}
-            onInput={(e) => {
+            onChange={(e) => {
                 handleInput(e);
             }}
         />

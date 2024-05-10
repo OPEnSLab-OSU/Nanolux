@@ -17,7 +17,6 @@
 #include "core_analysis.h"
 #include "ext_analysis.h"
 #include "palettes.h"
-#include "globals.h"
 
 extern unsigned long microseconds;
 extern double vReal[SAMPLES];      // Sampling buffers
@@ -81,13 +80,13 @@ void nextPattern() {
   }
 }
 
-void clearLEDSegment(Pattern_History * hist, int len){
+void clearLEDSegment(Strip_Buffer * buf, int len){
   for(int i = 0; i < len; i++)
-    hist->leds[i] = CRGB(0,0,0);
+    buf->leds[i] = CRGB(0,0,0);
 }
 
-void blank(Pattern_History * hist, int len, Pattern_Data* params){
-  clearLEDSegment(hist, len);
+void blank(Strip_Buffer * buf, int len, Pattern_Data* params){
+  clearLEDSegment(buf, len);
 }
 
 void setColorHSV(CRGB* leds, byte h, byte s, byte v, int len) {
@@ -100,81 +99,81 @@ void setColorHSV(CRGB* leds, byte h, byte s, byte v, int len) {
 
 /// @brief Based on a sufficient volume, a pixel will float to some position on the light strip 
 ///        and fall down (vol_show adds another threshold)
-/// @param hist Pointer to the Pattern_History structure, holds LED buffer and history variables.
+/// @param buf Pointer to the Strip_Buffer structure, holds LED buffer and history variables.
 /// @param len The length of LEDs to process
 /// @param params Pointer to Pattern_Data structure containing configuration options.
-void pix_freq(Pattern_History * hist, int len, Pattern_Data* params) {
+void pix_freq(Strip_Buffer * buf, int len, Pattern_Data* params) {
     //switch(params->config){
       //case 0:
       //default:
     //getFhue();
-    fadeToBlackBy(hist->leds, len, 50);
+    fadeToBlackBy(buf->leds, len, 50);
     if (volume > 200) {
-      hist->pix_pos = map(peak, MIN_FREQUENCY, MAX_FREQUENCY, 0, len-1);
-      hist->tempHue = fHue;
+      buf->pix_pos = map(peak, MIN_FREQUENCY, MAX_FREQUENCY, 0, len-1);
+      buf->tempHue = fHue;
     }
     else {
-      hist->pix_pos--;
-      hist->tempHue--;
-      hist->vol_pos--;
+      buf->pix_pos--;
+      buf->tempHue--;
+      buf->vol_pos--;
     }
     if (VOL_SHOW) {
       if (volume > 100) {
-        hist->vol_pos = map(volume, MIN_VOLUME, MAX_VOLUME, 0, len-1);
-        hist->tempHue = fHue;
+        buf->vol_pos = map(volume, MIN_VOLUME, MAX_VOLUME, 0, len-1);
+        buf->tempHue = fHue;
       } else {
-        hist->vol_pos--;
+        buf->vol_pos--;
       }
 
-      hist->leds[hist->vol_pos] = hist->vol_pos < len ? CRGB(255, 255, 255):CRGB(0, 0, 0);
+      buf->leds[buf->vol_pos] = buf->vol_pos < len ? CRGB(255, 255, 255):CRGB(0, 0, 0);
     }
-    hist->leds[hist->pix_pos] = hist->pix_pos < len ? CHSV(hist->tempHue, 255, 255):CRGB(0, 0, 0);
+    buf->leds[buf->pix_pos] = buf->pix_pos < len ? CHSV(buf->tempHue, 255, 255):CRGB(0, 0, 0);
 }
 
 /// @brief Confetti effect using frequency and brightness.
 ///        Colored speckles that blink and fade smoothly are scattered across the strip.
-/// @param hist Pointer to the Pattern_History structure, holds LED buffer and history variables.
+/// @param buf Pointer to the Strip_Buffer structure, holds LED buffer and history variables.
 /// @param len The length of LEDs to process
 /// @param params Pointer to Pattern_Data structure containing configuration options.
-void confetti(Pattern_History * hist, int len, Pattern_Data* params){
+void confetti(Strip_Buffer * buf, int len, Pattern_Data* params){
   // colored speckles based on frequency that blink in and fade smoothly
-  fadeToBlackBy(hist->leds, len, 20);
+  fadeToBlackBy(buf->leds, len, 20);
   int pos = random16(len);
   switch(params->config){
       case 0:
       default:
-      hist->leds[pos] += CHSV( fHue + random8(10), 255, vbrightness);
-      hist->leds[pos] += CHSV( fHue + random8(10), 255, vbrightness);
+      buf->leds[pos] += CHSV( fHue + random8(10), 255, vbrightness);
+      buf->leds[pos] += CHSV( fHue + random8(10), 255, vbrightness);
   }
 }
 
 /// @brief  Outputs a steady moving stream of lights where each pixel correlates to a previous fHue value.
 ///          Visually tracks pitch over time, with brightness determined by volume.
 ///           blur configuration adds blur
-/// @param hist Pointer to the Pattern_History structure, holds LED buffer and history variables.
+/// @param buf Pointer to the Strip_Buffer structure, holds LED buffer and history variables.
 /// @param len The length of LEDs to process
 /// @param params Pointer to Pattern_Data structure containing configuration options.
-void hue_trail(Pattern_History* hist, int len, Pattern_Data* params) {
+void hue_trail(Strip_Buffer* buf, int len, Pattern_Data* params) {
     switch (params->config) {
         case 0: // freq_hue_trail (also default case)
         default: // Default case set to execute the freq_hue_trail pattern
-            hist->leds[0] = CHSV(fHue, 255, params->brightness);
-            hist->leds[1] = CHSV(fHue, 255, params->brightness);
+            buf->leds[0] = CHSV(fHue, 255, params->brightness);
+            buf->leds[1] = CHSV(fHue, 255, params->brightness);
             for (int i = len - 1; i > 1; i -= 2) {
-                hist->leds[i] = hist->leds[i - 2];
-                hist->leds[i - 1] = hist->leds[i - 2];
+                buf->leds[i] = buf->leds[i - 2];
+                buf->leds[i - 1] = buf->leds[i - 2];
             }
             break;
 
         case 1: // blur
             {
-            hist->leds[0] = CHSV(fHue, 255, params->brightness);
-            hist->leds[1] = CHSV(fHue, 255, params->brightness);
+            buf->leds[0] = CHSV(fHue, 255, params->brightness);
+            buf->leds[1] = CHSV(fHue, 255, params->brightness);
             for (int i = len - 1; i > 1; i -= 2) {
-                hist->leds[i] = hist->leds[i - 2];
-                hist->leds[i - 1] = hist->leds[i - 2];
+                buf->leds[i] = buf->leds[i - 2];
+                buf->leds[i - 1] = buf->leds[i - 2];
             }
-            blur1d(hist->leds, len, 20);
+            blur1d(buf->leds, len, 20);
             break;
             }
         case 2: //sin_hue
@@ -183,8 +182,8 @@ void hue_trail(Pattern_History* hist, int len, Pattern_Data* params) {
         uint16_t sinBeat0  = beatsin16(12, 0, len-1, 0, 0);
         
         //Given the sinBeat and fHue, color the LEDS and fade
-        hist->leds[sinBeat0]  = CHSV(fHue, 255, MAX_BRIGHTNESS);
-        fadeToBlackBy(hist->leds, len, 5);
+        buf->leds[sinBeat0]  = CHSV(fHue, 255, MAX_BRIGHTNESS);
+        fadeToBlackBy(buf->leds, len, 5);
         break;
       }
 
@@ -196,10 +195,10 @@ void hue_trail(Pattern_History* hist, int len, Pattern_Data* params) {
 ///         Hue Octave Config remaps the volume to the range of hues present on strip.
 ///         Hue Shift Config remaps volume as octaves and hhue_shift parameters in fill_noise16()
 ///         Noise Compression config rremaps volume as hue_x parameter
-/// @param hist Pointer to the Pattern_History structure, holds LED buffer and history variables.
+/// @param buf Pointer to the Strip_Buffer structure, holds LED buffer and history variables.
 /// @param len The length of LEDs to process
 /// @param params Pointer to Pattern_Data structure containing configuration options.
-void saturated(Pattern_History* hist, int len, Pattern_Data* params){
+void saturated(Strip_Buffer* buf, int len, Pattern_Data* params){
   //Set params for fill_noise16()
   uint8_t octaves = 1;
   uint16_t x = 0;
@@ -230,9 +229,9 @@ void saturated(Pattern_History* hist, int len, Pattern_Data* params){
             }
             break;
   //Fill LEDS with noise using parameters above
-  fill_noise16 (hist->leds, len, octaves, x, scale, hue_octaves, hue_x, hue_scale, ntime, hue_shift);
+  fill_noise16 (buf->leds, len, octaves, x, scale, hue_octaves, hue_x, hue_scale, ntime, hue_shift);
   //Add blur
-  blur1d(hist->leds, len, 80);
+  blur1d(buf->leds, len, 80);
   }
 }
 
@@ -240,10 +239,10 @@ void saturated(Pattern_History* hist, int len, Pattern_Data* params){
 ///       This function is similar to saturated_noise but the values of scale and hue_shift are 100 and 5 respectively. 
 ///       This is a moving pattern but it does not change based on and volume or frequency changes. Uses fill_noise16() and blur.
 ///       Hue Shift Change configuration remaps volume variable as hue_shift.
-/// @param hist Pointer to the Pattern_History structure, holds LED buffer and history variables.
+/// @param buf Pointer to the Strip_Buffer structure, holds LED buffer and history variables.
 /// @param len The length of LEDs to process
 /// @param params Pointer to Pattern_Data structure containing configuration options.
-void groovy(Pattern_History* hist, int len, Pattern_Data* params) {
+void groovy(Strip_Buffer* buf, int len, Pattern_Data* params) {
     // Assume global access to necessary variables like volume, or pass them as parameters
     switch (params->config) {
         case 0: // groovy_noise (also default case)
@@ -258,8 +257,8 @@ void groovy(Pattern_History* hist, int len, Pattern_Data* params) {
                 uint16_t ntime = millis() / 3;
                 uint8_t hue_shift =  5;
   
-                fill_noise16(hist->leds, len, octaves, x, scale, hue_octaves, hue_x, hue_scale, ntime, hue_shift);
-                blur1d(hist->leds, len, 80);
+                fill_noise16(buf->leds, len, octaves, x, scale, hue_octaves, hue_x, hue_scale, ntime, hue_shift);
+                blur1d(buf->leds, len, 80);
             }
             break;
 
@@ -277,8 +276,8 @@ void groovy(Pattern_History* hist, int len, Pattern_Data* params) {
                 uint16_t ntime = millis() / 3;
                 uint8_t hue_shift =  shiftFromVolume;
 
-                fill_noise16(hist->leds, len, octaves, x, scale, hue_octaves, hue_x, hue_scale, ntime, hue_shift);
-                blur1d(hist->leds, len, 80);
+                fill_noise16(buf->leds, len, octaves, x, scale, hue_octaves, hue_x, hue_scale, ntime, hue_shift);
+                blur1d(buf->leds, len, 80);
             }
             break;
     }
@@ -288,10 +287,10 @@ void groovy(Pattern_History* hist, int len, Pattern_Data* params) {
 ///         The distance the two outer LEDS from the center is determined by the detected volume.
 ///         Formant configuration takes the clusters to be red,green,blue.
 ///         Moving configuration, the three clusters move up and down according to sine wave motion.
-/// @param hist Pointer to the Pattern_History structure, holds LED buffer and history variables.
+/// @param buf Pointer to the Strip_Buffer structure, holds LED buffer and history variables.
 /// @param len The length of LEDs to process
 /// @param params Pointer to Pattern_Data structure containing configuration options.
-void talking(Pattern_History *hist, int len, Pattern_Data *params) {
+void talking(Strip_Buffer *buf, int len, Pattern_Data *params) {
   // Common variables
   int offsetFromVolume;
   int midpoint = len / 2;
@@ -306,9 +305,9 @@ void talking(Pattern_History *hist, int len, Pattern_Data *params) {
       double f2 = remap(formants[2], MIN_FREQUENCY, MAX_FREQUENCY, 0, 255);
 
       offsetFromVolume = remap(volume, MIN_VOLUME, MAX_VOLUME, 1, 30);
-      hist->leds[len / 2] = CRGB(f0, f1, f2);
-      hist->leds[len / 2 - offsetFromVolume] = CHSV(f0Hue, 255, MAX_BRIGHTNESS);
-      hist->leds[len / 2 + offsetFromVolume] = CHSV(f0Hue, 255, MAX_BRIGHTNESS);
+      buf->leds[len / 2] = CRGB(f0, f1, f2);
+      buf->leds[len / 2 - offsetFromVolume] = CHSV(f0Hue, 255, MAX_BRIGHTNESS);
+      buf->leds[len / 2 + offsetFromVolume] = CHSV(f0Hue, 255, MAX_BRIGHTNESS);
 
       // Reset formant array for next loop, assuming dynamic allocation
       delete[] formants;
@@ -322,35 +321,35 @@ void talking(Pattern_History *hist, int len, Pattern_Data *params) {
       uint16_t sinBeat1 = beatsin16(5, 2, len - 3, 0, 0 - offsetFromVolume);
       uint16_t sinBeat2 = beatsin16(5, 2, len - 3, 0, 750 + offsetFromVolume);
 
-      hist->leds[sinBeat0] = CHSV(fHue + 100, 255, MAX_BRIGHTNESS);
-      hist->leds[sinBeat1] = CHSV(fHue, 255, MAX_BRIGHTNESS);
-      hist->leds[sinBeat2] = CHSV(fHue, 255, MAX_BRIGHTNESS);
+      buf->leds[sinBeat0] = CHSV(fHue + 100, 255, MAX_BRIGHTNESS);
+      buf->leds[sinBeat1] = CHSV(fHue, 255, MAX_BRIGHTNESS);
+      buf->leds[sinBeat2] = CHSV(fHue, 255, MAX_BRIGHTNESS);
       break;
     } 
 
     default: // Talking Hue
     case 0: 
-      hist->leds[midpoint] = CHSV(fHue / 2, 255, MAX_BRIGHTNESS);
-      hist->leds[midpoint - offsetFromVolume] = CHSV(fHue, 255, MAX_BRIGHTNESS);
-      hist->leds[midpoint + offsetFromVolume] = CHSV(fHue, 255, MAX_BRIGHTNESS);
+      buf->leds[midpoint] = CHSV(fHue / 2, 255, MAX_BRIGHTNESS);
+      buf->leds[midpoint - offsetFromVolume] = CHSV(fHue, 255, MAX_BRIGHTNESS);
+      buf->leds[midpoint + offsetFromVolume] = CHSV(fHue, 255, MAX_BRIGHTNESS);
       break;
   }
 
   // Common effects for all modes
-  blur1d(hist->leds, len, 80);
+  blur1d(buf->leds, len, 80);
   // Adjust fade value based on the pattern
   int fadeValue = (params->config == 0 || params->config == 2) ? 150 : (params->config == 1) ? 200 : 100;
-  fadeToBlackBy(hist->leds, len, fadeValue);
+  fadeToBlackBy(buf->leds, len, fadeValue);
 }
 
 /// @brief  Creates two light clusters that move according to sine wave motion, but their speed is affected by the volume. 
 ///         One pulls its color from fHue, and the other pulls its color from the formant values.
 ///         Talk configuration combines glitch with talking_moving().
 ///         Sections configuration creates 4 seperate sine wave clusters.
-/// @param hist Pointer to the Pattern_History structure, holds LED buffer and history variables.
+/// @param buf Pointer to the Strip_Buffer structure, holds LED buffer and history variables.
 /// @param len The length of LEDs to process
 /// @param params Pointer to Pattern_Data structure containing configuration options.
-void glitch(Pattern_History * hist, int len, Pattern_Data * params ) {
+void glitch(Strip_Buffer * buf, int len, Pattern_Data * params ) {
     int offsetFromVolume, speedFromVolume;
     uint16_t sinBeat[4]; 
     double *formants;
@@ -378,18 +377,18 @@ void glitch(Pattern_History * hist, int len, Pattern_Data * params ) {
             break;
     }
     // Common effects: blur and fade
-    blur1d(hist->leds, len, 80);
-    fadeToBlackBy(hist->leds, len, params->config == 1 ? 100 : (params->config == 2 ? 60 : 40)); 
+    blur1d(buf->leds, len, 80);
+    fadeToBlackBy(buf->leds, len, params->config == 1 ? 100 : (params->config == 2 ? 60 : 40)); 
 }
 
 /// @brief  Basic band config : Uses the band_split_bounce() function to generate a five band split, and maps that split to the light strip. The strip is broken into five chunks of different colors, 
 ///         where the volume of each band determines how much of each section of the LED strip is lit.
 ///         Advanced bands config : he strip is broken into five chunks of different colors, where the volume of each band determines how much of each section is lit, and that portion will diminish over time if a certain volume threshold is not met
 ///         Fomant bands config: emonstrates the formant feature of the audio analysis code. Each of the three formant values correspond to a third of the entire LED strip, where the individual formant values determine the hue of each third.
-/// @param hist Pointer to the Pattern_History structure, holds LED buffer and history variables.
+/// @param buf Pointer to the Strip_Buffer structure, holds LED buffer and history variables.
 /// @param len The length of LEDs to process
 /// @param params Pointer to Pattern_Data structure containing configuration options.
-void bands(Pattern_History* hist, int len, Pattern_Data* params) {
+void bands(Strip_Buffer* buf, int len, Pattern_Data* params) {
     // double *fiveSamples = band_sample_bounce();
     double *fiveSamples = band_split_bounce(len); // Maybe use above if you want, but its generally agreed this one looks better
     
@@ -417,19 +416,19 @@ void bands(Pattern_History* hist, int len, Pattern_Data* params) {
 
             // Fill each chunk of the light strip with the volume of each band
             for (int i = 0; i < vol1; i++) {
-              hist->leds[i] = CRGB(255,0,0);
+              buf->leds[i] = CRGB(255,0,0);
             }
             for (int i = len/5; i < len/5+vol2; i++) {
-              hist->leds[i] = CRGB(255,255,0);
+              buf->leds[i] = CRGB(255,255,0);
             }
             for (int i = 2*len/5; i < 2*len/5+vol3; i++) {
-              hist->leds[i] = CRGB(0,255,0);
+              buf->leds[i] = CRGB(0,255,0);
             }
             for (int i = 3*len/5; i < 3*len/5+vol4; i++) {
-              hist->leds[i] = CRGB(0,255,255);
+              buf->leds[i] = CRGB(0,255,255);
             }
             for (int i = 4*len/5; i < 4*len/5+vol5; i++) {
-              hist->leds[i] = CRGB(0,0,255);
+              buf->leds[i] = CRGB(0,0,255);
             }
 
             delete [] fiveSamples;
@@ -437,23 +436,23 @@ void bands(Pattern_History* hist, int len, Pattern_Data* params) {
           case 1:{
           // Calculate the volume of each band
           for (int i = 0; i < advanced_size; i++) {
-            avg1 += hist->max1[i];    
+            avg1 += buf->max1[i];    
           }
           avg1 /= advanced_size;
           for (int i = 0; i < advanced_size; i++) {
-            avg2 += hist->max2[i];
+            avg2 += buf->max2[i];
           }
           avg2 /= advanced_size;
           for (int i = 0; i < advanced_size; i++) {
-            avg3 += hist->max3[i];
+            avg3 += buf->max3[i];
           }
           avg3 /= advanced_size;
           for (int i = 0; i < advanced_size; i++) {
-            avg4 += hist->max4[i];
+            avg4 += buf->max4[i];
           }
           avg4 /= advanced_size;
           for (int i = 0; i < advanced_size; i++) {
-            avg5 += hist->max5[i];
+            avg5 += buf->max5[i];
           }
           avg5 /= advanced_size;
 
@@ -482,81 +481,81 @@ void bands(Pattern_History* hist, int len, Pattern_Data* params) {
 
           // If there exists a new volume that is bigger than the falling pixel, reassign it to the top, otherwise make it fall for each band
           if (vol1 <= avg1) {
-            hist->max1[hist->maxIter] = 0;
+            buf->max1[buf->maxIter] = 0;
           }
           else {
               for (int i = 0; i < 5; i++) {
-                hist->max1[i] = vol1;
+                buf->max1[i] = vol1;
               }
           }
             
           if (vol2 <= avg2) {
-            hist->max2[hist->maxIter] = 0;
+            buf->max2[buf->maxIter] = 0;
           }
           else {
               for (int i = 0; i < 5; i++) {
-                hist->max2[i] = vol2;
+                buf->max2[i] = vol2;
               }
           }
 
           if (vol3 <= avg3) {
-            hist->max3[hist->maxIter] = 0;
+            buf->max3[buf->maxIter] = 0;
           }
           else {
               for (int i = 0; i < 5; i++) {
-                hist->max3[i] = vol3;
+                buf->max3[i] = vol3;
               }
           }
 
           if (vol4 <= avg4) {
-            hist->max4[hist->maxIter] = 0;
+            buf->max4[buf->maxIter] = 0;
           }
           else {
               for (int i = 0; i < 5; i++) {
-                hist->max4[i] = vol4;
+                buf->max4[i] = vol4;
               }
           }
 
           if (vol5 <= avg5) {
-            hist->max5[hist->maxIter] = 0;
+            buf->max5[buf->maxIter] = 0;
           }
           else {
               for (int i = 0; i < 5; i++) {
-                hist->max5[i] = vol5;
+                buf->max5[i] = vol5;
               }
           }
 
           // Get this smoothed array to loop to beginning again once it is at teh end of the falling pixel smoothing
-          if (hist->maxIter == advanced_size-1) {
-            hist->maxIter = 0;
+          if (buf->maxIter == advanced_size-1) {
+            buf->maxIter = 0;
           } else {
-            hist->maxIter++;
+            buf->maxIter++;
           }
 
           // Fill the respective chunks of the light strip with the color based on above^
           for (int i = 0; i < vol1-1; i++) {
-            hist->leds[i] = CRGB(255,0,0);
+            buf->leds[i] = CRGB(255,0,0);
           }
           for (int i = len/5; i < len/5+vol2-1; i++) {
-            hist->leds[i] = CRGB(255,255,0);
+            buf->leds[i] = CRGB(255,255,0);
           }
           for (int i = 2*len/5; i < 2*len/5+vol3-1; i++) {
-            hist->leds[i] = CRGB(0,255,0);
+            buf->leds[i] = CRGB(0,255,0);
           }
           for (int i = 3*len/5; i < 3*len/5+vol4-1; i++) {
-            hist->leds[i] = CRGB(0,255,255);
+            buf->leds[i] = CRGB(0,255,255);
           }
           for (int i = 4*len/5; i < 4*len/5+vol5-1; i++) {
-            hist->leds[i] = CRGB(0,0,255);
+            buf->leds[i] = CRGB(0,0,255);
           }
           
           // Assign the values for the pixel to goto
-          hist->leds[(int) avg1+ (int) vol1] = CRGB(255,255,255);
-          hist->leds[(int) len/5 + (int) avg2+ (int) vol2] = CRGB(255,255,255);
-          hist->leds[(int) 2*len/5+(int) avg3+ (int) vol3] = CRGB(255,255,255);
-          hist->leds[(int) 3*len/5+(int) avg4+ (int) vol4] = CRGB(255,255,255);
-          hist->leds[(int) 4*len/5+(int) avg5+ (int) vol5] = CRGB(255,255,255);
-          fadeToBlackBy(hist->leds, len, 90);
+          buf->leds[(int) avg1+ (int) vol1] = CRGB(255,255,255);
+          buf->leds[(int) len/5 + (int) avg2+ (int) vol2] = CRGB(255,255,255);
+          buf->leds[(int) 2*len/5+(int) avg3+ (int) vol3] = CRGB(255,255,255);
+          buf->leds[(int) 3*len/5+(int) avg4+ (int) vol4] = CRGB(255,255,255);
+          buf->leds[(int) 4*len/5+(int) avg5+ (int) vol5] = CRGB(255,255,255);
+          fadeToBlackBy(buf->leds, len, 90);
 
           delete [] fiveSamples;
           break;
@@ -581,19 +580,19 @@ void bands(Pattern_History* hist, int len, Pattern_Data* params) {
             // Fill 1/3 with each formant
             for (int i = 0; i < len; i++) {
               if (i < len/3) {
-                hist->leds[i] = CHSV(f0Hue, 255, 255);
+                buf->leds[i] = CHSV(f0Hue, 255, 255);
               }
               else if (len/3 <= i && i < 2*len/3) {
-                hist->leds[i] = CHSV(f1Hue, 255, 255);
+                buf->leds[i] = CHSV(f1Hue, 255, 255);
               } 
               else { 
-                hist->leds[i] = CHSV(f2Hue, 255, 255);
+                buf->leds[i] = CHSV(f2Hue, 255, 255);
               }
             }
 
             // Smooth out the result
             for (int i = 0; i < 5; i++) {
-              blur1d(hist->leds, len, 50);
+              blur1d(buf->leds, len, 50);
             }
             delete[] temp_formants;
             break;
@@ -603,44 +602,44 @@ void bands(Pattern_History* hist, int len, Pattern_Data* params) {
 
 /// @brief Short and sweet function. Each pixel corresponds to a value from vReal, 
 ///         where the volume at each pitch determines the brightness of each pixel. Hue is locked in to a rainbow.
-/// @param hist Pointer to the Pattern_History structure, holds LED buffer and history variables.
+/// @param buf Pointer to the Strip_Buffer structure, holds LED buffer and history variables.
 /// @param len The length of LEDs to process
 /// @param params Pointer to Pattern_Data structure containing configuration options.
-void eq(Pattern_History * hist, int len, Pattern_Data* params) {
+void eq(Strip_Buffer * buf, int len, Pattern_Data* params) {
   
   for (int i = 0; i < len; i++) {
     int brit = map(vReal[i], MIN_FREQUENCY, MAX_FREQUENCY, 0, 255); // The brightness is based on HOW MUCH of the frequency exists
     int hue = map(i, 0, len, 0, 255); // The fue is based on position on the light strip, ergo, what frequency it is at
     if (vReal[i] > 200) { // An extra gate because the frequency array is really messy without it
-      hist->leds[i] = CHSV(hue, 255, brit);
+      buf->leds[i] = CHSV(hue, 255, brit);
     }
   }
 }
 
 /// @brief A random spot is chosen along the length and does a ripple based on frequency
-/// @param hist Pointer to the Pattern_History structure, holds LED buffer and history variables.
+/// @param buf Pointer to the Strip_Buffer structure, holds LED buffer and history variables.
 /// @param len The length of LEDs to process
 /// @param params Pointer to Pattern_Data structure containing configuration options.
-void random_raindrop(Pattern_History * hist, int len, Pattern_Data* params){
+void random_raindrop(Strip_Buffer * buf, int len, Pattern_Data* params){
     int startIdx = random(len);
 
-    hist->leds[startIdx] = CHSV(fHue, 255, vbrightness);
+    buf->leds[startIdx] = CHSV(fHue, 255, vbrightness);
     
     for(int i = len-1; i > 0; i--) {
       if (i != startIdx) {
-        hist->leds[i] = hist->leds[i-1];
+        buf->leds[i] = buf->leds[i-1];
       }
     }
 
-    hist->leds[0] = CRGB::Black;
+    buf->leds[0] = CRGB::Black;
 }
 
 /// @brief Strip is split into two sides, red and blue showing push and pull motion 
 ///         based on either frequency or volume
-/// @param hist Pointer to the Pattern_History structure, holds LED buffer and history variables.
+/// @param buf Pointer to the Strip_Buffer structure, holds LED buffer and history variables.
 /// @param len The length of LEDs to process
 /// @param params Pointer to Pattern_Data structure containing configuration options.
-void tug_of_war(Pattern_History * hist, int len, Pattern_Data* params) {
+void tug_of_war(Strip_Buffer * buf, int len, Pattern_Data* params) {
     int splitPosition;
     //use this function with smoothing for better results
     // red is on the left, blue is on the right
@@ -656,9 +655,9 @@ void tug_of_war(Pattern_History * hist, int len, Pattern_Data* params) {
         // red is on the left, blue is on the right
         for (int i = 0; i < len; i++) {
             if (i < splitPosition) {
-                hist->leds[i] = CRGB::Blue; 
+                buf->leds[i] = CRGB::Blue; 
             } else {
-                hist->leds[i] = CRGB::Red;
+                buf->leds[i] = CRGB::Red;
             }
         }
     
@@ -668,16 +667,16 @@ void tug_of_war(Pattern_History * hist, int len, Pattern_Data* params) {
         splitPosition = remap(volume, MIN_VOLUME, MAX_VOLUME, 0, len);
         for (int i = 0; i < len; i++) {
             if (i < splitPosition) {
-                hist->leds[i] = CRGB::Green; 
+                buf->leds[i] = CRGB::Green; 
             } else {
-                hist->leds[i] = CRGB::Blue;
+                buf->leds[i] = CRGB::Blue;
             }
         }
         }
     }
 }
 
-void tug_of_war_frequency(Pattern_History * hist, int len) {
+void tug_of_war_frequency(Strip_Buffer * buf, int len) {
     double *formants = density_formant();
     double f0 = formants[0];
     delete[] formants;
@@ -687,19 +686,19 @@ void tug_of_war_frequency(Pattern_History * hist, int len) {
     // red is on the left, blue is on the right
     for (int i = 0; i < len; i++) {
         if (i < splitPosition) {
-            hist->leds[i] = CRGB::Blue; 
+            buf->leds[i] = CRGB::Blue; 
         } else {
-            hist->leds[i] = CRGB::Red;
+            buf->leds[i] = CRGB::Red;
         }
     }
 }
 
 
 /// @brief Fire2012 pattern utilizing heating and cooling
-/// @param hist Pointer to the Pattern_History structure, holds LED buffer and history variables.
+/// @param buf Pointer to the Strip_Buffer structure, holds LED buffer and history variables.
 /// @param len The length of LEDs to process
 /// @param params Pointer to Pattern_Data structure containing configuration options.
-void Fire2012(Pattern_History * hist, int len, Pattern_Data* params){
+void Fire2012(Strip_Buffer * buf, int len, Pattern_Data* params){
   
   int sparkVolume = remap(volume, MIN_VOLUME, MAX_VOLUME, 10,200);
   //int coolingVolume = remap(volume, MIN_VOLUME, MAX_VOLUME, 60, 40);
@@ -744,7 +743,7 @@ void Fire2012(Pattern_History * hist, int len, Pattern_Data* params){
     } else {
       pixelnumber = j;
     }
-    hist->leds[pixelnumber] = color;
+    buf->leds[pixelnumber] = color;
   }
 }
 

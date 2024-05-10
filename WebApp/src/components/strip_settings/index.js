@@ -9,9 +9,9 @@ import useInterval from "../../utils/use_interval";
 import { LabelSpinner } from '../spinner';
 import SimpleChooser from '../single_chooser';
 import style from './style.css';
-import Pattern from '../pattern_settings';
+import PatternSettings from '../pattern_settings';
 
-const Strip = ({patterns}) => {
+const StripSettings = ({patterns}) => {
 
 	// Checks if the web app is connected to the device.
 	const { isConnected } = useConnectivity();
@@ -166,7 +166,7 @@ const Strip = ({patterns}) => {
 					
 				})}
 
-				<Pattern
+				<PatternSettings
 					num={selectedPattern}
 					patterns={patterns}
 					key={selectedPattern}
@@ -177,4 +177,4 @@ const Strip = ({patterns}) => {
 	);
 }
 
-export default CurrentPattern;
+export default StripSettings;

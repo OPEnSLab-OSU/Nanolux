@@ -1,7 +1,7 @@
 /**@file
  *
  * This file contains function headers for patterns.cpp
- * along with the Pattern_History struct definition.
+ * along with the Strip_Buffer struct definition.
  *
 **/
 
@@ -52,13 +52,13 @@ typedef struct{
   double accelerations[5] = {0,0,0,0,0};
   int locations[5] = {70,60,50,40,30};
   double vRealSums[5] = {0,0,0,0,0};
-} Pattern_History;
+} Strip_Buffer;
 
 extern Pattern_Data params;
 
 void nextPattern();
 
-void clearLEDSegment(Pattern_History * hist, int len);
+void clearLEDSegment(Strip_Buffer * buf, int len);
 
 void setColorHSV(CRGB* leds, byte h, byte s, byte v, int len);
 
@@ -68,33 +68,33 @@ void getFhue(uint8_t min_hue, uint8_t max_hue);
 
 void getVbrightness();
 
-void blank(Pattern_History * hist, int len, Pattern_Data* params);
+void blank(Strip_Buffer * buf, int len, Pattern_Data* params);
 
-void confetti(Pattern_History * hist, int len, Pattern_Data* params);
+void confetti(Strip_Buffer * buf, int len, Pattern_Data* params);
 
-void pix_freq(Pattern_History * hist, int len, Pattern_Data* params);
+void pix_freq(Strip_Buffer * buf, int len, Pattern_Data* params);
 
-void eq(Pattern_History * hist, int len, Pattern_Data* params);
+void eq(Strip_Buffer * buf, int len, Pattern_Data* params);
 
-void tug_of_war(Pattern_History * hist, int len, Pattern_Data* params);
+void tug_of_war(Strip_Buffer * buf, int len, Pattern_Data* params);
 
-void tug_of_war(Pattern_History * hist, int len, Pattern_Data* params);
+void tug_of_war(Strip_Buffer * buf, int len, Pattern_Data* params);
 
-void saturated(Pattern_History * hist, int len, Pattern_Data* params);
+void saturated(Strip_Buffer * buf, int len, Pattern_Data* params);
 
-void random_raindrop(Pattern_History * hist, int len, Pattern_Data* params);
+void random_raindrop(Strip_Buffer * buf, int len, Pattern_Data* params);
 
-void hue_trail(Pattern_History* hist, int len, Pattern_Data* params);
+void hue_trail(Strip_Buffer* buf, int len, Pattern_Data* params);
 
-void groovy(Pattern_History* hist, int len, Pattern_Data* params);
+void groovy(Strip_Buffer* buf, int len, Pattern_Data* params);
 
-void talking(Pattern_History *hist, int len, Pattern_Data *params);
+void talking(Strip_Buffer *buf, int len, Pattern_Data *params);
 
-void glitch(Pattern_History * hist, int len, Pattern_Data * params);
+void glitch(Strip_Buffer * buf, int len, Pattern_Data * params);
 
-void bands(Pattern_History * hist, int len, Pattern_Data * params);
+void bands(Strip_Buffer * buf, int len, Pattern_Data * params);
 
-void Fire2012(Pattern_History * hist, int len, Pattern_Data* params);
+void Fire2012(Strip_Buffer * buf, int len, Pattern_Data* params);
 
 
 #endif

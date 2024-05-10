@@ -181,6 +181,11 @@ inline void handle_pattern_put_request(AsyncWebServerRequest* request, JsonVaria
     const uint8_t idx = payload["idx"];
     const uint8_t bright = payload["brightness"];
     const uint8_t smooth = payload["smoothing"];
+    const uint8_t minhue = payload["hue_min"];
+    const uint8_t maxhue = payload["hue_max"];
+    const uint8_t conf = payload["config"];
+    const bool reversed = payload["reversed"];
+    const bool mirrored = payload["mirrored"];
 
     if(idx != loaded_patterns.pattern[pattern_num].idx)
       pattern_changed = true;
@@ -188,6 +193,11 @@ inline void handle_pattern_put_request(AsyncWebServerRequest* request, JsonVaria
     loaded_patterns.pattern[pattern_num].idx = idx;
     loaded_patterns.pattern[pattern_num].brightness = bright;
     loaded_patterns.pattern[pattern_num].smoothing = smooth;
+      loaded_patterns.pattern[pattern_num].minhue = minhue;
+    loaded_patterns.pattern[pattern_num].maxhue = maxhue;
+    loaded_patterns.pattern[pattern_num].config = conf;
+    loaded_patterns.pattern[pattern_num].reversed = reversed;
+    loaded_patterns.pattern[pattern_num].mirrored = mirrored;
 
     request->send(
       HTTP_OK,
