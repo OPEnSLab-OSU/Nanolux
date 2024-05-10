@@ -15,7 +15,7 @@
 #include "ext_analysis.h"
 #include "storage.h"
 #include "globals.h"
-
+#include "AiEsp32RotaryEncoder.h"
 
 FASTLED_USING_NAMESPACE
 
@@ -74,6 +74,9 @@ uint8_t manual_pattern_idx = 0;
 /// Contains if manual control is enabled or not.
 volatile bool manual_control_enabled = false;
 
+/// The current rotary encoder pattern index.
+uint8_t rotary_encoder_pattern_idx = 0;
+
 /// History of all currently-running subpatterns.
 Pattern_History histories[NUM_SUBPATTERNS];
 
@@ -88,6 +91,48 @@ extern Pattern mainPatterns[];
 #ifdef ENABLE_WEB_SERVER
 #include "api.h"
 #endif
+
+AiEsp32RotaryEncoder rotaryEncoder = AiEsp32RotaryEncoder(ROTARY_ENCODER_A_PIN,
+ ROTARY_ENCODER_B_PIN,
+ ROTARY_ENCODER_BUTTON_PIN,
+ ROTARY_ENCODER_VCC_PIN, 
+ ROTARY_ENCODER_STEPS);
+
+ void rotary_onButtonClick()
+{
+  static unsigned long lastTimePressed = 0; // Soft debouncing
+  if (millis() - lastTimePressed < 500)
+  {
+    return;
+  }
+  lastTimePressed = millis();
+  Serial.print("button pressed ");
+  Serial.print("hello world1 ");
+
+  Serial.print(millis());
+  Serial.println(" milliseconds after restart");
+}
+void rotary_loop()
+{
+  //dont print anything unless value changed
+  if (rotaryEncoder.encoderChanged())
+  {
+    Serial.print("Value: ");
+
+    rotary_encoder_pattern_idx = rotaryEncoder.readEncoder();
+    Serial.println(rotaryEncoder.readEncoder());
+    nextPattern();
+  }
+  if (rotaryEncoder.isEncoderButtonClicked())
+  {
+    rotary_onButtonClick();
+  }
+}
+void IRAM_ATTR readEncoderISR()
+{
+  rotaryEncoder.readEncoder_ISR();
+}
+
 
 void setup();
 void loop();
@@ -104,6 +149,22 @@ void setup() {
   // Start USB serial communication
   Serial.begin(115200);  
   while (!Serial) { ; }
+  Serial.print("hello world3 ");
+
+   //Initialize rotary encoder
+  rotaryEncoder.begin();
+  rotaryEncoder.setup(readEncoderISR);
+  bool circleValues = true;
+  rotaryEncoder.setBoundaries(0, 40, circleValues); //minValue, maxValue, circleValues true|false (when max go to min and vice versa)
+
+  /*Rotary acceleration introduced 25.2.2021.
+    in case range to select is huge, for example - select a value between 0 and 1000 and we want 785
+    without accelerateion you need long time to get to that number
+    Using acceleration, faster you turn, faster will the value raise.
+    For fine tuning slow down.
+  */
+  //rotaryEncoder.disableAcceleration(); //acceleration is now enabled by default - disable if you dont need it
+  rotaryEncoder.setAcceleration(250); //or set the value - larger number = more accelearation; 0 or 1 means disabled acceleration
 
   // Reindex mainPatterns, to make sure it is consistent.
   for (int i = 0; i < NUM_PATTERNS; i++) {
@@ -282,7 +343,7 @@ void print_buffer(CRGB *buf, uint8_t len) {
   for (int i = 0; i < len; i++) {
     Serial.print(String(buf[i].r) + "," + String(buf[i].g) + "," + String(buf[i].b) + " ");
   }
-  Serial.print("\n");
+//   Serial.print("\n");
 }
 
 /// @brief Runs the main program loop.
@@ -292,7 +353,7 @@ void print_buffer(CRGB *buf, uint8_t len) {
 void loop() {
 
   begin_loop_timer(config.loop_ms);  // Begin timing this loop
-
+  rotary_loop();
   // Reset buffers if pattern settings were changed since
   // last program loop.
   if (pattern_changed) {
