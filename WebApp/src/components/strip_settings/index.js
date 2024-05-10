@@ -26,7 +26,7 @@ const StripSettings = ({patterns}) => {
 	// Stores the subpattern currently selected as an object state.
 	const [selectedPattern, setPattern] = useState(0);
 
-	// Pattern-level data structure
+	// Strip-level data structure
 	const [data, setData] = useState({
 		pattern_count: 1,
 		alpha: 0,
@@ -75,7 +75,7 @@ const StripSettings = ({patterns}) => {
 	}
 
 	/**
-	 * @brief Increments the amount of patterns displayed. If the pattern is at
+	 * @brief Increments the amount of patterns displayed. If the device is at
 	 * maximum patterns, the function will refuse to increment.
 	 */
 	const incrementPatterns = async () => {
@@ -85,7 +85,7 @@ const StripSettings = ({patterns}) => {
 	}
 
 	/**
-	 * @brief Decrements the amount of patterns displayed. If the pattern is at
+	 * @brief Decrements the amount of patterns displayed. If the device is at
 	 * 1 pattern, the function will refuse to decrement. Moves to the
 	 * previous pattern if the existing one is deleted.
 	 */

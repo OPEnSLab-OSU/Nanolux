@@ -12,9 +12,9 @@ import style from './style.css';
 import MultiRangeSliderWrapper from '../../components/multi_range_slider';
 
 /**
- * @brief An object meant to hold and display settings for a specific subpattern.
- * @param subpattern The ID of the subpattern to display
- * @param patterns	 A list of patterns and their IDs
+ * @brief An object meant to hold and display settings for a specific pattern
+ * @param num 	The ID of the pattern to display
+ * @param patterns	A list of patterns and their IDs
  */
 const PatternSettings = ({num, patterns}) => {
 
@@ -28,7 +28,7 @@ const PatternSettings = ({num, patterns}) => {
 	// Flag that tells the object to update the NanoLux device with new data.
 	const [updated, setUpdated] = useState(false);
 
-	// Subpattern data structure
+	// Pattern-level data structure
 	const [data, setData] = useState({
 		idx: 0,
 		hue_max: 255,
