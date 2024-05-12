@@ -105,7 +105,7 @@ inline void handle_pattern_get_request(AsyncWebServerRequest* request) {
 inline void handle_strip_get_request(AsyncWebServerRequest* request) {
 
   // Create response substrings
-  String count = String(" \"count\": ") + loaded_patterns.pattern_count;
+  String count = String(" \"pattern_count\": ") + loaded_patterns.pattern_count;
   String alpha = String(", \"alpha\": ") + loaded_patterns.alpha;
   String mode = String(", \"mode\": ") + loaded_patterns.mode;
   String noise = String(", \"noise\": ") + loaded_patterns.noise_thresh;
@@ -127,7 +127,7 @@ inline void handle_strip_put_request(AsyncWebServerRequest* request, JsonVariant
 
     int status = HTTP_OK;
 
-    uint8_t count = payload["count"];
+    uint8_t count = payload["pattern_count"];
     uint8_t alpha = payload["alpha"];
     uint8_t mode = payload["mode"];
     uint8_t noise = payload["noise"];

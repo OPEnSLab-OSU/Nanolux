@@ -80,7 +80,7 @@ const StripSettings = ({patterns}) => {
 	 */
 	const incrementPatterns = async () => {
 		if(data.pattern_count < RANGE_CONSTANTS.PATTERN_MAX){
-			update("subpattern_count", data.pattern_count + 1);
+			update("pattern_count", data.pattern_count + 1);
 		}
 	}
 
@@ -94,7 +94,7 @@ const StripSettings = ({patterns}) => {
 			if(data.pattern_count == selectedPattern + 1){
 				setPattern(data.pattern_count - 1);
 			}
-			update("subpattern_count", data.pattern_count - 1);
+			update("pattern_count", data.pattern_count - 1);
 		}
 	}
 

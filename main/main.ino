@@ -219,7 +219,7 @@ void process_pattern(uint8_t idx, uint8_t len){
   uint8_t processed_len = (is_mirrored) ? len/2 : len;
 
   // Reverse the buffer to make it normal if it is reversed.
-  if(is_mirrored) reverse_buffer(histories[idx].leds, processed_len);
+  if(is_reversed) reverse_buffer(histories[idx].leds, processed_len);
 
   // Process the pattern.
   mainPatterns[loaded_patterns.pattern[idx].idx].pattern_handler(
