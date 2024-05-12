@@ -35,8 +35,7 @@ const PatternSettings = ({num, patterns}) => {
 		hue_min: 0,
 		brightness: 255,
 		smoothing: 0,
-		reversed: false,
-		mirrored: false
+		postprocess: 0,
 	});
 
 	/**
@@ -120,9 +119,25 @@ const PatternSettings = ({num, patterns}) => {
 					type="checkbox" 
 					id="reverse" 
 					name="reverse" 
-					checked={data.reversed}
+					checked={(data.postprocess == 1) || (data.postprocess == 3)}
 					onChange={() => {
-						update("reversed", !data.reversed)
+						switch (data.postprocess) {
+							case 0:
+								update("postprocess", 1);
+								break;
+							
+							case 1:
+								update("postprocess", 0);
+								break;
+							
+							case 2:
+								update("postprocess", 3);
+								break;
+						
+							default:
+								update("postprocess", 2);
+								break;
+						}
 					}}
 				/>
 				<label for="mirror">Mirror</label>
@@ -130,10 +145,25 @@ const PatternSettings = ({num, patterns}) => {
 					type="checkbox" 
 					id="mirror" 
 					name="mirror" 
-					checked={data.mirrored}
+					checked={(data.postprocess == 2) || (data.postprocess == 3)}
 					onChange={() => {
-						update("mirrored", !data.mirrored)
-						alert("test")
+						switch (data.postprocess) {
+							case 0:
+								update("postprocess", 2);
+								break;
+							
+							case 1:
+								update("postprocess", 3);
+								break;
+							
+							case 2:
+								update("postprocess", 0);
+								break;
+						
+							default:
+								update("postprocess", 1);
+								break;
+						}
 					}}
 				/>
             </div>

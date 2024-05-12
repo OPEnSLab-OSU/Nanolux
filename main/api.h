@@ -89,11 +89,10 @@ inline void handle_pattern_get_request(AsyncWebServerRequest* request) {
   String minhue = String(", \"hue_min\": ") + p.minhue;
   String maxhue = String(", \"hue_max\": ") + p.maxhue;
   String conf = String(", \"config\": ") + p.config;
-  String reversed = String(", \"reversed\": ") + p.config;
-  String mirrored = String(", \"mirrored\": ") + p.config;
+  String postprocess = String(", \"postprocess\": ") + p.postprocessing_mode;
 
   // Build and send the final response
-  const String response = String("{") + idx + bright + smooth + minhue + maxhue + conf + reversed + mirrored + String(" }");
+  const String response = String("{") + idx + bright + smooth + minhue + maxhue + conf + postprocess + String(" }");
   request->send(HTTP_OK, CONTENT_JSON, response);
 }
 
@@ -184,8 +183,7 @@ inline void handle_pattern_put_request(AsyncWebServerRequest* request, JsonVaria
     const uint8_t minhue = payload["hue_min"];
     const uint8_t maxhue = payload["hue_max"];
     const uint8_t conf = payload["config"];
-    const bool reversed = payload["reversed"];
-    const bool mirrored = payload["mirrored"];
+    const bool postprocess = payload["postprocess"];
 
     if(idx != loaded_patterns.pattern[pattern_num].idx)
       pattern_changed = true;
@@ -193,11 +191,10 @@ inline void handle_pattern_put_request(AsyncWebServerRequest* request, JsonVaria
     loaded_patterns.pattern[pattern_num].idx = idx;
     loaded_patterns.pattern[pattern_num].brightness = bright;
     loaded_patterns.pattern[pattern_num].smoothing = smooth;
-      loaded_patterns.pattern[pattern_num].minhue = minhue;
+    loaded_patterns.pattern[pattern_num].minhue = minhue;
     loaded_patterns.pattern[pattern_num].maxhue = maxhue;
     loaded_patterns.pattern[pattern_num].config = conf;
-    loaded_patterns.pattern[pattern_num].reversed = reversed;
-    loaded_patterns.pattern[pattern_num].mirrored = mirrored;
+    loaded_patterns.pattern[pattern_num].postprocessing_mode = postprocess;
 
     request->send(
       HTTP_OK,

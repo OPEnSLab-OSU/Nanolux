@@ -207,13 +207,19 @@ void unfold_buffer(CRGB* buf, uint8_t len, bool even){
 }
 
 void process_pattern(uint8_t idx, uint8_t len){
+
+  // Pull the current postprocessing effects from the struct integer.
+  uint8_t pp_mode = loaded_patterns.pattern[idx].postprocessing_mode;
+  bool is_reversed = (pp_mode == 1) || (pp_mode == 3);
+  bool is_mirrored = (pp_mode == 2) || (pp_mode == 3);
+
   getFhue(loaded_patterns.pattern[idx].minhue, loaded_patterns.pattern[idx].maxhue);
   getVbrightness();
   // Calculate the length to process
-  uint8_t processed_len = (loaded_patterns.pattern[idx].mirrored) ? len/2 : len;
+  uint8_t processed_len = (is_mirrored) ? len/2 : len;
 
   // Reverse the buffer to make it normal if it is reversed.
-  if(loaded_patterns.pattern[idx].reversed) reverse_buffer(histories[idx].leds, processed_len);
+  if(is_mirrored) reverse_buffer(histories[idx].leds, processed_len);
 
   // Process the pattern.
   mainPatterns[loaded_patterns.pattern[idx].idx].pattern_handler(
@@ -222,10 +228,10 @@ void process_pattern(uint8_t idx, uint8_t len){
       &loaded_patterns.pattern[idx]);
   
   // Re-invert the buffer if we need the output to be reversed.
-  if(loaded_patterns.pattern[idx].reversed) reverse_buffer(histories[idx].leds, processed_len);
+  if(is_reversed) reverse_buffer(histories[idx].leds, processed_len);
 
   // Unfold the buffer if needed.
-  if(loaded_patterns.pattern[idx].mirrored) 
+  if(is_mirrored) 
     unfold_buffer(histories[idx].leds, processed_len, (len == processed_len * 2));
 }
 
