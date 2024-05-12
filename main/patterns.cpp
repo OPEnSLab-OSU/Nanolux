@@ -17,7 +17,6 @@
 #include "core_analysis.h"
 #include "ext_analysis.h"
 #include "palettes.h"
-#include "AiEsp32RotaryEncoder.h"
 
 extern unsigned long microseconds;
 extern double vReal[SAMPLES];      // Sampling buffers
@@ -41,12 +40,11 @@ bool gReverseDirection = false;
 extern Config_Data config; // Currently loaded config
 extern uint8_t manual_pattern_idx;
 extern volatile bool manual_control_enabled;
-extern uint8_t rotary_encoder_pattern_idx;
 
 void nextPattern() {
   // add one to the current pattern number, and wrap around at the end
   if(manual_control_enabled){
-    manual_pattern_idx = (rotary_encoder_pattern_idx) % NUM_PATTERNS;
+    manual_pattern_idx = (manual_pattern_idx + 1) % NUM_PATTERNS;
   }else{
     manual_control_enabled = true;
   }
