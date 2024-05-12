@@ -23,7 +23,6 @@ var main_8ino =
     [ "output_buffer", "main_8ino.html#a920e9759f6ba35f80e11e3b7c6ed7451", null ],
     [ "pattern_changed", "main_8ino.html#ab543150ff7d4457a985c2e09bcf636b5", null ],
     [ "peak", "main_8ino.html#aa7fd5e56ed5028cc63702f999df5cbfd", null ],
-    [ "rotary_encoder_pattern_idx", "main_8ino.html#aeb9dab4ac60efe499b640c4a778d437c", null ],
     [ "saved_patterns", "main_8ino.html#a2c41856e6233425fdbfd5a320ecdcef8", null ],
     [ "smoothed_output", "main_8ino.html#a54d0986e11a540072df62d5d7a6a3d92", null ],
     [ "vbrightness", "main_8ino.html#a7f0661869175f6745d4a7d291c627709", null ],
