@@ -46,9 +46,10 @@ typedef struct{
   uint8_t minhue = 0;
   uint8_t maxhue = 255;
   uint8_t config = 0; // diffrent configs
-  bool reversed = false;
-  bool mirrored = false;
+  uint8_t postprocessing_mode = 0; // The current mode for postprocessing
+  
 } Pattern_Data;
+  
 
 /// A structure holding strip configuration data.
 typedef struct{
