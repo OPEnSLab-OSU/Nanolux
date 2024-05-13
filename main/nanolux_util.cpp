@@ -15,6 +15,7 @@
 #include "nanolux_types.h"
 #include "nanolux_util.h"
 #include "storage.h"
+#include "AiEsp32RotaryEncoder.h"
 
 /// The current config of the device, defined in main.ino.
 /// Used to check if serial printing is allowed.
@@ -34,6 +35,9 @@ long loop_start_time = 0;
 
 /// Holds the expected end time of the current program loop.
 long loop_end_time = 0;
+extern uint8_t rotary_encoder_pattern_idx;
+extern AiEsp32RotaryEncoder rotaryEncoder;
+
 
 /************************************************
  *
@@ -265,4 +269,32 @@ long timer_overrun(){
   // else return the difference between the current time and
   // the expected loop end time.
   return (millis() < loop_end_time) ? 0 : millis() - loop_end_time + 1;
+}
+
+void rotary_onButtonClick() {
+    static unsigned long lastTimePressed = 0; // Soft debouncing
+    if (millis() - lastTimePressed < 500){
+        return;
+    }
+    lastTimePressed = millis();
+    Serial.print("button pressed ");
+    Serial.print(millis());
+    Serial.println(" milliseconds after restart");
+}
+
+void rotary_loop() {
+    //dont print anything unless value changed
+    if (rotaryEncoder.encoderChanged()){
+        Serial.print("Value: ");
+        rotary_encoder_pattern_idx = rotaryEncoder.readEncoder();
+        Serial.println(rotaryEncoder.readEncoder());
+        nextPattern();
+    }
+    if (rotaryEncoder.isEncoderButtonClicked()) {
+        rotary_onButtonClick();
+    }
+}
+
+void IRAM_ATTR readEncoderISR() {
+    rotaryEncoder.readEncoder_ISR();
 }
