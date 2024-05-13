@@ -111,7 +111,6 @@ $(function(){initNavTree('main_8ino.html',''); initResizable(); });
 <code>#include &quot;ext_analysis.h&quot;</code><br />
 <code>#include &quot;<a class="el" href="storage_8h_source.html">storage.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="globals_8h_source.html">globals.h</a>&quot;</code><br />
-<code>#include &quot;AiEsp32RotaryEncoder.h&quot;</code><br />
 <code>#include &quot;WebServer.h&quot;</code><br />
 <code>#include &quot;<a class="el" href="api_8h_source.html">api.h</a>&quot;</code><br />
 </div><table class="memberdecls">
@@ -216,9 +215,6 @@ uint8_t&#160;</td><td class="memItemRight" valign="bottom"><b>manual_pattern_idx
 volatile bool&#160;</td><td class="memItemRight" valign="bottom"><b>manual_control_enabled</b> = false</td></tr>
 <tr class="memdesc:ab2f12c6a03e526949d9492da9c0287bb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Contains if manual control is enabled or not. <br /></td></tr>
 <tr class="separator:ab2f12c6a03e526949d9492da9c0287bb"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aeb9dab4ac60efe499b640c4a778d437c" id="r_aeb9dab4ac60efe499b640c4a778d437c"><td class="memItemLeft" align="right" valign="top"><a id="aeb9dab4ac60efe499b640c4a778d437c" name="aeb9dab4ac60efe499b640c4a778d437c"></a>
-uint8_t&#160;</td><td class="memItemRight" valign="bottom"><b>rotary_encoder_pattern_idx</b> = 0</td></tr>
-<tr class="separator:aeb9dab4ac60efe499b640c4a778d437c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac5ea43aaef4ac8b670dd0f166d36a2e5" id="r_ac5ea43aaef4ac8b670dd0f166d36a2e5"><td class="memItemLeft" align="right" valign="top"><a id="ac5ea43aaef4ac8b670dd0f166d36a2e5" name="ac5ea43aaef4ac8b670dd0f166d36a2e5"></a>
 <a class="el" href="struct_strip___buffer.html">Strip_Buffer</a>&#160;</td><td class="memItemRight" valign="bottom"><b>histories</b> [<a class="el" href="storage_8h.html#ab38ce3af4eb0fb3da19fcabd8b796a4c">PATTERN_LIMIT</a>]</td></tr>
 <tr class="memdesc:ac5ea43aaef4ac8b670dd0f166d36a2e5"><td class="mdescLeft">&#160;</td><td class="mdescRight">History of all currently-running patterns. <br /></td></tr>
@@ -227,9 +223,6 @@ uint8_t&#160;</td><td class="memItemRight" valign="bottom"><b>rotary_encoder_pat
 <a class="el" href="struct_pattern.html">Pattern</a>&#160;</td><td class="memItemRight" valign="bottom"><b>mainPatterns</b> []</td></tr>
 <tr class="memdesc:a7e3d635edcf09480b85dff9c73c76ca3"><td class="mdescLeft">&#160;</td><td class="mdescRight">The current list of patterns, externed from <a class="el" href="globals_8h.html">globals.h</a>. <br /></td></tr>
 <tr class="separator:a7e3d635edcf09480b85dff9c73c76ca3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae4c0a1f49c789cbce567eab5beb5abe8" id="r_ae4c0a1f49c789cbce567eab5beb5abe8"><td class="memItemLeft" align="right" valign="top"><a id="ae4c0a1f49c789cbce567eab5beb5abe8" name="ae4c0a1f49c789cbce567eab5beb5abe8"></a>
-AiEsp32RotaryEncoder&#160;</td><td class="memItemRight" valign="bottom"><b>rotaryEncoder</b> = AiEsp32RotaryEncoder(ROTARY_ENCODER_A_PIN, ROTARY_ENCODER_B_PIN, ROTARY_ENCODER_BUTTON_PIN, ROTARY_ENCODER_VCC_PIN, ROTARY_ENCODER_STEPS)</td></tr>
-<tr class="separator:ae4c0a1f49c789cbce567eab5beb5abe8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>This file is the main driver of the NanoLux codebase. </p>
