@@ -6,8 +6,8 @@ var annotated_dup =
     [ "CurrentWifi", "struct_current_wifi.html", null ],
     [ "Pattern", "struct_pattern.html", null ],
     [ "Pattern_Data", "struct_pattern___data.html", "struct_pattern___data" ],
-    [ "Pattern_History", "struct_pattern___history.html", null ],
-    [ "Subpattern_Data", "struct_subpattern___data.html", "struct_subpattern___data" ],
+    [ "Strip_Buffer", "struct_strip___buffer.html", null ],
+    [ "Strip_Data", "struct_strip___data.html", "struct_strip___data" ],
     [ "WiFiNetwork", "struct_wi_fi_network.html", null ],
     [ "WlStatusToString", "struct_wl_status_to_string.html", null ]
 ];

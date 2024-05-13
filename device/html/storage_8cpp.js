@@ -11,8 +11,8 @@ var storage_8cpp =
     [ "set_slot", "storage_8cpp.html#a4a4c1f67fd190bc079f96cdd2c59d3b2", null ],
     [ "verify_saves", "storage_8cpp.html#ad56cad6a67e62b74ea02ed9b145b6fae", null ],
     [ "config", "storage_8cpp.html#a771cac207619504c2bd44a4392428a04", null ],
-    [ "loaded_pattern", "storage_8cpp.html#a94feaf5faee405b08bafde6d58e01d56", null ],
+    [ "loaded_patterns", "storage_8cpp.html#ab366196355defee7e0962544599dc407", null ],
     [ "NUM_PATTERNS", "storage_8cpp.html#a79dadced029cb34ff962c3bb9e45b99d", null ],
-    [ "saved_patterns", "storage_8cpp.html#a2c41856e6233425fdbfd5a320ecdcef8", null ],
+    [ "saved_patterns", "storage_8cpp.html#a4b265bf0c74f71f08b775c03e663e505", null ],
     [ "storage", "storage_8cpp.html#ae9991def554a05846720cda6683533c0", null ]
 ];

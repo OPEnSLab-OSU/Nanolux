@@ -94,18 +94,20 @@ $(function(){initNavTree('patterns_8h.html',''); initResizable(); });
 <div class="header">
   <div class="summary">
 <a href="#nested-classes">Classes</a> &#124;
-<a href="#func-members">Functions</a>  </div>
+<a href="#func-members">Functions</a> &#124;
+<a href="#var-members">Variables</a>  </div>
   <div class="headertitle"><div class="title">patterns.h File Reference</div></div>
 </div><!--header-->
 <div class="contents">
 <div class="textblock"><code>#include &quot;<a class="el" href="nanolux__types_8h_source.html">nanolux_types.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="storage_8h_source.html">storage.h</a>&quot;</code><br />
 </div>
 <p><a href="patterns_8h_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
 Classes</h2></td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_pattern___history.html">Pattern_History</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Holds persistent data for currently-running patterns.  <a href="struct_pattern___history.html#details">More...</a><br /></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_strip___buffer.html">Strip_Buffer</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Holds persistent data for currently-running patterns.  <a href="struct_strip___buffer.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
@@ -113,142 +115,501 @@ Functions</h2></td></tr>
 <tr class="memitem:a0fffc251888efdd9732daaf60689bfa8" id="r_a0fffc251888efdd9732daaf60689bfa8"><td class="memItemLeft" align="right" valign="top"><a id="a0fffc251888efdd9732daaf60689bfa8" name="a0fffc251888efdd9732daaf60689bfa8"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>nextPattern</b> ()</td></tr>
 <tr class="separator:a0fffc251888efdd9732daaf60689bfa8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2c9dc09fa7ef0114dda60f5cf151d835" id="r_a2c9dc09fa7ef0114dda60f5cf151d835"><td class="memItemLeft" align="right" valign="top"><a id="a2c9dc09fa7ef0114dda60f5cf151d835" name="a2c9dc09fa7ef0114dda60f5cf151d835"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>clearLEDSegment</b> (<a class="el" href="struct_strip___buffer.html">Strip_Buffer</a> *buf, int len)</td></tr>
+<tr class="separator:a2c9dc09fa7ef0114dda60f5cf151d835"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a89d672d8af17e1878550d77b358c3c3e" id="r_a89d672d8af17e1878550d77b358c3c3e"><td class="memItemLeft" align="right" valign="top"><a id="a89d672d8af17e1878550d77b358c3c3e" name="a89d672d8af17e1878550d77b358c3c3e"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>setColorHSV</b> (CRGB *leds, byte h, byte s, byte v, int len)</td></tr>
 <tr class="separator:a89d672d8af17e1878550d77b358c3c3e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4d6179bfedf475f6980293c38c2b857c" id="r_a4d6179bfedf475f6980293c38c2b857c"><td class="memItemLeft" align="right" valign="top"><a id="a4d6179bfedf475f6980293c38c2b857c" name="a4d6179bfedf475f6980293c38c2b857c"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>freq_hue_vol_brightness</b> (<a class="el" href="struct_pattern___history.html">Pattern_History</a> *hist, int len)</td></tr>
-<tr class="separator:a4d6179bfedf475f6980293c38c2b857c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a54f7d531e67b8d8672d5a34f89a99ec3" id="r_a54f7d531e67b8d8672d5a34f89a99ec3"><td class="memItemLeft" align="right" valign="top"><a id="a54f7d531e67b8d8672d5a34f89a99ec3" name="a54f7d531e67b8d8672d5a34f89a99ec3"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>freq_confetti_vol_brightness</b> (<a class="el" href="struct_pattern___history.html">Pattern_History</a> *hist, int len)</td></tr>
-<tr class="separator:a54f7d531e67b8d8672d5a34f89a99ec3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac136c843f3e214e63c96ed3e77b115d3" id="r_ac136c843f3e214e63c96ed3e77b115d3"><td class="memItemLeft" align="right" valign="top"><a id="ac136c843f3e214e63c96ed3e77b115d3" name="ac136c843f3e214e63c96ed3e77b115d3"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>volume_level_middle_bar_freq_hue</b> (<a class="el" href="struct_pattern___history.html">Pattern_History</a> *hist, int len)</td></tr>
-<tr class="separator:ac136c843f3e214e63c96ed3e77b115d3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a276fccccc07fd14b5cebfe3e892e088a" id="r_a276fccccc07fd14b5cebfe3e892e088a"><td class="memItemLeft" align="right" valign="top"><a id="a276fccccc07fd14b5cebfe3e892e088a" name="a276fccccc07fd14b5cebfe3e892e088a"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>freq_hue_trail</b> (<a class="el" href="struct_pattern___history.html">Pattern_History</a> *hist, int len)</td></tr>
-<tr class="separator:a276fccccc07fd14b5cebfe3e892e088a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa46c3c6e017459a010e7de95a7536f29" id="r_aa46c3c6e017459a010e7de95a7536f29"><td class="memItemLeft" align="right" valign="top"><a id="aa46c3c6e017459a010e7de95a7536f29" name="aa46c3c6e017459a010e7de95a7536f29"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>blank</b> (<a class="el" href="struct_pattern___history.html">Pattern_History</a> *hist, int len)</td></tr>
-<tr class="separator:aa46c3c6e017459a010e7de95a7536f29"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac5d9aba3d20758b96842d6b21a29643d" id="r_ac5d9aba3d20758b96842d6b21a29643d"><td class="memItemLeft" align="right" valign="top"><a id="ac5d9aba3d20758b96842d6b21a29643d" name="ac5d9aba3d20758b96842d6b21a29643d"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>spring_mass_1</b> (<a class="el" href="struct_pattern___history.html">Pattern_History</a> *hist, int len)</td></tr>
-<tr class="separator:ac5d9aba3d20758b96842d6b21a29643d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a220ab773a51c74b1ecfca7d392fc3532" id="r_a220ab773a51c74b1ecfca7d392fc3532"><td class="memItemLeft" align="right" valign="top"><a id="a220ab773a51c74b1ecfca7d392fc3532" name="a220ab773a51c74b1ecfca7d392fc3532"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>spring_mass_2</b> (<a class="el" href="struct_pattern___history.html">Pattern_History</a> *hist, int len)</td></tr>
-<tr class="separator:a220ab773a51c74b1ecfca7d392fc3532"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a553bb8687a2f8975e394c547e87cbc24" id="r_a553bb8687a2f8975e394c547e87cbc24"><td class="memItemLeft" align="right" valign="top"><a id="a553bb8687a2f8975e394c547e87cbc24" name="a553bb8687a2f8975e394c547e87cbc24"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>spring_mass_3</b> (<a class="el" href="struct_pattern___history.html">Pattern_History</a> *hist, int len)</td></tr>
-<tr class="separator:a553bb8687a2f8975e394c547e87cbc24"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a777d3c5f5200d5566bc31d35d1267a25" id="r_a777d3c5f5200d5566bc31d35d1267a25"><td class="memItemLeft" align="right" valign="top"><a id="a777d3c5f5200d5566bc31d35d1267a25" name="a777d3c5f5200d5566bc31d35d1267a25"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>classical</b> (<a class="el" href="struct_pattern___history.html">Pattern_History</a> *hist, int len)</td></tr>
-<tr class="separator:a777d3c5f5200d5566bc31d35d1267a25"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa8dee468964658851e3963e375eebd09" id="r_aa8dee468964658851e3963e375eebd09"><td class="memItemLeft" align="right" valign="top"><a id="aa8dee468964658851e3963e375eebd09" name="aa8dee468964658851e3963e375eebd09"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>pix_freq</b> (<a class="el" href="struct_pattern___history.html">Pattern_History</a> *hist, int len)</td></tr>
-<tr class="separator:aa8dee468964658851e3963e375eebd09"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7722e1b50e902d23fe6e57e5f87911f9" id="r_a7722e1b50e902d23fe6e57e5f87911f9"><td class="memItemLeft" align="right" valign="top"><a id="a7722e1b50e902d23fe6e57e5f87911f9" name="a7722e1b50e902d23fe6e57e5f87911f9"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>mirror_pix_freq</b> (<a class="el" href="struct_pattern___history.html">Pattern_History</a> *hist, int len)</td></tr>
-<tr class="separator:a7722e1b50e902d23fe6e57e5f87911f9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a89511d7ea2100dd52deffe9f0ceeccb2" id="r_a89511d7ea2100dd52deffe9f0ceeccb2"><td class="memItemLeft" align="right" valign="top"><a id="a89511d7ea2100dd52deffe9f0ceeccb2" name="a89511d7ea2100dd52deffe9f0ceeccb2"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>send_wave</b> (<a class="el" href="struct_pattern___history.html">Pattern_History</a> *hist, int len)</td></tr>
-<tr class="separator:a89511d7ea2100dd52deffe9f0ceeccb2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af8c84458678e4661cc38f5f9015593e1" id="r_af8c84458678e4661cc38f5f9015593e1"><td class="memItemLeft" align="right" valign="top"><a id="af8c84458678e4661cc38f5f9015593e1" name="af8c84458678e4661cc38f5f9015593e1"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>math</b> (<a class="el" href="struct_pattern___history.html">Pattern_History</a> *hist, int len)</td></tr>
-<tr class="separator:af8c84458678e4661cc38f5f9015593e1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a52d44d771a8739ce3845a1cbdcecebca" id="r_a52d44d771a8739ce3845a1cbdcecebca"><td class="memItemLeft" align="right" valign="top"><a id="a52d44d771a8739ce3845a1cbdcecebca" name="a52d44d771a8739ce3845a1cbdcecebca"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>band_brightness</b> (<a class="el" href="struct_pattern___history.html">Pattern_History</a> *hist, int len)</td></tr>
-<tr class="separator:a52d44d771a8739ce3845a1cbdcecebca"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a40189f77ba937d0a714af907154ebb8d" id="r_a40189f77ba937d0a714af907154ebb8d"><td class="memItemLeft" align="right" valign="top"><a id="a40189f77ba937d0a714af907154ebb8d" name="a40189f77ba937d0a714af907154ebb8d"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>advanced_bands</b> (<a class="el" href="struct_pattern___history.html">Pattern_History</a> *hist, int len)</td></tr>
-<tr class="separator:a40189f77ba937d0a714af907154ebb8d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a008795fea267ca1f7a59227146f14122" id="r_a008795fea267ca1f7a59227146f14122"><td class="memItemLeft" align="right" valign="top"><a id="a008795fea267ca1f7a59227146f14122" name="a008795fea267ca1f7a59227146f14122"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>basic_bands</b> (<a class="el" href="struct_pattern___history.html">Pattern_History</a> *hist, int len)</td></tr>
-<tr class="separator:a008795fea267ca1f7a59227146f14122"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab6812c8c15659b94ab92e0631561a092" id="r_ab6812c8c15659b94ab92e0631561a092"><td class="memItemLeft" align="right" valign="top"><a id="ab6812c8c15659b94ab92e0631561a092" name="ab6812c8c15659b94ab92e0631561a092"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>eq</b> (<a class="el" href="struct_pattern___history.html">Pattern_History</a> *hist, int len)</td></tr>
-<tr class="separator:ab6812c8c15659b94ab92e0631561a092"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa30be122f092c53e59df7bac39db9ac9" id="r_aa30be122f092c53e59df7bac39db9ac9"><td class="memItemLeft" align="right" valign="top"><a id="aa30be122f092c53e59df7bac39db9ac9" name="aa30be122f092c53e59df7bac39db9ac9"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>show_drums</b> (<a class="el" href="struct_pattern___history.html">Pattern_History</a> *hist, int len)</td></tr>
-<tr class="separator:aa30be122f092c53e59df7bac39db9ac9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0b351544bc9960381ecf3c5c99437277" id="r_a0b351544bc9960381ecf3c5c99437277"><td class="memItemLeft" align="right" valign="top"><a id="a0b351544bc9960381ecf3c5c99437277" name="a0b351544bc9960381ecf3c5c99437277"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>show_formants</b> (<a class="el" href="struct_pattern___history.html">Pattern_History</a> *hist, int len)</td></tr>
-<tr class="separator:a0b351544bc9960381ecf3c5c99437277"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa9c5552d7f8b09ba9a0a276c09dc9462" id="r_aa9c5552d7f8b09ba9a0a276c09dc9462"><td class="memItemLeft" align="right" valign="top"><a id="aa9c5552d7f8b09ba9a0a276c09dc9462" name="aa9c5552d7f8b09ba9a0a276c09dc9462"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>noisy</b> (<a class="el" href="struct_pattern___history.html">Pattern_History</a> *hist, int len)</td></tr>
-<tr class="separator:aa9c5552d7f8b09ba9a0a276c09dc9462"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aeb540a657375f9eba26882cd4475ae36" id="r_aeb540a657375f9eba26882cd4475ae36"><td class="memItemLeft" align="right" valign="top"><a id="aeb540a657375f9eba26882cd4475ae36" name="aeb540a657375f9eba26882cd4475ae36"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>formant_band</b> (<a class="el" href="struct_pattern___history.html">Pattern_History</a> *hist, int len)</td></tr>
-<tr class="separator:aeb540a657375f9eba26882cd4475ae36"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3b4b3bedcdde8e433bee48e4503a36d2" id="r_a3b4b3bedcdde8e433bee48e4503a36d2"><td class="memItemLeft" align="right" valign="top"><a id="a3b4b3bedcdde8e433bee48e4503a36d2" name="a3b4b3bedcdde8e433bee48e4503a36d2"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>alt_drums</b> (<a class="el" href="struct_pattern___history.html">Pattern_History</a> *hist, int len)</td></tr>
-<tr class="separator:a3b4b3bedcdde8e433bee48e4503a36d2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad96872b276fc45381cf7d972174801e4" id="r_ad96872b276fc45381cf7d972174801e4"><td class="memItemLeft" align="right" valign="top"><a id="ad96872b276fc45381cf7d972174801e4" name="ad96872b276fc45381cf7d972174801e4"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>formant_test</b> (<a class="el" href="struct_pattern___history.html">Pattern_History</a> *hist, int len)</td></tr>
-<tr class="separator:ad96872b276fc45381cf7d972174801e4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7d846ee756934220defee5047ad3e5b4" id="r_a7d846ee756934220defee5047ad3e5b4"><td class="memItemLeft" align="right" valign="top"><a id="a7d846ee756934220defee5047ad3e5b4" name="a7d846ee756934220defee5047ad3e5b4"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>Fire2012WithPalette</b> (<a class="el" href="struct_pattern___history.html">Pattern_History</a> *hist, int len)</td></tr>
-<tr class="separator:a7d846ee756934220defee5047ad3e5b4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a73147dd40f643c6593b189400eba339b" id="r_a73147dd40f643c6593b189400eba339b"><td class="memItemLeft" align="right" valign="top"><a id="a73147dd40f643c6593b189400eba339b" name="a73147dd40f643c6593b189400eba339b"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>saturated_noise</b> (<a class="el" href="struct_pattern___history.html">Pattern_History</a> *hist, int len)</td></tr>
-<tr class="separator:a73147dd40f643c6593b189400eba339b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aaa6b4265d1d5a3e7c027aedb32c17508" id="r_aaa6b4265d1d5a3e7c027aedb32c17508"><td class="memItemLeft" align="right" valign="top"><a id="aaa6b4265d1d5a3e7c027aedb32c17508" name="aaa6b4265d1d5a3e7c027aedb32c17508"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>saturated_noise_hue_octaves</b> (<a class="el" href="struct_pattern___history.html">Pattern_History</a> *hist, int len)</td></tr>
-<tr class="separator:aaa6b4265d1d5a3e7c027aedb32c17508"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0ca8fca3fdaa6f736313accbb6ec58a5" id="r_a0ca8fca3fdaa6f736313accbb6ec58a5"><td class="memItemLeft" align="right" valign="top"><a id="a0ca8fca3fdaa6f736313accbb6ec58a5" name="a0ca8fca3fdaa6f736313accbb6ec58a5"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>saturated_noise_hue_shift</b> (<a class="el" href="struct_pattern___history.html">Pattern_History</a> *hist, int len)</td></tr>
-<tr class="separator:a0ca8fca3fdaa6f736313accbb6ec58a5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa8f4fb8c7050e389bd1bdf612a6a3e7d" id="r_aa8f4fb8c7050e389bd1bdf612a6a3e7d"><td class="memItemLeft" align="right" valign="top"><a id="aa8f4fb8c7050e389bd1bdf612a6a3e7d" name="aa8f4fb8c7050e389bd1bdf612a6a3e7d"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>saturated_noise_compression</b> (<a class="el" href="struct_pattern___history.html">Pattern_History</a> *hist, int len)</td></tr>
-<tr class="separator:aa8f4fb8c7050e389bd1bdf612a6a3e7d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a11c77e55fd6fedc2cd83f8e546d751f4" id="r_a11c77e55fd6fedc2cd83f8e546d751f4"><td class="memItemLeft" align="right" valign="top"><a id="a11c77e55fd6fedc2cd83f8e546d751f4" name="a11c77e55fd6fedc2cd83f8e546d751f4"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>groovy_noise</b> (<a class="el" href="struct_pattern___history.html">Pattern_History</a> *hist, int len)</td></tr>
-<tr class="separator:a11c77e55fd6fedc2cd83f8e546d751f4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab955accfcb624ec80c194fcccd4c1ea7" id="r_ab955accfcb624ec80c194fcccd4c1ea7"><td class="memItemLeft" align="right" valign="top"><a id="ab955accfcb624ec80c194fcccd4c1ea7" name="ab955accfcb624ec80c194fcccd4c1ea7"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>groovy_noise_hue_shift_change</b> (<a class="el" href="struct_pattern___history.html">Pattern_History</a> *hist, int len)</td></tr>
-<tr class="separator:ab955accfcb624ec80c194fcccd4c1ea7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a933cd831d0c36ff15343cbf515a5f6cc" id="r_a933cd831d0c36ff15343cbf515a5f6cc"><td class="memItemLeft" align="right" valign="top"><a id="a933cd831d0c36ff15343cbf515a5f6cc" name="a933cd831d0c36ff15343cbf515a5f6cc"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>sin_hue_trail</b> (<a class="el" href="struct_pattern___history.html">Pattern_History</a> *hist, int len)</td></tr>
-<tr class="separator:a933cd831d0c36ff15343cbf515a5f6cc"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a62987ca5da2a13da1725402bc09fd79a" id="r_a62987ca5da2a13da1725402bc09fd79a"><td class="memItemLeft" align="right" valign="top"><a id="a62987ca5da2a13da1725402bc09fd79a" name="a62987ca5da2a13da1725402bc09fd79a"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>freq_hue_trail_mid</b> (<a class="el" href="struct_pattern___history.html">Pattern_History</a> *hist, int len)</td></tr>
-<tr class="separator:a62987ca5da2a13da1725402bc09fd79a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3c04b81274a0a2788c3aec5799688799" id="r_a3c04b81274a0a2788c3aec5799688799"><td class="memItemLeft" align="right" valign="top"><a id="a3c04b81274a0a2788c3aec5799688799" name="a3c04b81274a0a2788c3aec5799688799"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>freq_hue_trail_mid_blur</b> (<a class="el" href="struct_pattern___history.html">Pattern_History</a> *hist, int len)</td></tr>
-<tr class="separator:a3c04b81274a0a2788c3aec5799688799"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae5698cb10259820a823fd71791b7d257" id="r_ae5698cb10259820a823fd71791b7d257"><td class="memItemLeft" align="right" valign="top"><a id="ae5698cb10259820a823fd71791b7d257" name="ae5698cb10259820a823fd71791b7d257"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>talking_hue</b> (<a class="el" href="struct_pattern___history.html">Pattern_History</a> *hist, int len)</td></tr>
-<tr class="separator:ae5698cb10259820a823fd71791b7d257"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a21306bd2da637cf2863a9cdf19f60a3b" id="r_a21306bd2da637cf2863a9cdf19f60a3b"><td class="memItemLeft" align="right" valign="top"><a id="a21306bd2da637cf2863a9cdf19f60a3b" name="a21306bd2da637cf2863a9cdf19f60a3b"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>talking_formants</b> (<a class="el" href="struct_pattern___history.html">Pattern_History</a> *hist, int len)</td></tr>
-<tr class="separator:a21306bd2da637cf2863a9cdf19f60a3b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af8f8393192629c6d2f196668fef0a4e9" id="r_af8f8393192629c6d2f196668fef0a4e9"><td class="memItemLeft" align="right" valign="top"><a id="af8f8393192629c6d2f196668fef0a4e9" name="af8f8393192629c6d2f196668fef0a4e9"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>talking_moving</b> (<a class="el" href="struct_pattern___history.html">Pattern_History</a> *hist, int len)</td></tr>
-<tr class="separator:af8f8393192629c6d2f196668fef0a4e9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af6b2ae384e032989c75b7357bf37f8dd" id="r_af6b2ae384e032989c75b7357bf37f8dd"><td class="memItemLeft" align="right" valign="top"><a id="af6b2ae384e032989c75b7357bf37f8dd" name="af6b2ae384e032989c75b7357bf37f8dd"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>bounce_back</b> (<a class="el" href="struct_pattern___history.html">Pattern_History</a> *hist, int len)</td></tr>
-<tr class="separator:af6b2ae384e032989c75b7357bf37f8dd"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0193fa4913f3452b68171f8492988d52" id="r_a0193fa4913f3452b68171f8492988d52"><td class="memItemLeft" align="right" valign="top"><a id="a0193fa4913f3452b68171f8492988d52" name="a0193fa4913f3452b68171f8492988d52"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>glitch</b> (<a class="el" href="struct_pattern___history.html">Pattern_History</a> *hist, int len)</td></tr>
-<tr class="separator:a0193fa4913f3452b68171f8492988d52"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab6e3bfb7fd12fff7957dfaf6d03e9556" id="r_ab6e3bfb7fd12fff7957dfaf6d03e9556"><td class="memItemLeft" align="right" valign="top"><a id="ab6e3bfb7fd12fff7957dfaf6d03e9556" name="ab6e3bfb7fd12fff7957dfaf6d03e9556"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>glitch_talk</b> (<a class="el" href="struct_pattern___history.html">Pattern_History</a> *hist, int len)</td></tr>
-<tr class="separator:ab6e3bfb7fd12fff7957dfaf6d03e9556"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3c5e8edc4d1d67a1d0991c13baa77741" id="r_a3c5e8edc4d1d67a1d0991c13baa77741"><td class="memItemLeft" align="right" valign="top"><a id="a3c5e8edc4d1d67a1d0991c13baa77741" name="a3c5e8edc4d1d67a1d0991c13baa77741"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>glitch_sections</b> (<a class="el" href="struct_pattern___history.html">Pattern_History</a> *hist, int len)</td></tr>
-<tr class="separator:a3c5e8edc4d1d67a1d0991c13baa77741"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2b6f61cf80e4e619cb04c8340385f771" id="r_a2b6f61cf80e4e619cb04c8340385f771"><td class="memItemLeft" align="right" valign="top"><a id="a2b6f61cf80e4e619cb04c8340385f771" name="a2b6f61cf80e4e619cb04c8340385f771"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>tug_of_war_frequency</b> (<a class="el" href="struct_pattern___history.html">Pattern_History</a> *hist, int len)</td></tr>
-<tr class="separator:a2b6f61cf80e4e619cb04c8340385f771"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a917f19c7c14477929eb724cc26a48c12" id="r_a917f19c7c14477929eb724cc26a48c12"><td class="memItemLeft" align="right" valign="top"><a id="a917f19c7c14477929eb724cc26a48c12" name="a917f19c7c14477929eb724cc26a48c12"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>tug_of_war_volume</b> (<a class="el" href="struct_pattern___history.html">Pattern_History</a> *hist, int len)</td></tr>
-<tr class="separator:a917f19c7c14477929eb724cc26a48c12"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:afe1bc8d6bd3f1996e14532f4886b6106" id="r_afe1bc8d6bd3f1996e14532f4886b6106"><td class="memItemLeft" align="right" valign="top"><a id="afe1bc8d6bd3f1996e14532f4886b6106" name="afe1bc8d6bd3f1996e14532f4886b6106"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>random_raindrop</b> (<a class="el" href="struct_pattern___history.html">Pattern_History</a> *hist, int len)</td></tr>
-<tr class="separator:afe1bc8d6bd3f1996e14532f4886b6106"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a66096b1afe8a40664355945c97d00115" id="r_a66096b1afe8a40664355945c97d00115"><td class="memItemLeft" align="right" valign="top"><a id="a66096b1afe8a40664355945c97d00115" name="a66096b1afe8a40664355945c97d00115"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>getFhue</b> (uint8_t min_hue, uint8_t max_hue)</td></tr>
+<tr class="separator:a66096b1afe8a40664355945c97d00115"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a80eb5b9bbf03b79a4da9a4562e96c290" id="r_a80eb5b9bbf03b79a4da9a4562e96c290"><td class="memItemLeft" align="right" valign="top"><a id="a80eb5b9bbf03b79a4da9a4562e96c290" name="a80eb5b9bbf03b79a4da9a4562e96c290"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>getVbrightness</b> ()</td></tr>
+<tr class="memdesc:a80eb5b9bbf03b79a4da9a4562e96c290"><td class="mdescLeft">&#160;</td><td class="mdescRight">get vol brightness <br /></td></tr>
+<tr class="separator:a80eb5b9bbf03b79a4da9a4562e96c290"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a138e1504863bcffdaef154a7cb5fc82c" id="r_a138e1504863bcffdaef154a7cb5fc82c"><td class="memItemLeft" align="right" valign="top"><a id="a138e1504863bcffdaef154a7cb5fc82c" name="a138e1504863bcffdaef154a7cb5fc82c"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>blank</b> (<a class="el" href="struct_strip___buffer.html">Strip_Buffer</a> *buf, int len, <a class="el" href="struct_pattern___data.html">Pattern_Data</a> *params)</td></tr>
+<tr class="separator:a138e1504863bcffdaef154a7cb5fc82c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3d83bebf605e40265a61d3b70a94a477" id="r_a3d83bebf605e40265a61d3b70a94a477"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a3d83bebf605e40265a61d3b70a94a477">confetti</a> (<a class="el" href="struct_strip___buffer.html">Strip_Buffer</a> *buf, int len, <a class="el" href="struct_pattern___data.html">Pattern_Data</a> *params)</td></tr>
+<tr class="memdesc:a3d83bebf605e40265a61d3b70a94a477"><td class="mdescLeft">&#160;</td><td class="mdescRight">Confetti effect using frequency and brightness. Colored speckles that blink and fade smoothly are scattered across the strip.  <br /></td></tr>
+<tr class="separator:a3d83bebf605e40265a61d3b70a94a477"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0a2007b15137c803a2b6544f31825f15" id="r_a0a2007b15137c803a2b6544f31825f15"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a0a2007b15137c803a2b6544f31825f15">pix_freq</a> (<a class="el" href="struct_strip___buffer.html">Strip_Buffer</a> *buf, int len, <a class="el" href="struct_pattern___data.html">Pattern_Data</a> *params)</td></tr>
+<tr class="memdesc:a0a2007b15137c803a2b6544f31825f15"><td class="mdescLeft">&#160;</td><td class="mdescRight">Based on a sufficient volume, a pixel will float to some position on the light strip and fall down (vol_show adds another threshold)  <br /></td></tr>
+<tr class="separator:a0a2007b15137c803a2b6544f31825f15"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af93356e3e70c1ff942871c1fc532e6db" id="r_af93356e3e70c1ff942871c1fc532e6db"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af93356e3e70c1ff942871c1fc532e6db">eq</a> (<a class="el" href="struct_strip___buffer.html">Strip_Buffer</a> *buf, int len, <a class="el" href="struct_pattern___data.html">Pattern_Data</a> *params)</td></tr>
+<tr class="memdesc:af93356e3e70c1ff942871c1fc532e6db"><td class="mdescLeft">&#160;</td><td class="mdescRight">Short and sweet function. Each pixel corresponds to a value from vReal, where the volume at each pitch determines the brightness of each pixel. Hue is locked in to a rainbow.  <br /></td></tr>
+<tr class="separator:af93356e3e70c1ff942871c1fc532e6db"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a20640e7d60033be2d768196de0dc1853" id="r_a20640e7d60033be2d768196de0dc1853"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a20640e7d60033be2d768196de0dc1853">tug_of_war</a> (<a class="el" href="struct_strip___buffer.html">Strip_Buffer</a> *buf, int len, <a class="el" href="struct_pattern___data.html">Pattern_Data</a> *params)</td></tr>
+<tr class="memdesc:a20640e7d60033be2d768196de0dc1853"><td class="mdescLeft">&#160;</td><td class="mdescRight">Strip is split into two sides, red and blue showing push and pull motion based on either frequency or volume.  <br /></td></tr>
+<tr class="separator:a20640e7d60033be2d768196de0dc1853"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afb270fa2ec672ca4ec41e4757b44c3b7" id="r_afb270fa2ec672ca4ec41e4757b44c3b7"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#afb270fa2ec672ca4ec41e4757b44c3b7">saturated</a> (<a class="el" href="struct_strip___buffer.html">Strip_Buffer</a> *buf, int len, <a class="el" href="struct_pattern___data.html">Pattern_Data</a> *params)</td></tr>
+<tr class="memdesc:afb270fa2ec672ca4ec41e4757b44c3b7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Fills the light strip with a nice ambient mess of colors that shift slowly over time. This function is similar to grovvy noise except the scale and hue_shift values are quiote different. Hue Octave Config remaps the volume to the range of hues present on strip. Hue Shift Config remaps volume as octaves and hhue_shift parameters in fill_noise16() Noise Compression config rremaps volume as hue_x parameter.  <br /></td></tr>
+<tr class="separator:afb270fa2ec672ca4ec41e4757b44c3b7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa9abdfa6d8a8cd220a943baf902e3b11" id="r_aa9abdfa6d8a8cd220a943baf902e3b11"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa9abdfa6d8a8cd220a943baf902e3b11">random_raindrop</a> (<a class="el" href="struct_strip___buffer.html">Strip_Buffer</a> *buf, int len, <a class="el" href="struct_pattern___data.html">Pattern_Data</a> *params)</td></tr>
+<tr class="memdesc:aa9abdfa6d8a8cd220a943baf902e3b11"><td class="mdescLeft">&#160;</td><td class="mdescRight">A random spot is chosen along the length and does a ripple based on frequency.  <br /></td></tr>
+<tr class="separator:aa9abdfa6d8a8cd220a943baf902e3b11"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4a0e3d33841cffff42c8908dc7580c47" id="r_a4a0e3d33841cffff42c8908dc7580c47"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a4a0e3d33841cffff42c8908dc7580c47">hue_trail</a> (<a class="el" href="struct_strip___buffer.html">Strip_Buffer</a> *buf, int len, <a class="el" href="struct_pattern___data.html">Pattern_Data</a> *params)</td></tr>
+<tr class="memdesc:a4a0e3d33841cffff42c8908dc7580c47"><td class="mdescLeft">&#160;</td><td class="mdescRight">Outputs a steady moving stream of lights where each pixel correlates to a previous fHue value. Visually tracks pitch over time, with brightness determined by volume. blur configuration adds blur.  <br /></td></tr>
+<tr class="separator:a4a0e3d33841cffff42c8908dc7580c47"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a69cb95245f151518f6c53259aafac764" id="r_a69cb95245f151518f6c53259aafac764"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a69cb95245f151518f6c53259aafac764">groovy</a> (<a class="el" href="struct_strip___buffer.html">Strip_Buffer</a> *buf, int len, <a class="el" href="struct_pattern___data.html">Pattern_Data</a> *params)</td></tr>
+<tr class="memdesc:a69cb95245f151518f6c53259aafac764"><td class="mdescLeft">&#160;</td><td class="mdescRight">A cool fluctuating pattern that changes color in waves of greens, yellows, purples and blue. This function is similar to saturated_noise but the values of scale and hue_shift are 100 and 5 respectively. This is a moving pattern but it does not change based on and volume or frequency changes. Uses fill_noise16() and blur. Hue Shift Change configuration remaps volume variable as hue_shift.  <br /></td></tr>
+<tr class="separator:a69cb95245f151518f6c53259aafac764"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a46d2a5da00a48c7a25fa66032cc7c930" id="r_a46d2a5da00a48c7a25fa66032cc7c930"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a46d2a5da00a48c7a25fa66032cc7c930">talking</a> (<a class="el" href="struct_strip___buffer.html">Strip_Buffer</a> *buf, int len, <a class="el" href="struct_pattern___data.html">Pattern_Data</a> *params)</td></tr>
+<tr class="memdesc:a46d2a5da00a48c7a25fa66032cc7c930"><td class="mdescLeft">&#160;</td><td class="mdescRight">Generates three clusters of lights, one in the middle, and two symmetric ones that travel out from the center and return. The distance the two outer LEDS from the center is determined by the detected volume. Formant configuration takes the clusters to be red,green,blue. Moving configuration, the three clusters move up and down according to sine wave motion.  <br /></td></tr>
+<tr class="separator:a46d2a5da00a48c7a25fa66032cc7c930"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abff51f2ded6047423b1bac2100b20ec7" id="r_abff51f2ded6047423b1bac2100b20ec7"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#abff51f2ded6047423b1bac2100b20ec7">glitch</a> (<a class="el" href="struct_strip___buffer.html">Strip_Buffer</a> *buf, int len, <a class="el" href="struct_pattern___data.html">Pattern_Data</a> *params)</td></tr>
+<tr class="memdesc:abff51f2ded6047423b1bac2100b20ec7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates two light clusters that move according to sine wave motion, but their speed is affected by the volume. One pulls its color from fHue, and the other pulls its color from the formant values. Talk configuration combines glitch with talking_moving(). Sections configuration creates 4 seperate sine wave clusters.  <br /></td></tr>
+<tr class="separator:abff51f2ded6047423b1bac2100b20ec7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3c0b2916e18f5a9a01c32c8214927752" id="r_a3c0b2916e18f5a9a01c32c8214927752"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a3c0b2916e18f5a9a01c32c8214927752">bands</a> (<a class="el" href="struct_strip___buffer.html">Strip_Buffer</a> *buf, int len, <a class="el" href="struct_pattern___data.html">Pattern_Data</a> *params)</td></tr>
+<tr class="memdesc:a3c0b2916e18f5a9a01c32c8214927752"><td class="mdescLeft">&#160;</td><td class="mdescRight">Basic band config : Uses the <a class="el" href="ext__analysis_8cpp.html#a5fc0a70d11594cbb70b3d21e3a36d5b1" title="Outputs the average volume of 5 buckets given a sample length.">band_split_bounce()</a> function to generate a five band split, and maps that split to the light strip. The strip is broken into five chunks of different colors, where the volume of each band determines how much of each section of the LED strip is lit. Advanced bands config : he strip is broken into five chunks of different colors, where the volume of each band determines how much of each section is lit, and that portion will diminish over time if a certain volume threshold is not met Fomant bands config: emonstrates the formant feature of the audio analysis code. Each of the three formant values correspond to a third of the entire LED strip, where the individual formant values determine the hue of each third.  <br /></td></tr>
+<tr class="separator:a3c0b2916e18f5a9a01c32c8214927752"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acff6dfc16e4f97d405bdbf87836c7b12" id="r_acff6dfc16e4f97d405bdbf87836c7b12"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#acff6dfc16e4f97d405bdbf87836c7b12">Fire2012</a> (<a class="el" href="struct_strip___buffer.html">Strip_Buffer</a> *buf, int len, <a class="el" href="struct_pattern___data.html">Pattern_Data</a> *params)</td></tr>
+<tr class="memdesc:acff6dfc16e4f97d405bdbf87836c7b12"><td class="mdescLeft">&#160;</td><td class="mdescRight">Fire2012 pattern utilizing heating and cooling.  <br /></td></tr>
+<tr class="separator:acff6dfc16e4f97d405bdbf87836c7b12"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="var-members" name="var-members"></a>
+Variables</h2></td></tr>
+<tr class="memitem:a2e525d5e45104092f7b14c3486c99f75" id="r_a2e525d5e45104092f7b14c3486c99f75"><td class="memItemLeft" align="right" valign="top"><a id="a2e525d5e45104092f7b14c3486c99f75" name="a2e525d5e45104092f7b14c3486c99f75"></a>
+<a class="el" href="struct_pattern___data.html">Pattern_Data</a>&#160;</td><td class="memItemRight" valign="bottom"><b>params</b></td></tr>
+<tr class="separator:a2e525d5e45104092f7b14c3486c99f75"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>This file contains function headers for <a class="el" href="patterns_8cpp.html">patterns.cpp</a> along with the <a class="el" href="struct_pattern___history.html" title="Holds persistent data for currently-running patterns.">Pattern_History</a> struct definition. </p>
-</div></div><!-- contents -->
+<div class="textblock"><p>This file contains function headers for <a class="el" href="patterns_8cpp.html">patterns.cpp</a> along with the <a class="el" href="struct_strip___buffer.html" title="Holds persistent data for currently-running patterns.">Strip_Buffer</a> struct definition. </p>
+</div><h2 class="groupheader">Function Documentation</h2>
+<a id="a3c0b2916e18f5a9a01c32c8214927752" name="a3c0b2916e18f5a9a01c32c8214927752"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3c0b2916e18f5a9a01c32c8214927752">&#9670;&#160;</a></span>bands()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void bands </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="struct_strip___buffer.html">Strip_Buffer</a> *</td>          <td class="paramname"><span class="paramname"><em>buf</em>, </span></td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int</td>          <td class="paramname"><span class="paramname"><em>len</em>, </span></td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="struct_pattern___data.html">Pattern_Data</a> *</td>          <td class="paramname"><span class="paramname"><em>params</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Basic band config : Uses the <a class="el" href="ext__analysis_8cpp.html#a5fc0a70d11594cbb70b3d21e3a36d5b1" title="Outputs the average volume of 5 buckets given a sample length.">band_split_bounce()</a> function to generate a five band split, and maps that split to the light strip. The strip is broken into five chunks of different colors, where the volume of each band determines how much of each section of the LED strip is lit. Advanced bands config : he strip is broken into five chunks of different colors, where the volume of each band determines how much of each section is lit, and that portion will diminish over time if a certain volume threshold is not met Fomant bands config: emonstrates the formant feature of the audio analysis code. Each of the three formant values correspond to a third of the entire LED strip, where the individual formant values determine the hue of each third. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">buf</td><td>Pointer to the <a class="el" href="struct_strip___buffer.html" title="Holds persistent data for currently-running patterns.">Strip_Buffer</a> structure, holds LED buffer and history variables. </td></tr>
+    <tr><td class="paramname">len</td><td>The length of LEDs to process </td></tr>
+    <tr><td class="paramname">params</td><td>Pointer to <a class="el" href="struct_pattern___data.html">Pattern_Data</a> structure containing configuration options. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a3d83bebf605e40265a61d3b70a94a477" name="a3d83bebf605e40265a61d3b70a94a477"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3d83bebf605e40265a61d3b70a94a477">&#9670;&#160;</a></span>confetti()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void confetti </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="struct_strip___buffer.html">Strip_Buffer</a> *</td>          <td class="paramname"><span class="paramname"><em>buf</em>, </span></td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int</td>          <td class="paramname"><span class="paramname"><em>len</em>, </span></td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="struct_pattern___data.html">Pattern_Data</a> *</td>          <td class="paramname"><span class="paramname"><em>params</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Confetti effect using frequency and brightness. Colored speckles that blink and fade smoothly are scattered across the strip. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">buf</td><td>Pointer to the <a class="el" href="struct_strip___buffer.html" title="Holds persistent data for currently-running patterns.">Strip_Buffer</a> structure, holds LED buffer and history variables. </td></tr>
+    <tr><td class="paramname">len</td><td>The length of LEDs to process </td></tr>
+    <tr><td class="paramname">params</td><td>Pointer to <a class="el" href="struct_pattern___data.html">Pattern_Data</a> structure containing configuration options. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="af93356e3e70c1ff942871c1fc532e6db" name="af93356e3e70c1ff942871c1fc532e6db"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af93356e3e70c1ff942871c1fc532e6db">&#9670;&#160;</a></span>eq()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void eq </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="struct_strip___buffer.html">Strip_Buffer</a> *</td>          <td class="paramname"><span class="paramname"><em>buf</em>, </span></td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int</td>          <td class="paramname"><span class="paramname"><em>len</em>, </span></td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="struct_pattern___data.html">Pattern_Data</a> *</td>          <td class="paramname"><span class="paramname"><em>params</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Short and sweet function. Each pixel corresponds to a value from vReal, where the volume at each pitch determines the brightness of each pixel. Hue is locked in to a rainbow. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">buf</td><td>Pointer to the <a class="el" href="struct_strip___buffer.html" title="Holds persistent data for currently-running patterns.">Strip_Buffer</a> structure, holds LED buffer and history variables. </td></tr>
+    <tr><td class="paramname">len</td><td>The length of LEDs to process </td></tr>
+    <tr><td class="paramname">params</td><td>Pointer to <a class="el" href="struct_pattern___data.html">Pattern_Data</a> structure containing configuration options. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="acff6dfc16e4f97d405bdbf87836c7b12" name="acff6dfc16e4f97d405bdbf87836c7b12"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#acff6dfc16e4f97d405bdbf87836c7b12">&#9670;&#160;</a></span>Fire2012()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Fire2012 </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="struct_strip___buffer.html">Strip_Buffer</a> *</td>          <td class="paramname"><span class="paramname"><em>buf</em>, </span></td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int</td>          <td class="paramname"><span class="paramname"><em>len</em>, </span></td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="struct_pattern___data.html">Pattern_Data</a> *</td>          <td class="paramname"><span class="paramname"><em>params</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Fire2012 pattern utilizing heating and cooling. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">buf</td><td>Pointer to the <a class="el" href="struct_strip___buffer.html" title="Holds persistent data for currently-running patterns.">Strip_Buffer</a> structure, holds LED buffer and history variables. </td></tr>
+    <tr><td class="paramname">len</td><td>The length of LEDs to process </td></tr>
+    <tr><td class="paramname">params</td><td>Pointer to <a class="el" href="struct_pattern___data.html">Pattern_Data</a> structure containing configuration options. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="abff51f2ded6047423b1bac2100b20ec7" name="abff51f2ded6047423b1bac2100b20ec7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abff51f2ded6047423b1bac2100b20ec7">&#9670;&#160;</a></span>glitch()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void glitch </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="struct_strip___buffer.html">Strip_Buffer</a> *</td>          <td class="paramname"><span class="paramname"><em>buf</em>, </span></td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int</td>          <td class="paramname"><span class="paramname"><em>len</em>, </span></td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="struct_pattern___data.html">Pattern_Data</a> *</td>          <td class="paramname"><span class="paramname"><em>params</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Creates two light clusters that move according to sine wave motion, but their speed is affected by the volume. One pulls its color from fHue, and the other pulls its color from the formant values. Talk configuration combines glitch with talking_moving(). Sections configuration creates 4 seperate sine wave clusters. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">buf</td><td>Pointer to the <a class="el" href="struct_strip___buffer.html" title="Holds persistent data for currently-running patterns.">Strip_Buffer</a> structure, holds LED buffer and history variables. </td></tr>
+    <tr><td class="paramname">len</td><td>The length of LEDs to process </td></tr>
+    <tr><td class="paramname">params</td><td>Pointer to <a class="el" href="struct_pattern___data.html">Pattern_Data</a> structure containing configuration options. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a69cb95245f151518f6c53259aafac764" name="a69cb95245f151518f6c53259aafac764"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a69cb95245f151518f6c53259aafac764">&#9670;&#160;</a></span>groovy()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void groovy </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="struct_strip___buffer.html">Strip_Buffer</a> *</td>          <td class="paramname"><span class="paramname"><em>buf</em>, </span></td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int</td>          <td class="paramname"><span class="paramname"><em>len</em>, </span></td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="struct_pattern___data.html">Pattern_Data</a> *</td>          <td class="paramname"><span class="paramname"><em>params</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>A cool fluctuating pattern that changes color in waves of greens, yellows, purples and blue. This function is similar to saturated_noise but the values of scale and hue_shift are 100 and 5 respectively. This is a moving pattern but it does not change based on and volume or frequency changes. Uses fill_noise16() and blur. Hue Shift Change configuration remaps volume variable as hue_shift. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">buf</td><td>Pointer to the <a class="el" href="struct_strip___buffer.html" title="Holds persistent data for currently-running patterns.">Strip_Buffer</a> structure, holds LED buffer and history variables. </td></tr>
+    <tr><td class="paramname">len</td><td>The length of LEDs to process </td></tr>
+    <tr><td class="paramname">params</td><td>Pointer to <a class="el" href="struct_pattern___data.html">Pattern_Data</a> structure containing configuration options. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a4a0e3d33841cffff42c8908dc7580c47" name="a4a0e3d33841cffff42c8908dc7580c47"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4a0e3d33841cffff42c8908dc7580c47">&#9670;&#160;</a></span>hue_trail()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void hue_trail </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="struct_strip___buffer.html">Strip_Buffer</a> *</td>          <td class="paramname"><span class="paramname"><em>buf</em>, </span></td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int</td>          <td class="paramname"><span class="paramname"><em>len</em>, </span></td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="struct_pattern___data.html">Pattern_Data</a> *</td>          <td class="paramname"><span class="paramname"><em>params</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Outputs a steady moving stream of lights where each pixel correlates to a previous fHue value. Visually tracks pitch over time, with brightness determined by volume. blur configuration adds blur. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">buf</td><td>Pointer to the <a class="el" href="struct_strip___buffer.html" title="Holds persistent data for currently-running patterns.">Strip_Buffer</a> structure, holds LED buffer and history variables. </td></tr>
+    <tr><td class="paramname">len</td><td>The length of LEDs to process </td></tr>
+    <tr><td class="paramname">params</td><td>Pointer to <a class="el" href="struct_pattern___data.html">Pattern_Data</a> structure containing configuration options. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a0a2007b15137c803a2b6544f31825f15" name="a0a2007b15137c803a2b6544f31825f15"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0a2007b15137c803a2b6544f31825f15">&#9670;&#160;</a></span>pix_freq()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void pix_freq </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="struct_strip___buffer.html">Strip_Buffer</a> *</td>          <td class="paramname"><span class="paramname"><em>buf</em>, </span></td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int</td>          <td class="paramname"><span class="paramname"><em>len</em>, </span></td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="struct_pattern___data.html">Pattern_Data</a> *</td>          <td class="paramname"><span class="paramname"><em>params</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Based on a sufficient volume, a pixel will float to some position on the light strip and fall down (vol_show adds another threshold) </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">buf</td><td>Pointer to the <a class="el" href="struct_strip___buffer.html" title="Holds persistent data for currently-running patterns.">Strip_Buffer</a> structure, holds LED buffer and history variables. </td></tr>
+    <tr><td class="paramname">len</td><td>The length of LEDs to process </td></tr>
+    <tr><td class="paramname">params</td><td>Pointer to <a class="el" href="struct_pattern___data.html">Pattern_Data</a> structure containing configuration options. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="aa9abdfa6d8a8cd220a943baf902e3b11" name="aa9abdfa6d8a8cd220a943baf902e3b11"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa9abdfa6d8a8cd220a943baf902e3b11">&#9670;&#160;</a></span>random_raindrop()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void random_raindrop </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="struct_strip___buffer.html">Strip_Buffer</a> *</td>          <td class="paramname"><span class="paramname"><em>buf</em>, </span></td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int</td>          <td class="paramname"><span class="paramname"><em>len</em>, </span></td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="struct_pattern___data.html">Pattern_Data</a> *</td>          <td class="paramname"><span class="paramname"><em>params</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>A random spot is chosen along the length and does a ripple based on frequency. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">buf</td><td>Pointer to the <a class="el" href="struct_strip___buffer.html" title="Holds persistent data for currently-running patterns.">Strip_Buffer</a> structure, holds LED buffer and history variables. </td></tr>
+    <tr><td class="paramname">len</td><td>The length of LEDs to process </td></tr>
+    <tr><td class="paramname">params</td><td>Pointer to <a class="el" href="struct_pattern___data.html">Pattern_Data</a> structure containing configuration options. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="afb270fa2ec672ca4ec41e4757b44c3b7" name="afb270fa2ec672ca4ec41e4757b44c3b7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afb270fa2ec672ca4ec41e4757b44c3b7">&#9670;&#160;</a></span>saturated()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void saturated </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="struct_strip___buffer.html">Strip_Buffer</a> *</td>          <td class="paramname"><span class="paramname"><em>buf</em>, </span></td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int</td>          <td class="paramname"><span class="paramname"><em>len</em>, </span></td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="struct_pattern___data.html">Pattern_Data</a> *</td>          <td class="paramname"><span class="paramname"><em>params</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Fills the light strip with a nice ambient mess of colors that shift slowly over time. This function is similar to grovvy noise except the scale and hue_shift values are quiote different. Hue Octave Config remaps the volume to the range of hues present on strip. Hue Shift Config remaps volume as octaves and hhue_shift parameters in fill_noise16() Noise Compression config rremaps volume as hue_x parameter. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">buf</td><td>Pointer to the <a class="el" href="struct_strip___buffer.html" title="Holds persistent data for currently-running patterns.">Strip_Buffer</a> structure, holds LED buffer and history variables. </td></tr>
+    <tr><td class="paramname">len</td><td>The length of LEDs to process </td></tr>
+    <tr><td class="paramname">params</td><td>Pointer to <a class="el" href="struct_pattern___data.html">Pattern_Data</a> structure containing configuration options. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a46d2a5da00a48c7a25fa66032cc7c930" name="a46d2a5da00a48c7a25fa66032cc7c930"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a46d2a5da00a48c7a25fa66032cc7c930">&#9670;&#160;</a></span>talking()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void talking </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="struct_strip___buffer.html">Strip_Buffer</a> *</td>          <td class="paramname"><span class="paramname"><em>buf</em>, </span></td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int</td>          <td class="paramname"><span class="paramname"><em>len</em>, </span></td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="struct_pattern___data.html">Pattern_Data</a> *</td>          <td class="paramname"><span class="paramname"><em>params</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Generates three clusters of lights, one in the middle, and two symmetric ones that travel out from the center and return. The distance the two outer LEDS from the center is determined by the detected volume. Formant configuration takes the clusters to be red,green,blue. Moving configuration, the three clusters move up and down according to sine wave motion. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">buf</td><td>Pointer to the <a class="el" href="struct_strip___buffer.html" title="Holds persistent data for currently-running patterns.">Strip_Buffer</a> structure, holds LED buffer and history variables. </td></tr>
+    <tr><td class="paramname">len</td><td>The length of LEDs to process </td></tr>
+    <tr><td class="paramname">params</td><td>Pointer to <a class="el" href="struct_pattern___data.html">Pattern_Data</a> structure containing configuration options. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a20640e7d60033be2d768196de0dc1853" name="a20640e7d60033be2d768196de0dc1853"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a20640e7d60033be2d768196de0dc1853">&#9670;&#160;</a></span>tug_of_war()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void tug_of_war </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="struct_strip___buffer.html">Strip_Buffer</a> *</td>          <td class="paramname"><span class="paramname"><em>buf</em>, </span></td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int</td>          <td class="paramname"><span class="paramname"><em>len</em>, </span></td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="struct_pattern___data.html">Pattern_Data</a> *</td>          <td class="paramname"><span class="paramname"><em>params</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Strip is split into two sides, red and blue showing push and pull motion based on either frequency or volume. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">buf</td><td>Pointer to the <a class="el" href="struct_strip___buffer.html" title="Holds persistent data for currently-running patterns.">Strip_Buffer</a> structure, holds LED buffer and history variables. </td></tr>
+    <tr><td class="paramname">len</td><td>The length of LEDs to process </td></tr>
+    <tr><td class="paramname">params</td><td>Pointer to <a class="el" href="struct_pattern___data.html">Pattern_Data</a> structure containing configuration options. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+</div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->

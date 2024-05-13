@@ -750,7 +750,7 @@ $(function(){initNavTree('web_server_8h_source.html',''); initResizable(); });
 <div class="line"><a id="l00638" name="l00638"></a><span class="lineno">  638</span> </div>
 <div class="line"><a id="l00639" name="l00639"></a><span class="lineno">  639</span>    <span class="comment">// AP mode is always active.</span></div>
 <div class="line"><a id="l00640" name="l00640"></a><span class="lineno">  640</span>    WiFi.mode(WIFI_MODE_APSTA);</div>
-<div class="line"><a id="l00641" name="l00641"></a><span class="lineno">  641</span>    WiFi.softAP(ap_ssid, ap_password);</div>
+<div class="line"><a id="l00641" name="l00641"></a><span class="lineno">  641</span>    WiFi.softAP(ap_ssid);</div>
 <div class="line"><a id="l00642" name="l00642"></a><span class="lineno">  642</span>    delay(1000);</div>
 <div class="line"><a id="l00643" name="l00643"></a><span class="lineno">  643</span>    <span class="keyword">const</span> IPAddress ap_ip = WiFi.softAPIP();</div>
 <div class="line"><a id="l00644" name="l00644"></a><span class="lineno">  644</span> </div>
@@ -827,10 +827,10 @@ $(function(){initNavTree('web_server_8h_source.html',''); initResizable(); });
 <div class="line"><a id="l00715" name="l00715"></a><span class="lineno">  715</span>    DefaultHeaders::Instance().addHeader(<span class="stringliteral">&quot;Access-Control-Allow-Headers&quot;</span>, <span class="stringliteral">&quot;Content-Type&quot;</span>);</div>
 <div class="line"><a id="l00716" name="l00716"></a><span class="lineno">  716</span>    webServer.begin();</div>
 <div class="line"><a id="l00717" name="l00717"></a><span class="lineno">  717</span>}</div>
-<div class="ttc" id="amain_8ino_html_a771cac207619504c2bd44a4392428a04"><div class="ttname"><a href="main_8ino.html#a771cac207619504c2bd44a4392428a04">config</a></div><div class="ttdeci">Config_Data config</div><div class="ttdoc">The currently-loaded device config.</div><div class="ttdef"><b>Definition</b> main.ino:69</div></div>
+<div class="ttc" id="amain_8ino_html_a771cac207619504c2bd44a4392428a04"><div class="ttname"><a href="main_8ino.html#a771cac207619504c2bd44a4392428a04">config</a></div><div class="ttdeci">Config_Data config</div><div class="ttdoc">The currently-loaded device config.</div><div class="ttdef"><b>Definition</b> main.ino:70</div></div>
 <div class="ttc" id="astruct_a_p_i_get_hook_html"><div class="ttname"><a href="struct_a_p_i_get_hook.html">APIGetHook</a></div><div class="ttdef"><b>Definition</b> webServer.h:112</div></div>
 <div class="ttc" id="astruct_a_p_i_put_hook_html"><div class="ttname"><a href="struct_a_p_i_put_hook.html">APIPutHook</a></div><div class="ttdef"><b>Definition</b> webServer.h:117</div></div>
-<div class="ttc" id="astruct_config___data_html"><div class="ttname"><a href="struct_config___data.html">Config_Data</a></div><div class="ttdoc">A structure holding system configuration data.</div><div class="ttdef"><b>Definition</b> storage.h:61</div></div>
+<div class="ttc" id="astruct_config___data_html"><div class="ttname"><a href="struct_config___data.html">Config_Data</a></div><div class="ttdoc">A structure holding system configuration data.</div><div class="ttdef"><b>Definition</b> storage.h:66</div></div>
 <div class="ttc" id="astruct_current_wifi_html"><div class="ttname"><a href="struct_current_wifi.html">CurrentWifi</a></div><div class="ttdef"><b>Definition</b> webServer.h:33</div></div>
 <div class="ttc" id="astruct_wi_fi_network_html"><div class="ttname"><a href="struct_wi_fi_network.html">WiFiNetwork</a></div><div class="ttdef"><b>Definition</b> webServer.h:26</div></div>
 <div class="ttc" id="astruct_wl_status_to_string_html"><div class="ttname"><a href="struct_wl_status_to_string.html">WlStatusToString</a></div><div class="ttdef"><b>Definition</b> webServer.h:44</div></div>

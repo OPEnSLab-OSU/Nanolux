@@ -1,8 +1,6 @@
 var searchData=
 [
-  ['largest_0',['largest',['../nanolux__util_8cpp.html#aa1a294335bcab38c61496cae29566cf9',1,'nanolux_util.cpp']]],
-  ['led_5fon_5fforever_1',['led_on_forever',['../nanolux__util_8cpp.html#a368badc6185939de1fc68a0bcddc3584',1,'nanolux_util.cpp']]],
-  ['load_5ffrom_5fnvs_2',['load_from_nvs',['../storage_8cpp.html#ae1e74499a5d4ddfd9cb5286e798cd729',1,'load_from_nvs():&#160;storage.cpp'],['../storage_8h.html#ae1e74499a5d4ddfd9cb5286e798cd729',1,'load_from_nvs():&#160;storage.cpp']]],
-  ['load_5fslot_3',['load_slot',['../storage_8cpp.html#a13187a0d386b6239bd0eabb8d10be0ec',1,'load_slot(int slot):&#160;storage.cpp'],['../storage_8h.html#a13187a0d386b6239bd0eabb8d10be0ec',1,'load_slot(int slot):&#160;storage.cpp']]],
-  ['loop_4',['loop',['../main_8ino.html#afe461d27b9c48d5921c00d521181f12f',1,'main.ino']]]
+  ['getvbrightness_0',['getVbrightness',['../patterns_8cpp.html#a80eb5b9bbf03b79a4da9a4562e96c290',1,'getVbrightness():&#160;patterns.cpp'],['../patterns_8h.html#a80eb5b9bbf03b79a4da9a4562e96c290',1,'getVbrightness():&#160;patterns.cpp']]],
+  ['glitch_1',['glitch',['../patterns_8cpp.html#abff51f2ded6047423b1bac2100b20ec7',1,'glitch(Strip_Buffer *buf, int len, Pattern_Data *params):&#160;patterns.cpp'],['../patterns_8h.html#abff51f2ded6047423b1bac2100b20ec7',1,'glitch(Strip_Buffer *buf, int len, Pattern_Data *params):&#160;patterns.cpp']]],
+  ['groovy_2',['groovy',['../patterns_8cpp.html#a69cb95245f151518f6c53259aafac764',1,'groovy(Strip_Buffer *buf, int len, Pattern_Data *params):&#160;patterns.cpp'],['../patterns_8h.html#a69cb95245f151518f6c53259aafac764',1,'groovy(Strip_Buffer *buf, int len, Pattern_Data *params):&#160;patterns.cpp']]]
 ];

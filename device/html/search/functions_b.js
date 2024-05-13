@@ -1,5 +1,6 @@
 var searchData=
 [
-  ['temp_5fto_5farray_0',['temp_to_array',['../ext__analysis_8cpp.html#a00e2741b7431e669a809814028b8f4b7',1,'ext_analysis.cpp']]],
-  ['timer_5foverrun_1',['timer_overrun',['../nanolux__util_8cpp.html#a246034a20f2f570fe86ae69fd22b69e1',1,'nanolux_util.cpp']]]
+  ['pix_5ffreq_0',['pix_freq',['../patterns_8cpp.html#a0a2007b15137c803a2b6544f31825f15',1,'pix_freq(Strip_Buffer *buf, int len, Pattern_Data *params):&#160;patterns.cpp'],['../patterns_8h.html#a0a2007b15137c803a2b6544f31825f15',1,'pix_freq(Strip_Buffer *buf, int len, Pattern_Data *params):&#160;patterns.cpp']]],
+  ['print_5fbuffer_1',['print_buffer',['../main_8ino.html#a279952fdc56782b0a1b589b60ce51241',1,'main.ino']]],
+  ['process_5freset_5fbutton_2',['process_reset_button',['../nanolux__util_8cpp.html#a90e377323ebdc6cfcc7bdfcf158de9e3',1,'nanolux_util.cpp']]]
 ];

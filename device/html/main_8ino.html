@@ -134,6 +134,15 @@ Functions</h2></td></tr>
 <tr class="memitem:a6e61f2a39b11b39082d0f60bb042ab6d" id="r_a6e61f2a39b11b39082d0f60bb042ab6d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a6e61f2a39b11b39082d0f60bb042ab6d">scale_crgb_array</a> (CRGB *arr, uint8_t len, uint8_t factor)</td></tr>
 <tr class="memdesc:a6e61f2a39b11b39082d0f60bb042ab6d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Scales all LEDs in a CRGB array by (factor)/255.  <br /></td></tr>
 <tr class="separator:a6e61f2a39b11b39082d0f60bb042ab6d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0e06798a633ed20e00cfb4ff575a16c8" id="r_a0e06798a633ed20e00cfb4ff575a16c8"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a0e06798a633ed20e00cfb4ff575a16c8">reverse_buffer</a> (CRGB *buf, uint8_t len)</td></tr>
+<tr class="memdesc:a0e06798a633ed20e00cfb4ff575a16c8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Reverses the LED buffer supplied given a length.  <br /></td></tr>
+<tr class="separator:a0e06798a633ed20e00cfb4ff575a16c8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a53cdfc663a14d99d48f51a16404568f2" id="r_a53cdfc663a14d99d48f51a16404568f2"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a53cdfc663a14d99d48f51a16404568f2">unfold_buffer</a> (CRGB *buf, uint8_t len, bool even)</td></tr>
+<tr class="memdesc:a53cdfc663a14d99d48f51a16404568f2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Unfolds the buffer by mirroring it across the right side.  <br /></td></tr>
+<tr class="separator:a53cdfc663a14d99d48f51a16404568f2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a69d58ad999ebda720a3ff72adbbf3d7e" id="r_a69d58ad999ebda720a3ff72adbbf3d7e"><td class="memItemLeft" align="right" valign="top"><a id="a69d58ad999ebda720a3ff72adbbf3d7e" name="a69d58ad999ebda720a3ff72adbbf3d7e"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>process_pattern</b> (uint8_t idx, uint8_t len)</td></tr>
+<tr class="separator:a69d58ad999ebda720a3ff72adbbf3d7e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a73767c61fbb24c0ace2c4b6ea6310184" id="r_a73767c61fbb24c0ace2c4b6ea6310184"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a73767c61fbb24c0ace2c4b6ea6310184">run_strip_splitting</a> ()</td></tr>
 <tr class="memdesc:a73767c61fbb24c0ace2c4b6ea6310184"><td class="mdescLeft">&#160;</td><td class="mdescRight">Runs the strip splitting LED strip mode.  <br /></td></tr>
 <tr class="separator:a73767c61fbb24c0ace2c4b6ea6310184"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -189,12 +198,12 @@ double&#160;</td><td class="memItemRight" valign="bottom"><b>checkVol</b></td></
 volatile bool&#160;</td><td class="memItemRight" valign="bottom"><b>pattern_changed</b> = false</td></tr>
 <tr class="memdesc:ab543150ff7d4457a985c2e09bcf636b5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Updated to "true" when the web server changes significant pattern settings. <br /></td></tr>
 <tr class="separator:ab543150ff7d4457a985c2e09bcf636b5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a94feaf5faee405b08bafde6d58e01d56" id="r_a94feaf5faee405b08bafde6d58e01d56"><td class="memItemLeft" align="right" valign="top"><a class="el" href="struct_pattern___data.html">Pattern_Data</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a94feaf5faee405b08bafde6d58e01d56">loaded_pattern</a></td></tr>
-<tr class="memdesc:a94feaf5faee405b08bafde6d58e01d56"><td class="mdescLeft">&#160;</td><td class="mdescRight">The current pattern being ran by the device.  <br /></td></tr>
-<tr class="separator:a94feaf5faee405b08bafde6d58e01d56"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2c41856e6233425fdbfd5a320ecdcef8" id="r_a2c41856e6233425fdbfd5a320ecdcef8"><td class="memItemLeft" align="right" valign="top"><a class="el" href="struct_pattern___data.html">Pattern_Data</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a2c41856e6233425fdbfd5a320ecdcef8">saved_patterns</a> [<a class="el" href="storage_8h.html#ac79c80814ce9328ea16a17299422bc55">NUM_SAVES</a>]</td></tr>
-<tr class="memdesc:a2c41856e6233425fdbfd5a320ecdcef8"><td class="mdescLeft">&#160;</td><td class="mdescRight">All patterns currently loaded from storage.  <br /></td></tr>
-<tr class="separator:a2c41856e6233425fdbfd5a320ecdcef8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab366196355defee7e0962544599dc407" id="r_ab366196355defee7e0962544599dc407"><td class="memItemLeft" align="right" valign="top"><a class="el" href="struct_strip___data.html">Strip_Data</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab366196355defee7e0962544599dc407">loaded_patterns</a></td></tr>
+<tr class="memdesc:ab366196355defee7e0962544599dc407"><td class="mdescLeft">&#160;</td><td class="mdescRight">The current strip configuration being ran by the device.  <br /></td></tr>
+<tr class="separator:ab366196355defee7e0962544599dc407"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4b265bf0c74f71f08b775c03e663e505" id="r_a4b265bf0c74f71f08b775c03e663e505"><td class="memItemLeft" align="right" valign="top"><a class="el" href="struct_strip___data.html">Strip_Data</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a4b265bf0c74f71f08b775c03e663e505">saved_patterns</a> [<a class="el" href="storage_8h.html#ac79c80814ce9328ea16a17299422bc55">NUM_SAVES</a>]</td></tr>
+<tr class="memdesc:a4b265bf0c74f71f08b775c03e663e505"><td class="mdescLeft">&#160;</td><td class="mdescRight">All patterns and strip configuration currently loaded from storage.  <br /></td></tr>
+<tr class="separator:a4b265bf0c74f71f08b775c03e663e505"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a771cac207619504c2bd44a4392428a04" id="r_a771cac207619504c2bd44a4392428a04"><td class="memItemLeft" align="right" valign="top"><a class="el" href="struct_config___data.html">Config_Data</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a771cac207619504c2bd44a4392428a04">config</a></td></tr>
 <tr class="memdesc:a771cac207619504c2bd44a4392428a04"><td class="mdescLeft">&#160;</td><td class="mdescRight">The currently-loaded device config.  <br /></td></tr>
 <tr class="separator:a771cac207619504c2bd44a4392428a04"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -206,10 +215,10 @@ uint8_t&#160;</td><td class="memItemRight" valign="bottom"><b>manual_pattern_idx
 volatile bool&#160;</td><td class="memItemRight" valign="bottom"><b>manual_control_enabled</b> = false</td></tr>
 <tr class="memdesc:ab2f12c6a03e526949d9492da9c0287bb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Contains if manual control is enabled or not. <br /></td></tr>
 <tr class="separator:ab2f12c6a03e526949d9492da9c0287bb"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a74bfc71123c6d3e9d987c33e17e8ccf9" id="r_a74bfc71123c6d3e9d987c33e17e8ccf9"><td class="memItemLeft" align="right" valign="top"><a id="a74bfc71123c6d3e9d987c33e17e8ccf9" name="a74bfc71123c6d3e9d987c33e17e8ccf9"></a>
-<a class="el" href="struct_pattern___history.html">Pattern_History</a>&#160;</td><td class="memItemRight" valign="bottom"><b>histories</b> [<a class="el" href="storage_8h.html#af93e972195f0ec4f57c19936445e58b8">NUM_SUBPATTERNS</a>]</td></tr>
-<tr class="memdesc:a74bfc71123c6d3e9d987c33e17e8ccf9"><td class="mdescLeft">&#160;</td><td class="mdescRight">History of all currently-running subpatterns. <br /></td></tr>
-<tr class="separator:a74bfc71123c6d3e9d987c33e17e8ccf9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac5ea43aaef4ac8b670dd0f166d36a2e5" id="r_ac5ea43aaef4ac8b670dd0f166d36a2e5"><td class="memItemLeft" align="right" valign="top"><a id="ac5ea43aaef4ac8b670dd0f166d36a2e5" name="ac5ea43aaef4ac8b670dd0f166d36a2e5"></a>
+<a class="el" href="struct_strip___buffer.html">Strip_Buffer</a>&#160;</td><td class="memItemRight" valign="bottom"><b>histories</b> [<a class="el" href="storage_8h.html#ab38ce3af4eb0fb3da19fcabd8b796a4c">PATTERN_LIMIT</a>]</td></tr>
+<tr class="memdesc:ac5ea43aaef4ac8b670dd0f166d36a2e5"><td class="mdescLeft">&#160;</td><td class="mdescRight">History of all currently-running patterns. <br /></td></tr>
+<tr class="separator:ac5ea43aaef4ac8b670dd0f166d36a2e5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7e3d635edcf09480b85dff9c73c76ca3" id="r_a7e3d635edcf09480b85dff9c73c76ca3"><td class="memItemLeft" align="right" valign="top"><a id="a7e3d635edcf09480b85dff9c73c76ca3" name="a7e3d635edcf09480b85dff9c73c76ca3"></a>
 <a class="el" href="struct_pattern.html">Pattern</a>&#160;</td><td class="memItemRight" valign="bottom"><b>mainPatterns</b> []</td></tr>
 <tr class="memdesc:a7e3d635edcf09480b85dff9c73c76ca3"><td class="mdescLeft">&#160;</td><td class="mdescRight">The current list of patterns, externed from <a class="el" href="globals_8h.html">globals.h</a>. <br /></td></tr>
@@ -336,6 +345,36 @@ volatile bool&#160;</td><td class="memItemRight" valign="bottom"><b>manual_contr
 
 </div>
 </div>
+<a id="a0e06798a633ed20e00cfb4ff575a16c8" name="a0e06798a633ed20e00cfb4ff575a16c8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0e06798a633ed20e00cfb4ff575a16c8">&#9670;&#160;</a></span>reverse_buffer()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void reverse_buffer </td>
+          <td>(</td>
+          <td class="paramtype">CRGB *</td>          <td class="paramname"><span class="paramname"><em>buf</em>, </span></td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint8_t</td>          <td class="paramname"><span class="paramname"><em>len</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Reverses the LED buffer supplied given a length. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">buf</td><td>The LED buffer to reverse. </td></tr>
+    <tr><td class="paramname">len</td><td>The length of the buffer to reverse. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
 <a id="aceda055518a59887a9c2de7f56015929" name="aceda055518a59887a9c2de7f56015929"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#aceda055518a59887a9c2de7f56015929">&#9670;&#160;</a></span>run_pattern_layering()</h2>
 
@@ -352,9 +391,9 @@ volatile bool&#160;</td><td class="memItemRight" valign="bottom"><b>manual_contr
 </div><div class="memdoc">
 
 <p>Runs the pattern layering output mode. </p>
-<p>This function layers two subpatterns onto each other, covering the entire length of the LED strip.</p>
-<p>Each subpattern buffer is moved into a temp buffer, which scales the brightness of each subpattern according to user settings.</p>
-<p>Then, the subpatterns are merged into the unsmoothed buffer, which then is combined with the smoothed buffer. </p>
+<p>This function layers two patterns onto each other, covering the entire length of the LED strip.</p>
+<p>Each pattern buffer is moved into a temp buffer, which scales the brightness of each pattern according to user settings.</p>
+<p>Then, the patterns are merged into the unsmoothed buffer, which then is combined with the smoothed buffer. </p>
 
 </div>
 </div>
@@ -374,7 +413,7 @@ volatile bool&#160;</td><td class="memItemRight" valign="bottom"><b>manual_contr
 </div><div class="memdoc">
 
 <p>Runs the strip splitting LED strip mode. </p>
-<p>This function allocates a number of LEDs per subpattern, then moves LED data from the subpattern's history buffer to the unsmoothed output buffer.</p>
+<p>This function allocates a number of LEDs per pattern, then moves LED data from the pattern's history buffer to the unsmoothed output buffer.</p>
 <p>Once the data is in the unsmoothed buffer, the buffer is "smoothed" into the output smoothed buffer. </p>
 
 </div>
@@ -435,6 +474,42 @@ volatile bool&#160;</td><td class="memItemRight" valign="bottom"><b>manual_contr
 
 </div>
 </div>
+<a id="a53cdfc663a14d99d48f51a16404568f2" name="a53cdfc663a14d99d48f51a16404568f2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a53cdfc663a14d99d48f51a16404568f2">&#9670;&#160;</a></span>unfold_buffer()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void unfold_buffer </td>
+          <td>(</td>
+          <td class="paramtype">CRGB *</td>          <td class="paramname"><span class="paramname"><em>buf</em>, </span></td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint8_t</td>          <td class="paramname"><span class="paramname"><em>len</em>, </span></td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool</td>          <td class="paramname"><span class="paramname"><em>even</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Unfolds the buffer by mirroring it across the right side. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">buf</td><td>The buffer to unfold. </td></tr>
+    <tr><td class="paramname">len</td><td>The length to unfold. </td></tr>
+    <tr><td class="paramname">even</td><td>If the LED strip length is even/odd. When odd, duplicates the middle pixel a second time to fill space. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
 <a id="a2804eef424e6a49f1693b768100ccc20" name="a2804eef424e6a49f1693b768100ccc20"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a2804eef424e6a49f1693b768100ccc20">&#9670;&#160;</a></span>update_web_server()</h2>
 
@@ -490,37 +565,37 @@ volatile bool&#160;</td><td class="memItemRight" valign="bottom"><b>manual_contr
 
 </div>
 </div>
-<a id="a94feaf5faee405b08bafde6d58e01d56" name="a94feaf5faee405b08bafde6d58e01d56"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a94feaf5faee405b08bafde6d58e01d56">&#9670;&#160;</a></span>loaded_pattern</h2>
+<a id="ab366196355defee7e0962544599dc407" name="ab366196355defee7e0962544599dc407"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab366196355defee7e0962544599dc407">&#9670;&#160;</a></span>loaded_patterns</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="struct_pattern___data.html">Pattern_Data</a> loaded_pattern</td>
+          <td class="memname"><a class="el" href="struct_strip___data.html">Strip_Data</a> loaded_patterns</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p>The current pattern being ran by the device. </p>
-<p>The currently loaded pattern, externed from <a class="el" href="main_8ino.html">main.ino</a>. </p>
+<p>The current strip configuration being ran by the device. </p>
+<p>The currently strip configuration, externed from <a class="el" href="main_8ino.html">main.ino</a>. </p>
 
 </div>
 </div>
-<a id="a2c41856e6233425fdbfd5a320ecdcef8" name="a2c41856e6233425fdbfd5a320ecdcef8"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a2c41856e6233425fdbfd5a320ecdcef8">&#9670;&#160;</a></span>saved_patterns</h2>
+<a id="a4b265bf0c74f71f08b775c03e663e505" name="a4b265bf0c74f71f08b775c03e663e505"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4b265bf0c74f71f08b775c03e663e505">&#9670;&#160;</a></span>saved_patterns</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="struct_pattern___data.html">Pattern_Data</a> saved_patterns[<a class="el" href="storage_8h.html#ac79c80814ce9328ea16a17299422bc55">NUM_SAVES</a>]</td>
+          <td class="memname"><a class="el" href="struct_strip___data.html">Strip_Data</a> saved_patterns[<a class="el" href="storage_8h.html#ac79c80814ce9328ea16a17299422bc55">NUM_SAVES</a>]</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p>All patterns currently loaded from storage. </p>
-<p>The array for storing saved patterns, externed from <a class="el" href="main_8ino.html">main.ino</a>. </p>
+<p>All patterns and strip configuration currently loaded from storage. </p>
+<p>The array for storing saved strip configurations, externed from <a class="el" href="main_8ino.html">main.ino</a>. </p>
 
 </div>
 </div>

@@ -1,7 +1,6 @@
 var struct_pattern___data =
 [
-    [ "mode", "struct_pattern___data.html#aeedd84da44275108c4f6ebb261ade2ed", null ],
-    [ "noise_thresh", "struct_pattern___data.html#ab9a644362c66d24be0d5f29e74d9f56a", null ],
-    [ "subpattern", "struct_pattern___data.html#a153a61a3c37747f3edac38eae9e8f394", null ],
-    [ "subpattern_count", "struct_pattern___data.html#a4a5dc721b67ce56c7230a91e9e65e8ab", null ]
+    [ "brightness", "struct_pattern___data.html#afc50c573472d0252f05b9d0778cb4f0c", null ],
+    [ "minhue", "struct_pattern___data.html#ab90e699d5c41d4419f883d56f4d507bc", null ],
+    [ "smoothing", "struct_pattern___data.html#a29a6ff37d9417341f884f48683cde4ef", null ]
 ];

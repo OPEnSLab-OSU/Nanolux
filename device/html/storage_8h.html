@@ -105,11 +105,10 @@ $(function(){initNavTree('storage_8h.html',''); initResizable(); });
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
 Classes</h2></td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_subpattern___data.html">Subpattern_Data</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A structure holding subpattern configuration data.  <a href="struct_subpattern___data.html#details">More...</a><br /></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_pattern___data.html">Pattern_Data</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A structure holding pattern configuration data.  <a href="struct_pattern___data.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_strip___data.html">Strip_Data</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A structure holding strip configuration data.  <a href="struct_strip___data.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_config___data.html">Config_Data</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A structure holding system configuration data.  <a href="struct_config___data.html#details">More...</a><br /></td></tr>
@@ -119,17 +118,17 @@ Classes</h2></td></tr>
 Macros</h2></td></tr>
 <tr class="memitem:ac79c80814ce9328ea16a17299422bc55" id="r_ac79c80814ce9328ea16a17299422bc55"><td class="memItemLeft" align="right" valign="top"><a id="ac79c80814ce9328ea16a17299422bc55" name="ac79c80814ce9328ea16a17299422bc55"></a>
 #define&#160;</td><td class="memItemRight" valign="bottom"><b>NUM_SAVES</b>&#160;&#160;&#160;3</td></tr>
-<tr class="memdesc:ac79c80814ce9328ea16a17299422bc55"><td class="mdescLeft">&#160;</td><td class="mdescRight">The number of saved patterns the ESP32 is able to address. <br /></td></tr>
+<tr class="memdesc:ac79c80814ce9328ea16a17299422bc55"><td class="mdescLeft">&#160;</td><td class="mdescRight">The number of saved strip configs the ESP32 is able to address. <br /></td></tr>
 <tr class="separator:ac79c80814ce9328ea16a17299422bc55"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af93e972195f0ec4f57c19936445e58b8" id="r_af93e972195f0ec4f57c19936445e58b8"><td class="memItemLeft" align="right" valign="top"><a id="af93e972195f0ec4f57c19936445e58b8" name="af93e972195f0ec4f57c19936445e58b8"></a>
-#define&#160;</td><td class="memItemRight" valign="bottom"><b>NUM_SUBPATTERNS</b>&#160;&#160;&#160;4</td></tr>
-<tr class="memdesc:af93e972195f0ec4f57c19936445e58b8"><td class="mdescLeft">&#160;</td><td class="mdescRight">The number of subpatterns each pattern can play at maximum. <br /></td></tr>
-<tr class="separator:af93e972195f0ec4f57c19936445e58b8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab38ce3af4eb0fb3da19fcabd8b796a4c" id="r_ab38ce3af4eb0fb3da19fcabd8b796a4c"><td class="memItemLeft" align="right" valign="top"><a id="ab38ce3af4eb0fb3da19fcabd8b796a4c" name="ab38ce3af4eb0fb3da19fcabd8b796a4c"></a>
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>PATTERN_LIMIT</b>&#160;&#160;&#160;4</td></tr>
+<tr class="memdesc:ab38ce3af4eb0fb3da19fcabd8b796a4c"><td class="mdescLeft">&#160;</td><td class="mdescRight">The number of patterns that can run at maximum. <br /></td></tr>
+<tr class="separator:ab38ce3af4eb0fb3da19fcabd8b796a4c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
 <tr class="memitem:a13187a0d386b6239bd0eabb8d10be0ec" id="r_a13187a0d386b6239bd0eabb8d10be0ec"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a13187a0d386b6239bd0eabb8d10be0ec">load_slot</a> (int slot)</td></tr>
-<tr class="memdesc:a13187a0d386b6239bd0eabb8d10be0ec"><td class="mdescLeft">&#160;</td><td class="mdescRight">Move subpatterns in a slot to the main buffer.  <br /></td></tr>
+<tr class="memdesc:a13187a0d386b6239bd0eabb8d10be0ec"><td class="mdescLeft">&#160;</td><td class="mdescRight">Move patterns in a slot to the main buffer.  <br /></td></tr>
 <tr class="separator:a13187a0d386b6239bd0eabb8d10be0ec"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4a4c1f67fd190bc079f96cdd2c59d3b2" id="r_a4a4c1f67fd190bc079f96cdd2c59d3b2"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a4a4c1f67fd190bc079f96cdd2c59d3b2">set_slot</a> (int slot)</td></tr>
 <tr class="memdesc:a4a4c1f67fd190bc079f96cdd2c59d3b2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Saves the currently-loaded pattern to a save slot.  <br /></td></tr>
@@ -208,7 +207,7 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Move subpatterns in a slot to the main buffer. </p>
+<p>Move patterns in a slot to the main buffer. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">slot</td><td>The save slot number to load from. </td></tr>

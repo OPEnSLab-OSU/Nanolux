@@ -98,37 +98,35 @@ $(function(){initNavTree('struct_pattern___data.html',''); initResizable(); });
   <div class="headertitle"><div class="title">Pattern_Data Struct Reference</div></div>
 </div><!--header-->
 <div class="contents">
-
-<p>A structure holding pattern configuration data.  
- <a href="#details">More...</a></p>
-
-<p><code>#include &lt;<a class="el" href="storage_8h_source.html">storage.h</a>&gt;</code></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
-<tr class="memitem:aabe9e5f71b53cdbc59651ef4345dbc91" id="r_aabe9e5f71b53cdbc59651ef4345dbc91"><td class="memItemLeft" align="right" valign="top"><a id="aabe9e5f71b53cdbc59651ef4345dbc91" name="aabe9e5f71b53cdbc59651ef4345dbc91"></a>
-uint8_t&#160;</td><td class="memItemRight" valign="bottom"><b>alpha</b> = 0</td></tr>
-<tr class="separator:aabe9e5f71b53cdbc59651ef4345dbc91"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab9a644362c66d24be0d5f29e74d9f56a" id="r_ab9a644362c66d24be0d5f29e74d9f56a"><td class="memItemLeft" align="right" valign="top"><a id="ab9a644362c66d24be0d5f29e74d9f56a" name="ab9a644362c66d24be0d5f29e74d9f56a"></a>
-uint8_t&#160;</td><td class="memItemRight" valign="bottom"><b>noise_thresh</b> = 0</td></tr>
-<tr class="memdesc:ab9a644362c66d24be0d5f29e74d9f56a"><td class="mdescLeft">&#160;</td><td class="mdescRight">How transparent the top pattern is in Z-layering. <br /></td></tr>
-<tr class="separator:ab9a644362c66d24be0d5f29e74d9f56a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aeedd84da44275108c4f6ebb261ade2ed" id="r_aeedd84da44275108c4f6ebb261ade2ed"><td class="memItemLeft" align="right" valign="top"><a id="aeedd84da44275108c4f6ebb261ade2ed" name="aeedd84da44275108c4f6ebb261ade2ed"></a>
-uint8_t&#160;</td><td class="memItemRight" valign="bottom"><b>mode</b> = 0</td></tr>
-<tr class="memdesc:aeedd84da44275108c4f6ebb261ade2ed"><td class="mdescLeft">&#160;</td><td class="mdescRight">The minimum noise floor to consider as audio. <br /></td></tr>
-<tr class="separator:aeedd84da44275108c4f6ebb261ade2ed"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4a5dc721b67ce56c7230a91e9e65e8ab" id="r_a4a5dc721b67ce56c7230a91e9e65e8ab"><td class="memItemLeft" align="right" valign="top"><a id="a4a5dc721b67ce56c7230a91e9e65e8ab" name="a4a5dc721b67ce56c7230a91e9e65e8ab"></a>
-uint8_t&#160;</td><td class="memItemRight" valign="bottom"><b>subpattern_count</b> = 1</td></tr>
-<tr class="memdesc:a4a5dc721b67ce56c7230a91e9e65e8ab"><td class="mdescLeft">&#160;</td><td class="mdescRight">The currently-running pattern mode (splitting vs layering). <br /></td></tr>
-<tr class="separator:a4a5dc721b67ce56c7230a91e9e65e8ab"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a153a61a3c37747f3edac38eae9e8f394" id="r_a153a61a3c37747f3edac38eae9e8f394"><td class="memItemLeft" align="right" valign="top"><a id="a153a61a3c37747f3edac38eae9e8f394" name="a153a61a3c37747f3edac38eae9e8f394"></a>
-<a class="el" href="struct_subpattern___data.html">Subpattern_Data</a>&#160;</td><td class="memItemRight" valign="bottom"><b>subpattern</b> [<a class="el" href="storage_8h.html#af93e972195f0ec4f57c19936445e58b8">NUM_SUBPATTERNS</a>]</td></tr>
-<tr class="memdesc:a153a61a3c37747f3edac38eae9e8f394"><td class="mdescLeft">&#160;</td><td class="mdescRight">The number of subpatterns this pattern has. <br /></td></tr>
-<tr class="separator:a153a61a3c37747f3edac38eae9e8f394"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa8ce8a93a249f688d28bc14a6d47140d" id="r_aa8ce8a93a249f688d28bc14a6d47140d"><td class="memItemLeft" align="right" valign="top"><a id="aa8ce8a93a249f688d28bc14a6d47140d" name="aa8ce8a93a249f688d28bc14a6d47140d"></a>
+uint8_t&#160;</td><td class="memItemRight" valign="bottom"><b>idx</b> = 0</td></tr>
+<tr class="separator:aa8ce8a93a249f688d28bc14a6d47140d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afc50c573472d0252f05b9d0778cb4f0c" id="r_afc50c573472d0252f05b9d0778cb4f0c"><td class="memItemLeft" align="right" valign="top"><a id="afc50c573472d0252f05b9d0778cb4f0c" name="afc50c573472d0252f05b9d0778cb4f0c"></a>
+uint8_t&#160;</td><td class="memItemRight" valign="bottom"><b>brightness</b> = 255</td></tr>
+<tr class="memdesc:afc50c573472d0252f05b9d0778cb4f0c"><td class="mdescLeft">&#160;</td><td class="mdescRight">The selected pattern name to run. <br /></td></tr>
+<tr class="separator:afc50c573472d0252f05b9d0778cb4f0c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a29a6ff37d9417341f884f48683cde4ef" id="r_a29a6ff37d9417341f884f48683cde4ef"><td class="memItemLeft" align="right" valign="top"><a id="a29a6ff37d9417341f884f48683cde4ef" name="a29a6ff37d9417341f884f48683cde4ef"></a>
+uint8_t&#160;</td><td class="memItemRight" valign="bottom"><b>smoothing</b> = 0</td></tr>
+<tr class="memdesc:a29a6ff37d9417341f884f48683cde4ef"><td class="mdescLeft">&#160;</td><td class="mdescRight">The pattern's brightness. <br /></td></tr>
+<tr class="separator:a29a6ff37d9417341f884f48683cde4ef"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab90e699d5c41d4419f883d56f4d507bc" id="r_ab90e699d5c41d4419f883d56f4d507bc"><td class="memItemLeft" align="right" valign="top"><a id="ab90e699d5c41d4419f883d56f4d507bc" name="ab90e699d5c41d4419f883d56f4d507bc"></a>
+uint8_t&#160;</td><td class="memItemRight" valign="bottom"><b>minhue</b> = 0</td></tr>
+<tr class="memdesc:ab90e699d5c41d4419f883d56f4d507bc"><td class="mdescLeft">&#160;</td><td class="mdescRight">How smoothed pattern light changes are. <br /></td></tr>
+<tr class="separator:ab90e699d5c41d4419f883d56f4d507bc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac3d9f315254ce1bf6a6b6734f996b325" id="r_ac3d9f315254ce1bf6a6b6734f996b325"><td class="memItemLeft" align="right" valign="top"><a id="ac3d9f315254ce1bf6a6b6734f996b325" name="ac3d9f315254ce1bf6a6b6734f996b325"></a>
+uint8_t&#160;</td><td class="memItemRight" valign="bottom"><b>maxhue</b> = 255</td></tr>
+<tr class="separator:ac3d9f315254ce1bf6a6b6734f996b325"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0da7ec9a960c4950d3f2d4059de2f1ae" id="r_a0da7ec9a960c4950d3f2d4059de2f1ae"><td class="memItemLeft" align="right" valign="top"><a id="a0da7ec9a960c4950d3f2d4059de2f1ae" name="a0da7ec9a960c4950d3f2d4059de2f1ae"></a>
+uint8_t&#160;</td><td class="memItemRight" valign="bottom"><b>config</b> = 0</td></tr>
+<tr class="separator:a0da7ec9a960c4950d3f2d4059de2f1ae"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a99f97d269922db2ef57d42f5371e9b2d" id="r_a99f97d269922db2ef57d42f5371e9b2d"><td class="memItemLeft" align="right" valign="top"><a id="a99f97d269922db2ef57d42f5371e9b2d" name="a99f97d269922db2ef57d42f5371e9b2d"></a>
+uint8_t&#160;</td><td class="memItemRight" valign="bottom"><b>postprocessing_mode</b> = 0</td></tr>
+<tr class="separator:a99f97d269922db2ef57d42f5371e9b2d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>A structure holding pattern configuration data. </p>
-</div><hr/>The documentation for this struct was generated from the following file:<ul>
+<hr/>The documentation for this struct was generated from the following file:<ul>
 <li>main/<a class="el" href="storage_8h_source.html">storage.h</a></li>
 </ul>
 </div><!-- contents -->

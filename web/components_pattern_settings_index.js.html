@@ -26,20 +26,26 @@
     
     <section>
         <article>
-            <pre class="prettyprint source linenums"><code>import RANGE_CONSTANTS from '../../utils/constants';
-import Subpattern from '../subpattern_settings';
+            <pre class="prettyprint source linenums"><code>import Patterns from "../../components/patterns";
 import NumericSlider from "../../components/numeric_slider";
 import {useState, useEffect} from "preact/hooks";
 import {
-	getLoadedPatternSettings,
-	updateLoadedPattern} from "../../utils/api";
+	getPattern,
+	updatePattern} from "../../utils/api";
 import {useConnectivity} from "../../context/online_context";
 import useInterval from "../../utils/use_interval";
 import { LabelSpinner } from '../../components/spinner';
-import SimpleChooser from '../single_chooser';
+import RANGE_CONSTANTS from '../../utils/constants';
 import style from './style.css';
+import MultiRangeSliderWrapper from '../../components/multi_range_slider';
+import ConfigDropDown from "../config_drop_down";
 
-const CurrentPattern = ({patterns}) => {
+/**
+ * @brief An object meant to hold and display settings for a specific pattern
+ * @param num 	The ID of the pattern to display
+ * @param patterns	A list of patterns and their IDs
+ */
+const PatternSettings = ({num, patterns}) => {
 
 	// Checks if the web app is connected to the device.
 	const { isConnected } = useConnectivity();
@@ -51,15 +57,14 @@ const CurrentPattern = ({patterns}) => {
 	// Flag that tells the object to update the NanoLux device with new data.
 	const [updated, setUpdated] = useState(false);
 
-	// Stores the subpattern currently selected as an object state.
-	const [selectedSubpattern, setSubpattern] = useState(0);
-
 	// Pattern-level data structure
 	const [data, setData] = useState({
-		subpattern_count: 1,
-		alpha: 0,
-		mode: 0,
-		noise: 20
+		idx: 0,
+		hue_max: 255,
+		hue_min: 0,
+		brightness: 255,
+		smoothing: 0,
+		postprocess: 0,
 	});
 
 	/**
@@ -68,9 +73,9 @@ const CurrentPattern = ({patterns}) => {
 	 */
 	useEffect(() => {
         if (isConnected) {
-            getLoadedPatternSettings()
-				.then(data => setData(data))
-				.then(setLoading(false));
+            getPattern(num)
+			.then(data => {setData(data)})
+			.then(setLoading(false));
         }  
     }, [isConnected])
 
@@ -81,13 +86,13 @@ const CurrentPattern = ({patterns}) => {
 	 */
 	useInterval(() => {
         if (isConnected &amp;&amp; updated) {
-            updateLoadedPattern(data);
+            updatePattern(num, data);
 			setUpdated(false);
         }
     }, 100);
 
 	/**
-	 * @brief Updates a parameter in the subpattern data structure with a new value.
+	 * @brief Updates a parameter in the pattern data structure with a new value.
 	 * @param ref The string reference to update in the data structure
 	 * @param value The new value to update the data structure with
 	 */
@@ -99,113 +104,120 @@ const CurrentPattern = ({patterns}) => {
 				return newData;
 			})
 		}
+		
 		setUpdated(true);
 	}
 
 	/**
-	 * @brief Increments the amount of subpatterns displayed. If the pattern is at
-	 * maximum subpatterns, the function will refuse to increment.
-	 */
-	const incrementSubpatterns = async () => {
-		if(data.subpattern_count &lt; RANGE_CONSTANTS.SUBPATTERN_MAX){
-			update("subpattern_count", data.subpattern_count + 1);
-		}
-	}
-
-	/**
-	 * @brief Decrements the amount of subpatterns displayed. If the pattern is at
-	 * 1 subpattern, the function will refuse to decrement. Moves to the
-	 * previous subpattern if the existing one is deleted.
-	 */
-	const decrementSubpatterns = async () => {
-		if(data.subpattern_count > 1){
-			if(data.subpattern_count == selectedSubpattern + 1){
-				setSubpattern(data.subpattern_count - 1);
-			}
-			update("subpattern_count", data.subpattern_count - 1);
-		}
-	}
-
-	/**
-	 * @brief Generates a list from 0 to end. Analagous to Python's
-	 * range() function.
-	 * @param end The value to end at.
-	 */
-	function inRange(end){
-		var l = [];
-		for(var i = 0; i &lt; end; i++){
-			l.push({idx: i});
-		}
-		return l;
-	}
-
-	/**
-	 * @brief Generates the Pattern UI element and it's selected subpattern.
+	 * @brief Generates the Subpattern UI element itself. If initial data is not
+	 * loaded, show a spinner instead.
 	 */
 	return (
 		(!loading ? 
-			&lt;div>
-				&lt;SimpleChooser
-					label="Mode"
-					options={[
-						{option : "Strip Splitting", idx : RANGE_CONSTANTS.STRIP_SPLITTING_ID},
-						{option : "Z-Layering", idx : RANGE_CONSTANTS.Z_LAYERING_ID},
-					]}
-					noSelection={false}
-					initial={data.mode}
-					structure_ref="mode"
-					update={update}
+		&lt;div>
+			&lt;br/>
+			&lt;Patterns
+				initialID={data.idx}
+				structure_ref={"idx"}
+				update={update}
+				patterns={patterns}
+			/>
+			&lt;br/>
+			&lt;ConfigDropDown
+				patternIdx={data.idx}
+				structureRef={"config"}
+				update={update}
+				initial={data.config}
+			/>
+			&lt;br/>
+			&lt;NumericSlider
+				className={style.settings_control}
+				label="Brightness"
+				min={RANGE_CONSTANTS.BRIGHTNESS_MIN}
+				max={RANGE_CONSTANTS.BRIGHTNESS_MAX}
+				initial={data.brightness}
+				structure_ref="brightness"
+				update={update}
+			/>
+			&lt;br/>
+			&lt;NumericSlider
+				className={style.settings_control}
+				label="Smoothing"
+				min={RANGE_CONSTANTS.SMOOTHING_MIN}
+				max={RANGE_CONSTANTS.SMOOTHING_MAX}
+				initial={data.smoothing}
+				structure_ref="smoothing"
+				update={update}
+			/>
+			&lt;div className={style.settings_control}>
+                &lt;label for="reverse">Reverse&lt;/label>
+				&lt;input 
+					type="checkbox" 
+					id="reverse" 
+					name="reverse" 
+					checked={(data.postprocess == 1) || (data.postprocess == 3)}
+					onChange={() => {
+						switch (data.postprocess) {
+							case 0:
+								update("postprocess", 1);
+								break;
+							
+							case 1:
+								update("postprocess", 0);
+								break;
+							
+							case 2:
+								update("postprocess", 3);
+								break;
+						
+							default:
+								update("postprocess", 2);
+								break;
+						}
+					}}
 				/>
-				&lt;br/>
-				&lt;NumericSlider
-					className={style.settings_control}
-					label="Transparency"
-					min={RANGE_CONSTANTS.ALPHA_MIN}
-					max={RANGE_CONSTANTS.ALPHA_MAX}
-					initial={data.alpha}
-					structure_ref="alpha"
-					update={update}
+				&lt;label for="mirror">Mirror&lt;/label>
+				&lt;input 
+					type="checkbox" 
+					id="mirror" 
+					name="mirror" 
+					checked={(data.postprocess == 2) || (data.postprocess == 3)}
+					onChange={() => {
+						switch (data.postprocess) {
+							case 0:
+								update("postprocess", 2);
+								break;
+							
+							case 1:
+								update("postprocess", 3);
+								break;
+							
+							case 2:
+								update("postprocess", 0);
+								break;
+						
+							default:
+								update("postprocess", 1);
+								break;
+						}
+					}}
 				/>
-				&lt;br/>
-				&lt;NumericSlider
-					className={style.settings_control}
-					label="Noise Threshold"
-					min={RANGE_CONSTANTS.NOISE_MIN}
-					max={RANGE_CONSTANTS.NOISE_MAX}
-					initial={data.noise}
-					structure_ref="noise"
-					update={update}
-				/>
-				&lt;br/>
-				&lt;button type="button" onClick={incrementSubpatterns}>+&lt;/button>
-				&lt;button type="button" onClick={decrementSubpatterns}>-&lt;/button>
-				&lt;hr>&lt;/hr>
-
-				{inRange(data.subpattern_count).map((data) => {
-					if(data.idx == selectedSubpattern){
-						return &lt;button type="button" onClick={function() {setSubpattern(data.idx);}} key={data.idx} style="border-style:inset;">
-							SP {data.idx}
-						&lt;/button>
-					}else{
-						return &lt;button type="button" onClick={function() {setSubpattern(data.idx);}} key={data.idx}>
-							SP {data.idx}
-						&lt;/button>
-					}
-					
-				})}
-
-				&lt;Subpattern
-					subpattern={selectedSubpattern}
-					patterns={patterns}
-					key={selectedSubpattern}
-				/>	
-			&lt;/div> 
-		: &lt;LabelSpinner>&lt;/LabelSpinner>)
-		
+            &lt;/div>
+			&lt;MultiRangeSliderWrapper
+				min={0}
+				max={255}
+				selectedLow={data.hue_min}
+				selectedHigh={data.hue_max}
+				minRef={"hue_min"}
+				maxRef={"hue_max"}
+				update={update}
+			/>
+		&lt;/div> : &lt;LabelSpinner>&lt;/LabelSpinner>
+		)
 	);
 }
 
-export default CurrentPattern;</code></pre>
+export default PatternSettings;</code></pre>
         </article>
     </section>
 
@@ -215,13 +227,13 @@ export default CurrentPattern;</code></pre>
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#Header">Header</a></li><li><a href="global.html#Modal">Modal</a></li><li><a href="global.html#NumericSlider">NumericSlider</a></li><li><a href="global.html#Password">Password</a></li><li><a href="global.html#Patterns">Patterns</a></li><li><a href="global.html#Save_Entry">Save_Entry</a></li><li><a href="global.html#Settings">Settings</a></li><li><a href="global.html#SimpleChooser">SimpleChooser</a></li><li><a href="global.html#Subpattern">Subpattern</a></li><li><a href="global.html#SystemControls">SystemControls</a></li><li><a href="global.html#useInterval">useInterval</a></li><li><a href="global.html#Wifi">Wifi</a></li><li><a href="global.html#WiFiModal">WiFiModal</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#Header">Header</a></li><li><a href="global.html#Modal">Modal</a></li><li><a href="global.html#MultiRangeSliderWrapper">MultiRangeSliderWrapper</a></li><li><a href="global.html#NumericSlider">NumericSlider</a></li><li><a href="global.html#Password">Password</a></li><li><a href="global.html#Patterns">Patterns</a></li><li><a href="global.html#PatternSettings">PatternSettings</a></li><li><a href="global.html#Save_Entry">Save_Entry</a></li><li><a href="global.html#Settings">Settings</a></li><li><a href="global.html#SimpleChooser">SimpleChooser</a></li><li><a href="global.html#SystemControls">SystemControls</a></li><li><a href="global.html#useInterval">useInterval</a></li><li><a href="global.html#Wifi">Wifi</a></li><li><a href="global.html#WiFiModal">WiFiModal</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.7</a> on Sun May 12 2024 06:04:16 GMT+0000 (Coordinated Universal Time)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.7</a> on Mon May 13 2024 01:45:30 GMT+0000 (Coordinated Universal Time)
 </footer>
 
 <script> prettyPrint(); </script>
