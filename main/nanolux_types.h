@@ -57,13 +57,6 @@ typedef void (*SimplePatternList[])();
 // Button Input
 #define BUTTON_PIN 33
 
-// Rotary Encoder
-#define ROTARY_ENCODER_A_PIN 23
-#define ROTARY_ENCODER_B_PIN 22
-#define ROTARY_ENCODER_BUTTON_PIN 33
-#define ROTARY_ENCODER_VCC_PIN -1
-#define ROTARY_ENCODER_STEPS 4
-
 // MAX - MIN | Freq Volume
 #define MAX_FREQUENCY       4000.0
 #define MIN_FREQUENCY       50.0

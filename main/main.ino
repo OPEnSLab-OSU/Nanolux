@@ -16,7 +16,6 @@
 #include "ext_analysis.h"
 #include "storage.h"
 #include "globals.h"
-#include "AiEsp32RotaryEncoder.h"
 
 
 FASTLED_USING_NAMESPACE
@@ -76,8 +75,6 @@ uint8_t manual_pattern_idx = 0;
 
 /// Contains if manual control is enabled or not.
 volatile bool manual_control_enabled = false;
-uint8_t rotary_encoder_pattern_idx = 0;
-
 
 /// History of all currently-running patterns.
 Strip_Buffer histories[PATTERN_LIMIT];
@@ -94,8 +91,6 @@ extern Pattern mainPatterns[];
 #include "api.h"
 #endif
 
-AiEsp32RotaryEncoder rotaryEncoder = AiEsp32RotaryEncoder(ROTARY_ENCODER_A_PIN, ROTARY_ENCODER_B_PIN, ROTARY_ENCODER_BUTTON_PIN, ROTARY_ENCODER_VCC_PIN, ROTARY_ENCODER_STEPS);
-
 void setup();
 void loop();
 void audio_analysis();
@@ -111,21 +106,6 @@ void setup() {
   // Start USB serial communication
   Serial.begin(115200);  
   while (!Serial) { ; }
-
-  //Initialize rotary encoder
-  rotaryEncoder.begin();
-  rotaryEncoder.setup(readEncoderISR);
-  bool circleValues = true;
-  rotaryEncoder.setBoundaries(0, 12, circleValues); //minValue, maxValue, circleValues true|false (when max go to min and vice versa)
-
-  /*Rotary acceleration introduced 25.2.2021.
-    in case range to select is huge, for example - select a value between 0 and 1000 and we want 785
-    without accelerateion you need long time to get to that number
-    Using acceleration, faster you turn, faster will the value raise.
-    For fine tuning slow down.
-  */
-  //rotaryEncoder.disableAcceleration(); //acceleration is now enabled by default - disable if you dont need it
-  rotaryEncoder.setAcceleration(250); //or set the value - larger number = more accelearation; 0 or 1 means disabled acceleration
 
   // Reindex mainPatterns, to make sure it is consistent.
   for (int i = 0; i < NUM_PATTERNS; i++) {
@@ -379,8 +359,6 @@ void print_buffer(CRGB *buf, uint8_t len) {
 /// LED strip.
 void loop() {
   begin_loop_timer(config.loop_ms);  // Begin timing this loop
-  rotary_loop();
-  delay(50); 
 
   // Reset buffers if pattern settings were changed since
   // last program loop.

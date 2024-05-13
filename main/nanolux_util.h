@@ -13,8 +13,4 @@ void bound_byte(uint8_t * val, int lower, int upper);
 void process_reset_button();
 void nanolux_serial_print(char * msg);
 
-// Rotary encoder codes
-void rotary_onButtonClick();
-void rotary_loop();
-void IRAM_ATTR readEncoderISR();
 #endif

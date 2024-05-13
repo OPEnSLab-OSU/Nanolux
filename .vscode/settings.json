@@ -1,8 +1,5 @@
 {
     "files.associations": {
-        "cmath": "cpp",
-        "__locale": "cpp",
-        "string": "cpp",
-        "string_view": "cpp"
+        "cmath": "cpp"
     }
 }
