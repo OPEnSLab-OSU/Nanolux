@@ -49,7 +49,7 @@ void getFhue(uint8_t min_hue, uint8_t max_hue){
     log(peak) / log(2),
     log(MIN_FREQUENCY) / log(2),
     log(MAX_FREQUENCY) / log(2),
-    min_hue, max_hue);
+    double(min_hue), double(max_hue));
 }
 
 // void getFhue(){
@@ -157,8 +157,8 @@ void hue_trail(Strip_Buffer* buf, int len, Pattern_Data* params) {
     switch (params->config) {
         case 0: // freq_hue_trail (also default case)
         default: // Default case set to execute the freq_hue_trail pattern
-            buf->leds[0] = CHSV(fHue, 255, params->brightness);
-            buf->leds[1] = CHSV(fHue, 255, params->brightness);
+            buf->leds[0] = CHSV(fHue, 255, vbrightness);
+            buf->leds[1] = CHSV(fHue, 255, vbrightness);
             for (int i = len - 1; i > 1; i -= 2) {
                 buf->leds[i] = buf->leds[i - 2];
                 buf->leds[i - 1] = buf->leds[i - 2];
@@ -167,8 +167,8 @@ void hue_trail(Strip_Buffer* buf, int len, Pattern_Data* params) {
 
         case 1: // blur
             {
-            buf->leds[0] = CHSV(fHue, 255, params->brightness);
-            buf->leds[1] = CHSV(fHue, 255, params->brightness);
+            buf->leds[0] = CHSV(fHue, 255, vbrightness);
+            buf->leds[1] = CHSV(fHue, 255, vbrightness);
             for (int i = len - 1; i > 1; i -= 2) {
                 buf->leds[i] = buf->leds[i - 2];
                 buf->leds[i - 1] = buf->leds[i - 2];
