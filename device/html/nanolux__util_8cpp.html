@@ -105,6 +105,7 @@ $(function(){initNavTree('nanolux__util_8cpp.html',''); initResizable(); });
 <code>#include &quot;<a class="el" href="nanolux__types_8h_source.html">nanolux_types.h</a>&quot;</code><br />
 <code>#include &quot;nanolux_util.h&quot;</code><br />
 <code>#include &quot;<a class="el" href="storage_8h_source.html">storage.h</a>&quot;</code><br />
+<code>#include &quot;AiEsp32RotaryEncoder.h&quot;</code><br />
 </div><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
@@ -138,6 +139,15 @@ Functions</h2></td></tr>
 <tr class="memitem:a246034a20f2f570fe86ae69fd22b69e1" id="r_a246034a20f2f570fe86ae69fd22b69e1"><td class="memItemLeft" align="right" valign="top">long&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a246034a20f2f570fe86ae69fd22b69e1">timer_overrun</a> ()</td></tr>
 <tr class="memdesc:a246034a20f2f570fe86ae69fd22b69e1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the amount of time since expected loop termination.  <br /></td></tr>
 <tr class="separator:a246034a20f2f570fe86ae69fd22b69e1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2ee6e0402eedef40fdf5b4cd941d7c2a" id="r_a2ee6e0402eedef40fdf5b4cd941d7c2a"><td class="memItemLeft" align="right" valign="top"><a id="a2ee6e0402eedef40fdf5b4cd941d7c2a" name="a2ee6e0402eedef40fdf5b4cd941d7c2a"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>rotary_onButtonClick</b> ()</td></tr>
+<tr class="separator:a2ee6e0402eedef40fdf5b4cd941d7c2a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afd063f1076dd403edb14e6d69cabb78f" id="r_afd063f1076dd403edb14e6d69cabb78f"><td class="memItemLeft" align="right" valign="top"><a id="afd063f1076dd403edb14e6d69cabb78f" name="afd063f1076dd403edb14e6d69cabb78f"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>rotary_loop</b> ()</td></tr>
+<tr class="separator:afd063f1076dd403edb14e6d69cabb78f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad3f3ddd6424eb42b167daf9b2ee0e1e9" id="r_ad3f3ddd6424eb42b167daf9b2ee0e1e9"><td class="memItemLeft" align="right" valign="top"><a id="ad3f3ddd6424eb42b167daf9b2ee0e1e9" name="ad3f3ddd6424eb42b167daf9b2ee0e1e9"></a>
+void IRAM_ATTR&#160;</td><td class="memItemRight" valign="bottom"><b>readEncoderISR</b> ()</td></tr>
+<tr class="separator:ad3f3ddd6424eb42b167daf9b2ee0e1e9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="var-members" name="var-members"></a>
 Variables</h2></td></tr>
@@ -157,6 +167,12 @@ long&#160;</td><td class="memItemRight" valign="bottom"><b>loop_start_time</b> =
 long&#160;</td><td class="memItemRight" valign="bottom"><b>loop_end_time</b> = 0</td></tr>
 <tr class="memdesc:af9fb16ea00d772a32c3062311335d3ef"><td class="mdescLeft">&#160;</td><td class="mdescRight">Holds the expected end time of the current program loop. <br /></td></tr>
 <tr class="separator:af9fb16ea00d772a32c3062311335d3ef"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aeb9dab4ac60efe499b640c4a778d437c" id="r_aeb9dab4ac60efe499b640c4a778d437c"><td class="memItemLeft" align="right" valign="top"><a id="aeb9dab4ac60efe499b640c4a778d437c" name="aeb9dab4ac60efe499b640c4a778d437c"></a>
+uint8_t&#160;</td><td class="memItemRight" valign="bottom"><b>rotary_encoder_pattern_idx</b></td></tr>
+<tr class="separator:aeb9dab4ac60efe499b640c4a778d437c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae4c0a1f49c789cbce567eab5beb5abe8" id="r_ae4c0a1f49c789cbce567eab5beb5abe8"><td class="memItemLeft" align="right" valign="top"><a id="ae4c0a1f49c789cbce567eab5beb5abe8" name="ae4c0a1f49c789cbce567eab5beb5abe8"></a>
+AiEsp32RotaryEncoder&#160;</td><td class="memItemRight" valign="bottom"><b>rotaryEncoder</b></td></tr>
+<tr class="separator:ae4c0a1f49c789cbce567eab5beb5abe8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>This file contains functions that interface with the phyiscal on-board hardware, such as encoders or buttons.</p>
