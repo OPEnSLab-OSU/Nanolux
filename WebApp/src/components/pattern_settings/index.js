@@ -10,7 +10,6 @@ import { LabelSpinner } from '../../components/spinner';
 import RANGE_CONSTANTS from '../../utils/constants';
 import style from './style.css';
 import MultiRangeSliderWrapper from '../../components/multi_range_slider';
-import ConfigDropDown from "../config_drop_down";
 
 /**
  * @brief An object meant to hold and display settings for a specific pattern
@@ -93,13 +92,6 @@ const PatternSettings = ({num, patterns}) => {
 				structure_ref={"idx"}
 				update={update}
 				patterns={patterns}
-			/>
-			<br/>
-			<ConfigDropDown
-				patternIdx={data.idx}
-				structureRef={"config"}
-				update={update}
-				initial={data.config}
 			/>
 			<br/>
 			<NumericSlider
