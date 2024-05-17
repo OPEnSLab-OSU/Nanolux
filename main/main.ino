@@ -446,7 +446,7 @@ void audio_analysis() {
 
   noise_gate(loaded_patterns.noise_thresh);
 
-  Serial.println(volume);
+  Serial.println(loaded_patterns.pattern[0].postprocessing_mode);
 
 #ifdef SHOW_TIMINGS
   const int end = micros();
