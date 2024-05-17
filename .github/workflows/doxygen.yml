@@ -47,13 +47,6 @@ jobs:
         # Change the directory if changes in Doxyfile
         publish_dir: ./docs
 
-    - name: Cleanup workspace
-      uses: akiojin/clean-workspace-github-action@v1
-
-    - uses: actions/checkout@v3
-      with:
-        ref: landing-page
-    
     - name: Deploy
       uses: peaceiris/actions-gh-pages@v3
       with:
