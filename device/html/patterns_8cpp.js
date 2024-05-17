@@ -18,7 +18,6 @@ var patterns_8cpp =
     [ "FFT", "patterns_8cpp.html#a06dc8755eca604de4444291b9dfe17a0", null ],
     [ "fHue", "patterns_8cpp.html#a7c08d24e884c11de984d2043cd9e0243", null ],
     [ "manual_control_enabled", "patterns_8cpp.html#a2cc0e9634c531780594a5d10445e6458", null ],
-    [ "manual_pattern_idx", "patterns_8cpp.html#a0450b207379ef0cf5fe320826c1c5824", null ],
     [ "peak", "patterns_8cpp.html#aa7fd5e56ed5028cc63702f999df5cbfd", null ],
     [ "vbrightness", "patterns_8cpp.html#a7f0661869175f6745d4a7d291c627709", null ],
     [ "volume", "patterns_8cpp.html#a8eb3ef4958b442309868039dbab6f0bf", null ]

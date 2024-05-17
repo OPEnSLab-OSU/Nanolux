@@ -207,14 +207,6 @@ volatile bool&#160;</td><td class="memItemRight" valign="bottom"><b>pattern_chan
 <tr class="memitem:a771cac207619504c2bd44a4392428a04" id="r_a771cac207619504c2bd44a4392428a04"><td class="memItemLeft" align="right" valign="top"><a class="el" href="struct_config___data.html">Config_Data</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a771cac207619504c2bd44a4392428a04">config</a></td></tr>
 <tr class="memdesc:a771cac207619504c2bd44a4392428a04"><td class="mdescLeft">&#160;</td><td class="mdescRight">The currently-loaded device config.  <br /></td></tr>
 <tr class="separator:a771cac207619504c2bd44a4392428a04"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0450b207379ef0cf5fe320826c1c5824" id="r_a0450b207379ef0cf5fe320826c1c5824"><td class="memItemLeft" align="right" valign="top"><a id="a0450b207379ef0cf5fe320826c1c5824" name="a0450b207379ef0cf5fe320826c1c5824"></a>
-uint8_t&#160;</td><td class="memItemRight" valign="bottom"><b>manual_pattern_idx</b> = 0</td></tr>
-<tr class="memdesc:a0450b207379ef0cf5fe320826c1c5824"><td class="mdescLeft">&#160;</td><td class="mdescRight">The pattern ID displayed when manual control is enabled. <br /></td></tr>
-<tr class="separator:a0450b207379ef0cf5fe320826c1c5824"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab2f12c6a03e526949d9492da9c0287bb" id="r_ab2f12c6a03e526949d9492da9c0287bb"><td class="memItemLeft" align="right" valign="top"><a id="ab2f12c6a03e526949d9492da9c0287bb" name="ab2f12c6a03e526949d9492da9c0287bb"></a>
-volatile bool&#160;</td><td class="memItemRight" valign="bottom"><b>manual_control_enabled</b> = false</td></tr>
-<tr class="memdesc:ab2f12c6a03e526949d9492da9c0287bb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Contains if manual control is enabled or not. <br /></td></tr>
-<tr class="separator:ab2f12c6a03e526949d9492da9c0287bb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac5ea43aaef4ac8b670dd0f166d36a2e5" id="r_ac5ea43aaef4ac8b670dd0f166d36a2e5"><td class="memItemLeft" align="right" valign="top"><a id="ac5ea43aaef4ac8b670dd0f166d36a2e5" name="ac5ea43aaef4ac8b670dd0f166d36a2e5"></a>
 <a class="el" href="struct_strip___buffer.html">Strip_Buffer</a>&#160;</td><td class="memItemRight" valign="bottom"><b>histories</b> [<a class="el" href="storage_8h.html#ab38ce3af4eb0fb3da19fcabd8b796a4c">PATTERN_LIMIT</a>]</td></tr>
 <tr class="memdesc:ac5ea43aaef4ac8b670dd0f166d36a2e5"><td class="mdescLeft">&#160;</td><td class="mdescRight">History of all currently-running patterns. <br /></td></tr>
@@ -223,6 +215,16 @@ volatile bool&#160;</td><td class="memItemRight" valign="bottom"><b>manual_contr
 <a class="el" href="struct_pattern.html">Pattern</a>&#160;</td><td class="memItemRight" valign="bottom"><b>mainPatterns</b> []</td></tr>
 <tr class="memdesc:a7e3d635edcf09480b85dff9c73c76ca3"><td class="mdescLeft">&#160;</td><td class="mdescRight">The current list of patterns, externed from <a class="el" href="globals_8h.html">globals.h</a>. <br /></td></tr>
 <tr class="separator:a7e3d635edcf09480b85dff9c73c76ca3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab2f12c6a03e526949d9492da9c0287bb" id="r_ab2f12c6a03e526949d9492da9c0287bb"><td class="memItemLeft" align="right" valign="top"><a id="ab2f12c6a03e526949d9492da9c0287bb" name="ab2f12c6a03e526949d9492da9c0287bb"></a>
+volatile bool&#160;</td><td class="memItemRight" valign="bottom"><b>manual_control_enabled</b> = false</td></tr>
+<tr class="memdesc:ab2f12c6a03e526949d9492da9c0287bb"><td class="mdescLeft">&#160;</td><td class="mdescRight">MANUAL CONTROL VARIABLES. <br /></td></tr>
+<tr class="separator:ab2f12c6a03e526949d9492da9c0287bb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a851fcad0b089814aea31d6c2f56ba13f" id="r_a851fcad0b089814aea31d6c2f56ba13f"><td class="memItemLeft" align="right" valign="top"><a id="a851fcad0b089814aea31d6c2f56ba13f" name="a851fcad0b089814aea31d6c2f56ba13f"></a>
+<a class="el" href="struct_strip___buffer.html">Strip_Buffer</a>&#160;</td><td class="memItemRight" valign="bottom"><b>manual_strip_buffer</b></td></tr>
+<tr class="separator:a851fcad0b089814aea31d6c2f56ba13f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5678993a9b2f2add080c62610d704e3a" id="r_a5678993a9b2f2add080c62610d704e3a"><td class="memItemLeft" align="right" valign="top"><a id="a5678993a9b2f2add080c62610d704e3a" name="a5678993a9b2f2add080c62610d704e3a"></a>
+<a class="el" href="struct_pattern___data.html">Pattern_Data</a>&#160;</td><td class="memItemRight" valign="bottom"><b>manual_pattern</b></td></tr>
+<tr class="separator:a5678993a9b2f2add080c62610d704e3a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>This file is the main driver of the NanoLux codebase. </p>

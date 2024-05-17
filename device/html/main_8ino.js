@@ -21,7 +21,6 @@ var main_8ino =
     [ "loaded_patterns", "main_8ino.html#ab366196355defee7e0962544599dc407", null ],
     [ "mainPatterns", "main_8ino.html#a7e3d635edcf09480b85dff9c73c76ca3", null ],
     [ "manual_control_enabled", "main_8ino.html#ab2f12c6a03e526949d9492da9c0287bb", null ],
-    [ "manual_pattern_idx", "main_8ino.html#a0450b207379ef0cf5fe320826c1c5824", null ],
     [ "output_buffer", "main_8ino.html#a920e9759f6ba35f80e11e3b7c6ed7451", null ],
     [ "pattern_changed", "main_8ino.html#ab543150ff7d4457a985c2e09bcf636b5", null ],
     [ "peak", "main_8ino.html#aa7fd5e56ed5028cc63702f999df5cbfd", null ],
