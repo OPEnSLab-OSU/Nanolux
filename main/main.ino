@@ -69,18 +69,16 @@ Strip_Data saved_patterns[NUM_SAVES];
 /// The currently-loaded device config.
 Config_Data config;
 
-
-/// The pattern ID displayed when manual control is enabled.
-uint8_t manual_pattern_idx = 0;
-
-/// Contains if manual control is enabled or not.
-volatile bool manual_control_enabled = false;
-
 /// History of all currently-running patterns.
 Strip_Buffer histories[PATTERN_LIMIT];
 
 /// The current list of patterns, externed from globals.h.
 extern Pattern mainPatterns[];
+
+/// MANUAL CONTROL VARIABLES
+volatile bool manual_control_enabled = false;
+Strip_Buffer manual_strip_buffer;
+Pattern_Data manual_pattern;
 
 /**********************************************************
  *
