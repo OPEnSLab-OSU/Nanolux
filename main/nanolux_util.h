@@ -15,7 +15,7 @@ void bound_byte(uint8_t * val, int lower, int upper);
 void process_reset_button();
 void nanolux_serial_print(char * msg);
 
-// void IRAM_ATTR readEncoderISR(AiEsp32RotaryEncoder rotaryEncoder);
+ void IRAM_ATTR readEncoderISR(AiEsp32RotaryEncoder rotaryEncoder);
 void setup_rotary_encoder(AiEsp32RotaryEncoder rotaryEncoder);
 int calculate_pattern_index(AiEsp32RotaryEncoder rotaryEncoder);
 #endif

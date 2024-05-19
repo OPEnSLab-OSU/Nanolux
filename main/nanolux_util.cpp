@@ -269,14 +269,14 @@ long timer_overrun(){
   return (millis() < loop_end_time) ? 0 : millis() - loop_end_time + 1;
 }
 
-void IRAM_ATTR readEncoderISR(AiEsp32RotaryEncoder rotaryEncoder)
-{
-  rotaryEncoder.readEncoder_ISR();
-}
+ void IRAM_ATTR readEncoderISR(AiEsp32RotaryEncoder rotaryEncoder)
+ {
+   rotaryEncoder.readEncoder_ISR();
+ }
 
 void setup_rotary_encoder(AiEsp32RotaryEncoder rotaryEncoder){
     rotaryEncoder.begin();
-    rotaryEncoder.setup(readEncoderISR);
+    rotaryEncoder.setup(readEncoderISR(rotaryEncoder));
     rotaryEncoder.setBoundaries(0, 12, true); //minValue, maxValue, circleValues true|false (when max go to min and vice versa)
     rotaryEncoder.setAcceleration(250);
 }
