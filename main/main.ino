@@ -94,7 +94,6 @@ Pattern_Data manual_pattern;
 void setup();
 void loop();
 void audio_analysis();
-AiEsp32RotaryEncoder rotaryEncoder = AiEsp32RotaryEncoder(ROTARY_ENCODER_A_PIN, ROTARY_ENCODER_B_PIN, ROTARY_ENCODER_BUTTON_PIN, ROTARY_ENCODER_VCC_PIN, ROTARY_ENCODER_STEPS);
 
 /// @brief Sets up various objects needed by the device.
 ///
@@ -108,7 +107,7 @@ void setup() {
   Serial.begin(115200);  
   while (!Serial) { ; }
 
-  setup_rotary_encoder(rotaryEncoder);
+  setup_rotary_encoder();
 
   // Reindex mainPatterns, to make sure it is consistent.
   for (int i = 0; i < NUM_PATTERNS; i++) {
@@ -395,7 +394,7 @@ void loop() {
   //   MAX_BRIGHTNESS);
   
   int old_idx = manual_pattern.idx;
-  manual_pattern.idx = calculate_pattern_index(rotaryEncoder);
+  manual_pattern.idx = calculate_pattern_index();
   
   if (old_idx != manual_pattern.idx) {
     manual_control_enabled = true;

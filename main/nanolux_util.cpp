@@ -269,18 +269,19 @@ long timer_overrun(){
   return (millis() < loop_end_time) ? 0 : millis() - loop_end_time + 1;
 }
 
- void IRAM_ATTR readEncoderISR(AiEsp32RotaryEncoder rotaryEncoder)
- {
-   rotaryEncoder.readEncoder_ISR();
- }
+AiEsp32RotaryEncoder rotaryEncoder = AiEsp32RotaryEncoder(ROTARY_ENCODER_A_PIN, ROTARY_ENCODER_B_PIN, ROTARY_ENCODER_BUTTON_PIN, ROTARY_ENCODER_VCC_PIN, ROTARY_ENCODER_STEPS);
 
-void setup_rotary_encoder(AiEsp32RotaryEncoder rotaryEncoder){
+void IRAM_ATTR readEncoderISR(){
+    rotaryEncoder.readEncoder_ISR();
+}
+
+void setup_rotary_encoder(){
     rotaryEncoder.begin();
-    rotaryEncoder.setup(readEncoderISR(rotaryEncoder));
+    rotaryEncoder.setup(readEncoderISR);
     rotaryEncoder.setBoundaries(0, 12, true); //minValue, maxValue, circleValues true|false (when max go to min and vice versa)
     rotaryEncoder.setAcceleration(250);
 }
-int calculate_pattern_index(AiEsp32RotaryEncoder rotaryEncoder){
+int calculate_pattern_index(){
     Serial.print("Value: ");
     Serial.println(rotaryEncoder.readEncoder());
     return rotaryEncoder.readEncoder();
