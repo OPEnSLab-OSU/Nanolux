@@ -20,6 +20,13 @@ typedef void (*SimplePatternList[])();
 // Array size macro
 #define ARRAY_SIZE(A) (sizeof(A) / sizeof((A)[0]))
 
+//Rotary Encoder
+#define ROTARY_ENCODER_A_PIN 23
+#define ROTARY_ENCODER_B_PIN 22
+#define ROTARY_ENCODER_BUTTON_PIN 33
+#define ROTARY_ENCODER_VCC_PIN -1
+#define ROTARY_ENCODER_STEPS 24
+
 // FastLED
 #define MAX_LEDS    200
 #define DATA_PIN    15      // No hardware SPI pins defined for the ESP32 yet.
