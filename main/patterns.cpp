@@ -50,15 +50,9 @@ void getFhue(uint8_t min_hue, uint8_t max_hue){
     log(MIN_FREQUENCY) / log(2),
     log(MAX_FREQUENCY) / log(2),
     min_hue, max_hue);
+    // disable min hue and max hue
+    // 10, 240);
 }
-
-// void getFhue(){
-//     fHue = remap(
-//     log(peak) / log(2),
-//     log(MIN_FREQUENCY) / log(2),
-//     log(MAX_FREQUENCY) / log(2),
-//     10, 240);
-// }
 
 /// get vol brightness
 void getVbrightness(){
@@ -210,9 +204,11 @@ void saturated(Strip_Buffer* buf, int len, Pattern_Data* params){
   uint8_t hue_shift =  50;
    switch (params->config) {
         case 0: // Default, no additional values changed
+            fill_noise16 (buf->leds, len, octaves, x, scale, hue_octaves, hue_x, hue_scale, ntime, hue_shift);
           break;
         case 1: { // Hue octaves 
             hue_octaves = remap(volume, MIN_VOLUME, MAX_VOLUME, 1, 10);
+            fill_noise16 (buf->leds, len, octaves, x, scale, hue_octaves, hue_x, hue_scale, ntime, hue_shift);
             }
             break;
             
@@ -221,15 +217,13 @@ void saturated(Strip_Buffer* buf, int len, Pattern_Data* params){
             hue_shift = remap(volume, MIN_VOLUME, MAX_VOLUME, 50, 100);
             scale = 230;
             hue_x = 150;
-            }
+            fill_noise16 (buf->leds, len, octaves, x, scale, hue_octaves, hue_x, hue_scale, ntime, hue_shift);            }
             break;
         case 3:{ // Compression
             hue_x = remap(volume, MIN_VOLUME, MAX_VOLUME, 1, 8);
             ntime = millis() / 4;
             }
             break;
-  //Fill LEDS with noise using parameters above
-  fill_noise16 (buf->leds, len, octaves, x, scale, hue_octaves, hue_x, hue_scale, ntime, hue_shift);
   //Add blur
   blur1d(buf->leds, len, 80);
   }
@@ -243,22 +237,21 @@ void saturated(Strip_Buffer* buf, int len, Pattern_Data* params){
 /// @param len The length of LEDs to process
 /// @param params Pointer to Pattern_Data structure containing configuration options.
 void groovy(Strip_Buffer* buf, int len, Pattern_Data* params) {
-    // Assume global access to necessary variables like volume, or pass them as parameters
+  uint8_t octaves = 1;
+  uint16_t x = 0;
+  int scale = 100;
+  uint8_t hue_octaves = 1;
+  uint16_t hue_x = 1;
+  int hue_scale = 50;
+  uint16_t ntime = millis() / 3;
+  uint8_t hue_shift =  5;
+    
+    
     switch (params->config) {
         case 0: // groovy_noise (also default case)
         default:
             {
-                uint8_t octaves = 1;
-                uint16_t x = 0;
-                int scale = 100;
-                uint8_t hue_octaves = 1;
-                uint16_t hue_x = 1;
-                int hue_scale = 50;
-                uint16_t ntime = millis() / 3;
-                uint8_t hue_shift =  5;
-  
                 fill_noise16(buf->leds, len, octaves, x, scale, hue_octaves, hue_x, hue_scale, ntime, hue_shift);
-                blur1d(buf->leds, len, 80);
             }
             break;
 
@@ -266,21 +259,17 @@ void groovy(Strip_Buffer* buf, int len, Pattern_Data* params) {
             {
                 int shiftFromVolume = remap(volume, MIN_VOLUME, MAX_VOLUME, 5, 220);
                 int xFromVolume = remap(volume, MIN_VOLUME, MAX_VOLUME, 1, 2);
-
-                uint8_t octaves = 1;
-                uint16_t x = 0;
-                int scale = 100;
-                uint8_t hue_octaves = 1;
-                uint16_t hue_x = xFromVolume;
-                int hue_scale = 20;
-                uint16_t ntime = millis() / 3;
-                uint8_t hue_shift =  shiftFromVolume;
+                x = 0;
+                hue_octaves = 1;
+                hue_x = xFromVolume;
+                hue_scale = 20;
+                hue_shift =  shiftFromVolume;
 
                 fill_noise16(buf->leds, len, octaves, x, scale, hue_octaves, hue_x, hue_scale, ntime, hue_shift);
-                blur1d(buf->leds, len, 80);
             }
             break;
     }
+    blur1d(buf->leds, len, 80);
 }
 
 /// @brief   Generates three clusters of lights, one in the middle, and two symmetric ones that travel out from the center and return. 
@@ -661,9 +650,9 @@ void tug_of_war(Strip_Buffer * buf, int len, Pattern_Data* params) {
         // red is on the left, blue is on the right
         for (int i = 0; i < len; i++) {
             if (i < splitPosition) {
-                buf->leds[i] = CRGB::Blue; 
+                buf->leds[i] = CHSV(params->minhue, 255, 255);
             } else {
-                buf->leds[i] = CRGB::Red;
+                buf->leds[i] = CHSV(params->maxhue, 255, 255);
             }
         }
     
@@ -673,31 +662,15 @@ void tug_of_war(Strip_Buffer * buf, int len, Pattern_Data* params) {
         splitPosition = remap(volume, MIN_VOLUME, MAX_VOLUME, 0, len);
         for (int i = 0; i < len; i++) {
             if (i < splitPosition) {
-                buf->leds[i] = CRGB::Green; 
+                buf->leds[i] = CHSV(params->minhue, 255, 255);
             } else {
-                buf->leds[i] = CRGB::Blue;
+                buf->leds[i] = CHSV(params->maxhue, 255, 255);
             }
         }
         }
     }
 }
 
-void tug_of_war_frequency(Strip_Buffer * buf, int len) {
-    double *formants = density_formant();
-    double f0 = formants[0];
-    delete[] formants;
-
-    int splitPosition = remap(f0, MIN_FREQUENCY, MAX_FREQUENCY, 0, len);
-
-    // red is on the left, blue is on the right
-    for (int i = 0; i < len; i++) {
-        if (i < splitPosition) {
-            buf->leds[i] = CRGB::Blue; 
-        } else {
-            buf->leds[i] = CRGB::Red;
-        }
-    }
-}
 
 
 /// @brief Fire2012 pattern utilizing heating and cooling
