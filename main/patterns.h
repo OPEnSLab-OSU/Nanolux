@@ -1,7 +1,7 @@
 /**@file
  *
  * This file contains function headers for patterns.cpp
- * along with the Pattern_History struct definition.
+ * along with the Strip_Buffer struct definition.
  *
 **/
 
@@ -9,6 +9,7 @@
 #define PATTERNS_H
 
 #include "nanolux_types.h"
+#include "storage.h"
 
 /// @brief Holds persistent data for currently-running patterns.
 ///
@@ -51,97 +52,49 @@ typedef struct{
   double accelerations[5] = {0,0,0,0,0};
   int locations[5] = {70,60,50,40,30};
   double vRealSums[5] = {0,0,0,0,0};
+} Strip_Buffer;
 
-} Pattern_History;
+extern Pattern_Data params;
 
 void nextPattern();
 
+void clearLEDSegment(Strip_Buffer * buf, int len);
+
 void setColorHSV(CRGB* leds, byte h, byte s, byte v, int len);
 
-void freq_hue_vol_brightness(Pattern_History * hist, int len);
+// void getFhue(uint8_t min_hue, uint8_t max_hue);
 
-void freq_confetti_vol_brightness(Pattern_History * hist, int len);
+void getFhue(uint8_t min_hue, uint8_t max_hue);
 
-void volume_level_middle_bar_freq_hue(Pattern_History * hist, int len);
+void getVbrightness();
 
-void freq_hue_trail(Pattern_History * hist, int len);
+void blank(Strip_Buffer * buf, int len, Pattern_Data* params);
 
-void blank(Pattern_History * hist, int len);
+void confetti(Strip_Buffer * buf, int len, Pattern_Data* params);
 
-void spring_mass_1(Pattern_History * hist, int len);
+void pix_freq(Strip_Buffer * buf, int len, Pattern_Data* params);
 
-void spring_mass_2(Pattern_History * hist, int len);
+void eq(Strip_Buffer * buf, int len, Pattern_Data* params);
 
-void spring_mass_3(Pattern_History * hist, int len);
+void tug_of_war(Strip_Buffer * buf, int len, Pattern_Data* params);
 
-void classical(Pattern_History * hist, int len);
+void tug_of_war(Strip_Buffer * buf, int len, Pattern_Data* params);
 
-void pix_freq(Pattern_History * hist, int len);
+void saturated(Strip_Buffer * buf, int len, Pattern_Data* params);
 
-void mirror_pix_freq(Pattern_History * hist, int len);
+void random_raindrop(Strip_Buffer * buf, int len, Pattern_Data* params);
 
-void send_wave(Pattern_History * hist, int len);
+void hue_trail(Strip_Buffer* buf, int len, Pattern_Data* params);
 
-void math(Pattern_History * hist, int len);
+void groovy(Strip_Buffer* buf, int len, Pattern_Data* params);
 
-void band_brightness(Pattern_History * hist, int len);
+void talking(Strip_Buffer *buf, int len, Pattern_Data *params);
 
-void advanced_bands(Pattern_History * hist, int len);
+void glitch(Strip_Buffer * buf, int len, Pattern_Data * params);
 
-void basic_bands(Pattern_History * hist, int len);
+void bands(Strip_Buffer * buf, int len, Pattern_Data * params);
 
-void eq(Pattern_History * hist, int len);
+void Fire2012(Strip_Buffer * buf, int len, Pattern_Data* params);
 
-void show_drums(Pattern_History * hist, int len);
-
-void show_formants(Pattern_History * hist, int len);
-
-void noisy(Pattern_History * hist, int len);
-
-void formant_band(Pattern_History * hist, int len);
-
-void alt_drums(Pattern_History * hist, int len);
-
-void formant_test(Pattern_History * hist, int len);
-
-void Fire2012WithPalette(Pattern_History * hist, int len);
-
-void saturated_noise(Pattern_History * hist, int len);
-
-void saturated_noise_hue_octaves(Pattern_History * hist, int len);
-
-void saturated_noise_hue_shift(Pattern_History * hist, int len);
-
-void saturated_noise_compression(Pattern_History * hist, int len);
-
-void groovy_noise(Pattern_History * hist, int len);
-
-void groovy_noise_hue_shift_change(Pattern_History * hist, int len);
-
-void sin_hue_trail(Pattern_History * hist, int len);
-
-void freq_hue_trail_mid(Pattern_History * hist, int len);
-
-void freq_hue_trail_mid_blur(Pattern_History * hist, int len);
-
-void talking_hue(Pattern_History * hist, int len);
-
-void talking_formants(Pattern_History * hist, int len);
-
-void talking_moving(Pattern_History * hist, int len);
-
-void bounce_back(Pattern_History * hist, int len);
-
-void glitch(Pattern_History * hist, int len);
-
-void glitch_talk(Pattern_History * hist, int len);
-
-void glitch_sections(Pattern_History * hist, int len);
-
-void tug_of_war_frequency(Pattern_History * hist, int len);
-
-void tug_of_war_volume(Pattern_History * hist, int len);
-
-void random_raindrop(Pattern_History * hist, int len);
 
 #endif

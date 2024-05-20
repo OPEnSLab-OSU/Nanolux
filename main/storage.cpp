@@ -18,11 +18,11 @@
 #define CONFIG_NAMESPACE  "c"
 #define CONFIG_KEY        "f"
 
-/// The currently loaded pattern, externed from main.ino.
-extern Pattern_Data loaded_pattern;
+/// The currently strip configuration, externed from main.ino.
+extern Strip_Data loaded_patterns;
 
-/// The array for storing saved patterns, externed from main.ino.
-extern Pattern_Data saved_patterns[NUM_SAVES];
+/// The array for storing saved strip configurations, externed from main.ino.
+extern Strip_Data saved_patterns[NUM_SAVES];
 
 /// The number of patterns that can be shown, externed from globals.h.
 extern int NUM_PATTERNS;
@@ -56,19 +56,19 @@ void clear_nvs() {
 
 /// @brief Ensures all saved pattern data is properly constrained.
 ///
-/// Constrains both pattern and subpattern level settings.
+/// Constrains both pattern and strip level settings.
 /// This function should not be called by itself.
 void bound_user_data() {
   // Loaded pattern:
-  bound_byte(&loaded_pattern.subpattern_count, 0, NUM_SUBPATTERNS);
-  bound_byte(&loaded_pattern.alpha, 0, 255);
-  bound_byte(&loaded_pattern.mode, 0, 1);
-  bound_byte(&loaded_pattern.noise_thresh, 0, 100);
+  bound_byte(&loaded_patterns.pattern_count, 0, PATTERN_LIMIT);
+  bound_byte(&loaded_patterns.alpha, 0, 255);
+  bound_byte(&loaded_patterns.mode, 0, 1);
+  bound_byte(&loaded_patterns.noise_thresh, 0, 100);
 
-  for(int i = 0; i < NUM_SUBPATTERNS; i++){
-    bound_byte(&loaded_pattern.subpattern[i].brightness, 0, 255);
-    bound_byte(&loaded_pattern.subpattern[i].smoothing, 0, 175);
-    bound_byte(&loaded_pattern.subpattern[i].idx, 0, NUM_PATTERNS);
+  for(int i = 0; i < PATTERN_LIMIT; i++){
+    bound_byte(&loaded_patterns.pattern[i].brightness, 0, 255);
+    bound_byte(&loaded_patterns.pattern[i].smoothing, 0, 175);
+    bound_byte(&loaded_patterns.pattern[i].idx, 0, NUM_PATTERNS);
   }
 }
 
@@ -89,19 +89,19 @@ void bound_system_settings() {
  *
 *************************************************/
 
-/// @brief Move subpatterns in a slot to the main buffer.
+/// @brief Move patterns in a slot to the main buffer.
 /// @param slot The save slot number to load from.
 void load_slot(int slot) {
 
   // Return if slot is greater than the number of patterns.
   if (slot > NUM_SAVES - 1) return;
 
-  if (loaded_pattern.subpattern_count > 4 || loaded_pattern.subpattern_count < 1)
-    loaded_pattern.subpattern_count = 1;
+  if (loaded_patterns.pattern_count > 4 || loaded_patterns.pattern_count < 1)
+    loaded_patterns.pattern_count = 1;
 
-  // Copy the subpatterns into the main buffer.
+  // Copy the patterns into the main buffer.
   memcpy(
-    &loaded_pattern,
+    &loaded_patterns,
     &saved_patterns[slot],
     sizeof(Pattern_Data));
 }
@@ -115,7 +115,7 @@ void set_slot(int slot) {
 
   memcpy(
     &saved_patterns[slot],
-    &loaded_pattern,
+    &loaded_patterns,
     sizeof(Pattern_Data));
   
   bound_user_data();
@@ -165,8 +165,8 @@ void save_config_to_nvs() {
 /// TODO: Is this function even needed anymore?
 void verify_saves() {
   for (int i = 0; i < NUM_SAVES; i++) {
-    if (saved_patterns[i].subpattern_count > 4 || saved_patterns[i].subpattern_count == 0){
-      saved_patterns[i].subpattern_count = 1;
+    if (saved_patterns[i].pattern_count > 4 || saved_patterns[i].pattern_count == 0){
+      saved_patterns[i].pattern_count = 1;
     }
   }
 }

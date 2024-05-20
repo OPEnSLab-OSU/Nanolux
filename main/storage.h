@@ -13,48 +13,54 @@
 
 /******************************************************************
 *
-* SUBPATTERNS AND PATTERNS
+* STRIP AND PATTERN CONFIGURATIONS
 *
-* In the NanoLux codebase, the term "subpattern" refers to the
+* In the NanoLux codebase, the term "pattern" refers to the
 * individual light pattern running on part of the LED strip.
-* Therefore, in the case of strip splitting, up to NUM_SUBPATTERNS
-* could run side-by-side. Each subpattern has other data besides
+* Therefore, in the case of strip splitting, up to PATTERN_LIMIT
+* could run side-by-side. Each pattern has other data besides
 * the pattern index, which includes a brightness value and a
 * smoothing value.
 *
-* The term "pattern" refers to everything currently running on the
-* strip. Each pattern contains the individual subpatterns within
+* The term "strip config" refers to everything currently running on 
+* the strip. Each strip config contains patterns within
 * them, and have extra data that pertains to the entire LED strip
 * or audio analysis module that cannot run multiple times. Of note
-* is the number of subpatterns that pattern is currently running.
+* is the number of patterns that pattern is currently running.
 *
 ******************************************************************/
 
-/// The number of saved patterns the ESP32 is able to address.
+/// The number of saved strip configs the ESP32 is able to address.
 #define NUM_SAVES  3
 
-/// The number of subpatterns each pattern can play at maximum.
-#define NUM_SUBPATTERNS 4
+/// The number of patterns that can run at maximum.
+#define PATTERN_LIMIT 4
 
-/// A structure holding subpattern configuration data.
+
+
 typedef struct{
 
   uint8_t idx = 0; /// The selected pattern name to run.
-  uint8_t brightness = 255; /// The subpattern's brightness.
-  uint8_t smoothing = 0; /// How smoothed subpattern light changes are.
+  uint8_t brightness = 255; /// The pattern's brightness.
+  uint8_t smoothing = 0; /// How smoothed pattern light changes are.
+  uint8_t minhue = 0;
+  uint8_t maxhue = 255;
+  uint8_t config = 0; // diffrent configs
+  uint8_t postprocessing_mode = 0; // The current mode for postprocessing
+  
+} Pattern_Data;
+  
 
-} Subpattern_Data;
-
-/// A structure holding pattern configuration data.
+/// A structure holding strip configuration data.
 typedef struct{
 
   uint8_t alpha = 0; /// How transparent the top pattern is in Z-layering.
   uint8_t noise_thresh = 0; /// The minimum noise floor to consider as audio.
   uint8_t mode = 0; /// The currently-running pattern mode (splitting vs layering).
-  uint8_t subpattern_count = 1; /// The number of subpatterns this pattern has.
-  Subpattern_Data subpattern[NUM_SUBPATTERNS]; /// Data for all subpatterns loaded.
+  uint8_t pattern_count = 1; /// The number of patterns this config has.
+  Pattern_Data pattern[PATTERN_LIMIT]; /// Data for all patterns loaded.
 
-} Pattern_Data;
+} Strip_Data;
 
 /// A structure holding system configuration data.
 typedef struct{

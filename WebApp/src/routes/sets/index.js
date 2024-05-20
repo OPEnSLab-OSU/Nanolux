@@ -2,7 +2,7 @@ import style from './style.css';
 import {useState, useEffect} from "preact/hooks";
 import {useConnectivity} from "../../context/online_context";
 import Save_Entry from '../../components/save_entry';
-import CurrentPattern from '../../components/pattern_settings';
+import StripSettings from '../../components/strip_settings';
 import SystemControls from '../../components/system_settings';
 import { getPatternList } from '../../utils/api';
 
@@ -37,7 +37,7 @@ const Settings = () => {
 				</tr>
 				<tr>
 					<td>
-						<CurrentPattern
+						<StripSettings
 							patterns={patterns}
 						/>
 					</td>

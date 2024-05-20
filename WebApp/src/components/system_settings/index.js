@@ -2,7 +2,7 @@ import NumericSlider from "../../components/numeric_slider";
 import {useState, useEffect} from "preact/hooks";
 import {
 	updateDeviceSettings,
-	getSystemSettings} from "../../utils/api";
+	getDeviceSettings} from "../../utils/api";
 import {useConnectivity} from "../../context/online_context";
 import useInterval from "../../utils/use_interval";
 import SimpleChooser from '../../components/single_chooser';
@@ -38,7 +38,7 @@ const SystemControls = () => {
 	 */
 	useEffect(() => {
 		if (isConnected) {
-			getSystemSettings()
+			getDeviceSettings()
 				.then(data => setData(data))
 				.then(setLoading(false));
 		}  

@@ -25,7 +25,7 @@ const RANGE_CONSTANTS = {
     LENGTH_MAX : 200,
 
     SAVE_COUNT : 3,
-    SUBPATTERN_MAX : 4,
+    PATTERN_MAX : 4,
 }
 
 export default RANGE_CONSTANTS;

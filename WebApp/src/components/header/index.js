@@ -3,6 +3,13 @@ import { Link } from 'preact-router/match';
 import style from './style.css';
 
 
+/**
+ * Generates the header object for the website. This provides links
+ * to the settings and wifi pages. It also loads the CymaSpace logo
+ * for display.
+ * 
+ * @return The HTML object for the header.
+ */
 const Header = () => (
 	<header className={style.header}>
 		<a href="/" className={style.logo}>
@@ -13,9 +20,6 @@ const Header = () => (
 			<Link activeClassName={style.active} href="/">
 				Settings
 			</Link>
-			{/*<Link activeClassName={style.active} href="/user">*/}
-			{/*	User*/}
-			{/*</Link>*/}
 			<Link activeClassName={style.active} href="/wifi">
 				Wifi
 			</Link>
