@@ -144,6 +144,10 @@ void clear_all() {
     0,
     sizeof(Pattern_Data) * NUM_SAVES);
   save_to_nvs();
+
+  config = Config_Data();
+
+  save_config_to_nvs();
 }
 
 /// @brief Saves configuration data to the NVS

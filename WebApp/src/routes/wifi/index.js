@@ -144,6 +144,7 @@ const Wifi = () => {
         setPass(newValue);
         if (isConnected) {
             await updateLocalPassword(newValue);
+            alert("Password succesfully updated: please power cycle the device.")
         }
     }
 

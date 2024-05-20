@@ -632,13 +632,19 @@ inline void setup_networking(const char * password)
     else {
         ALWAYS_PRINTF("****\n");
         ALWAYS_PRINTF("No wifi saved. AudioLux available via Access Point:\n");
-        ALWAYS_PRINTF("SSID: %s Password: %s\n", ap_ssid, ap_password);
+        ALWAYS_PRINTF("SSID: %s Password: %s\n", ap_ssid, password);
         ALWAYS_PRINTF("****\n");
     }
 
     // AP mode is always active.
     WiFi.mode(WIFI_MODE_APSTA);
-    WiFi.softAP(ap_ssid, password);
+    if(password[0] == '\0'){
+      WiFi.softAP("AUDIOLUX UNSECURED");
+      ALWAYS_PRINTF("WIFI IS UNSECURED!!!\n");
+    }else{
+      WiFi.softAP(ap_ssid, password);
+    }
+    
     delay(1000);
     const IPAddress ap_ip = WiFi.softAPIP();
 

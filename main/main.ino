@@ -126,6 +126,7 @@ void setup() {
 
 #ifdef ENABLE_WEB_SERVER
   initialize_web_server(apiGetHooks, API_GET_HOOK_COUNT, apiPutHooks, API_PUT_HOOK_COUNT, config.pass);
+  Serial.println(config.pass);
 #endif
 }
 
