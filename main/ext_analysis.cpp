@@ -253,4 +253,60 @@ void update_five_band_split(int len) {
   temp_to_array(band_split_bounce(len), fbs, 5);
 }
 
+VowelSounds vowel_detection() {
+
+  //find the max value
+  double maxVal = 0.0;
+  for (int i = 3; i < SAMPLES - 2; i++) {
+    if (vReal[i] > maxVal) {
+      maxVal = vReal[i];
+    }
+  }
+
+  //normalize vReal. leave the first and last few idx of vReal out due to garbage data. noise_threshold filters out junk data
+  int noise_threshold = 450;
+  for (int i = 3; i < SAMPLES - 2; i++) {
+    if (maxVal < noise_threshold) {
+      vReal[i] = 0;
+    } else vReal[i] /= maxVal;
+  }
+
+  double scaler = 0.5;  //used for normalizing
+  // vReal contains 128 samples, where the first output is around idx 0, 1, 127 seem to be not useful (very large)
+  // Note this function needs to scale with volume. (it currently will not work at lower volumes)
+
+  // if (maxVal > noise_threshold) Serial.println("NEW ARRAY");
+  // for (int i = 3; i < SAMPLES - 2; i++) {
+  //   if (vReal[i] > .4) {
+  //     Serial.print("Potential peak at index ");
+  //     Serial.print(i);
+  //     Serial.print(" with a value of ");
+  //     Serial.println(vReal[i]);
+  //   }
+  // }
+
+
+  // combination hierachy. the top cases need to be more precise so other cases can be accessed
+  double accuracy = .9;  //ranges from 1.0 <-> 0.0
+  // if((vReal[6] > accuracy || vReal[5] > accuracy-.3) && (vReal[121] == 1 || vReal[122] == 1)){
+  //   Serial.println("found an ooooo like 'boot'");//needs work
+  //   return VowelSounds.oSound;
+  // }else 
+  if((vReal[3] > accuracy || vReal[4] > accuracy || vReal[5] > accuracy) && (vReal[7] > accuracy-.5 || vReal[8] > accuracy-.5 || vReal[9] > accuracy-.5) && (vReal[122] > accuracy || vReal[123] > accuracy || vReal[124] > accuracy)){
+    Serial.println("found an 'aaaa' like 'say'");
+    return aVowel;
+  }else if((vReal[4] > accuracy || vReal[5] > accuracy) && (vReal[124] > accuracy || vReal[123] > accuracy-.2 || vReal[125] > accuracy-.2)){
+    Serial.println("found an eeee like 'bee'");//might be picking up on b's
+    return eVowel;
+  }else if((vReal[11] > accuracy || vReal[12] > accuracy || vReal[13] > accuracy) && (vReal[113] > accuracy-.2 || vReal[114] > accuracy-.2) && (vReal[115] > accuracy || vReal[117] > accuracy)){
+    Serial.println("found an ah");
+    return aVowel;
+  }else if((vReal[11] > accuracy || vReal[12] > accuracy) && (vReal[117] > accuracy || vReal[118] > accuracy)){
+    Serial.println("found an 'i' like 'find'");
+    return iVowel;
+  }
+
+  return noVowel;
+}
+
 

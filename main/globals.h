@@ -69,8 +69,8 @@ Pattern mainPatterns[]{
     { 10, "Tug of War", true, tug_of_war},
     { 11, "Rain Drop", true, random_raindrop},
     { 12, "Fire 2012", true, Fire2012},
-    
+    { 13, "Vowel Rain Drop", true, vowels_raindrop},
 };
-int NUM_PATTERNS = 13;  // MAKE SURE TO UPDATE THIS WITH THE ACTUAL NUMBER OF PATTERNS (+1 last array pos)
+int NUM_PATTERNS = 14;  // MAKE SURE TO UPDATE THIS WITH THE ACTUAL NUMBER OF PATTERNS (+1 last array pos)
 
 #endif

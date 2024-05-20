@@ -20,6 +20,16 @@ typedef void (*SimplePatternList[])();
 // Array size macro
 #define ARRAY_SIZE(A) (sizeof(A) / sizeof((A)[0]))
 
+// Vowel recognition
+enum VowelSounds {
+  aVowel = 1,
+  eVowel = 2,
+  iVowel = 3,
+  oVowel = 4,
+  uVowel = 5,
+  noVowel = 6
+};
+
 // FastLED
 #define MAX_LEDS    200
 #define DATA_PIN    15      // No hardware SPI pins defined for the ESP32 yet.
