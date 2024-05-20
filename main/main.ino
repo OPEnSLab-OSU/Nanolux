@@ -395,6 +395,7 @@ void loop() {
   
   int old_idx = manual_pattern.idx;
   manual_pattern.idx = calculate_pattern_index();
+  Serial.println(manual_pattern.idx);
   
   if (old_idx != manual_pattern.idx) {
     manual_control_enabled = true;
@@ -456,7 +457,7 @@ void audio_analysis() {
 
   noise_gate(loaded_patterns.noise_thresh);
 
-  Serial.println(volume);
+//   Serial.println(volume);
 
 #ifdef SHOW_TIMINGS
   const int end = micros();

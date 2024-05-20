@@ -25,7 +25,7 @@ typedef void (*SimplePatternList[])();
 #define ROTARY_ENCODER_B_PIN 22
 #define ROTARY_ENCODER_BUTTON_PIN 33
 #define ROTARY_ENCODER_VCC_PIN -1
-#define ROTARY_ENCODER_STEPS 24
+#define ROTARY_ENCODER_STEPS 4
 
 // FastLED
 #define MAX_LEDS    200

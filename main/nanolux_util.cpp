@@ -7,7 +7,7 @@
  * sense to define elsewhere.
  *
 **/
-
+#include "cmath"
 #include <FastLED.h>
 #include <Arduino.h>
 #include "arduinoFFT.h"
@@ -25,6 +25,8 @@ extern Config_Data config;
 /// Checks if the device button is pressed, defined in
 /// main.ino.
 extern bool button_pressed;
+
+extern int NUM_PATTERNS;
 
 /// Stores the inital time the button was pressed. Used
 /// to determine if the button has been held long enough
@@ -278,11 +280,11 @@ void IRAM_ATTR readEncoderISR(){
 void setup_rotary_encoder(){
     rotaryEncoder.begin();
     rotaryEncoder.setup(readEncoderISR);
-    rotaryEncoder.setBoundaries(0, 12, true); //minValue, maxValue, circleValues true|false (when max go to min and vice versa)
+    rotaryEncoder.setBoundaries(0, 1000, true); //minValue, maxValue, circleValues true|false (when max go to min and vice versa)
     rotaryEncoder.setAcceleration(250);
 }
 int calculate_pattern_index(){
-    Serial.print("Value: ");
-    Serial.println(rotaryEncoder.readEncoder());
-    return rotaryEncoder.readEncoder();
+    int index = static_cast<int>(floor(rotaryEncoder.readEncoder() / ROTARY_ENCODER_STEPS)) % NUM_PATTERNS;
+
+    return index;
 }
