@@ -336,8 +336,8 @@ long&#160;</td><td class="memItemRight" valign="bottom"><b>loop_end_time</b> = 0
 
 <p>If the hardware button is held for RESET_TIME, clear the list of saves and call <a class="el" href="#a368badc6185939de1fc68a0bcddc3584" title="Causes the LED to turn on/off forever.">led_on_forever()</a>. </p>
 <p>The inital button press sets start_millis to the current device time. If the delta between the current time and start_millis is equal to 1.5 seconds, turn on the LED.</p>
-<p>If the delta is more than RESET_TIME, reset the device and call <a class="el" href="#a368badc6185939de1fc68a0bcddc3584" title="Causes the LED to turn on/off forever.">led_on_forever()</a>. This is an infinite loop, which requires a device reset to clear. This is intended behavior. <br  />
- </p>
+<p>If the delta is more than RESET_TIME, reset the device and call <a class="el" href="#a368badc6185939de1fc68a0bcddc3584" title="Causes the LED to turn on/off forever.">led_on_forever()</a>. This is an infinite loop, which requires a device reset to clear. This is intended behavior.</p>
+<p>This function requires constant monitoring of the button, so direct hardware calls are used here. </p>
 
 </div>
 </div>
