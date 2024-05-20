@@ -170,6 +170,7 @@ var NAVTREEINDEX0 =
 "struct_a_p_i_get_hook.html":[0,0,0],
 "struct_a_p_i_put_hook.html":[0,0,1],
 "struct_config___data.html":[0,0,2],
+"struct_config___data.html#a54ab794aef93c34ac0571f1ae4be5970":[0,0,2,3],
 "struct_config___data.html#a8c5aff141715e46573307442e5b6a3b0":[0,0,2,0],
 "struct_config___data.html#acfabf1197a51045c5101697edc5f262c":[0,0,2,1],
 "struct_config___data.html#afef30be548cea55d9f3329a0d47269f4":[0,0,2,2],
