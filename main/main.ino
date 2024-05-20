@@ -204,33 +204,33 @@ void unfold_buffer(CRGB* buf, uint8_t len, bool even){
   }
 }
 
-void process_pattern(uint8_t idx, uint8_t len){
+void process_pattern(Pattern_Data * p, Strip_Buffer * buf, uint8_t len){
 
   // Pull the current postprocessing effects from the struct integer.
-  uint8_t pp_mode = loaded_patterns.pattern[idx].postprocessing_mode;
+  uint8_t pp_mode = p->postprocessing_mode;
   bool is_reversed = (pp_mode == 1) || (pp_mode == 3);
   bool is_mirrored = (pp_mode == 2) || (pp_mode == 3);
 
-  getFhue(loaded_patterns.pattern[idx].minhue, loaded_patterns.pattern[idx].maxhue);
+  getFhue(p->minhue, p->maxhue);
   getVbrightness();
   // Calculate the length to process
   uint8_t processed_len = (is_mirrored) ? len/2 : len;
 
   // Reverse the buffer to make it normal if it is reversed.
-  if(is_reversed) reverse_buffer(histories[idx].leds, processed_len);
+  if(is_reversed) reverse_buffer(buf->leds, processed_len);
 
   // Process the pattern.
-  mainPatterns[loaded_patterns.pattern[idx].idx].pattern_handler(
-      &histories[idx],
+  mainPatterns[p->idx].pattern_handler(
+      buf,
       processed_len,
-      &loaded_patterns.pattern[idx]);
+      p);
   
   // Re-invert the buffer if we need the output to be reversed.
-  if(is_reversed) reverse_buffer(histories[idx].leds, processed_len);
+  if(is_reversed) reverse_buffer(buf->leds, processed_len);
 
   // Unfold the buffer if needed.
   if(is_mirrored) 
-    unfold_buffer(histories[idx].leds, processed_len, (len == processed_len * 2));
+    unfold_buffer(buf->leds, processed_len, (len == processed_len * 2));
 }
 
 
@@ -251,7 +251,7 @@ void run_strip_splitting() {
   for (int i = 0; i < loaded_patterns.pattern_count; i++) {
 
     // Run the pattern handler for pattern i using history i
-    process_pattern(i, section_length);
+    process_pattern(&loaded_patterns.pattern[i], &histories[i], section_length);
 
     // Copy the processed segment to the output buffer
     memcpy(
@@ -264,10 +264,6 @@ void run_strip_splitting() {
       &output_buffer[section_length * i],
       section_length,
       loaded_patterns.pattern[i].brightness);
-
-    
-
-    
 
     // Smooth the brightness-adjusted output and put it
     // into the main output buffer.
@@ -309,7 +305,7 @@ void run_pattern_layering() {
   uint8_t section_length = config.length;
   for (uint8_t i = 0; i < 2; i++) {
     // Run the pattern handler for pattern i using history i
-    process_pattern(i, section_length);
+    process_pattern(&loaded_patterns.pattern[i], &histories[i], section_length);
 
     // Copy the processed segment to the temp buffer
     memcpy(
@@ -370,29 +366,47 @@ void loop() {
     histories[3] = Strip_Buffer();
   }
 
-  reset_button_state();  // Check for user button input
-
   process_reset_button();  // Manage resetting saves if button held
+
+  // Handle moving to the next pattern if the button is pressed.
+  if(button_pressed){
+    manual_pattern.idx = (manual_control_enabled + manual_pattern.idx) % NUM_PATTERNS;
+    manual_control_enabled = true;
+  }
+
+  reset_button_state();  // Resets the current pressed state of the button.
 
   audio_analysis();  // Run the audio analysis pipeline
 
-  // fHue = remap(
-  //   log(peak) / log(2),
-  //   log(MIN_FREQUENCY) / log(2),
-  //   log(MAX_FREQUENCY) / log(2),
-  //   10, 240);
+  if(manual_control_enabled){
 
-  // vbrightness = remap(
-  //   volume,
-  //   MIN_VOLUME,
-  //   MAX_VOLUME,
-  //   0,
-  //   MAX_BRIGHTNESS);
+    process_pattern(
+      &manual_pattern,
+      &manual_strip_buffer,
+      config.length
+    );
 
+    // Copy the processed segment to the temp buffer
+    memcpy(
+      output_buffer,
+      manual_strip_buffer.leds,
+      sizeof(CRGB) * config.length
+    );
 
-  switch (loaded_patterns.mode) {
+    // Smooth the brightness-adjusted output and put it
+    // into the main output buffer.
+    calculate_layering(
+      smoothed_output,
+      output_buffer,
+      smoothed_output,
+      config.length,
+      255 - 125);
+
+  }else{
+    switch (loaded_patterns.mode) {
 
       case STRIP_SPLITTING:
+      default:
         run_strip_splitting();
         break;
 
@@ -400,9 +414,7 @@ void loop() {
         run_pattern_layering();
         break;
 
-      default:
-        0;
-    
+    }
   }
 
   FastLED.show();  // Push changes from the smoothed buffer to the LED strip
@@ -445,8 +457,6 @@ void audio_analysis() {
   update_drums();
 
   noise_gate(loaded_patterns.noise_thresh);
-
-  Serial.println(volume);
 
 #ifdef SHOW_TIMINGS
   const int end = micros();

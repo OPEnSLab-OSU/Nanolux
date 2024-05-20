@@ -141,10 +141,7 @@ int largest(double arr[], int n){
 /// If the button state is currently true, print to serial
 /// if debug is enabled in the device config.
 void reset_button_state(){
-  if(button_pressed) {
-    nanolux_serial_print("Pressed!");
-    button_pressed = false;
-  }
+  button_pressed = false;
 }
 
 /// @brief A debounced interrupt to set the button state.
@@ -199,6 +196,9 @@ void led_on_forever() {
 /// If the delta is more than RESET_TIME, reset the device and call
 /// led_on_forever(). This is an infinite loop, which requires a
 /// device reset to clear. This is intended behavior. 
+///
+/// This function requires constant monitoring of the button, so
+/// direct hardware calls are used here.
 void process_reset_button() {
 
   if (!digitalRead(BUTTON_PIN)) {

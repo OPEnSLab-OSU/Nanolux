@@ -390,7 +390,12 @@ void glitch(Strip_Buffer * buf, int len, Pattern_Data * params ) {
 /// @param params Pointer to Pattern_Data structure containing configuration options.
 void bands(Strip_Buffer* buf, int len, Pattern_Data* params) {
     // double *fiveSamples = band_sample_bounce();
+    // Pattern is broken, return.
+
+    return;
     double *fiveSamples = band_split_bounce(len); // Maybe use above if you want, but its generally agreed this one looks better
+
+    // Pattern is broken, return.
     
     double avg1 = 0;
     double avg2 = 0;
@@ -408,6 +413,7 @@ void bands(Strip_Buffer* buf, int len, Pattern_Data* params) {
       switch (params->config) {
         case 0 : 
         {
+            
             vol1 = fiveSamples[0];
             vol2 = fiveSamples[1];
             vol3 = fiveSamples[2];

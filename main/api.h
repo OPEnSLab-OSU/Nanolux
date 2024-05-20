@@ -196,6 +196,8 @@ inline void handle_pattern_put_request(AsyncWebServerRequest* request, JsonVaria
     loaded_patterns.pattern[pattern_num].config = conf;
     loaded_patterns.pattern[pattern_num].postprocessing_mode = postprocess;
 
+    manual_control_enabled = false;
+
     request->send(
       HTTP_OK,
       CONTENT_TEXT,
