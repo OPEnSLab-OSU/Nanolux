@@ -24,6 +24,7 @@ const ConfigDropDown = ({
         ["Default"],
         ["Default"],
         ["Frequency", "Volume"],
+        ["Default"],
         ["Default"]
     ]
 
