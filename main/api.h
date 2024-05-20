@@ -454,4 +454,4 @@ APIPutHook apiPutHooks[] = {
   { "/api/putSettings", handle_system_settings_put_request },
   { "/api/updatePassword", handle_new_password_put_request },
 };
-constexpr int API_PUT_HOOK_COUNT = 7;
+constexpr int API_PUT_HOOK_COUNT = 6;
