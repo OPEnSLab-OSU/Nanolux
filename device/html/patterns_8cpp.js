@@ -1,6 +1,7 @@
 var patterns_8cpp =
 [
     [ "bands", "patterns_8cpp.html#a3c0b2916e18f5a9a01c32c8214927752", null ],
+    [ "bar_fill", "patterns_8cpp.html#a1c538ad659e0874ad33fe3b2f961f9db", null ],
     [ "confetti", "patterns_8cpp.html#a3d83bebf605e40265a61d3b70a94a477", null ],
     [ "eq", "patterns_8cpp.html#af93356e3e70c1ff942871c1fc532e6db", null ],
     [ "Fire2012", "patterns_8cpp.html#acff6dfc16e4f97d405bdbf87836c7b12", null ],

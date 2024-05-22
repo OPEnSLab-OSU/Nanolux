@@ -1,6 +1,6 @@
 # Nanolux Developer's Handbook #
-**Version 0.9**
+**Version 1.0**
 
-*5-20-2024*
+*5-22-2024*
 
 ---
