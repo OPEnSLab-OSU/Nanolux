@@ -1,5 +1,4 @@
 import { useSignal } from '@preact/signals';
-import {h, Component} from 'preact';
 import Select from 'preact-material-components/Select';
 
 // SOURCE:
@@ -24,7 +23,8 @@ const ConfigDropDown = ({
         ["Default"],
         ["Default"],
         ["Frequency", "Volume"],
-        ["Default"]
+        ["Default"],
+        ["Volume", "Frequency"]
     ]
 
     const current = useSignal(initial);

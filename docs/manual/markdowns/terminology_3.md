@@ -53,16 +53,8 @@ Nanolux also uses a "Strip Buffer" structure to store the previous state of the 
 
 Each currently running pattern on the strip has an accompanying Strip Buffer object. The relationship between a Strip Buffer object and a Pattern Data object is purely associative: the only piece of information that links them is a common array index.
 
-<p align="center">
-<img src="images\storage_struct.png"/>
-</p>
-
-
-
 Nanolux also uses libraries or features of the micro controller that could use additional definition.
 
 - **ESP32:** An Arduino-compatible microcontroller with built-in WiFi and Bluetooth.
 - **NVS:** Stands for "non-volatile storage." NVS is persistent memory built into the ESP32 itself that persists through power cycles.
 - **FastLED:** An Arduino-compatible library capable of outputting to an LED strip. Contains many useful functions, such as blend().
-
----

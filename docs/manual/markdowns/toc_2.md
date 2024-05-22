@@ -21,3 +21,11 @@
 	- Post-Processing
 	- Driver Functions
 	- Program Loops
+5. Adding New Patterns
+	- Stating the Problem
+	- ESP32 Implementation
+	- Web App Implementation
+6. Building the Nanolux Developer's Handbook
+	- Dependencies
+	- Adding New Sections
+7. Changelog

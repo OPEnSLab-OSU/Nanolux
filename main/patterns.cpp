@@ -753,6 +753,45 @@ void Fire2012(Strip_Buffer * buf, int len, Pattern_Data* params){
   }
 }
 
+#define VOLUME 0
+#define FREQUENCY 1
+/// @brief Displays a pattern that occupies "lower" pixels at lower values,
+/// and "higher" pixels at higher values.
+/// @param buf Pointer to the Strip_Buffer structure, holds LED buffer and history variables.
+/// @param len The length of LEDs to process
+/// @param params Pointer to Pattern_Data structure containing configuration options.
+void bar_fill(Strip_Buffer * buf, int len, Pattern_Data* params){
 
+  uint8_t max_height = 0;
 
+  switch(params->config) {
+
+    case VOLUME: default: {
+      max_height = remap(volume, MIN_VOLUME * 4, MAX_VOLUME/2, 0, len-1);
+      break;
+    }
+
+    case FREQUENCY: {
+      max_height = map(peak, MIN_FREQUENCY * 4, MAX_FREQUENCY/2, 0, len-1);
+      break;
+    }
+  }
+
+  uint8_t hue_step = (params->maxhue - params->minhue) / (len - 1);
+
+  // Apply the color to the strip.
+  for(uint8_t i = 0; i < max_height; i++){
+    buf->leds[i] = CHSV(
+      (params->minhue + hue_step * (i - 1)) % 255,
+      255,
+      255
+    );
+  }
+
+  // Black out the rest of the strip.
+  for(uint8_t i = max_height; i < len; i++){
+    buf->leds[i] = CHSV(0, 0, 0);
+  }
+  
+}
 
