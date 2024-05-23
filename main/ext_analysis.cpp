@@ -253,6 +253,7 @@ void update_five_band_split(int len) {
   temp_to_array(band_split_bounce(len), fbs, 5);
 }
 
+/// @brief Detects vowels based off of formants.
 VowelSounds vowel_detection() {
 
   //find the max value
@@ -271,7 +272,6 @@ VowelSounds vowel_detection() {
     } else vReal[i] /= maxVal;
   }
 
-  double scaler = 0.5;  //used for normalizing
   // vReal contains 128 samples, where the first output is around idx 0, 1, 127 seem to be not useful (very large)
   // Note this function needs to scale with volume. (it currently will not work at lower volumes)
 
@@ -286,26 +286,30 @@ VowelSounds vowel_detection() {
   // }
 
 
-  // combination hierachy. the top cases need to be more precise so other cases can be accessed
-  double accuracy = .9;  //ranges from 1.0 <-> 0.0
-  // if((vReal[6] > accuracy || vReal[5] > accuracy-.3) && (vReal[121] == 1 || vReal[122] == 1)){
-  //   Serial.println("found an ooooo like 'boot'");//needs work
-  //   return VowelSounds.oSound;
-  // }else 
-  if((vReal[3] > accuracy || vReal[4] > accuracy || vReal[5] > accuracy) && (vReal[7] > accuracy-.5 || vReal[8] > accuracy-.5 || vReal[9] > accuracy-.5) && (vReal[122] > accuracy || vReal[123] > accuracy || vReal[124] > accuracy)){
-    Serial.println("found an 'aaaa' like 'say'");
-    return aVowel;
-  }else if((vReal[4] > accuracy || vReal[5] > accuracy) && (vReal[124] > accuracy || vReal[123] > accuracy-.2 || vReal[125] > accuracy-.2)){
-    Serial.println("found an eeee like 'bee'");//might be picking up on b's
-    return eVowel;
-  }else if((vReal[11] > accuracy || vReal[12] > accuracy || vReal[13] > accuracy) && (vReal[113] > accuracy-.2 || vReal[114] > accuracy-.2) && (vReal[115] > accuracy || vReal[117] > accuracy)){
-    Serial.println("found an ah");
-    return aVowel;
-  }else if((vReal[11] > accuracy || vReal[12] > accuracy) && (vReal[117] > accuracy || vReal[118] > accuracy)){
+  // primary peaks are in the first set of paranthesis. second set (if present) are the sub-peaks 
+  double peak_threshold = .9;
+  if((vReal[17] > peak_threshold && vReal[111] > peak_threshold)){
     Serial.println("found an 'i' like 'find'");
     return iVowel;
+  } else if(((vReal[13] > peak_threshold && vReal[115] > peak_threshold))){
+    Serial.println("found an ah like 'saw'");
+    return aVowel;
+  }else if((vReal[12] > peak_threshold && vReal[116] > peak_threshold)){
+    Serial.println("found an oh like 'no'");
+    return oVowel;
+  }else if((vReal[6] > peak_threshold && vReal[126] > peak_threshold) && (vReal[5] > peak_threshold-.1 && vReal[123] > peak_threshold-.1)){
+    Serial.println("found an ooooo like 'boot'");
+    return oVowel;
+  }else if((vReal[9] > peak_threshold && vReal[119] > peak_threshold)){
+    Serial.println("found an 'aaaa' like 'say'");
+    return aVowel;
+  } else if((vReal[4] > peak_threshold && vReal[124] > peak_threshold)){
+    Serial.println("found an eeee like 'bee'");
+    return eVowel;
+  } else if ((vReal[11] > peak_threshold && vReal[117] > peak_threshold)){
+    Serial.println("found an uh like 'bus'");
+    return uVowel;
   }
-
   return noVowel;
 }
 
