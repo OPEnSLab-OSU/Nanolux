@@ -272,8 +272,7 @@ VowelSounds vowel_detection() {
     } else vReal[i] /= maxVal;
   }
 
-  // vReal contains 128 samples, where the first output is around idx 0, 1, 127 seem to be not useful (very large)
-  // Note this function needs to scale with volume. (it currently will not work at lower volumes)
+  // vReal contains 128 samples, where the data in idx 0, 1, 126, 127 seem to be garbage
 
   // if (maxVal > noise_threshold) Serial.println("NEW ARRAY");
   // for (int i = 3; i < SAMPLES - 2; i++) {
