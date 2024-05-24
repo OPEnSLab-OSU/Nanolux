@@ -78,7 +78,6 @@ void eq(Strip_Buffer * buf, int len, Pattern_Data* params);
 
 void tug_of_war(Strip_Buffer * buf, int len, Pattern_Data* params);
 
-
 void saturated(Strip_Buffer * buf, int len, Pattern_Data* params);
 
 void random_raindrop(Strip_Buffer * buf, int len, Pattern_Data* params);
