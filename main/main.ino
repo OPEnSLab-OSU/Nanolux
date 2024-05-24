@@ -375,16 +375,22 @@ void loop() {
   }
 
   reset_button_state();  // Check for user button input
+
+  bool lastEncoderBtnPressed = false;
+  bool currentEncoderBtnPressed = isEncoderButtonPressed();
   
-  //Ensure the button not pressed in the last cycle, increment the postprocessing mode. 
-  if (handle_rotary_button()) {
-    if (isEncoderButtonPressed()) {
-        Serial.println("Button pressed");
+  if (currentEncoderBtnPressed != lastEncoderBtnPressed) {
+    if (currentEncoderBtnPressed) {
+      Serial.println("Button is pressed");
+    }
+    else {
+        Serial.println("Button is released");
         manual_pattern.postprocessing_mode = (manual_pattern.postprocessing_mode + 1) % 4;
         Serial.println(manual_pattern.postprocessing_mode);
-    } 
-  }
+    }
+    lastEncoderBtnPressed = currentEncoderBtnPressed;
 
+  }
 
   process_reset_button();  // Manage resetting saves if button held
 
