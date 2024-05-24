@@ -3,6 +3,7 @@
 
 double* density_formant();
 double* band_split_bounce(int len);
+double* band_sample_bounce();
 bool nvp();
 int* drum_identify();
 void update_noise();

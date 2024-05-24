@@ -222,6 +222,7 @@ void saturated(Strip_Buffer* buf, int len, Pattern_Data* params){
         case 3:{ // Compression
             hue_x = remap(volume, MIN_VOLUME, MAX_VOLUME, 1, 8);
             ntime = millis() / 4;
+            fill_noise16 (buf->leds, len, octaves, x, scale, hue_octaves, hue_x, hue_scale, ntime, hue_shift);
             }
             break;
   //Add blur
@@ -378,13 +379,10 @@ void glitch(Strip_Buffer * buf, int len, Pattern_Data * params ) {
 /// @param len The length of LEDs to process
 /// @param params Pointer to Pattern_Data structure containing configuration options.
 void bands(Strip_Buffer* buf, int len, Pattern_Data* params) {
-    // double *fiveSamples = band_sample_bounce();
-    // Pattern is broken, return.
+    //double *fiveSamples = band_sample_bounce();
 
-    return;
     double *fiveSamples = band_split_bounce(len); // Maybe use above if you want, but its generally agreed this one looks better
 
-    // Pattern is broken, return.
     
     double avg1 = 0;
     double avg2 = 0;

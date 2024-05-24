@@ -119,29 +119,113 @@ double* density_formant(){
 /// then maps them to the allowed volume range.
 double* band_split_bounce(int len) {
     // Define the volumes to be calculated
-    double *vol = new double[5];
-
-    // Sum the frequencies for each band.
+    double vol1 = 0;
+    double vol2 = 0;
+    double vol3 = 0;
+    double vol4 = 0;
+    double vol5 = 0;
+    // Sum the frequencies
     for (int i = 5; i < SAMPLES-3; i++) {
-      
-      // If i is out of bounds, break out of loop.
-      if(i > 5*len/6) break;
-
-      // Adds the recorded volume to the desired index.
-      vol[(i * 6)/len] += vReal[i];
+      if (0 <= i && i < len/6) {
+        vol1 += vReal[i];
+      }
+      if (len/6 <= i && i < 2*len/6) {
+        vol2 += vReal[i];
+      }
+      if (2*len/6 <= i && i < 3*len/6) {
+        vol3 += vReal[i];
+      }
+      if (3*len/6 <= i && i < 4*len/6) {
+        vol4 += vReal[i];
+      }
+      if (4*len/6 <= i && i < 5*len/6) {
+        vol5 += vReal[i];
+      }
     }
     
-    // For each frequency...
-    for(int i = 0; i < 5; i++){
-      // Average the summed volumes...
-      vol[i] /= (len/6);
-      // ???
-      vol[i] = map(vol[i], MIN_VOLUME, MAX_VOLUME, 0, len/6);
-    }
+    // Average the frequencies
+    vol1 /= (len/6);
+    vol2 /= (len/6);
+    vol3 /= (len/6);
+    vol4 /= (len/6);
+    vol5 /= (len/6);
+
+    // Map to frequency based values
+    vol1 = map(vol1, MIN_VOLUME, MAX_VOLUME, 0, len/6);
+    vol2 = map(vol2, MIN_VOLUME, MAX_VOLUME, 0, len/6);
+    vol3 = map(vol3, MIN_VOLUME, MAX_VOLUME, 0, len/6);
+    vol4 = map(vol4, MIN_VOLUME, MAX_VOLUME, 0, len/6);
+    vol5 = map(vol5, MIN_VOLUME, MAX_VOLUME, 0, len/6);
+
+    // Create a resultant array
+    double *fiveBands = new double[5];
+
+    // Store the results
+    fiveBands[0] = vol1;
+    fiveBands[1] = vol2;
+    fiveBands[2] = vol3;
+    fiveBands[3] = vol4;
+    fiveBands[4] = vol5;
 
     // Return the five-band-split
-    return vol;
+    return fiveBands;
 }
+
+// Outputs an array of a 5-band-split based on iteration through each sample
+double* band_sample_bounce() {
+    // Define the volumes to be calculated
+    double vol1 = 0;
+    double vol2 = 0;
+    double vol3 = 0;
+    double vol4 = 0;
+    double vol5 = 0;
+    // Get the volumes of each band
+    for (int i = 5; i < SAMPLES-3; i++) {
+      if (0 <= i && i < SAMPLES/6) {
+        vol1 += vReal[i];
+      }
+      if (SAMPLES/6 <= i && i < 2*SAMPLES/6) {
+        vol2 += vReal[i];
+      }
+      if (2*SAMPLES/6 <= i && i < 3*SAMPLES/6) {
+        vol3 += vReal[i];
+      }
+      if (3*SAMPLES/6 <= i && i < 4*SAMPLES/6) {
+        vol4 += vReal[i];
+      }
+      if (4*SAMPLES/6 <= i && i < 5*SAMPLES/6) {
+        vol5 += vReal[i];
+      }
+    }
+    
+    // Average them by the SAMPLES
+    vol1 /= (SAMPLES/6);
+    vol2 /= (SAMPLES/6);
+    vol3 /= (SAMPLES/6);
+    vol4 /= (SAMPLES/6);
+    vol5 /= (SAMPLES/6);
+
+    // Map them to values that split up the SAMPLES accurately (just for variability smoothing)
+    vol1 = map(vol1, MIN_VOLUME, MAX_VOLUME, 0, SAMPLES/6);
+    vol2 = map(vol2, MIN_VOLUME, MAX_VOLUME, 0, SAMPLES/6);
+    vol3 = map(vol3, MIN_VOLUME, MAX_VOLUME, 0, SAMPLES/6);
+    vol4 = map(vol4, MIN_VOLUME, MAX_VOLUME, 0, SAMPLES/6);
+    vol5 = map(vol5, MIN_VOLUME, MAX_VOLUME, 0, SAMPLES/6);
+    
+
+    // Create an array for the result
+    double *fiveSamples = new double[5];
+    // Store the Five Bands volumes
+    fiveSamples[0] = vol1;
+    fiveSamples[1] = vol2;
+    fiveSamples[2] = vol3;
+    fiveSamples[3] = vol4;
+    fiveSamples[4] = vol5;
+
+    // Return the five sample array
+    return fiveSamples;
+}
+
 
 /// @brief Returns a boolean signifying if the audio signal is
 /// noisy or periodic.
