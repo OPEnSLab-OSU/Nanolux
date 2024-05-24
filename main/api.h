@@ -186,7 +186,7 @@ inline void handle_pattern_put_request(AsyncWebServerRequest* request, JsonVaria
     const uint8_t minhue = payload["hue_min"];
     const uint8_t maxhue = payload["hue_max"];
     const uint8_t conf = payload["config"];
-    const bool postprocess = payload["postprocess"];
+    const uint8_t postprocess = payload["postprocess"];
 
     if(idx != loaded_patterns.pattern[pattern_num].idx)
       pattern_changed = true;
