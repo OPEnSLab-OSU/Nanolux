@@ -97,4 +97,6 @@ void Fire2012(Strip_Buffer * buf, int len, Pattern_Data* params);
 
 void bar_fill(Strip_Buffer * buf, int len, Pattern_Data* params);
 
+void vowels_raindrop(Strip_Buffer * buf, int len, Pattern_Data* params);
+
 #endif

@@ -24,7 +24,8 @@ const ConfigDropDown = ({
         ["Default"],
         ["Frequency", "Volume"],
         ["Default"],
-        ["Volume", "Frequency"]
+        ["Volume", "Frequency"],
+        ["Default"]
     ]
 
     const current = useSignal(initial);

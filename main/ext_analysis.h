@@ -11,5 +11,6 @@ void update_drums();
 void temp_to_array(double * temp, double * arr, int len);
 void update_formants();
 void update_five_band_split(int len);
+VowelSounds vowel_detection();
 
 #endif

@@ -724,6 +724,42 @@ void Fire2012(Strip_Buffer * buf, int len, Pattern_Data* params){
   }
 }
 
+void vowels_raindrop(Strip_Buffer * buf, int len, Pattern_Data* params){
+    int startIdx = random(len);
+    VowelSounds result = vowel_detection();
+    switch (result) {
+      case aVowel:
+        buf->leds[startIdx] = CRGB::Blue;
+        break;
+      case eVowel:
+        buf->leds[startIdx] = CRGB::Green;
+        break;
+      case iVowel:
+        buf->leds[startIdx] = CRGB::Red;
+        break;
+      case oVowel:
+        buf->leds[startIdx] = CRGB::Orange;
+        break;
+      case uVowel:
+        buf->leds[startIdx] = CRGB::Yellow;
+        break;
+      default: // no vowel is detected
+        buf->leds[startIdx] = CRGB::Black;
+        break;
+    }
+
+    buf->leds[startIdx] = CHSV(fHue, 255, vbrightness);
+    
+    for(int i = len-1; i > 0; i--) {
+      if (i != startIdx) {
+        buf->leds[i] = buf->leds[i-1];
+      }
+    }
+
+    buf->leds[0] = CRGB::Black;
+  
+}
+
 #define VOLUME 0
 #define FREQUENCY 1
 /// @brief Displays a pattern that occupies "lower" pixels at lower values,
