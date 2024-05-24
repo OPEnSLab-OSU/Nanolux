@@ -81,6 +81,7 @@ extern Pattern mainPatterns[];
 volatile bool manual_control_enabled = false;
 Strip_Buffer manual_strip_buffer;
 Pattern_Data manual_pattern;
+bool lastEncoderBtnPressed = false;
 
 /**********************************************************
  *
@@ -376,21 +377,14 @@ void loop() {
 
   reset_button_state();  // Check for user button input
 
-  bool lastEncoderBtnPressed = false;
-  bool currentEncoderBtnPressed = isEncoderButtonPressed();
   
-  if (currentEncoderBtnPressed != lastEncoderBtnPressed) {
-    if (currentEncoderBtnPressed) {
-      Serial.println("Button is pressed");
-    }
-    else {
-        Serial.println("Button is released");
-        manual_pattern.postprocessing_mode = (manual_pattern.postprocessing_mode + 1) % 4;
-        Serial.println(manual_pattern.postprocessing_mode);
-    }
-    lastEncoderBtnPressed = currentEncoderBtnPressed;
-
+  if (isEncoderButtonPressed() == lastEncoderBtnPressed) {
+    Serial.println("Button is not pressed");
+    manual_pattern.postprocessing_mode = (manual_pattern.postprocessing_mode + 1) % 4;
+    Serial.println(manual_pattern.postprocessing_mode);
   }
+    lastEncoderBtnPressed = isEncoderButtonPressed();
+
 
   process_reset_button();  // Manage resetting saves if button held
 
