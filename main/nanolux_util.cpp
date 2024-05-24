@@ -272,6 +272,7 @@ long timer_overrun(){
 }
 
 AiEsp32RotaryEncoder rotaryEncoder = AiEsp32RotaryEncoder(ROTARY_ENCODER_A_PIN, ROTARY_ENCODER_B_PIN, ROTARY_ENCODER_BUTTON_PIN, ROTARY_ENCODER_VCC_PIN, ROTARY_ENCODER_STEPS);
+static bool wasButtonDown = false;
 
 void IRAM_ATTR readEncoderISR(){
     rotaryEncoder.readEncoder_ISR();
@@ -291,4 +292,15 @@ int calculate_pattern_index(){
 
 bool isEncoderButtonPressed(){
     return rotaryEncoder.isEncoderButtonClicked();
+}
+
+
+bool handle_rotary_button() {
+  if (rotaryEncoder.isEncoderButtonDown()) {
+    wasButtonDown = true;
+    return false;
+  }
+
+  wasButtonDown = false;
+  return true
 }
