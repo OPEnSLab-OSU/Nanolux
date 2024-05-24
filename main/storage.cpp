@@ -103,7 +103,7 @@ void load_slot(int slot) {
   memcpy(
     &loaded_patterns,
     &saved_patterns[slot],
-    sizeof(Pattern_Data));
+    sizeof(Strip_Data));
 }
 
 /// @brief Saves the currently-loaded pattern to a save slot.
@@ -116,7 +116,7 @@ void set_slot(int slot) {
   memcpy(
     &saved_patterns[slot],
     &loaded_patterns,
-    sizeof(Pattern_Data));
+    sizeof(Strip_Data));
   
   bound_user_data();
 }
@@ -129,7 +129,7 @@ void save_to_nvs() {
   storage.putBytes(
     PATTERN_KEY,
     &saved_patterns[0],
-    sizeof(Pattern_Data) * NUM_SAVES);
+    sizeof(Strip_Data) * NUM_SAVES);
   storage.end();
 }
 
@@ -139,10 +139,11 @@ void save_to_nvs() {
 /// volatile storage as well.
 void clear_all() {
   clear_nvs();
-  memset(
-    &saved_patterns[0],
-    0,
-    sizeof(Pattern_Data) * NUM_SAVES);
+
+  for(uint8_t i = 0; i < NUM_SAVES; i++){
+    saved_patterns[i] = Strip_Data(); 
+  }
+
   save_to_nvs();
 
   config = Config_Data();
@@ -182,7 +183,7 @@ void load_from_nvs() {
     storage.getBytes(
       PATTERN_KEY,
       &saved_patterns[0],
-      sizeof(Pattern_Data) * NUM_SAVES);
+      sizeof(Strip_Data) * NUM_SAVES);
   }
 
   storage.end();

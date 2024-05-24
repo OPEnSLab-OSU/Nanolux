@@ -380,14 +380,14 @@ void update_hardware(){
 
   #else
 
-    reset_button_state();  // Check for user button input
-
     process_reset_button(!digitalRead(BUTTON_PIN));  // Manage resetting saves if button held
     
     if(button_pressed){
       manual_pattern.idx = (manual_control_enabled + manual_pattern.idx) % NUM_PATTERNS;
       manual_control_enabled = true;
     }
+
+    reset_button_state();  // Check for user button input
 
   #endif
 

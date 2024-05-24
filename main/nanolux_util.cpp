@@ -203,9 +203,9 @@ void led_on_forever() {
 ///
 /// This function requires constant monitoring of the button, so
 /// direct hardware calls are used here.
-void process_reset_button() {
+void process_reset_button(int button_value) {
 
-  if (!digitalRead(BUTTON_PIN)) {
+  if (button_value) {
 
     if (start_millis == NULL)
       start_millis = millis();
