@@ -375,12 +375,12 @@ void loop() {
   }
 
   reset_button_state();  // Check for user button input
-  if (isEncoderButtonClicked()) {
-    Serial.println("Button clicked");
+  
+if (isEncoderButtonPressed() == 1) {
+    Serial.println("Button pressed");
   }
-  else {
-    Serial.println("Button not clicked");
-  }
+  
+
 
   process_reset_button();  // Manage resetting saves if button held
 

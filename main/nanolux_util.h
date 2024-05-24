@@ -18,4 +18,6 @@ void nanolux_serial_print(char * msg);
 void IRAM_ATTR readEncoderISR();
 void setup_rotary_encoder();
 int calculate_pattern_index();
+bool isEncoderButtonPressed();
+
 #endif

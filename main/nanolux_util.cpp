@@ -289,40 +289,12 @@ int calculate_pattern_index(){
     return index;
 }
 
-// This is the code from <AiEsp32RotaryEncoder.h> 
-// check if the button is clicked
-// bool AiEsp32RotaryEncoder::isEncoderButtonClicked(unsigned long maximumWaitMilliseconds)
-// {
-// 	static bool wasTimeouted = false;
-// 	int button = 1 - digitalRead(encoderButtonPin);
-// 	if (!button)
-// 	{
-// 		if (wasTimeouted)
-// 		{
-// 			wasTimeouted = false;
-// 			return true;
-// 		}
-// 		return false;
-// 	}
-// 	delay(30); // debounce
-// 	button = 1 - digitalRead(encoderButtonPin);
-// 	if (!button)
-// 	{
-// 		return false;
-// 	}
-
-// 	// wait release of button but only maximumWaitMilliseconds
-// 	wasTimeouted = false;
-// 	unsigned long waitUntil = millis() + maximumWaitMilliseconds;
-// 	while (1 - digitalRead(encoderButtonPin))
-// 	{
-// 		if (millis() > waitUntil)
-// 		{
-// 			// button not released until timeout
-// 			wasTimeouted = true;
-// 			return false;
-// 		}
-// 	}
-
-// 	return true;
-// }
+bool isEncoderButtonPressed(){
+    if (rotaryEncoder.isEncoderButtonClicked() == true) {
+        Serial.println("GOODDDDDDD");
+        return true;
+    }
+    else{
+        return false;
+    }
+}
