@@ -91,10 +91,10 @@ const StripSettings = ({patterns}) => {
 	 */
 	const decrementPatterns = async () => {
 		if(data.pattern_count > 1){
-			if(data.pattern_count == selectedPattern + 1){
-				setPattern(data.pattern_count - 1);
-			}
 			update("pattern_count", data.pattern_count - 1);
+			if(data.pattern_count >= selectedPattern - 1){
+				setPattern(data.pattern_count - 2);
+			}	
 		}
 	}
 
