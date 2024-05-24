@@ -375,7 +375,7 @@ void loop() {
   }
 
   reset_button_state();  // Check for user button input
-  if (isEncoderButtonClicked) {
+  if (isEncoderButtonClicked()) {
     Serial.println("Button clicked");
   }
   else {
