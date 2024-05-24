@@ -290,11 +290,5 @@ int calculate_pattern_index(){
 }
 
 bool isEncoderButtonPressed(){
-    if (rotaryEncoder.isEncoderButtonClicked() == true) {
-        Serial.println("GOODDDDDDD");
-        return true;
-    }
-    else{
-        return false;
-    }
+    return rotaryEncoder.isEncoderButtonClicked();
 }
