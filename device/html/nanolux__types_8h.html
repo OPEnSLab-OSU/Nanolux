@@ -99,7 +99,8 @@ $(function(){initNavTree('nanolux__types_8h.html',''); initResizable(true); });
 <div class="header">
   <div class="summary">
 <a href="#define-members">Macros</a> &#124;
-<a href="#typedef-members">Typedefs</a>  </div>
+<a href="#typedef-members">Typedefs</a> &#124;
+<a href="#enum-members">Enumerations</a>  </div>
   <div class="headertitle"><div class="title">nanolux_types.h File Reference</div></div>
 </div><!--header-->
 <div class="contents">
@@ -117,6 +118,21 @@ Macros</h2></td></tr>
 <tr class="memitem:a4163b4a4e9d8f2949741962dca6c5944" id="r_a4163b4a4e9d8f2949741962dca6c5944"><td class="memItemLeft" align="right" valign="top"><a id="a4163b4a4e9d8f2949741962dca6c5944" name="a4163b4a4e9d8f2949741962dca6c5944"></a>
 #define&#160;</td><td class="memItemRight" valign="bottom"><b>ARRAY_SIZE</b>(A)&#160;&#160;&#160;(sizeof(A) / sizeof((A)[0]))</td></tr>
 <tr class="separator:a4163b4a4e9d8f2949741962dca6c5944"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6ada2dd999250ae001bb9b73a55a320b" id="r_a6ada2dd999250ae001bb9b73a55a320b"><td class="memItemLeft" align="right" valign="top"><a id="a6ada2dd999250ae001bb9b73a55a320b" name="a6ada2dd999250ae001bb9b73a55a320b"></a>
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>ROTARY_ENCODER_A_PIN</b>&#160;&#160;&#160;23</td></tr>
+<tr class="separator:a6ada2dd999250ae001bb9b73a55a320b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae115b14bfb96e842b74ce85dd3f234ed" id="r_ae115b14bfb96e842b74ce85dd3f234ed"><td class="memItemLeft" align="right" valign="top"><a id="ae115b14bfb96e842b74ce85dd3f234ed" name="ae115b14bfb96e842b74ce85dd3f234ed"></a>
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>ROTARY_ENCODER_B_PIN</b>&#160;&#160;&#160;22</td></tr>
+<tr class="separator:ae115b14bfb96e842b74ce85dd3f234ed"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a687af1215d889735f3e0f39c7c627d84" id="r_a687af1215d889735f3e0f39c7c627d84"><td class="memItemLeft" align="right" valign="top"><a id="a687af1215d889735f3e0f39c7c627d84" name="a687af1215d889735f3e0f39c7c627d84"></a>
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>ROTARY_ENCODER_BUTTON_PIN</b>&#160;&#160;&#160;33</td></tr>
+<tr class="separator:a687af1215d889735f3e0f39c7c627d84"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4076acb69d060fe31b1e6611e73eb881" id="r_a4076acb69d060fe31b1e6611e73eb881"><td class="memItemLeft" align="right" valign="top"><a id="a4076acb69d060fe31b1e6611e73eb881" name="a4076acb69d060fe31b1e6611e73eb881"></a>
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>ROTARY_ENCODER_VCC_PIN</b>&#160;&#160;&#160;-1</td></tr>
+<tr class="separator:a4076acb69d060fe31b1e6611e73eb881"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6e2273d826b61b054826ed5471333059" id="r_a6e2273d826b61b054826ed5471333059"><td class="memItemLeft" align="right" valign="top"><a id="a6e2273d826b61b054826ed5471333059" name="a6e2273d826b61b054826ed5471333059"></a>
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>ROTARY_ENCODER_STEPS</b>&#160;&#160;&#160;4</td></tr>
+<tr class="separator:a6e2273d826b61b054826ed5471333059"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a06e386e73f8a60e98403b109b3f59951" id="r_a06e386e73f8a60e98403b109b3f59951"><td class="memItemLeft" align="right" valign="top"><a id="a06e386e73f8a60e98403b109b3f59951" name="a06e386e73f8a60e98403b109b3f59951"></a>
 #define&#160;</td><td class="memItemRight" valign="bottom"><b>MAX_LEDS</b>&#160;&#160;&#160;200</td></tr>
 <tr class="separator:a06e386e73f8a60e98403b109b3f59951"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -207,6 +223,20 @@ Typedefs</h2></td></tr>
 <tr class="memitem:a9285b5c2872f60da1a8323d4e1d74085" id="r_a9285b5c2872f60da1a8323d4e1d74085"><td class="memItemLeft" align="right" valign="top"><a id="a9285b5c2872f60da1a8323d4e1d74085" name="a9285b5c2872f60da1a8323d4e1d74085"></a>
 typedef void(*&#160;</td><td class="memItemRight" valign="bottom"><b>SimplePatternList</b>[]) ()</td></tr>
 <tr class="separator:a9285b5c2872f60da1a8323d4e1d74085"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="enum-members" name="enum-members"></a>
+Enumerations</h2></td></tr>
+<tr class="memitem:afce14afdd715368e8f1dd6a41911335f" id="r_afce14afdd715368e8f1dd6a41911335f"><td class="memItemLeft" align="right" valign="top"><a id="afce14afdd715368e8f1dd6a41911335f" name="afce14afdd715368e8f1dd6a41911335f"></a>enum &#160;</td><td class="memItemRight" valign="bottom"><b>VowelSounds</b> { <br />
+&#160;&#160;<b>aVowel</b> = 1
+, <b>eVowel</b> = 2
+, <b>iVowel</b> = 3
+, <b>oVowel</b> = 4
+, <br />
+&#160;&#160;<b>uVowel</b> = 5
+, <b>noVowel</b> = 6
+<br />
+ }</td></tr>
+<tr class="separator:afce14afdd715368e8f1dd6a41911335f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>This file contains defined macros and constants that are used in many places in the Nanolux codebase. </p>

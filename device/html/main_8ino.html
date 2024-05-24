@@ -116,6 +116,7 @@ $(function(){initNavTree('main_8ino.html',''); initResizable(true); });
 <code>#include &quot;ext_analysis.h&quot;</code><br />
 <code>#include &quot;<a class="el" href="storage_8h_source.html">storage.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="globals_8h_source.html">globals.h</a>&quot;</code><br />
+<code>#include &lt;AiEsp32RotaryEncoder.h&gt;</code><br />
 <code>#include &quot;WebServer.h&quot;</code><br />
 <code>#include &quot;<a class="el" href="api_8h_source.html">api.h</a>&quot;</code><br />
 </div><table class="memberdecls">
@@ -157,6 +158,9 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>process_pattern</b> (
 <tr class="memitem:a279952fdc56782b0a1b589b60ce51241" id="r_a279952fdc56782b0a1b589b60ce51241"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a279952fdc56782b0a1b589b60ce51241">print_buffer</a> (CRGB *buf, uint8_t len)</td></tr>
 <tr class="memdesc:a279952fdc56782b0a1b589b60ce51241"><td class="mdescLeft">&#160;</td><td class="mdescRight">Prints a buffer to serial.  <br /></td></tr>
 <tr class="separator:a279952fdc56782b0a1b589b60ce51241"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6bde7ab64ea73378c7c819506def07f0" id="r_a6bde7ab64ea73378c7c819506def07f0"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a6bde7ab64ea73378c7c819506def07f0">update_hardware</a> ()</td></tr>
+<tr class="memdesc:a6bde7ab64ea73378c7c819506def07f0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Processes all calls to hardware and manages the results of those calls.  <br /></td></tr>
+<tr class="separator:a6bde7ab64ea73378c7c819506def07f0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="var-members" name="var-members"></a>
 Variables</h2></td></tr>
@@ -230,6 +234,9 @@ volatile bool&#160;</td><td class="memItemRight" valign="bottom"><b>manual_contr
 <tr class="memitem:a5678993a9b2f2add080c62610d704e3a" id="r_a5678993a9b2f2add080c62610d704e3a"><td class="memItemLeft" align="right" valign="top"><a id="a5678993a9b2f2add080c62610d704e3a" name="a5678993a9b2f2add080c62610d704e3a"></a>
 <a class="el" href="struct_pattern___data.html">Pattern_Data</a>&#160;</td><td class="memItemRight" valign="bottom"><b>manual_pattern</b></td></tr>
 <tr class="separator:a5678993a9b2f2add080c62610d704e3a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a193d8dc46e0bca50bac9d31b0b607ff5" id="r_a193d8dc46e0bca50bac9d31b0b607ff5"><td class="memItemLeft" align="right" valign="top"><a id="a193d8dc46e0bca50bac9d31b0b607ff5" name="a193d8dc46e0bca50bac9d31b0b607ff5"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>lastEncoderBtnPressed</b> = false</td></tr>
+<tr class="separator:a193d8dc46e0bca50bac9d31b0b607ff5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>This file is the main driver of the NanoLux codebase. </p>
@@ -514,6 +521,26 @@ volatile bool&#160;</td><td class="memItemRight" valign="bottom"><b>manual_contr
   </table>
   </dd>
 </dl>
+
+</div>
+</div>
+<a id="a6bde7ab64ea73378c7c819506def07f0" name="a6bde7ab64ea73378c7c819506def07f0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6bde7ab64ea73378c7c819506def07f0">&#9670;&#160;</a></span>update_hardware()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void update_hardware </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Processes all calls to hardware and manages the results of those calls. </p>
+<p>This function includes an ifdef else directive which checks for a macro called VERSION_2_HARDWARE. This macro is defined or commented out at the start of <a class="el" href="nanolux__util_8h_source.html">nanolux_util.h</a>. If your hardware has a rotary encoder and button combo, ensure this macro is not commented. </p>
 
 </div>
 </div>

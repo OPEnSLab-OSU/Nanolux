@@ -10,6 +10,7 @@ var main_8ino =
     [ "scale_crgb_array", "main_8ino.html#a6e61f2a39b11b39082d0f60bb042ab6d", null ],
     [ "setup", "main_8ino.html#a4fc01d736fe50cf5b977f755b675f11d", null ],
     [ "unfold_buffer", "main_8ino.html#a53cdfc663a14d99d48f51a16404568f2", null ],
+    [ "update_hardware", "main_8ino.html#a6bde7ab64ea73378c7c819506def07f0", null ],
     [ "update_web_server", "main_8ino.html#a2804eef424e6a49f1693b768100ccc20", null ],
     [ "button_pressed", "main_8ino.html#af23a0eb11ff9589330539e6b763badc8", null ],
     [ "checkTime", "main_8ino.html#a8ac487e4516fdbf32d27b53465cbf385", null ],
