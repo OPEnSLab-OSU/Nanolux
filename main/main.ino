@@ -16,6 +16,8 @@
 #include "ext_analysis.h"
 #include "storage.h"
 #include "globals.h"
+#include <AiEsp32RotaryEncoder.h>
+
 
 
 FASTLED_USING_NAMESPACE
@@ -79,6 +81,7 @@ extern Pattern mainPatterns[];
 volatile bool manual_control_enabled = false;
 Strip_Buffer manual_strip_buffer;
 Pattern_Data manual_pattern;
+bool lastEncoderBtnPressed = false;
 
 /**********************************************************
  *
@@ -104,6 +107,8 @@ void setup() {
   // Start USB serial communication
   Serial.begin(115200);  
   while (!Serial) { ; }
+
+  setup_rotary_encoder();
 
   // Reindex mainPatterns, to make sure it is consistent.
   for (int i = 0; i < NUM_PATTERNS; i++) {
@@ -348,6 +353,46 @@ void print_buffer(CRGB *buf, uint8_t len) {
   Serial.print("\n");
 }
 
+/// @brief Processes all calls to hardware and manages the results
+/// of those calls.
+///
+/// This function includes an ifdef else directive which checks for
+/// a macro called VERSION_2_HARDWARE. This macro is defined or
+/// commented out at the start of nanolux_util.h. If your hardware has
+/// a rotary encoder and button combo, ensure this macro is not
+/// commented.
+void update_hardware(){
+
+  #ifdef VERSION_2_HARDWARE
+
+    if (isEncoderButtonPressed() == lastEncoderBtnPressed)
+      manual_pattern.postprocessing_mode = (manual_pattern.postprocessing_mode + 1) % 4;
+
+    lastEncoderBtnPressed = isEncoderButtonPressed();
+
+    process_reset_button(isEncoderButtonPressed());
+
+    uint8_t old_idx = manual_pattern.idx;
+    manual_pattern.idx = calculate_pattern_index();
+    
+    if (old_idx != manual_pattern.idx) 
+      manual_control_enabled = true;
+
+  #else
+
+    reset_button_state();  // Check for user button input
+
+    process_reset_button(!digitalRead(BUTTON_PIN));  // Manage resetting saves if button held
+    
+    if(button_pressed){
+      manual_pattern.idx = (manual_control_enabled + manual_pattern.idx) % NUM_PATTERNS;
+      manual_control_enabled = true;
+    }
+
+  #endif
+
+}
+
 /// @brief Runs the main program loop.
 ///
 /// Carries out functions related to timing and updating the
@@ -365,19 +410,10 @@ void loop() {
     histories[1] = Strip_Buffer();
     histories[2] = Strip_Buffer();
     histories[3] = Strip_Buffer();
-  }
-
-  process_reset_button();  // Manage resetting saves if button held
-
-  // Handle moving to the next pattern if the button is pressed.
-  if(button_pressed){
-    manual_pattern.idx = (manual_control_enabled + manual_pattern.idx) % NUM_PATTERNS;
-    manual_control_enabled = true;
-  }
-
-  reset_button_state();  // Resets the current pressed state of the button.
+  } 
 
   audio_analysis();  // Run the audio analysis pipeline
+  update_hardware(); // Pull updates from hardware (buttons, encoder)
 
   if(manual_control_enabled){
 
@@ -459,8 +495,8 @@ void audio_analysis() {
 
   noise_gate(loaded_patterns.noise_thresh);
 
-#ifdef SHOW_TIMINGS
-  const int end = micros();
-  Serial.printf("Audio analysis: %d ms\n", (end - start) / 1000);
-#endif
+  #ifdef SHOW_TIMINGS
+    const int end = micros();
+    Serial.printf("Audio analysis: %d ms\n", (end - start) / 1000);
+  #endif
 }

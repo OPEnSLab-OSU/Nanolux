@@ -7,7 +7,7 @@
  * sense to define elsewhere.
  *
 **/
-
+#include "cmath"
 #include <FastLED.h>
 #include <Arduino.h>
 #include "arduinoFFT.h"
@@ -15,6 +15,8 @@
 #include "nanolux_types.h"
 #include "nanolux_util.h"
 #include "storage.h"
+#include <AiEsp32RotaryEncoder.h>
+
 
 /// The current config of the device, defined in main.ino.
 /// Used to check if serial printing is allowed.
@@ -23,6 +25,8 @@ extern Config_Data config;
 /// Checks if the device button is pressed, defined in
 /// main.ino.
 extern bool button_pressed;
+
+extern int NUM_PATTERNS;
 
 /// Stores the inital time the button was pressed. Used
 /// to determine if the button has been held long enough
@@ -265,4 +269,30 @@ long timer_overrun(){
   // else return the difference between the current time and
   // the expected loop end time.
   return (millis() < loop_end_time) ? 0 : millis() - loop_end_time + 1;
+}
+
+AiEsp32RotaryEncoder rotaryEncoder = AiEsp32RotaryEncoder(ROTARY_ENCODER_A_PIN, ROTARY_ENCODER_B_PIN, ROTARY_ENCODER_BUTTON_PIN, ROTARY_ENCODER_VCC_PIN, ROTARY_ENCODER_STEPS);
+
+void IRAM_ATTR readEncoderISR(){
+    rotaryEncoder.readEncoder_ISR();
+}
+
+void setup_rotary_encoder(){
+    rotaryEncoder.begin();
+    rotaryEncoder.setup(readEncoderISR);
+    rotaryEncoder.setBoundaries(0, 1000, true); //minValue, maxValue, circleValues true|false (when max go to min and vice versa)
+    rotaryEncoder.setAcceleration(250);
+}
+int calculate_pattern_index(){
+    int index = static_cast<int>(floor(rotaryEncoder.readEncoder() / ROTARY_ENCODER_STEPS)) % NUM_PATTERNS;
+
+    return index;
+}
+
+bool isEncoderButtonPressed(){
+    return rotaryEncoder.isEncoderButtonClicked();
+}
+
+bool isEncoderBtnDown() {
+    return rotaryEncoder.isEncoderButtonDown();
 }
