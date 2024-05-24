@@ -1,7 +1,7 @@
 #ifndef NANOLUX_UTIL_H
 #define NANOLUX_UTIL_H
 
-#include "AiEsp32RotaryEncoder.h"
+#include <AiEsp32RotaryEncoder.h>
 
 void IRAM_ATTR buttonISR();
 void reset_button_state();

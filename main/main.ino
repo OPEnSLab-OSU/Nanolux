@@ -16,7 +16,7 @@
 #include "ext_analysis.h"
 #include "storage.h"
 #include "globals.h"
-#include "AiEsp32RotaryEncoder.h"
+#include <AiEsp32RotaryEncoder.h>
 
 
 
@@ -375,6 +375,12 @@ void loop() {
   }
 
   reset_button_state();  // Check for user button input
+  if (isEncoderButtonClicked) {
+    Serial.println("Button clicked");
+  }
+  else {
+    Serial.println("Button not clicked");
+  }
 
   process_reset_button();  // Manage resetting saves if button held
 
