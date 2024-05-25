@@ -19,12 +19,9 @@ long timer_overrun();
 void bound_byte(uint8_t * val, int lower, int upper);
 void process_reset_button(int button_value);
 void nanolux_serial_print(char * msg);
-
 void IRAM_ATTR readEncoderISR();
 void setup_rotary_encoder();
 int calculate_pattern_index();
 bool isEncoderButtonPressed();
-bool isEncoderBtnDown();
-
 
 #endif

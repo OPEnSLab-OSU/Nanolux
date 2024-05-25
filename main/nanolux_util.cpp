@@ -39,6 +39,15 @@ long loop_start_time = 0;
 /// Holds the expected end time of the current program loop.
 long loop_end_time = 0;
 
+/// Defines the rotary encoder object for the 2.0 boards
+AiEsp32RotaryEncoder rotaryEncoder = AiEsp32RotaryEncoder(
+  ROTARY_ENCODER_A_PIN,
+  ROTARY_ENCODER_B_PIN,
+  ROTARY_ENCODER_BUTTON_PIN,
+  ROTARY_ENCODER_VCC_PIN,
+  ROTARY_ENCODER_STEPS
+);
+
 /************************************************
  *
  * HELPERS:
@@ -271,28 +280,28 @@ long timer_overrun(){
   return (millis() < loop_end_time) ? 0 : millis() - loop_end_time + 1;
 }
 
-AiEsp32RotaryEncoder rotaryEncoder = AiEsp32RotaryEncoder(ROTARY_ENCODER_A_PIN, ROTARY_ENCODER_B_PIN, ROTARY_ENCODER_BUTTON_PIN, ROTARY_ENCODER_VCC_PIN, ROTARY_ENCODER_STEPS);
-
+/// @brief Processes the interrupt for the rotary encoder on 2.0 hardware
 void IRAM_ATTR readEncoderISR(){
     rotaryEncoder.readEncoder_ISR();
 }
 
+/// @brief Performs initial setup for the rotary encoder
 void setup_rotary_encoder(){
     rotaryEncoder.begin();
     rotaryEncoder.setup(readEncoderISR);
     rotaryEncoder.setBoundaries(0, 1000, true); //minValue, maxValue, circleValues true|false (when max go to min and vice versa)
     rotaryEncoder.setAcceleration(250);
 }
-int calculate_pattern_index(){
-    int index = static_cast<int>(floor(rotaryEncoder.readEncoder() / ROTARY_ENCODER_STEPS)) % NUM_PATTERNS;
 
-    return index;
+/// @brief Calculates the pattern index the rotary encoder currently
+/// corresponds to.
+/// @returns The pattern index the encoder is set to.
+int calculate_pattern_index(){
+    return static_cast<int>(floor(rotaryEncoder.readEncoder() / ROTARY_ENCODER_STEPS)) % NUM_PATTERNS;
 }
 
+/// @brief Returns the current state of the rotary encoder button.
+/// @returns True if pressed, false if not.
 bool isEncoderButtonPressed(){
     return rotaryEncoder.isEncoderButtonClicked();
-}
-
-bool isEncoderBtnDown() {
-    return rotaryEncoder.isEncoderButtonDown();
 }

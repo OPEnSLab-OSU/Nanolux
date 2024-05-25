@@ -81,6 +81,8 @@ extern Pattern mainPatterns[];
 volatile bool manual_control_enabled = false;
 Strip_Buffer manual_strip_buffer;
 Pattern_Data manual_pattern;
+
+/// Stores the last state of the rotary encoder button.
 bool lastEncoderBtnPressed = false;
 
 /**********************************************************
@@ -210,6 +212,11 @@ void unfold_buffer(CRGB* buf, uint8_t len, bool even){
   }
 }
 
+/// @brief Runs a specified pattern and performs postprocessing effects on it.
+///
+/// @param p The pattern to run.
+/// @param buf The buffer to read/write to/from.
+/// @param len How many pixels this pattern can run on.
 void process_pattern(Pattern_Data * p, Strip_Buffer * buf, uint8_t len){
 
   // Pull the current postprocessing effects from the struct integer.
@@ -238,7 +245,6 @@ void process_pattern(Pattern_Data * p, Strip_Buffer * buf, uint8_t len){
   if(is_mirrored) 
     unfold_buffer(buf->leds, processed_len, (len == processed_len * 2));
 }
-
 
 /// @brief  Runs the strip splitting LED strip mode
 ///
