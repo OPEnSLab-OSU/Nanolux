@@ -147,19 +147,18 @@ Functions</h2></td></tr>
 <tr class="separator:a246034a20f2f570fe86ae69fd22b69e1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad3f3ddd6424eb42b167daf9b2ee0e1e9" id="r_ad3f3ddd6424eb42b167daf9b2ee0e1e9"><td class="memItemLeft" align="right" valign="top"><a id="ad3f3ddd6424eb42b167daf9b2ee0e1e9" name="ad3f3ddd6424eb42b167daf9b2ee0e1e9"></a>
 void IRAM_ATTR&#160;</td><td class="memItemRight" valign="bottom"><b>readEncoderISR</b> ()</td></tr>
+<tr class="memdesc:ad3f3ddd6424eb42b167daf9b2ee0e1e9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Processes the interrupt for the rotary encoder on 2.0 hardware. <br /></td></tr>
 <tr class="separator:ad3f3ddd6424eb42b167daf9b2ee0e1e9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae2dec6cad4e1b326ac39a3e75de0a582" id="r_ae2dec6cad4e1b326ac39a3e75de0a582"><td class="memItemLeft" align="right" valign="top"><a id="ae2dec6cad4e1b326ac39a3e75de0a582" name="ae2dec6cad4e1b326ac39a3e75de0a582"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>setup_rotary_encoder</b> ()</td></tr>
+<tr class="memdesc:ae2dec6cad4e1b326ac39a3e75de0a582"><td class="mdescLeft">&#160;</td><td class="mdescRight">Performs initial setup for the rotary encoder. <br /></td></tr>
 <tr class="separator:ae2dec6cad4e1b326ac39a3e75de0a582"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4074e6d034321489078b74a8c6f6eb70" id="r_a4074e6d034321489078b74a8c6f6eb70"><td class="memItemLeft" align="right" valign="top"><a id="a4074e6d034321489078b74a8c6f6eb70" name="a4074e6d034321489078b74a8c6f6eb70"></a>
-int&#160;</td><td class="memItemRight" valign="bottom"><b>calculate_pattern_index</b> ()</td></tr>
+<tr class="memitem:a4074e6d034321489078b74a8c6f6eb70" id="r_a4074e6d034321489078b74a8c6f6eb70"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a4074e6d034321489078b74a8c6f6eb70">calculate_pattern_index</a> ()</td></tr>
+<tr class="memdesc:a4074e6d034321489078b74a8c6f6eb70"><td class="mdescLeft">&#160;</td><td class="mdescRight">Calculates the pattern index the rotary encoder currently corresponds to.  <br /></td></tr>
 <tr class="separator:a4074e6d034321489078b74a8c6f6eb70"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa08f168e49940d21fddfadb4bb00a10f" id="r_aa08f168e49940d21fddfadb4bb00a10f"><td class="memItemLeft" align="right" valign="top"><a id="aa08f168e49940d21fddfadb4bb00a10f" name="aa08f168e49940d21fddfadb4bb00a10f"></a>
-bool&#160;</td><td class="memItemRight" valign="bottom"><b>isEncoderButtonPressed</b> ()</td></tr>
+<tr class="memitem:aa08f168e49940d21fddfadb4bb00a10f" id="r_aa08f168e49940d21fddfadb4bb00a10f"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa08f168e49940d21fddfadb4bb00a10f">isEncoderButtonPressed</a> ()</td></tr>
+<tr class="memdesc:aa08f168e49940d21fddfadb4bb00a10f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the current state of the rotary encoder button.  <br /></td></tr>
 <tr class="separator:aa08f168e49940d21fddfadb4bb00a10f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad9f5c25c0ea3cb4a1e18ae64d21d2ca2" id="r_ad9f5c25c0ea3cb4a1e18ae64d21d2ca2"><td class="memItemLeft" align="right" valign="top"><a id="ad9f5c25c0ea3cb4a1e18ae64d21d2ca2" name="ad9f5c25c0ea3cb4a1e18ae64d21d2ca2"></a>
-bool&#160;</td><td class="memItemRight" valign="bottom"><b>isEncoderBtnDown</b> ()</td></tr>
-<tr class="separator:ad9f5c25c0ea3cb4a1e18ae64d21d2ca2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="var-members" name="var-members"></a>
 Variables</h2></td></tr>
@@ -182,8 +181,8 @@ long&#160;</td><td class="memItemRight" valign="bottom"><b>loop_start_time</b> =
 long&#160;</td><td class="memItemRight" valign="bottom"><b>loop_end_time</b> = 0</td></tr>
 <tr class="memdesc:af9fb16ea00d772a32c3062311335d3ef"><td class="mdescLeft">&#160;</td><td class="mdescRight">Holds the expected end time of the current program loop. <br /></td></tr>
 <tr class="separator:af9fb16ea00d772a32c3062311335d3ef"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae4c0a1f49c789cbce567eab5beb5abe8" id="r_ae4c0a1f49c789cbce567eab5beb5abe8"><td class="memItemLeft" align="right" valign="top"><a id="ae4c0a1f49c789cbce567eab5beb5abe8" name="ae4c0a1f49c789cbce567eab5beb5abe8"></a>
-AiEsp32RotaryEncoder&#160;</td><td class="memItemRight" valign="bottom"><b>rotaryEncoder</b> = AiEsp32RotaryEncoder(ROTARY_ENCODER_A_PIN, ROTARY_ENCODER_B_PIN, ROTARY_ENCODER_BUTTON_PIN, ROTARY_ENCODER_VCC_PIN, ROTARY_ENCODER_STEPS)</td></tr>
+<tr class="memitem:ae4c0a1f49c789cbce567eab5beb5abe8" id="r_ae4c0a1f49c789cbce567eab5beb5abe8"><td class="memItemLeft" align="right" valign="top">AiEsp32RotaryEncoder&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae4c0a1f49c789cbce567eab5beb5abe8">rotaryEncoder</a></td></tr>
+<tr class="memdesc:ae4c0a1f49c789cbce567eab5beb5abe8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Defines the rotary encoder object for the 2.0 boards.  <br /></td></tr>
 <tr class="separator:ae4c0a1f49c789cbce567eab5beb5abe8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
@@ -268,6 +267,46 @@ AiEsp32RotaryEncoder&#160;</td><td class="memItemRight" valign="bottom"><b>rotar
 
 <p>A debounced interrupt to set the button state. </p>
 <p>If the device button is pressed, wait 5 milliseconds. If the button pin still reads a press, set button_pressed to True. </p>
+
+</div>
+</div>
+<a id="a4074e6d034321489078b74a8c6f6eb70" name="a4074e6d034321489078b74a8c6f6eb70"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4074e6d034321489078b74a8c6f6eb70">&#9670;&#160;</a></span>calculate_pattern_index()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int calculate_pattern_index </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Calculates the pattern index the rotary encoder currently corresponds to. </p>
+<dl class="section return"><dt>Returns</dt><dd>The pattern index the encoder is set to. </dd></dl>
+
+</div>
+</div>
+<a id="aa08f168e49940d21fddfadb4bb00a10f" name="aa08f168e49940d21fddfadb4bb00a10f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa08f168e49940d21fddfadb4bb00a10f">&#9670;&#160;</a></span>isEncoderButtonPressed()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool isEncoderButtonPressed </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Returns the current state of the rotary encoder button. </p>
+<dl class="section return"><dt>Returns</dt><dd>True if pressed, false if not. </dd></dl>
 
 </div>
 </div>
@@ -508,6 +547,29 @@ AiEsp32RotaryEncoder&#160;</td><td class="memItemRight" valign="bottom"><b>rotar
 
 <p>The currently-loaded device config. </p>
 <p>The current config of the device, defined in <a class="el" href="main_8ino.html">main.ino</a>. Used to check if serial printing is allowed. </p>
+
+</div>
+</div>
+<a id="ae4c0a1f49c789cbce567eab5beb5abe8" name="ae4c0a1f49c789cbce567eab5beb5abe8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae4c0a1f49c789cbce567eab5beb5abe8">&#9670;&#160;</a></span>rotaryEncoder</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">AiEsp32RotaryEncoder rotaryEncoder</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<b>Initial value:</b><div class="fragment"><div class="line">= AiEsp32RotaryEncoder(</div>
+<div class="line">  ROTARY_ENCODER_A_PIN,</div>
+<div class="line">  ROTARY_ENCODER_B_PIN,</div>
+<div class="line">  ROTARY_ENCODER_BUTTON_PIN,</div>
+<div class="line">  ROTARY_ENCODER_VCC_PIN,</div>
+<div class="line">  ROTARY_ENCODER_STEPS</div>
+<div class="line">)</div>
+</div><!-- fragment -->
+<p>Defines the rotary encoder object for the 2.0 boards. </p>
 
 </div>
 </div>
