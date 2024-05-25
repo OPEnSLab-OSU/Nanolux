@@ -1,0 +1,110 @@
+*{
+    font-family :system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    color:white;
+    text-align:center;
+}
+
+.nav {
+    font-size : 30px;
+    min-width:200px;
+    max-width:200px;
+    text-align:center;
+    margin:auto;
+}
+
+.link {
+    text-decoration: none;
+}
+
+.image{
+    max-width:400px;
+    display: block;
+    border-radius: 20px 20px 20px 20px;
+}
+
+.logo{
+    margin-left: auto;
+    margin-right: auto;
+    max-width:250px;
+}
+
+.photo{
+    max-width:300px;
+    display: block;
+    border-radius: 20px 20px 20px 20px;
+    padding: 10px;
+}
+
+.center {
+    margin-left: auto;
+    margin-right: auto;
+    max-width:500px;
+}
+
+.page_header {
+    font-size : 80px;
+    white-space: nowrap;
+}
+
+.name_text {
+    font-size : 45px;
+    white-space: nowrap;
+    text-align: left;
+    line-height: 0px
+}
+
+.email_text {
+    font-size : 30px;
+    white-space: nowrap;
+    text-align: left;
+    vertical-align: top;
+    line-height: 0px
+}
+
+.section_header {
+    font-size :50px;
+    min-width:500px;
+    max-width:500px;
+    text-align:center;
+    margin:auto;
+    font-style:italic
+}
+
+.section_body {
+    font-size : 35px;
+    min-width:500px;
+    max-width:500px;
+    text-align:left;
+    margin:auto;
+    font-weight:lighter;
+}
+
+body {
+    background-color: black;
+    text-align: center;
+}
+
+.container {
+    display: flex;
+    align-items: center;
+    justify-content: center
+}
+
+.white_button, .red_button{
+    border-radius: 40px 40px 40px 40px;
+    padding: 20px;
+    width: 500px;
+    text-align: center;
+    color:black;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 35px;
+}
+
+.white_button {
+    background: #ABB8C3; 
+}
+
+.red_button {
+    background: #C30443;
+}
