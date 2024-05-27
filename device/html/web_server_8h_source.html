@@ -751,10 +751,10 @@ $(function(){initNavTree('web_server_8h_source.html',''); initResizable(true); }
 <div class="line"><a id="l00639" name="l00639"></a><span class="lineno">  639</span>    <span class="comment">// AP mode is always active.</span></div>
 <div class="line"><a id="l00640" name="l00640"></a><span class="lineno">  640</span>    WiFi.mode(WIFI_MODE_APSTA);</div>
 <div class="line"><a id="l00641" name="l00641"></a><span class="lineno">  641</span>    <span class="keywordflow">if</span>(password[0] == <span class="charliteral">&#39;\0&#39;</span>){</div>
-<div class="line"><a id="l00642" name="l00642"></a><span class="lineno">  642</span>      WiFi.softAP(<span class="stringliteral">&quot;AUDIOLUX UNSECURED&quot;</span>);</div>
+<div class="line"><a id="l00642" name="l00642"></a><span class="lineno">  642</span>      WiFi.softAP(<span class="stringliteral">&quot;AudioluxUnsecured&quot;</span>);</div>
 <div class="line"><a id="l00643" name="l00643"></a><span class="lineno">  643</span>      ALWAYS_PRINTF(<span class="stringliteral">&quot;WIFI IS UNSECURED!!!\n&quot;</span>);</div>
 <div class="line"><a id="l00644" name="l00644"></a><span class="lineno">  644</span>    }<span class="keywordflow">else</span>{</div>
-<div class="line"><a id="l00645" name="l00645"></a><span class="lineno">  645</span>      WiFi.softAP(ap_ssid, password);</div>
+<div class="line"><a id="l00645" name="l00645"></a><span class="lineno">  645</span>      WiFi.softAP(hostname, password);</div>
 <div class="line"><a id="l00646" name="l00646"></a><span class="lineno">  646</span>    }</div>
 <div class="line"><a id="l00647" name="l00647"></a><span class="lineno">  647</span>    </div>
 <div class="line"><a id="l00648" name="l00648"></a><span class="lineno">  648</span>    delay(1000);</div>
