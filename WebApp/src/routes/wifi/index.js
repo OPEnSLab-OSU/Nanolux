@@ -198,11 +198,6 @@ const Wifi = () => {
                         onTextCommit={handleLocalPasswordChange}
                     />
                 </div>
-                <div className={style.centeredContainer}>
-                    <div className={style.fqdn}>
-                        Once it joins a WiFi, AudioLux can be found in the network with this name: {fqdn}
-                    </div>
-                </div>
             </div>
             <div className={style.settingsControl}>
                 <div className={style.centeredContainer}>

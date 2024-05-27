@@ -639,10 +639,10 @@ inline void setup_networking(const char * password)
     // AP mode is always active.
     WiFi.mode(WIFI_MODE_APSTA);
     if(password[0] == '\0'){
-      WiFi.softAP("AUDIOLUX UNSECURED");
+      WiFi.softAP("AudioluxUnsecured");
       ALWAYS_PRINTF("WIFI IS UNSECURED!!!\n");
     }else{
-      WiFi.softAP(ap_ssid, password);
+      WiFi.softAP(hostname, password);
     }
     
     delay(1000);
