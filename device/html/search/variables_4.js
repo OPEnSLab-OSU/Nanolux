@@ -1,5 +1,11 @@
 var searchData=
 [
-  ['fft_0',['FFT',['../core__analysis_8cpp.html#a06dc8755eca604de4444291b9dfe17a0',1,'FFT:&#160;main.ino'],['../main_8ino.html#a06dc8755eca604de4444291b9dfe17a0',1,'FFT:&#160;main.ino'],['../patterns_8cpp.html#a06dc8755eca604de4444291b9dfe17a0',1,'FFT:&#160;main.ino']]],
-  ['fhue_1',['fHue',['../main_8ino.html#a7c08d24e884c11de984d2043cd9e0243',1,'fHue:&#160;main.ino'],['../patterns_8cpp.html#a7c08d24e884c11de984d2043cd9e0243',1,'fHue:&#160;main.ino']]]
+  ['f0arr_0',['F0arr',['../ext__analysis_8cpp.html#aed80e8549e5df80f45f433696aa8ccf0',1,'F0arr:&#160;globals.h'],['../globals_8h.html#aed80e8549e5df80f45f433696aa8ccf0',1,'F0arr:&#160;globals.h']]],
+  ['f1arr_1',['F1arr',['../ext__analysis_8cpp.html#a071f33a586431ab7a783a9c3148071a3',1,'F1arr:&#160;globals.h'],['../globals_8h.html#a071f33a586431ab7a783a9c3148071a3',1,'F1arr:&#160;globals.h']]],
+  ['f2arr_2',['F2arr',['../ext__analysis_8cpp.html#a4d76430f67e939749a71df0888d5083d',1,'F2arr:&#160;globals.h'],['../globals_8h.html#a4d76430f67e939749a71df0888d5083d',1,'F2arr:&#160;globals.h']]],
+  ['fbs_3',['fbs',['../ext__analysis_8cpp.html#a5fe94530331e28002a3025747468de0a',1,'fbs:&#160;globals.h'],['../globals_8h.html#a5fe94530331e28002a3025747468de0a',1,'fbs:&#160;globals.h'],['../patterns_8cpp.html#a5fe94530331e28002a3025747468de0a',1,'fbs:&#160;globals.h']]],
+  ['fft_4',['FFT',['../core__analysis_8cpp.html#a06dc8755eca604de4444291b9dfe17a0',1,'FFT:&#160;main.ino'],['../main_8ino.html#a06dc8755eca604de4444291b9dfe17a0',1,'FFT:&#160;main.ino'],['../patterns_8cpp.html#a06dc8755eca604de4444291b9dfe17a0',1,'FFT:&#160;main.ino']]],
+  ['fhue_5',['fHue',['../main_8ino.html#a7c08d24e884c11de984d2043cd9e0243',1,'fHue:&#160;main.ino'],['../patterns_8cpp.html#a7c08d24e884c11de984d2043cd9e0243',1,'fHue:&#160;main.ino']]],
+  ['formant_5fpose_6',['formant_pose',['../ext__analysis_8cpp.html#ad97af23d5d7d6cadcf34380f9b365ca1',1,'formant_pose:&#160;globals.h'],['../globals_8h.html#ad97af23d5d7d6cadcf34380f9b365ca1',1,'formant_pose:&#160;globals.h']]],
+  ['formants_7',['formants',['../ext__analysis_8cpp.html#afb4968a692d198acc4488d90bd1ecde0',1,'formants:&#160;globals.h'],['../globals_8h.html#afb4968a692d198acc4488d90bd1ecde0',1,'formants:&#160;globals.h'],['../patterns_8cpp.html#afb4968a692d198acc4488d90bd1ecde0',1,'formants:&#160;globals.h']]]
 ];

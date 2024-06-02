@@ -118,22 +118,6 @@ Functions</h2></td></tr>
 <tr class="memitem:a5fc0a70d11594cbb70b3d21e3a36d5b1" id="r_a5fc0a70d11594cbb70b3d21e3a36d5b1"><td class="memItemLeft" align="right" valign="top">double *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a5fc0a70d11594cbb70b3d21e3a36d5b1">band_split_bounce</a> (int len)</td></tr>
 <tr class="memdesc:a5fc0a70d11594cbb70b3d21e3a36d5b1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Outputs the average volume of 5 buckets given a sample length.  <br /></td></tr>
 <tr class="separator:a5fc0a70d11594cbb70b3d21e3a36d5b1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac2bdd3c29416e939fec838991af5ef34" id="r_ac2bdd3c29416e939fec838991af5ef34"><td class="memItemLeft" align="right" valign="top"><a id="ac2bdd3c29416e939fec838991af5ef34" name="ac2bdd3c29416e939fec838991af5ef34"></a>
-double *&#160;</td><td class="memItemRight" valign="bottom"><b>band_sample_bounce</b> ()</td></tr>
-<tr class="separator:ac2bdd3c29416e939fec838991af5ef34"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a388ed2cecd51ba2fd59fddf96760724a" id="r_a388ed2cecd51ba2fd59fddf96760724a"><td class="memItemLeft" align="right" valign="top"><a id="a388ed2cecd51ba2fd59fddf96760724a" name="a388ed2cecd51ba2fd59fddf96760724a"></a>
-bool&#160;</td><td class="memItemRight" valign="bottom"><b>nvp</b> ()</td></tr>
-<tr class="memdesc:a388ed2cecd51ba2fd59fddf96760724a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a boolean signifying if the audio signal is noisy or periodic. <br /></td></tr>
-<tr class="separator:a388ed2cecd51ba2fd59fddf96760724a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a102f784f3f0d64734207fa40173127b7" id="r_a102f784f3f0d64734207fa40173127b7"><td class="memItemLeft" align="right" valign="top">int *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a102f784f3f0d64734207fa40173127b7">drum_identify</a> ()</td></tr>
-<tr class="memdesc:a102f784f3f0d64734207fa40173127b7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns an integer array containing what type of drums the Nanolux device believes it is hearing.  <br /></td></tr>
-<tr class="separator:a102f784f3f0d64734207fa40173127b7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad7d75c044684807519af93ccb1fc64e5" id="r_ad7d75c044684807519af93ccb1fc64e5"><td class="memItemLeft" align="right" valign="top"><a id="ad7d75c044684807519af93ccb1fc64e5" name="ad7d75c044684807519af93ccb1fc64e5"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>update_noise</b> ()</td></tr>
-<tr class="separator:ad7d75c044684807519af93ccb1fc64e5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a24626912608bde3574144325d0662e1b" id="r_a24626912608bde3574144325d0662e1b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a24626912608bde3574144325d0662e1b">update_drums</a> ()</td></tr>
-<tr class="memdesc:a24626912608bde3574144325d0662e1b"><td class="mdescLeft">&#160;</td><td class="mdescRight">An update method that updates the global drums array.  <br /></td></tr>
-<tr class="separator:a24626912608bde3574144325d0662e1b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a00e2741b7431e669a809814028b8f4b7" id="r_a00e2741b7431e669a809814028b8f4b7"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a00e2741b7431e669a809814028b8f4b7">temp_to_array</a> (double *temp, double *arr, int len)</td></tr>
 <tr class="memdesc:a00e2741b7431e669a809814028b8f4b7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Used for moving a temporary pointer into another pointer.  <br /></td></tr>
 <tr class="separator:a00e2741b7431e669a809814028b8f4b7"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -152,55 +136,38 @@ VowelSounds&#160;</td><td class="memItemRight" valign="bottom"><b>vowel_detectio
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="var-members" name="var-members"></a>
 Variables</h2></td></tr>
-<tr class="memitem:aa7fd5e56ed5028cc63702f999df5cbfd" id="r_aa7fd5e56ed5028cc63702f999df5cbfd"><td class="memItemLeft" align="right" valign="top"><a id="aa7fd5e56ed5028cc63702f999df5cbfd" name="aa7fd5e56ed5028cc63702f999df5cbfd"></a>
-double&#160;</td><td class="memItemRight" valign="bottom"><b>peak</b></td></tr>
-<tr class="memdesc:aa7fd5e56ed5028cc63702f999df5cbfd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Contains the peak frequency detected by the FFT. <br /></td></tr>
-<tr class="separator:aa7fd5e56ed5028cc63702f999df5cbfd"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a57f2c8816172cdced570b65197701a22" id="r_a57f2c8816172cdced570b65197701a22"><td class="memItemLeft" align="right" valign="top"><a id="a57f2c8816172cdced570b65197701a22" name="a57f2c8816172cdced570b65197701a22"></a>
-double&#160;</td><td class="memItemRight" valign="bottom"><b>vReal</b> [SAMPLES]</td></tr>
-<tr class="separator:a57f2c8816172cdced570b65197701a22"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8eb3ef4958b442309868039dbab6f0bf" id="r_a8eb3ef4958b442309868039dbab6f0bf"><td class="memItemLeft" align="right" valign="top"><a id="a8eb3ef4958b442309868039dbab6f0bf" name="a8eb3ef4958b442309868039dbab6f0bf"></a>
-double&#160;</td><td class="memItemRight" valign="bottom"><b>volume</b></td></tr>
-<tr class="memdesc:a8eb3ef4958b442309868039dbab6f0bf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Contains the current volume detected by the FFT. <br /></td></tr>
+<tr class="memitem:a8eb3ef4958b442309868039dbab6f0bf" id="r_a8eb3ef4958b442309868039dbab6f0bf"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a8eb3ef4958b442309868039dbab6f0bf">volume</a></td></tr>
+<tr class="memdesc:a8eb3ef4958b442309868039dbab6f0bf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Global variable used to access the current volume.  <br /></td></tr>
 <tr class="separator:a8eb3ef4958b442309868039dbab6f0bf"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa7fd5e56ed5028cc63702f999df5cbfd" id="r_aa7fd5e56ed5028cc63702f999df5cbfd"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa7fd5e56ed5028cc63702f999df5cbfd">peak</a></td></tr>
+<tr class="memdesc:aa7fd5e56ed5028cc63702f999df5cbfd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Global variable used to store preak audio frequency.  <br /></td></tr>
+<tr class="separator:aa7fd5e56ed5028cc63702f999df5cbfd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a57f2c8816172cdced570b65197701a22" id="r_a57f2c8816172cdced570b65197701a22"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a57f2c8816172cdced570b65197701a22">vReal</a> [SAMPLES]</td></tr>
+<tr class="separator:a57f2c8816172cdced570b65197701a22"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aed80e8549e5df80f45f433696aa8ccf0" id="r_aed80e8549e5df80f45f433696aa8ccf0"><td class="memItemLeft" align="right" valign="top"><a id="aed80e8549e5df80f45f433696aa8ccf0" name="aed80e8549e5df80f45f433696aa8ccf0"></a>
 int&#160;</td><td class="memItemRight" valign="bottom"><b>F0arr</b> [20]</td></tr>
+<tr class="memdesc:aed80e8549e5df80f45f433696aa8ccf0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Used for smoothing (old) formant processing. <br /></td></tr>
 <tr class="separator:aed80e8549e5df80f45f433696aa8ccf0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a071f33a586431ab7a783a9c3148071a3" id="r_a071f33a586431ab7a783a9c3148071a3"><td class="memItemLeft" align="right" valign="top"><a id="a071f33a586431ab7a783a9c3148071a3" name="a071f33a586431ab7a783a9c3148071a3"></a>
 int&#160;</td><td class="memItemRight" valign="bottom"><b>F1arr</b> [20]</td></tr>
+<tr class="memdesc:a071f33a586431ab7a783a9c3148071a3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Used for smoothing (old) formant processing. <br /></td></tr>
 <tr class="separator:a071f33a586431ab7a783a9c3148071a3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4d76430f67e939749a71df0888d5083d" id="r_a4d76430f67e939749a71df0888d5083d"><td class="memItemLeft" align="right" valign="top"><a id="a4d76430f67e939749a71df0888d5083d" name="a4d76430f67e939749a71df0888d5083d"></a>
 int&#160;</td><td class="memItemRight" valign="bottom"><b>F2arr</b> [20]</td></tr>
+<tr class="memdesc:a4d76430f67e939749a71df0888d5083d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Used for smoothing (old) formant processing. <br /></td></tr>
 <tr class="separator:a4d76430f67e939749a71df0888d5083d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad97af23d5d7d6cadcf34380f9b365ca1" id="r_ad97af23d5d7d6cadcf34380f9b365ca1"><td class="memItemLeft" align="right" valign="top"><a id="ad97af23d5d7d6cadcf34380f9b365ca1" name="ad97af23d5d7d6cadcf34380f9b365ca1"></a>
 int&#160;</td><td class="memItemRight" valign="bottom"><b>formant_pose</b></td></tr>
+<tr class="memdesc:ad97af23d5d7d6cadcf34380f9b365ca1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Used for smoothing (old) formant processing. <br /></td></tr>
 <tr class="separator:ad97af23d5d7d6cadcf34380f9b365ca1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a950e05dd204e3f6bbfb9ec056c33b75b" id="r_a950e05dd204e3f6bbfb9ec056c33b75b"><td class="memItemLeft" align="right" valign="top"><a id="a950e05dd204e3f6bbfb9ec056c33b75b" name="a950e05dd204e3f6bbfb9ec056c33b75b"></a>
-unsigned long&#160;</td><td class="memItemRight" valign="bottom"><b>myTime</b></td></tr>
-<tr class="separator:a950e05dd204e3f6bbfb9ec056c33b75b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8ac487e4516fdbf32d27b53465cbf385" id="r_a8ac487e4516fdbf32d27b53465cbf385"><td class="memItemLeft" align="right" valign="top"><a id="a8ac487e4516fdbf32d27b53465cbf385" name="a8ac487e4516fdbf32d27b53465cbf385"></a>
-unsigned long&#160;</td><td class="memItemRight" valign="bottom"><b>checkTime</b></td></tr>
-<tr class="memdesc:a8ac487e4516fdbf32d27b53465cbf385"><td class="mdescLeft">&#160;</td><td class="mdescRight">TODO: Refactor and move. <br /></td></tr>
-<tr class="separator:a8ac487e4516fdbf32d27b53465cbf385"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a419be24840f21c24ca0220c041efa291" id="r_a419be24840f21c24ca0220c041efa291"><td class="memItemLeft" align="right" valign="top"><a id="a419be24840f21c24ca0220c041efa291" name="a419be24840f21c24ca0220c041efa291"></a>
-double&#160;</td><td class="memItemRight" valign="bottom"><b>checkVol</b></td></tr>
-<tr class="memdesc:a419be24840f21c24ca0220c041efa291"><td class="mdescLeft">&#160;</td><td class="mdescRight">TODO: Refactor and move. <br /></td></tr>
-<tr class="separator:a419be24840f21c24ca0220c041efa291"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afb4968a692d198acc4488d90bd1ecde0" id="r_afb4968a692d198acc4488d90bd1ecde0"><td class="memItemLeft" align="right" valign="top"><a id="afb4968a692d198acc4488d90bd1ecde0" name="afb4968a692d198acc4488d90bd1ecde0"></a>
 double&#160;</td><td class="memItemRight" valign="bottom"><b>formants</b> [3]</td></tr>
+<tr class="memdesc:afb4968a692d198acc4488d90bd1ecde0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Global formant array, used for accessing. <br /></td></tr>
 <tr class="separator:afb4968a692d198acc4488d90bd1ecde0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af3ee029ba956f68f3e358422a4aeb5e8" id="r_af3ee029ba956f68f3e358422a4aeb5e8"><td class="memItemLeft" align="right" valign="top"><a id="af3ee029ba956f68f3e358422a4aeb5e8" name="af3ee029ba956f68f3e358422a4aeb5e8"></a>
-bool&#160;</td><td class="memItemRight" valign="bottom"><b>noise</b></td></tr>
-<tr class="separator:af3ee029ba956f68f3e358422a4aeb5e8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a325927a7d1d59cec68c8bb5982abd0c6" id="r_a325927a7d1d59cec68c8bb5982abd0c6"><td class="memItemLeft" align="right" valign="top"><a id="a325927a7d1d59cec68c8bb5982abd0c6" name="a325927a7d1d59cec68c8bb5982abd0c6"></a>
-bool&#160;</td><td class="memItemRight" valign="bottom"><b>drums</b> [3]</td></tr>
+<tr class="memitem:a325927a7d1d59cec68c8bb5982abd0c6" id="r_a325927a7d1d59cec68c8bb5982abd0c6"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a325927a7d1d59cec68c8bb5982abd0c6">drums</a> [3]</td></tr>
 <tr class="separator:a325927a7d1d59cec68c8bb5982abd0c6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5fe94530331e28002a3025747468de0a" id="r_a5fe94530331e28002a3025747468de0a"><td class="memItemLeft" align="right" valign="top"><a id="a5fe94530331e28002a3025747468de0a" name="a5fe94530331e28002a3025747468de0a"></a>
-double&#160;</td><td class="memItemRight" valign="bottom"><b>fbs</b> [5]</td></tr>
+<tr class="memitem:a5fe94530331e28002a3025747468de0a" id="r_a5fe94530331e28002a3025747468de0a"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a5fe94530331e28002a3025747468de0a">fbs</a> [5]</td></tr>
 <tr class="separator:a5fe94530331e28002a3025747468de0a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3c8b492f45bcc8332e320e358d4988a6" id="r_a3c8b492f45bcc8332e320e358d4988a6"><td class="memItemLeft" align="right" valign="top"><a id="a3c8b492f45bcc8332e320e358d4988a6" name="a3c8b492f45bcc8332e320e358d4988a6"></a>
-double&#160;</td><td class="memItemRight" valign="bottom"><b>fss</b> [5]</td></tr>
-<tr class="separator:a3c8b492f45bcc8332e320e358d4988a6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>This file's functions perform advanced audio processing.</p>
@@ -253,26 +220,6 @@ double&#160;</td><td class="memItemRight" valign="bottom"><b>fss</b> [5]</td></t
 
 </div>
 </div>
-<a id="a102f784f3f0d64734207fa40173127b7" name="a102f784f3f0d64734207fa40173127b7"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a102f784f3f0d64734207fa40173127b7">&#9670;&#160;</a></span>drum_identify()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">int * drum_identify </td>
-          <td>(</td>
-          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Returns an integer array containing what type of drums the Nanolux device believes it is hearing. </p>
-<p>drumsArr[0] = kick; drumsArr[1] = snare; drumsArr[2] = cymbal; </p>
-
-</div>
-</div>
 <a id="a00e2741b7431e669a809814028b8f4b7" name="a00e2741b7431e669a809814028b8f4b7"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a00e2741b7431e669a809814028b8f4b7">&#9670;&#160;</a></span>temp_to_array()</h2>
 
@@ -311,23 +258,123 @@ double&#160;</td><td class="memItemRight" valign="bottom"><b>fss</b> [5]</td></t
 
 </div>
 </div>
-<a id="a24626912608bde3574144325d0662e1b" name="a24626912608bde3574144325d0662e1b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a24626912608bde3574144325d0662e1b">&#9670;&#160;</a></span>update_drums()</h2>
+<h2 class="groupheader">Variable Documentation</h2>
+<a id="a325927a7d1d59cec68c8bb5982abd0c6" name="a325927a7d1d59cec68c8bb5982abd0c6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a325927a7d1d59cec68c8bb5982abd0c6">&#9670;&#160;</a></span>drums</h2>
 
 <div class="memitem">
 <div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">void update_drums </td>
-          <td>(</td>
-          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
-          <td></td>
+          <td class="memname">bool drums[3]</td>
         </tr>
       </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">extern</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Global drums array that stores whether a KICK, SNARE, or CYMBAL is happening in each element of the array </p>
+
+</div>
+</div>
+<a id="a5fe94530331e28002a3025747468de0a" name="a5fe94530331e28002a3025747468de0a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5fe94530331e28002a3025747468de0a">&#9670;&#160;</a></span>fbs</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">double fbs[5]</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">extern</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Global FIVE BAND SPLIT which stores changing bands based on raw frequencies </p>
+
+</div>
+</div>
+<a id="aa7fd5e56ed5028cc63702f999df5cbfd" name="aa7fd5e56ed5028cc63702f999df5cbfd"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa7fd5e56ed5028cc63702f999df5cbfd">&#9670;&#160;</a></span>peak</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">double peak</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">extern</span></span>  </td>
+  </tr>
+</table>
 </div><div class="memdoc">
 
-<p>An update method that updates the global drums array. </p>
-<p>Also an example of how to call and use the audio functions if not using global variables. </p>
+<p>Global variable used to store preak audio frequency. </p>
+<p>Global variable used to store preak audio frequency. </p>
+
+</div>
+</div>
+<a id="a8eb3ef4958b442309868039dbab6f0bf" name="a8eb3ef4958b442309868039dbab6f0bf"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8eb3ef4958b442309868039dbab6f0bf">&#9670;&#160;</a></span>volume</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">double volume</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">extern</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Global variable used to access the current volume. </p>
+<p>Global variable used to access the current volume. </p>
+
+</div>
+</div>
+<a id="a57f2c8816172cdced570b65197701a22" name="a57f2c8816172cdced570b65197701a22"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a57f2c8816172cdced570b65197701a22">&#9670;&#160;</a></span>vReal</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">double vReal[SAMPLES]</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">extern</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Array to store both sampled and FFT'ed audio. Processing is done in place. </p>
 
 </div>
 </div>

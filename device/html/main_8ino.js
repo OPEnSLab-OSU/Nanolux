@@ -14,8 +14,6 @@ var main_8ino =
     [ "update_hardware", "main_8ino.html#a6bde7ab64ea73378c7c819506def07f0", null ],
     [ "update_web_server", "main_8ino.html#a2804eef424e6a49f1693b768100ccc20", null ],
     [ "button_pressed", "main_8ino.html#af23a0eb11ff9589330539e6b763badc8", null ],
-    [ "checkTime", "main_8ino.html#a8ac487e4516fdbf32d27b53465cbf385", null ],
-    [ "checkVol", "main_8ino.html#a419be24840f21c24ca0220c041efa291", null ],
     [ "config", "main_8ino.html#a771cac207619504c2bd44a4392428a04", null ],
     [ "FFT", "main_8ino.html#a06dc8755eca604de4444291b9dfe17a0", null ],
     [ "fHue", "main_8ino.html#a7c08d24e884c11de984d2043cd9e0243", null ],

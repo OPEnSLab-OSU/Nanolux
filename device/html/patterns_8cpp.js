@@ -16,10 +16,17 @@ var patterns_8cpp =
     [ "tug_of_war", "patterns_8cpp.html#a20640e7d60033be2d768196de0dc1853", null ],
     [ "button_pressed", "patterns_8cpp.html#af23a0eb11ff9589330539e6b763badc8", null ],
     [ "config", "patterns_8cpp.html#a771cac207619504c2bd44a4392428a04", null ],
+    [ "delt", "patterns_8cpp.html#abde44bf7f909ccc0536377ee12ad046f", null ],
+    [ "fbs", "patterns_8cpp.html#a5fe94530331e28002a3025747468de0a", null ],
     [ "FFT", "patterns_8cpp.html#a06dc8755eca604de4444291b9dfe17a0", null ],
     [ "fHue", "patterns_8cpp.html#a7c08d24e884c11de984d2043cd9e0243", null ],
+    [ "formants", "patterns_8cpp.html#afb4968a692d198acc4488d90bd1ecde0", null ],
     [ "manual_control_enabled", "patterns_8cpp.html#a2cc0e9634c531780594a5d10445e6458", null ],
+    [ "maxDelt", "patterns_8cpp.html#a66b3a012e977e080be29a2715d01047f", null ],
     [ "peak", "patterns_8cpp.html#aa7fd5e56ed5028cc63702f999df5cbfd", null ],
     [ "vbrightness", "patterns_8cpp.html#a7f0661869175f6745d4a7d291c627709", null ],
-    [ "volume", "patterns_8cpp.html#a8eb3ef4958b442309868039dbab6f0bf", null ]
+    [ "vImag", "patterns_8cpp.html#ac034086d3825bcc85e52bb87eafaffa3", null ],
+    [ "volume", "patterns_8cpp.html#a8eb3ef4958b442309868039dbab6f0bf", null ],
+    [ "vReal", "patterns_8cpp.html#a57f2c8816172cdced570b65197701a22", null ],
+    [ "vRealHist", "patterns_8cpp.html#ac8b0b4754c9725c69948f347ec5d7edf", null ]
 ];

@@ -103,7 +103,7 @@ $(function(){initNavTree('web_server_8h_source.html',''); initResizable(true); }
 <div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="preprocessor">#pragma once</span></div>
 <div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span> </div>
 <div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span><span class="preprocessor">#include &lt;ESPmDNS.h&gt;</span></div>
-<div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span><span class="preprocessor">#include &quot;LITTLEFS.h&quot;</span></div>
+<div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span><span class="preprocessor">#include &lt;LittleFS.h&gt;</span></div>
 <div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span><span class="preprocessor">#include &quot;BluetoothSerial.h&quot;</span></div>
 <div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span><span class="preprocessor">#include &lt;WiFi.h&gt;</span></div>
 <div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span><span class="preprocessor">#include &lt;AsyncTCP.h&gt;</span></div>
@@ -242,7 +242,7 @@ $(function(){initNavTree('web_server_8h_source.html',''); initResizable(true); }
 <div class="line"><a id="l00130" name="l00130"></a><span class="lineno">  130</span><span class="comment"> */</span></div>
 <div class="line"><a id="l00131" name="l00131"></a><span class="lineno">  131</span><span class="keyword">inline</span> <span class="keywordtype">void</span> initialize_file_system() {</div>
 <div class="line"><a id="l00132" name="l00132"></a><span class="lineno">  132</span>    DEBUG_PRINTF(<span class="stringliteral">&quot;Initializing FS...&quot;</span>);</div>
-<div class="line"><a id="l00133" name="l00133"></a><span class="lineno">  133</span>    <span class="keywordflow">if</span> (LITTLEFS.begin()) {</div>
+<div class="line"><a id="l00133" name="l00133"></a><span class="lineno">  133</span>    <span class="keywordflow">if</span> (LittleFS.begin()) {</div>
 <div class="line"><a id="l00134" name="l00134"></a><span class="lineno">  134</span>        DEBUG_PRINTF(<span class="stringliteral">&quot;done.\n&quot;</span>);</div>
 <div class="line"><a id="l00135" name="l00135"></a><span class="lineno">  135</span>    }</div>
 <div class="line"><a id="l00136" name="l00136"></a><span class="lineno">  136</span>    <span class="keywordflow">else</span> {</div>
@@ -262,7 +262,7 @@ $(function(){initNavTree('web_server_8h_source.html',''); initResizable(true); }
 <div class="line"><a id="l00150" name="l00150"></a><span class="lineno">  150</span>    settings[<span class="stringliteral">&quot;wifi&quot;</span>][<span class="stringliteral">&quot;ssid&quot;</span>] = current_wifi.SSID;</div>
 <div class="line"><a id="l00151" name="l00151"></a><span class="lineno">  151</span>    settings[<span class="stringliteral">&quot;wifi&quot;</span>][<span class="stringliteral">&quot;key&quot;</span>] = current_wifi.Key;</div>
 <div class="line"><a id="l00152" name="l00152"></a><span class="lineno">  152</span> </div>
-<div class="line"><a id="l00153" name="l00153"></a><span class="lineno">  153</span>    File saved_settings = LITTLEFS.open(SETTINGS_FILE, <span class="stringliteral">&quot;w&quot;</span>);</div>
+<div class="line"><a id="l00153" name="l00153"></a><span class="lineno">  153</span>    File saved_settings = LittleFS.open(SETTINGS_FILE, <span class="stringliteral">&quot;w&quot;</span>);</div>
 <div class="line"><a id="l00154" name="l00154"></a><span class="lineno">  154</span>    <span class="keywordflow">if</span> (saved_settings) {</div>
 <div class="line"><a id="l00155" name="l00155"></a><span class="lineno">  155</span>        serializeJson(settings, saved_settings);</div>
 <div class="line"><a id="l00156" name="l00156"></a><span class="lineno">  156</span>        DEBUG_PRINTF(<span class="stringliteral">&quot;Saving settings:\n&quot;</span>);</div>
@@ -278,7 +278,7 @@ $(function(){initNavTree('web_server_8h_source.html',''); initResizable(true); }
 <div class="line"><a id="l00166" name="l00166"></a><span class="lineno">  166</span><span class="keyword">inline</span> <span class="keywordtype">void</span> load_settings() {</div>
 <div class="line"><a id="l00167" name="l00167"></a><span class="lineno">  167</span>    DEBUG_PRINTF(<span class="stringliteral">&quot;Checking if settings are available.\n&quot;</span>);</div>
 <div class="line"><a id="l00168" name="l00168"></a><span class="lineno">  168</span> </div>
-<div class="line"><a id="l00169" name="l00169"></a><span class="lineno">  169</span>    File saved_settings = LITTLEFS.open(SETTINGS_FILE, <span class="stringliteral">&quot;r&quot;</span>);</div>
+<div class="line"><a id="l00169" name="l00169"></a><span class="lineno">  169</span>    File saved_settings = LittleFS.open(SETTINGS_FILE, <span class="stringliteral">&quot;r&quot;</span>);</div>
 <div class="line"><a id="l00170" name="l00170"></a><span class="lineno">  170</span>    <span class="keywordflow">if</span> (saved_settings) {</div>
 <div class="line"><a id="l00171" name="l00171"></a><span class="lineno">  171</span>        <span class="keyword">const</span> DeserializationError error = deserializeJson(settings, saved_settings);</div>
 <div class="line"><a id="l00172" name="l00172"></a><span class="lineno">  172</span>        <span class="keywordflow">if</span> (!error) {</div>
@@ -705,7 +705,7 @@ $(function(){initNavTree('web_server_8h_source.html',''); initResizable(true); }
 <div class="line"><a id="l00593" name="l00593"></a><span class="lineno">  593</span>    <span class="comment">// When it starts, it will check this file to know which URL to use to talk</span></div>
 <div class="line"><a id="l00594" name="l00594"></a><span class="lineno">  594</span>    <span class="comment">// back to the server. The reason we need this is that we don&#39;t know which</span></div>
 <div class="line"><a id="l00595" name="l00595"></a><span class="lineno">  595</span>    <span class="comment">// route is available (AP or STA) until runtime.</span></div>
-<div class="line"><a id="l00596" name="l00596"></a><span class="lineno">  596</span>    File saved_url = LITTLEFS.open(URL_FILE, <span class="stringliteral">&quot;w&quot;</span>);</div>
+<div class="line"><a id="l00596" name="l00596"></a><span class="lineno">  596</span>    File saved_url = LittleFS.open(URL_FILE, <span class="stringliteral">&quot;w&quot;</span>);</div>
 <div class="line"><a id="l00597" name="l00597"></a><span class="lineno">  597</span>    <span class="keywordflow">if</span> (saved_url) {</div>
 <div class="line"><a id="l00598" name="l00598"></a><span class="lineno">  598</span>        StaticJsonDocument&lt;192&gt; data;</div>
 <div class="line"><a id="l00599" name="l00599"></a><span class="lineno">  599</span> </div>
@@ -824,7 +824,7 @@ $(function(){initNavTree('web_server_8h_source.html',''); initResizable(true); }
 <div class="line"><a id="l00712" name="l00712"></a><span class="lineno">  712</span> </div>
 <div class="line"><a id="l00713" name="l00713"></a><span class="lineno">  713</span>    <span class="comment">// Register the Web App</span></div>
 <div class="line"><a id="l00714" name="l00714"></a><span class="lineno">  714</span>   DEBUG_PRINTF(<span class="stringliteral">&quot;Registering Web App files.\n&quot;</span>);</div>
-<div class="line"><a id="l00715" name="l00715"></a><span class="lineno">  715</span>    webServer.serveStatic(<span class="stringliteral">&quot;/&quot;</span>, LITTLEFS, <span class="stringliteral">&quot;/&quot;</span>).setDefaultFile(<span class="stringliteral">&quot;index.html&quot;</span>);</div>
+<div class="line"><a id="l00715" name="l00715"></a><span class="lineno">  715</span>    webServer.serveStatic(<span class="stringliteral">&quot;/&quot;</span>, LittleFS, <span class="stringliteral">&quot;/&quot;</span>).setDefaultFile(<span class="stringliteral">&quot;index.html&quot;</span>);</div>
 <div class="line"><a id="l00716" name="l00716"></a><span class="lineno">  716</span>    webServer.onNotFound(handle_unknown_url);</div>
 <div class="line"><a id="l00717" name="l00717"></a><span class="lineno">  717</span> </div>
 <div class="line"><a id="l00718" name="l00718"></a><span class="lineno">  718</span>    <span class="comment">// &quot;Disable&quot; CORS.</span></div>
@@ -833,7 +833,7 @@ $(function(){initNavTree('web_server_8h_source.html',''); initResizable(true); }
 <div class="line"><a id="l00721" name="l00721"></a><span class="lineno">  721</span>    DefaultHeaders::Instance().addHeader(<span class="stringliteral">&quot;Access-Control-Allow-Headers&quot;</span>, <span class="stringliteral">&quot;Content-Type&quot;</span>);</div>
 <div class="line"><a id="l00722" name="l00722"></a><span class="lineno">  722</span>    webServer.begin();</div>
 <div class="line"><a id="l00723" name="l00723"></a><span class="lineno">  723</span>}</div>
-<div class="ttc" id="amain_8ino_html_a771cac207619504c2bd44a4392428a04"><div class="ttname"><a href="main_8ino.html#a771cac207619504c2bd44a4392428a04">config</a></div><div class="ttdeci">Config_Data config</div><div class="ttdoc">The currently-loaded device config.</div><div class="ttdef"><b>Definition</b> main.ino:72</div></div>
+<div class="ttc" id="amain_8ino_html_a771cac207619504c2bd44a4392428a04"><div class="ttname"><a href="main_8ino.html#a771cac207619504c2bd44a4392428a04">config</a></div><div class="ttdeci">Config_Data config</div><div class="ttdoc">The currently-loaded device config.</div><div class="ttdef"><b>Definition</b> main.ino:64</div></div>
 <div class="ttc" id="astruct_a_p_i_get_hook_html"><div class="ttname"><a href="struct_a_p_i_get_hook.html">APIGetHook</a></div><div class="ttdef"><b>Definition</b> webServer.h:112</div></div>
 <div class="ttc" id="astruct_a_p_i_put_hook_html"><div class="ttname"><a href="struct_a_p_i_put_hook.html">APIPutHook</a></div><div class="ttdef"><b>Definition</b> webServer.h:117</div></div>
 <div class="ttc" id="astruct_config___data_html"><div class="ttname"><a href="struct_config___data.html">Config_Data</a></div><div class="ttdoc">A structure holding system configuration data.</div><div class="ttdef"><b>Definition</b> storage.h:66</div></div>
