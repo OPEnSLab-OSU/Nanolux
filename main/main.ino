@@ -18,8 +18,6 @@
 #include "globals.h"
 #include <AiEsp32RotaryEncoder.h>
 
-
-
 FASTLED_USING_NAMESPACE
 
 #define ENABLE_WEB_SERVER
@@ -52,12 +50,6 @@ double volume = 0.;
 
 /// Contains the "base" brightness value, calculated from the current volume.
 uint8_t vbrightness = 0;
-
-/// TODO: Refactor and move.
-unsigned long checkTime;
-
-/// TODO: Refactor and move.
-double checkVol;
 
 /// Updated to "true" when the web server changes significant pattern settings.
 volatile bool pattern_changed = false;
@@ -120,9 +112,6 @@ void setup() {
   // attach button interrupt
   pinMode(digitalPinToInterrupt(BUTTON_PIN), INPUT_PULLUP);
   attachInterrupt(BUTTON_PIN, buttonISR, FALLING);
-
-  checkTime = millis();
-  checkVol = 0;
 
   //  initialize up led strip
   FastLED.addLeds<LED_TYPE, DATA_PIN, CLK_PIN, COLOR_ORDER>(smoothed_output, MAX_LEDS).setCorrection(TypicalLEDStrip);
@@ -494,10 +483,6 @@ void audio_analysis() {
   update_max_delta();
 
   update_formants();
-
-  update_noise();
-
-  update_drums();
 
   noise_gate(loaded_patterns.noise_thresh);
 

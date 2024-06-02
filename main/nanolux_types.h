@@ -11,14 +11,17 @@
 // Pattern list function pointers
 typedef void (*SimplePatternList[])();
 
-#define VOL_SHOW true
-
-// Conditions(Comment out to disable) | LAYE, HUE, DEBUG
-//#define LAYER_PATTERNS
-#define HUE_FLAG
-
 // Array size macro
 #define ARRAY_SIZE(A) (sizeof(A) / sizeof((A)[0]))
+
+// ADC2 (pins A0, A1) is not available when the WiFi radio is active,
+// so we use ADC1 (pins A2, A3). Additionally, rev 1.2 of the board
+// must be blue-wired to use pins A2, A3.
+// Rev 1.2: https://github.com/OPEnSLab-OSU/Nanolux/commit/caa2e2b44d8ce75352e0c0d2d5ace363cbcfa450
+//
+// When using a board with a version below 1.2, or an unmodified
+// v1.2 board, set this pin to A0.
+#define ANALOG_PIN          A2
 
 // Vowel recognition
 enum VowelSounds {
@@ -30,7 +33,7 @@ enum VowelSounds {
   noVowel = 6
 };
 
-//Rotary Encoder
+// Rotary Encoder Constants
 #define ROTARY_ENCODER_A_PIN 23
 #define ROTARY_ENCODER_B_PIN 22
 #define ROTARY_ENCODER_BUTTON_PIN 33
@@ -52,24 +55,9 @@ enum VowelSounds {
 #define NOISE_GATE_THRESH   20
 #define MAX_NOISE_GATE_THRESH   100
 
-#define MAX_REFRESH 255
-#define MIN_REFRESH 15
-#define DEF_REFRESH 40
-
-// ADC2 (pins A0, A1) is not available when the WiFi radio is active,
-// so we use ADC1 (pins A2, A3). Additionally, rev 1.2 of the board
-// must be blue-wired to use pins A2, A3.
-// Rev 1.2: https://github.com/OPEnSLab-OSU/Nanolux/commit/caa2e2b44d8ce75352e0c0d2d5ace363cbcfa450
-//
-// When using a board with a version below 1.2, or an unmodified
-// v1.2 board, set this pin to A0.
-#define ANALOG_PIN          A2
-
 // Mode Constants
 #define STRIP_SPLITTING 0
 #define Z_LAYERING      1
-#define MANUAL          2
-
 
 // Button Input
 #define BUTTON_PIN 33
@@ -80,20 +68,28 @@ enum VowelSounds {
 #define MAX_VOLUME          3000.0
 #define MIN_VOLUME          100.0
 
-#define SER_DELTA       'C'   // use max delta frequency analysis
-#define SER_NORMAL      'D'   // stop using max delta
-
-// COOLING: How much does the air cool as it rises?
-// Less cooling = taller flames.  More cooling = shorter flames.
-// Default 55, suggested range 20-100 
-#define COOLING  100
-
-// SPARKING: What chance (out of 255) is there that a new spark will be lit?
-// Higher chance = more roaring fire.  Lower chance = more flickery fire.
-// Default 120, suggested range 50-200.
-#define SPARKING 72
-
 // The time the button must be pressed to reset the ESP32 is 10 seconds.
 #define RESET_TIME 10000
+
+/*******************
+ * PATTERN CONSTANTS
+ *******************/
+
+/******************************************************************
+  * COOLING: How much does the air cool as it rises?
+  * Less cooling = taller flames.  More cooling = shorter flames.
+  * Default 55, suggested range 20-100 
+*******************************************************************/
+#define COOLING  100
+
+/*****************************************************************************
+  * SPARKING: What chance (out of 255) is there that a new spark will be lit?
+  * Higher chance = more roaring fire.  Lower chance = more flickery fire.
+  * Default 120, suggested range 50-200.
+******************************************************************************/
+#define SPARKING 72
+
+// Used in Pix_Hue_Freq
+#define VOL_SHOW true
 
 #endif

@@ -14,21 +14,39 @@
 #include "nanolux_util.h"
 #include <cmath>
 
+/// Global variable used to access the current volume.
+extern double volume;
+
+/// Global variable used to store preak audio frequency
 extern double peak;
-extern double vReal[SAMPLES];      // Sampling buffers
-extern double volume;                  
-extern int F0arr[20]; // For smoothing formants
-extern int F1arr[20]; // For smoothing formants
-extern int F2arr[20]; // For smoothing formants
-extern int formant_pose; // Position variable for smoothing formants
-extern unsigned long myTime; // For nvp
-extern unsigned long checkTime; // For nvp
-extern double checkVol; // For nvp
-extern double formants[3]; // Master formants array that constantly changes;
-extern bool noise; // Master Noisiness versus Periodic flag that is TRUE when noisy, FALSE when periodic;
-extern bool drums[3]; // Master drums array that stores whether a KICK, SNARE, or CYMBAL is happening in each element of the array;
-extern double fbs[5]; // Master FIVE BAND SPLIT which stores changing bands based on raw frequencies
-extern double fss[5]; // Master FIVE SAMPLE SPLIT which stores changing bands based on splitting up the samples
+
+/// Array to store both sampled and FFT'ed audio.
+/// Processing is done in place.
+extern double vReal[SAMPLES];
+
+/// Used for smoothing (old) formant processing.
+extern int F0arr[20];
+
+/// Used for smoothing (old) formant processing.
+extern int F1arr[20];
+
+/// Used for smoothing (old) formant processing.
+extern int F2arr[20];
+
+/// Used for smoothing (old) formant processing.
+extern int formant_pose;
+
+/// Global formant array, used for accessing.
+extern double formants[3];
+
+/// Global drums array that stores whether a KICK, SNARE,
+/// or CYMBAL is happening in each element of the array
+extern bool drums[3];
+
+/// Global FIVE BAND SPLIT which stores changing bands
+/// based on raw frequencies
+extern double fbs[5]; 
+
 
 /// @brief Calculates the frequency bands with the highest density.
 /// @returns An array of the highest density formants.
@@ -169,144 +187,6 @@ double* band_split_bounce(int len) {
 
     // Return the five-band-split
     return fiveBands;
-}
-
-// Outputs an array of a 5-band-split based on iteration through each sample
-double* band_sample_bounce() {
-    // Define the volumes to be calculated
-    double vol1 = 0;
-    double vol2 = 0;
-    double vol3 = 0;
-    double vol4 = 0;
-    double vol5 = 0;
-    // Get the volumes of each band
-    for (int i = 5; i < SAMPLES-3; i++) {
-      if (0 <= i && i < SAMPLES/6) {
-        vol1 += vReal[i];
-      }
-      if (SAMPLES/6 <= i && i < 2*SAMPLES/6) {
-        vol2 += vReal[i];
-      }
-      if (2*SAMPLES/6 <= i && i < 3*SAMPLES/6) {
-        vol3 += vReal[i];
-      }
-      if (3*SAMPLES/6 <= i && i < 4*SAMPLES/6) {
-        vol4 += vReal[i];
-      }
-      if (4*SAMPLES/6 <= i && i < 5*SAMPLES/6) {
-        vol5 += vReal[i];
-      }
-    }
-    
-    // Average them by the SAMPLES
-    vol1 /= (SAMPLES/6);
-    vol2 /= (SAMPLES/6);
-    vol3 /= (SAMPLES/6);
-    vol4 /= (SAMPLES/6);
-    vol5 /= (SAMPLES/6);
-
-    // Map them to values that split up the SAMPLES accurately (just for variability smoothing)
-    vol1 = map(vol1, MIN_VOLUME, MAX_VOLUME, 0, SAMPLES/6);
-    vol2 = map(vol2, MIN_VOLUME, MAX_VOLUME, 0, SAMPLES/6);
-    vol3 = map(vol3, MIN_VOLUME, MAX_VOLUME, 0, SAMPLES/6);
-    vol4 = map(vol4, MIN_VOLUME, MAX_VOLUME, 0, SAMPLES/6);
-    vol5 = map(vol5, MIN_VOLUME, MAX_VOLUME, 0, SAMPLES/6);
-    
-
-    // Create an array for the result
-    double *fiveSamples = new double[5];
-    // Store the Five Bands volumes
-    fiveSamples[0] = vol1;
-    fiveSamples[1] = vol2;
-    fiveSamples[2] = vol3;
-    fiveSamples[3] = vol4;
-    fiveSamples[4] = vol5;
-
-    // Return the five sample array
-    return fiveSamples;
-}
-
-
-/// @brief Returns a boolean signifying if the audio signal is
-/// noisy or periodic.
-bool nvp() {
-  int noise = 0;
-  myTime = millis(); // Get the time every millis
-
-  // Reset the checked time difference every second and reset volume
-  if (myTime-checkTime == 2000000) {
-    checkTime = millis();
-    checkVol = volume;
-    myTime = millis();
-  }
-
-  // If the noise is sufficient or not
-  return abs(checkVol-volume) >= 100;
-}
-
-/// @brief Returns an integer array containing what type of drums
-/// the Nanolux device believes it is hearing.
-///
-/// drumsArr[0] = kick;
-/// drumsArr[1] = snare;
-/// drumsArr[2] = cymbal;
-int* drum_identify() {
-
-  double vol1 = 0;
-  double vol3 = 0;
-  double vol5 = 0;
-  // Grab the portions of the frequencies where the drum pieces exist 
-  for (int i = 5; i < SAMPLES-3; i++) {
-    if (i < SAMPLES/6) {
-      vol1 += vReal[i];
-    }
-    if (2*SAMPLES/6 <= i && i < 3*SAMPLES/6) {
-      vol3 += vReal[i];
-    }
-    if (4*SAMPLES/6 <= i && i < 5*SAMPLES/6) {
-      vol5 += vReal[i];
-    }
-  }
-  
-  vol1 /= (SAMPLES/6);
-  vol3 /= (SAMPLES/6);
-  vol5 /= (SAMPLES/6);
-
-  // Now gets a sanitized result for volume
-  vol1 = map(vol1, MIN_VOLUME, MAX_VOLUME, 0, SAMPLES/6);
-  vol3 = map(vol3, MIN_VOLUME, MAX_VOLUME, 0, SAMPLES/6);
-  vol5 = map(vol5, MIN_VOLUME, MAX_VOLUME, 0, SAMPLES/6);
-
-  // Create a temporary array for output.
-  int *drumsArr = new int[3];
-
-  int kick = (vol1 >= vol5 && vol1 >= vol3);
-  int cymbal = (vol5 > vol1 && vol5 > vol3);
-  int snare = (((vol5 > vol1 && vol5 > vol3) || (vol1 > vol5 && vol1 > vol3)) && !kick && !cymbal);
-  
-  drumsArr[0] = kick;
-  drumsArr[1] = snare;
-  drumsArr[2] = cymbal;
-
-  return drumsArr;
-}
-
-// An update method for updating the global noise variable
-void update_noise() {
-  noise = nvp(); // Ternary operator that assigns true if nvp returns 1, else false
-}
-
-/// @brief An update method that updates the global drums array.
-///
-/// Also an example of how to call and use the audio functions
-/// if not using global variables.
-void update_drums() {
-  int* temp = drum_identify();
-  // C++ int -> bool conversion is implicit.
-  drums[0] = temp[0];
-  drums[1] = temp[1];
-  drums[2] = temp[2];
-  delete[] temp;
 }
 
 /// @brief Used for moving a temporary pointer into

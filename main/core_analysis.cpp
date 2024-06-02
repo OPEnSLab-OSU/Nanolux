@@ -15,16 +15,35 @@
 #include "nanolux_util.h"
 #include <cmath>
 
-extern double peak;
-extern arduinoFFT FFT;
-extern double vReal[SAMPLES];      // Sampling buffers
-extern double vRealHist[SAMPLES];  // for delta freq
-extern double vImag[SAMPLES];
-extern double delt[SAMPLES];
-extern double volume;                  
-extern double maxDelt;             // Frequency with the biggest change in amp.
+/// Audio sampling period
 extern unsigned int sampling_period_us;
-extern unsigned long microseconds;
+
+/// Global variable used to access the current volume.
+extern double volume;
+
+/// Global variable used to store preak audio frequency
+extern double peak;
+
+/// FFT object used for audio processing.
+extern arduinoFFT FFT;
+
+/// Array to store both sampled and FFT'ed audio.
+/// Processing is done in place.
+extern double vReal[SAMPLES];
+
+/// Last state of the vReal array.
+extern double vRealHist[SAMPLES];
+
+/// Imaginary component of vReal. Unused.
+extern double vImag[SAMPLES];
+
+/// Variable used to store the frequency delta between
+/// vReal and vRealHist.
+extern double delt[SAMPLES];
+
+/// Global variable used to access the frequency band
+/// with the largest delta between iterations.
+extern double maxDelt;
 
 /// @brief Samples incoming audio and stores the signal in vReal.
 ///
@@ -32,6 +51,7 @@ extern unsigned long microseconds;
 /// is sampled, the function sleeps until ready to sample again at the next
 /// timestep.
 void sample_audio(){
+  unsigned long microseconds;
   for(int i=0; i<SAMPLES; i++) {
     microseconds = micros();    //Overflows after around 70 minutes!
     vReal[i] = analogRead(ANALOG_PIN);

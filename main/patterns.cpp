@@ -42,6 +42,10 @@ extern Pattern_Data params;
 
 extern uint8_t manual_pattern_idx;
 extern bool manual_control_enabled;
+extern double fbs[5]; 
+
+/// Global formant array, used for accessing.
+extern double formants[3];
 
 // get frequency hue
 void getFhue(uint8_t min_hue, uint8_t max_hue){
@@ -287,7 +291,6 @@ void talking(Strip_Buffer *buf, int len, Pattern_Data *params) {
 
   switch (params->config) {
     case 1: { // Formants
-      double *formants = density_formant();
       double f0Hue = remap(formants[0], MIN_FREQUENCY, MAX_FREQUENCY, 0, 255);
       double f1Hue = remap(formants[1], MIN_FREQUENCY, MAX_FREQUENCY, 0, 255);
       double f0 = remap(formants[0], MIN_FREQUENCY, MAX_FREQUENCY, 0, 255);
@@ -298,9 +301,6 @@ void talking(Strip_Buffer *buf, int len, Pattern_Data *params) {
       buf->leds[len / 2] = CRGB(f0, f1, f2);
       buf->leds[len / 2 - offsetFromVolume] = CHSV(f0Hue, 255, MAX_BRIGHTNESS);
       buf->leds[len / 2 + offsetFromVolume] = CHSV(f0Hue, 255, MAX_BRIGHTNESS);
-
-      // Reset formant array for next loop, assuming dynamic allocation
-      delete[] formants;
       break;
     } 
 
@@ -318,7 +318,8 @@ void talking(Strip_Buffer *buf, int len, Pattern_Data *params) {
     } 
 
     default: // Talking Hue
-    case 0: 
+    case 0:
+      offsetFromVolume = remap(volume, MIN_VOLUME, MAX_VOLUME, 1, len/2);
       buf->leds[midpoint] = CHSV(fHue / 2, 255, MAX_BRIGHTNESS);
       buf->leds[midpoint - offsetFromVolume] = CHSV(fHue, 255, MAX_BRIGHTNESS);
       buf->leds[midpoint + offsetFromVolume] = CHSV(fHue, 255, MAX_BRIGHTNESS);
@@ -342,33 +343,64 @@ void talking(Strip_Buffer *buf, int len, Pattern_Data *params) {
 void glitch(Strip_Buffer * buf, int len, Pattern_Data * params ) {
     int offsetFromVolume, speedFromVolume;
     uint16_t sinBeat[4]; 
-    double *formants;
     double f0Hue;
     
-    speedFromVolume = remap(volume, MIN_VOLUME, MAX_VOLUME, 5, params->config == 0 ? 25 : 20);
+    speedFromVolume = remap(volume, MIN_VOLUME, MAX_VOLUME, 5, params->config == 0 ? 25 : 20); 
     switch (params->config) {
         case 0:
             sinBeat[0] = beatsin16(speedFromVolume, 0, len-1, 0, 0);
             sinBeat[1] = beatsin16(speedFromVolume, 0, len-1, 0, 32767);
-            formants = density_formant();
+
             f0Hue = remap(formants[0], MIN_FREQUENCY, MAX_FREQUENCY, 0, 255);
+
+            buf->leds[sinBeat[0]]  = CHSV(fHue, 255, MAX_BRIGHTNESS);
+            buf->leds[sinBeat[1]]  = CHSV(f0Hue, 255, MAX_BRIGHTNESS); //can use fHue instead of formants
+
+            blur1d(buf->leds, len, 80);
+            fadeToBlackBy(buf->leds, len, 40);
+
             break;
         case 1: // glitch_talk
+          {
             offsetFromVolume = remap(volume, MIN_VOLUME, MAX_VOLUME, 0, 20000);
-            for (int i = 0; i < 3; ++i) {
-                sinBeat[i] = beatsin16(speedFromVolume, 3, len-4, 0, i == 0 ? 250 : (i == 1 ? 0 - offsetFromVolume : 750 + offsetFromVolume));
-            }
+
+            //Create 3 sin beats with the speed and offset(first and last parameters) changing based off variables above
+            uint16_t sinBeat0  = beatsin16(speedFromVolume, 3, len-4, 0, 250);
+            uint16_t sinBeat1  = beatsin16(speedFromVolume, 3, len-4, 0, 0 - offsetFromVolume);
+            uint16_t sinBeat2  = beatsin16(speedFromVolume, 3, len-4, 0, 750 + offsetFromVolume);
+
+            //Given the sinBeats and fHue, color the LEDS  
+            buf->leds[sinBeat0]  = CHSV(fHue*2, 255, MAX_BRIGHTNESS);
+            buf->leds[sinBeat1]  = CHSV(fHue, 255, MAX_BRIGHTNESS);
+            buf->leds[sinBeat2]  = CHSV(fHue, 255, MAX_BRIGHTNESS);
+
+            blur1d(buf->leds, len, 80);
+            fadeToBlackBy(buf->leds, len, 100); 
+
             break;
+          }
         case 2: // glitch_sections
+          {
             offsetFromVolume = remap(volume, MIN_VOLUME, MAX_VOLUME, 0, 10000);
-            for (int i = 0; i < 4; ++i) {
-                sinBeat[i] = beatsin16(6, 0, len-1, 0, i * 16384 - offsetFromVolume);
-            }
+
+            //Create 4 sin beats with the offset(last parameter) changing based off offsetFromVolume
+            uint16_t sinBeat0  = beatsin16(6, 0, len-1, 0, 0     - offsetFromVolume);
+            uint16_t sinBeat1  = beatsin16(6, 0, len-1, 0, 16384 - offsetFromVolume);
+            uint16_t sinBeat2  = beatsin16(6, 0, len-1, 0, 32767 - offsetFromVolume);
+            uint16_t sinBeat3  = beatsin16(6, 0, len-1, 0, 49151 - offsetFromVolume);
+
+            //Given the sinBeats and fHue, color the LEDS
+            buf->leds[sinBeat0]  = CHSV(fHue, 255, MAX_BRIGHTNESS);
+            buf->leds[sinBeat1]  = CHSV(fHue, 255, MAX_BRIGHTNESS);
+            buf->leds[sinBeat2]  = CHSV(fHue, 255, MAX_BRIGHTNESS);
+            buf->leds[sinBeat3]  = CHSV(fHue, 255, MAX_BRIGHTNESS);
+          
+            //Add blur and fade 
+            blur1d(buf->leds, len, 80);
+            fadeToBlackBy(buf->leds, len, 60);
             break;
+          }
     }
-    // Common effects: blur and fade
-    blur1d(buf->leds, len, 80);
-    fadeToBlackBy(buf->leds, len, params->config == 1 ? 100 : (params->config == 2 ? 60 : 40)); 
 }
 
 /// @brief  Basic band config : Uses the band_split_bounce() function to generate a five band split, and maps that split to the light strip. The strip is broken into five chunks of different colors, 
@@ -380,9 +412,8 @@ void glitch(Strip_Buffer * buf, int len, Pattern_Data * params ) {
 /// @param params Pointer to Pattern_Data structure containing configuration options.
 void bands(Strip_Buffer* buf, int len, Pattern_Data* params) {
     //double *fiveSamples = band_sample_bounce();
-
-    double *fiveSamples = band_split_bounce(len); // Maybe use above if you want, but its generally agreed this one looks better
-
+    
+    update_five_band_split(len); // Maybe use above if you want, but its generally agreed this one looks better
     
     double avg1 = 0;
     double avg2 = 0;
@@ -390,23 +421,17 @@ void bands(Strip_Buffer* buf, int len, Pattern_Data* params) {
     double avg4 = 0;
     double avg5 = 0;
 
-    double vol1 = fiveSamples[0];
-    double vol2 = fiveSamples[1];
-    double vol3 = fiveSamples[2];
-    double vol4 = fiveSamples[3];
-    double vol5 = fiveSamples[4]; 
+    double vol1 = fbs[0];
+    double vol2 = fbs[1];
+    double vol3 = fbs[2];
+    double vol4 = fbs[3];
+    double vol5 = fbs[4];
 
 
       switch (params->config) {
         case 0 : 
         {
-            
-            vol1 = fiveSamples[0];
-            vol2 = fiveSamples[1];
-            vol3 = fiveSamples[2];
-            vol4 = fiveSamples[3];
-            vol5 = fiveSamples[4];
-
+            fadeToBlackBy(buf->leds, len, 85);
             // Fill each chunk of the light strip with the volume of each band
             for (int i = 0; i < vol1; i++) {
               buf->leds[i] = CRGB(255,0,0);
@@ -423,8 +448,7 @@ void bands(Strip_Buffer* buf, int len, Pattern_Data* params) {
             for (int i = 4*len/5; i < 4*len/5+vol5; i++) {
               buf->leds[i] = CRGB(0,0,255);
             }
-
-            delete [] fiveSamples;
+            break;
         }
           case 1:{
           // Calculate the volume of each band
@@ -451,11 +475,11 @@ void bands(Strip_Buffer* buf, int len, Pattern_Data* params) {
 
           double *fiveSamples = band_split_bounce(len);
 
-          vol1 = fiveSamples[0];
-          vol2 = fiveSamples[1];
-          vol3 = fiveSamples[2];
-          vol4 = fiveSamples[3];
-          vol5 = fiveSamples[4]; 
+          vol1 = fbs[0];
+          vol2 = fbs[1];
+          vol3 = fbs[2];
+          vol4 = fbs[3];
+          vol5 = fbs[4]; 
 
           // Get the Five Sample Split ^
 

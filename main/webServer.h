@@ -1,7 +1,7 @@
 #pragma once
 
 #include <ESPmDNS.h>
-#include "LITTLEFS.h"
+#include <LittleFS.h>
 #include "BluetoothSerial.h"
 #include <WiFi.h>
 #include <AsyncTCP.h>
@@ -130,7 +130,7 @@ AsyncWebServer webServer(80);
  */
 inline void initialize_file_system() {
     DEBUG_PRINTF("Initializing FS...");
-    if (LITTLEFS.begin()) {
+    if (LittleFS.begin()) {
         DEBUG_PRINTF("done.\n");
     }
     else {
@@ -150,7 +150,7 @@ inline void save_settings() {
     settings["wifi"]["ssid"] = current_wifi.SSID;
     settings["wifi"]["key"] = current_wifi.Key;
 
-    File saved_settings = LITTLEFS.open(SETTINGS_FILE, "w");
+    File saved_settings = LittleFS.open(SETTINGS_FILE, "w");
     if (saved_settings) {
         serializeJson(settings, saved_settings);
         DEBUG_PRINTF("Saving settings:\n");
@@ -166,7 +166,7 @@ inline void save_settings() {
 inline void load_settings() {
     DEBUG_PRINTF("Checking if settings are available.\n");
 
-    File saved_settings = LITTLEFS.open(SETTINGS_FILE, "r");
+    File saved_settings = LittleFS.open(SETTINGS_FILE, "r");
     if (saved_settings) {
         const DeserializationError error = deserializeJson(settings, saved_settings);
         if (!error) {
@@ -593,7 +593,7 @@ inline void save_url(const String& url) {
     // When it starts, it will check this file to know which URL to use to talk
     // back to the server. The reason we need this is that we don't know which
     // route is available (AP or STA) until runtime.
-    File saved_url = LITTLEFS.open(URL_FILE, "w");
+    File saved_url = LittleFS.open(URL_FILE, "w");
     if (saved_url) {
         StaticJsonDocument<192> data;
 
@@ -712,7 +712,7 @@ inline void initialize_web_server(const APIGetHook api_get_hooks[], const int ge
 
     // Register the Web App
    DEBUG_PRINTF("Registering Web App files.\n");
-    webServer.serveStatic("/", LITTLEFS, "/").setDefaultFile("index.html");
+    webServer.serveStatic("/", LittleFS, "/").setDefaultFile("index.html");
     webServer.onNotFound(handle_unknown_url);
 
     // "Disable" CORS.
