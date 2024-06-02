@@ -67,6 +67,18 @@ Jorden Mortenson (mortejor@oregonstate.edu)
 
 David Mora (morad@oregonstate.edu)
 
+2023-2024 Team:
+
+Andrew Adisoemarta (adisoema@oregonstate.edu)
+
+Anshul Batish (batisha@oregonstate.edu)
+
+Caleb Shilling (shillinc@oregonstate.edu)
+
+Can Yang (yangca@oregonstate.edu)
+
+Scout Hawkey (hawkeys@oregonstate.edu)
+
 # Some Important Things To Note
 
 1. The most current up to date code is located in the [Main](https://github.com/OPEnSLab-OSU/Nanolux/tree/main/main) directory. 
