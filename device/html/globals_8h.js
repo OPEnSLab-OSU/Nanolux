@@ -2,7 +2,6 @@ var globals_8h =
 [
     [ "Pattern", "struct_pattern.html", null ],
     [ "delt", "globals_8h.html#abde44bf7f909ccc0536377ee12ad046f", null ],
-    [ "drums", "globals_8h.html#a325927a7d1d59cec68c8bb5982abd0c6", null ],
     [ "F0arr", "globals_8h.html#aed80e8549e5df80f45f433696aa8ccf0", null ],
     [ "F1arr", "globals_8h.html#a071f33a586431ab7a783a9c3148071a3", null ],
     [ "F2arr", "globals_8h.html#a4d76430f67e939749a71df0888d5083d", null ],

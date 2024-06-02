@@ -6,7 +6,6 @@ var ext__analysis_8cpp =
     [ "update_five_band_split", "ext__analysis_8cpp.html#a57c5922526af37b4aa51aeeb345ff8e4", null ],
     [ "update_formants", "ext__analysis_8cpp.html#a98f1d76c9de74661e65b64a03621f796", null ],
     [ "vowel_detection", "ext__analysis_8cpp.html#ae0490cc158689d9c207d597549ec290e", null ],
-    [ "drums", "ext__analysis_8cpp.html#a325927a7d1d59cec68c8bb5982abd0c6", null ],
     [ "F0arr", "ext__analysis_8cpp.html#aed80e8549e5df80f45f433696aa8ccf0", null ],
     [ "F1arr", "ext__analysis_8cpp.html#a071f33a586431ab7a783a9c3148071a3", null ],
     [ "F2arr", "ext__analysis_8cpp.html#a4d76430f67e939749a71df0888d5083d", null ],
