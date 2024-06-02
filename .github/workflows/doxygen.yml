@@ -6,7 +6,7 @@ name: Doxygen Action
 # events but only for the master branch
 on:
   push:
-    branches: [ 3.0.0_prerelease ]
+    branches: [ main ]
 
 
   
