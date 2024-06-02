@@ -1,88 +1,101 @@
+/**@file
+ *
+ * This file contains function headers for patterns.cpp
+ * along with the Strip_Buffer struct definition.
+ *
+**/
+
 #ifndef PATTERNS_H
 #define PATTERNS_H
 
+#include "nanolux_types.h"
+#include "storage.h"
+
+/// @brief Holds persistent data for currently-running patterns.
+///
+/// This structure contains both persistent variables that can
+/// be reused on a per-subpattern basis.
+///
+/// It also contains the LED buffer for that subpattern. The main
+/// advantage of defining it here is that each subpattern can have
+/// an independent pattern buffer separate from the main ones
+/// in main.ino.
+///
+/// When a subpattern is modified in a way that requires a reset
+/// (changing the subpattern name, changing LED length), the
+/// existing pattern history should be replaced with the default
+/// structure.
+typedef struct{
+
+  // Pattern Buffer for the particular history being used.
+  CRGB leds[MAX_LEDS] = {0};
+
+  // History Variables
+  int frame = 0;                 // for spring mass 
+  double amplitude = 0;          //for spring mass 2
+  int tempHue = 0;
+  int vol_pos = 0;
+  int pix_pos = 0;
+  uint8_t genre_smoothing[10] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+  int genre_pose = 0;
+  double max1[20] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
+  double max2[20] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
+  double max3[20] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
+  double max4[20] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
+  double max5[20] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
+  int maxIter = 0;
+  double velocity = 0;
+  double acceleration = 0;
+  double smoothing_value[10] = {0,0,0,0,0,0,0,0,0,0};
+  int location = 70;
+  double velocities[5] = {0,0,0,0,0};
+  double accelerations[5] = {0,0,0,0,0};
+  int locations[5] = {70,60,50,40,30};
+  double vRealSums[5] = {0,0,0,0,0};
+} Strip_Buffer;
+
+extern Pattern_Data params;
+
 void nextPattern();
 
-void layer_patterns();
+void clearLEDSegment(Strip_Buffer * buf, int len);
 
-void setColorHSV(CRGB* leds, byte h, byte s, byte v);
+void setColorHSV(CRGB* leds, byte h, byte s, byte v, int len);
 
-void freq_hue_vol_brightness();
+// void getFhue(uint8_t min_hue, uint8_t max_hue);
 
-void freq_confetti_vol_brightness();
+void getFhue(uint8_t min_hue, uint8_t max_hue);
 
-void volume_level_middle_bar_freq_hue();
+void getVbrightness();
 
-void freq_hue_trail();
+void blank(Strip_Buffer * buf, int len, Pattern_Data* params);
 
-void blank();
+void confetti(Strip_Buffer * buf, int len, Pattern_Data* params);
 
-void spring_mass_1();
+void pix_freq(Strip_Buffer * buf, int len, Pattern_Data* params);
 
-void spring_mass_2();
+void eq(Strip_Buffer * buf, int len, Pattern_Data* params);
 
-void spring_mass_3 ();
+void tug_of_war(Strip_Buffer * buf, int len, Pattern_Data* params);
 
-void classical();
+void saturated(Strip_Buffer * buf, int len, Pattern_Data* params);
 
-void pix_freq();
+void random_raindrop(Strip_Buffer * buf, int len, Pattern_Data* params);
 
-void send_wave();
+void hue_trail(Strip_Buffer* buf, int len, Pattern_Data* params);
 
-void math();
+void groovy(Strip_Buffer* buf, int len, Pattern_Data* params);
 
-void band_brightness();
+void talking(Strip_Buffer *buf, int len, Pattern_Data *params);
 
-void advanced_bands();
+void glitch(Strip_Buffer * buf, int len, Pattern_Data * params);
 
-void basic_bands();
+void bands(Strip_Buffer * buf, int len, Pattern_Data * params);
 
-void eq();
+void Fire2012(Strip_Buffer * buf, int len, Pattern_Data* params);
 
-void show_drums();
+void bar_fill(Strip_Buffer * buf, int len, Pattern_Data* params);
 
-void show_formants();
-
-void noisy();
-
-void formant_band();
-
-void alt_drums();
-
-void formant_test();
-
-void Fire2012WithPalette();
-
-void saturated_noise();
-
-void saturated_noise_hue_octaves();
-
-void saturated_noise_hue_shift();
-
-void saturated_noise_compression();
-
-void groovy_noise();
-
-void groovy_noise_hue_shift_change();
-
-void sin_hue_trail();
-
-void freq_hue_trail_mid();
-
-void freq_hue_trail_mid_blur();
-
-void talking_hue();
-
-void talking_formants();
-
-void talking_moving();
-
-void bounce_back();
-
-void glitch();
-
-void glitch_talk();
-
-void glitch_sections();
+void vowels_raindrop(Strip_Buffer * buf, int len, Pattern_Data* params);
 
 #endif

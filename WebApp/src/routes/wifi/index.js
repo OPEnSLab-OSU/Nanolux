@@ -1,5 +1,5 @@
 import {h} from 'preact';
-import {joinWiFi, getHostname, saveHostname} from "../../utils/api";
+import {joinWiFi, getHostname, saveHostname, updateLocalPassword} from "../../utils/api";
 import style from "./style.css";
 import WifiSelector from "../../components/wifi_selector";
 import {useEffect, useState} from "preact/hooks";
@@ -9,22 +9,55 @@ import {useConnectivity} from "../../context/online_context";
 import WiFiModal from "../../components/redirect_modal";
 import useInterval from "../../utils/use_interval";
 
-
+/**
+ * @brief The object that generates the WiFi options page.
+ */
 const Wifi = () => {
-    const [currentWifi, setCurrentWifi] = useState(null);
-    const [selectedWifi, setSelectedWifi] = useState(null);
-    const [locked, setLocked] = useState(false);
-    const [password, setPassword] = useState(null);
-    const [forgetting, setForgetting] = useState(false);
-    const [joining, setJoining] = useState(false);
-    const [joinCompleted, setJoinCompleted] = useState(null);
-    const [joinResult, setJoinResult] = useState(null);
-    const [hostname, setHostname] = useState("");
-    const [gotHostname, setGotHostname] = useState(false);
-    const [fqdn, setFqdn] = useState(".local");
-    const [isModalOpen, setIsModalOpen] = useState(false);
 
+    /// Controls the modal instance for the Wifi page.
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    
+    /// Stores the text for the current AudioLux MDNS address.
+    const [fqdn, setFqdn] = useState(".local");
+
+    /// Stores the currently-connected Wifi connection.
+    const [currentWifi, setCurrentWifi] = useState(null);
+
+    /// Stores the Wifi connection that the user has selected,
+    /// but (possibly) not set.
+    const [selectedWifi, setSelectedWifi] = useState(null);
+
+    /// State that prevents the user from accessing the element
+    /// that allows the user to enter a password for the Wifi.
+    const [locked, setLocked] = useState(false);
+
+    /// Currently-stored Wifi password the user has entered.
+    const [password, setPassword] = useState(null);
+
+    /// Is set to "true" when the device is in the process of
+    /// forgetting the current Wifi settings.
+    const [forgetting, setForgetting] = useState(false);
+
+    /// Is set to "true" when the device is in the process of
+    /// joining a Wifi connection.
+    const [joining, setJoining] = useState(false);
+
+    /// Is set to "true" when the join process has been completed.
+    const [joinCompleted, setJoinCompleted] = useState(null);
+
+    /// Stores if the join process succeeded or failed.
+    const [joinResult, setJoinResult] = useState(null);
+
+    /// Stores the current hostname of the device (user-configurable)
+    const [hostname, setHostname] = useState("");
+
+    /// Is "true" when the hostname of the device has been obtained.
+    const [gotHostname, setGotHostname] = useState(false);
+    
+    /// Stores the state of device connectivity.
     const {isConnected} = useConnectivity();
+
+    const [pass, setPass] = useState("");
 
     function loadHostname() {
         getHostname()
@@ -36,19 +69,23 @@ const Wifi = () => {
             .catch(() => setHostname(null));
     }
 
+    /**
+     * Loads the hostname of the device when the app is connected.
+     */
     useEffect(() => {
         if (isConnected) {
             loadHostname();
         }
     }, [isConnected])
 
+    /**
+     * Loads the hostname of the device when the app is connected.
+     */
     useInterval(() => {
         if (!gotHostname) {
             loadHostname();
         }
     }, 1150);
-
-
 
     const handleNetworkSelected = async (newWifi) => {
         // setCurrentWifi(newWifi);
@@ -127,12 +164,41 @@ const Wifi = () => {
         }
     }
 
+    const handleLocalPasswordChange = async (newValue) => {
+
+        if(newValue.length < 8){
+            alert("Password is too short! Must be between 8 and 15 characters.")
+            return
+        }
+
+        if(newValue.length > 15){
+            alert("Password is too long! Must be between 8 and 15 characters.")
+            return
+        }
+
+        setPass(newValue);
+        if (isConnected) {
+            await updateLocalPassword(newValue);
+            alert("Password succesfully updated: please power cycle the device.")
+        }
+    }
+
     const closeModal = () => {
         setIsModalOpen(false);
     }
 
     return (
         <div className={style.home}>
+            <div className={style.settingsControl}>
+                <div className={style.centeredContainer}>
+                    <TextInput
+                        inputPrompt="New Local WiFi Password: "
+                        commmitPrompt="Set Password"
+                        textValue={pass}
+                        onTextCommit={handleLocalPasswordChange}
+                    />
+                </div>
+            </div>
             <div className={style.settingsControl}>
                 <div className={style.centeredContainer}>
                     <TextInput

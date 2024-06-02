@@ -1,43 +1,73 @@
 import style from './style.css';
-import Patterns from "../../components/patterns";
-import NumericSlider from "../../components/numeric_slider";
 import {useState, useEffect} from "preact/hooks";
-import {getNoise, saveNoise} from "../../utils/api";
 import {useConnectivity} from "../../context/online_context";
+import Save_Entry from '../../components/save_entry';
+import StripSettings from '../../components/strip_settings';
+import SystemControls from '../../components/system_settings';
+import { getPatternList } from '../../utils/api';
 
+/**
+ * @brief Generates the main settings page for the settings route.
+ */
 const Settings = () => {
+
+	// Object that returns if the app is connected to the device.
 	const { isConnected } = useConnectivity();
 
-	const [settings, setSettings] = useState({});
+	// Stores the list of patterns obtained from the device.
+	const [patterns, setPatterns] = useState([{index: 0, name: "None"}])
 
+	/**
+	 * @brief Obtains the list of patterns from the NanoLux device.
+	 */
 	useEffect(() => {
-		if (isConnected) {
-			getNoise().then(data => setSettings(data));
-		}
-	}, [isConnected])
-
-	const handleNoiseChange = async (newValue) => {
-		setSettings(current => ({...current, noise: newValue}));
-		if (isConnected) {
-			await saveNoise(settings.noise);
-		}
-	}
+        if (isConnected) {
+            getPatternList()
+				.then(data => setPatterns(data))
+				.then();
+        }  
+    }, [isConnected])
 
 	return (
-		<div className={style.home}>
-			<div className={style.settings_control}>
-				<Patterns />
-			</div>
-			<div className={style.settings_control}>
-				{ settings && <NumericSlider
-					className={style.settings_control}
-					label="Noise Threshold"
-					savedValue={settings.noise}
-					min={0}
-					max={100}
-					onValueChanged={handleNoiseChange}
-				/> }
-			</div>
+		<div>
+			<table>
+				<tr>
+					<th>Pattern Settings</th>
+					<th>System Settings</th>	
+				</tr>
+				<tr>
+					<td>
+						<StripSettings
+							patterns={patterns}
+						/>
+					</td>
+					<td>
+						<SystemControls/>
+						<hr></hr>
+						<br/>
+						<div className={style.background0}>
+							<Save_Entry 
+								name="Default Pattern"
+								idx='0'
+							/>
+						</div>
+						<br></br>
+						<div className={style.background1}>
+							<Save_Entry
+								name="Saved Pattern 1"
+								idx='1'
+							/>
+						</div>
+						<div className={style.background2}>
+							<Save_Entry
+								name="Saved Pattern 2"
+								idx='2'
+							/>
+						</div>
+					</td>
+					
+				</tr>
+			</table>
 		</div>
 	);
 };

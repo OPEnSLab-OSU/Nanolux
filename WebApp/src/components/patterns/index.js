@@ -1,67 +1,57 @@
-import {h} from 'preact';
 import style from './style.css';
-import {useEffect, useState} from "preact/hooks";
-import {getPattern, getPatternList, savePattern} from "../../utils/api";
-import {useConnectivity} from "../../context/online_context";
-import useInterval from "../../utils/use_interval";
-import {LabelSpinner} from "../spinner";
+import React from "react";
+import { useSignal } from '@preact/signals';
 
-const Patterns = () => {
-    const {isConnected} = useConnectivity();
-    const [patterns, setPatterns] = useState([]);
-    const [currentPattern, setCurrentPattern] = useState(-1)
-    const [loading, setLoading] = useState(true);
+/**
+ * @brief Displays a selectable drop down list of LED strip patterns
+ * 
+ * @param initialID The pattern ID to display initially.
+ * @param structure_ref The string reference to store values at.
+ * @param update A function to update an external data structure.
+ * @param patterns A list of patterns and their IDs.
+ * 
+ * @returns The UI element itself.
+ */
+const Patterns = ({
+    initialID,
+    structure_ref,
+    update,
+    patterns
+}) => {
 
+    // An object to store the current selected ID of the drop down.
+    const current = useSignal(initialID);
 
-    useEffect(() => {
-        if (isConnected) {
-            getPatternList().then(data => setPatterns(data));
-            getPattern().then(data => setCurrentPattern(data.index));
-            setLoading(false);
-        }
-    }, [isConnected])
-
-    const patternOptions = patterns.map(pattern => {
-        return <option key={pattern.index} value={pattern.index}>
-            {pattern.name}
+    /**
+     * @brief Creates a list of HTML list options based on the "patterns" parameter.
+     */
+    const patternOptions = patterns.map(p => {
+        return <option key={p.index} value={p.index}>
+            {p.name}
         </option>
     });
 
-    const refreshPattern = () => {
-        getPattern().then(data => setCurrentPattern(data.index));
-    }
-
-    useInterval(() => {
-        if (isConnected) {
-            refreshPattern();
-        }
-    }, 5000);
-
+    /**
+     * @brief Updates the selected ID and sends it to an external data structure.
+     * @param event The event that stored the newly selected ID.
+     */
     const handleSelection = async (event) => {
-        const newPattern = event.target.value;
-        setCurrentPattern(newPattern);
-        if  (isConnected) {
-            await savePattern(newPattern);
-        }
+        current.value = Number(event.target.value);
+        update(structure_ref, current.value);
     }
 
     return (
         <div>
-            {loading ? (
-                <LabelSpinner />
-            ) : (
-                <div>
-                    <label className={style.label} htmlFor="pattern-options">Current Pattern</label>
-                    <select className={style.label}
-                            id="pattern-options"
-                            value={currentPattern}
-                            onChange={handleSelection}
-                    >
-                        <option value="-1">Requesting pattern list...</option>
-                        {patternOptions}
-                    </select>
-                </div>
-                )}
+            <div>
+                <label className={style.label} htmlFor="pattern-options">Current Pattern</label>
+                <select className={style.label}
+                        id="pattern-options"
+                        value={initialID}
+                        onChange={handleSelection}
+                >
+                    {patternOptions}
+                </select>
+            </div>
         </div>
     );
 }

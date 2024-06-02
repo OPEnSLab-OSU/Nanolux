@@ -13,3 +13,7 @@ __pycache__/
 
 node_modules/
 build/
+act.exe
+docs/manual/mdpdf.log
+docs/manual/wkhtmltopdf.exe
+main/.DS_Store

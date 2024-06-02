@@ -1,7 +1,7 @@
 #pragma once
 
 #include <ESPmDNS.h>
-#include "LITTLEFS.h"
+#include <LittleFS.h>
 #include "BluetoothSerial.h"
 #include <WiFi.h>
 #include <AsyncTCP.h>
@@ -11,11 +11,9 @@
 #include <WebResponseImpl.h>
 
 
-#ifdef DEBUG
-#define DEBUG_PRINTF(...) Serial.printf(__VA_ARGS__)
-#else
+//#define DEBUG_PRINTF(...) Serial.printf(__VA_ARGS__) 
 #define DEBUG_PRINTF(...)
-#endif
+
 #define ALWAYS_PRINTF(...) Serial.printf(__VA_ARGS__)
 
 
@@ -38,7 +36,7 @@ typedef struct {
 } CurrentWifi;
 static CurrentWifi current_wifi;
 static CurrentWifi candidate_wifi;
-
+extern Config_Data config; // Currently loaded config
 
 /*
  * Artifacts used to manage the async WiFi join process.
@@ -132,7 +130,7 @@ AsyncWebServer webServer(80);
  */
 inline void initialize_file_system() {
     DEBUG_PRINTF("Initializing FS...");
-    if (LITTLEFS.begin()) {
+    if (LittleFS.begin()) {
         DEBUG_PRINTF("done.\n");
     }
     else {
@@ -152,7 +150,7 @@ inline void save_settings() {
     settings["wifi"]["ssid"] = current_wifi.SSID;
     settings["wifi"]["key"] = current_wifi.Key;
 
-    File saved_settings = LITTLEFS.open(SETTINGS_FILE, "w");
+    File saved_settings = LittleFS.open(SETTINGS_FILE, "w");
     if (saved_settings) {
         serializeJson(settings, saved_settings);
         DEBUG_PRINTF("Saving settings:\n");
@@ -168,7 +166,7 @@ inline void save_settings() {
 inline void load_settings() {
     DEBUG_PRINTF("Checking if settings are available.\n");
 
-    File saved_settings = LITTLEFS.open(SETTINGS_FILE, "r");
+    File saved_settings = LittleFS.open(SETTINGS_FILE, "r");
     if (saved_settings) {
         const DeserializationError error = deserializeJson(settings, saved_settings);
         if (!error) {
@@ -595,7 +593,7 @@ inline void save_url(const String& url) {
     // When it starts, it will check this file to know which URL to use to talk
     // back to the server. The reason we need this is that we don't know which
     // route is available (AP or STA) until runtime.
-    File saved_url = LITTLEFS.open(URL_FILE, "w");
+    File saved_url = LittleFS.open(URL_FILE, "w");
     if (saved_url) {
         StaticJsonDocument<192> data;
 
@@ -610,7 +608,7 @@ inline void save_url(const String& url) {
 }
 
 
-inline void setup_networking()
+inline void setup_networking(const char * password)
 {
     initialize_file_system();
 
@@ -634,13 +632,19 @@ inline void setup_networking()
     else {
         ALWAYS_PRINTF("****\n");
         ALWAYS_PRINTF("No wifi saved. AudioLux available via Access Point:\n");
-        ALWAYS_PRINTF("SSID: %s Password: %s\n", ap_ssid, ap_password);
+        ALWAYS_PRINTF("SSID: %s Password: %s\n", ap_ssid, password);
         ALWAYS_PRINTF("****\n");
     }
 
     // AP mode is always active.
     WiFi.mode(WIFI_MODE_APSTA);
-    WiFi.softAP(ap_ssid, ap_password);
+    if(password[0] == '\0'){
+      WiFi.softAP("AudioluxUnsecured");
+      ALWAYS_PRINTF("WIFI IS UNSECURED!!!\n");
+    }else{
+      WiFi.softAP(hostname, password);
+    }
+    
     delay(1000);
     const IPAddress ap_ip = WiFi.softAPIP();
 
@@ -659,7 +663,7 @@ inline void setup_networking()
 }
 
 
-inline void initialize_web_server(const APIGetHook api_get_hooks[], const int get_hook_count, APIPutHook api_put_hooks[], const int put_hook_count) {
+inline void initialize_web_server(const APIGetHook api_get_hooks[], const int get_hook_count, APIPutHook api_put_hooks[], const int put_hook_count, const char * password) {
     // Mutex to make join status globals thread safe.
     // The timer below runs on a different context than the web server,
     // so we need to properly marshall access between contexts.
@@ -682,7 +686,7 @@ inline void initialize_web_server(const APIGetHook api_get_hooks[], const int ge
         on_join_timer
     );
 
-    setup_networking();
+    setup_networking(password);
 
     // Register the main process API handlers.
     DEBUG_PRINTF("Registering main APIs.\n");
@@ -708,7 +712,7 @@ inline void initialize_web_server(const APIGetHook api_get_hooks[], const int ge
 
     // Register the Web App
    DEBUG_PRINTF("Registering Web App files.\n");
-    webServer.serveStatic("/", LITTLEFS, "/").setDefaultFile("index.html");
+    webServer.serveStatic("/", LittleFS, "/").setDefaultFile("index.html");
     webServer.onNotFound(handle_unknown_url);
 
     // "Disable" CORS.

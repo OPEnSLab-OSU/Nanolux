@@ -1,6 +1,15 @@
 import { h } from 'preact';
 import style from './style.css';
 
+/**
+ * @brief A modal that gives the user information after bridging
+ * to a new Wifi connection.
+ * 
+ * @param isOpen If the modal should be shown to the user
+ * @param onClose The function to be executed when the modal is clicked.
+ * @param ssid The ssid of the bridged network.
+ * @param audioLuxUrl The URL of the AudioLux on the bridged network.
+ */
 const WiFiModal = ({ isOpen, onClose, ssid, audioLuxUrl }) => {
     if (!isOpen) {
         return null;
