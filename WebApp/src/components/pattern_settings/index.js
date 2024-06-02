@@ -37,6 +37,7 @@ const PatternSettings = ({num, patterns}) => {
 		brightness: 255,
 		smoothing: 0,
 		postprocess: 0,
+		config: 0
 	});
 
 	/**

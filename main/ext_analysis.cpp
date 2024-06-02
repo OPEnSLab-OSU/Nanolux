@@ -39,10 +39,6 @@ extern int formant_pose;
 /// Global formant array, used for accessing.
 extern double formants[3];
 
-/// Global drums array that stores whether a KICK, SNARE,
-/// or CYMBAL is happening in each element of the array
-extern bool drums[3];
-
 /// Global FIVE BAND SPLIT which stores changing bands
 /// based on raw frequencies
 extern double fbs[5]; 
@@ -235,19 +231,6 @@ VowelSounds vowel_detection() {
       vReal[i] = 0;
     } else vReal[i] /= maxVal;
   }
-
-  // vReal contains 128 samples, where the data in idx 0, 1, 126, 127 seem to be garbage
-
-  // if (maxVal > noise_threshold) Serial.println("NEW ARRAY");
-  // for (int i = 3; i < SAMPLES - 2; i++) {
-  //   if (vReal[i] > .4) {
-  //     Serial.print("Potential peak at index ");
-  //     Serial.print(i);
-  //     Serial.print(" with a value of ");
-  //     Serial.println(vReal[i]);
-  //   }
-  // }
-
 
   // primary peaks are in the first set of paranthesis. second set (if present) are the sub-peaks 
   double peak_threshold = .9;
