@@ -235,25 +235,25 @@ VowelSounds vowel_detection() {
   // primary peaks are in the first set of paranthesis. second set (if present) are the sub-peaks 
   double peak_threshold = .9;
   if((vReal[17] > peak_threshold && vReal[111] > peak_threshold)){
-    Serial.println("found an 'i' like 'find'");
+    //Serial.println("found an 'i' like 'find'");
     return iVowel;
   } else if(((vReal[13] > peak_threshold && vReal[115] > peak_threshold))){
-    Serial.println("found an ah like 'saw'");
+    //Serial.println("found an ah like 'saw'");
     return aVowel;
   }else if((vReal[12] > peak_threshold && vReal[116] > peak_threshold)){
-    Serial.println("found an oh like 'no'");
+    //Serial.println("found an oh like 'no'");
     return oVowel;
   }else if((vReal[6] > peak_threshold && vReal[126] > peak_threshold) && (vReal[5] > peak_threshold-.1 && vReal[123] > peak_threshold-.1)){
-    Serial.println("found an ooooo like 'boot'");
+    //Serial.println("found an ooooo like 'boot'");
     return oVowel;
   }else if((vReal[9] > peak_threshold && vReal[119] > peak_threshold)){
-    Serial.println("found an 'aaaa' like 'say'");
+    //Serial.println("found an 'aaaa' like 'say'");
     return aVowel;
   } else if((vReal[4] > peak_threshold && vReal[124] > peak_threshold)){
-    Serial.println("found an eeee like 'bee'");
+    //Serial.println("found an eeee like 'bee'");
     return eVowel;
   } else if ((vReal[11] > peak_threshold && vReal[117] > peak_threshold)){
-    Serial.println("found an uh like 'bus'");
+    //Serial.println("found an uh like 'bus'");
     return uVowel;
   }
   return noVowel;
