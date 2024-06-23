@@ -7,10 +7,8 @@
   *
 */
 
-#include <FastLED.h>
 #include <Arduino.h>
 #include "arduinoFFT.h"
-#include "patterns.h"
 #include "nanolux_types.h"
 #include "nanolux_util.h"
 #include <cmath>
@@ -24,8 +22,7 @@ extern double volume;
 /// Global variable used to store preak audio frequency
 extern double peak;
 
-/// FFT object used for audio processing.
-extern arduinoFFT FFT;
+bool is_fft_initalized = false;
 
 /// Array to store both sampled and FFT'ed audio.
 /// Processing is done in place.
@@ -41,6 +38,9 @@ extern double vImag[SAMPLES];
 /// vReal and vRealHist.
 extern double delt[SAMPLES];
 
+/// FFT used for processing audio.
+ArduinoFFT<double> FFT = ArduinoFFT<double>(vReal, vImag, SAMPLES, SAMPLING_FREQUENCY);
+
 /// Global variable used to access the frequency band
 /// with the largest delta between iterations.
 extern double maxDelt;
@@ -51,6 +51,7 @@ extern double maxDelt;
 /// is sampled, the function sleeps until ready to sample again at the next
 /// timestep.
 void sample_audio(){
+
   unsigned long microseconds;
   for(int i=0; i<SAMPLES; i++) {
     microseconds = micros();    //Overflows after around 70 minutes!
@@ -100,8 +101,8 @@ void update_max_delta(){
 ///
 /// Places the calculated peak frequency in the "peak" variable.
 void update_peak(){
-  FFT.Windowing(vReal, SAMPLES, FFT_WIN_TYP_HAMMING, FFT_FORWARD);
-  FFT.Compute(vReal, vImag, SAMPLES, FFT_FORWARD);
-  FFT.ComplexToMagnitude(vReal, vImag, SAMPLES);
-  peak = FFT.MajorPeak(vReal, SAMPLES, SAMPLING_FREQUENCY);
+  FFT.windowing(vReal, SAMPLES, FFT_WIN_TYP_HAMMING, FFT_FORWARD);
+  FFT.compute(vReal, vImag, SAMPLES, FFT_FORWARD);
+  FFT.complexToMagnitude(vReal, vImag, SAMPLES);
+  peak = FFT.majorPeak(vReal, SAMPLES, SAMPLING_FREQUENCY);
 }

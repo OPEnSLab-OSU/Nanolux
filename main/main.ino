@@ -8,7 +8,6 @@
 #include <ArduinoJson.hpp>
 #include <FastLED.h>
 #include <Arduino.h>
-#include "arduinoFFT.h"
 #include "patterns.h"
 #include "nanolux_types.h"
 #include "nanolux_util.h"
@@ -16,6 +15,7 @@
 #include "ext_analysis.h"
 #include "storage.h"
 #include "globals.h"
+
 #include <AiEsp32RotaryEncoder.h>
 
 FASTLED_USING_NAMESPACE
@@ -32,9 +32,6 @@ CRGB output_buffer[MAX_LEDS];
 
 /// Postprocessed output buffer.
 CRGB smoothed_output[MAX_LEDS];
-
-/// FFT used for processing audio.
-arduinoFFT FFT = arduinoFFT();
 
 /// Contains the current state of the button (true is pressed).
 bool button_pressed = false;

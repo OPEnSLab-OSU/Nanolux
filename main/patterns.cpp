@@ -9,7 +9,6 @@
 
 #include <FastLED.h>
 #include <Arduino.h>
-#include "arduinoFFT.h"
 #include "patterns.h"
 #include "nanolux_types.h"
 #include "nanolux_util.h"
@@ -23,7 +22,6 @@ extern double vReal[SAMPLES];      // Sampling buffers
 extern double vImag[SAMPLES];
 extern double vRealHist[SAMPLES];  // for delta freq
 extern double delt[SAMPLES];
-extern arduinoFFT FFT;
 extern bool button_pressed;
 extern SimplePatternList gPatterns;
 extern int NUM_PATTERNS;

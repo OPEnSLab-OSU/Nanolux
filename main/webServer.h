@@ -9,6 +9,7 @@
 #include <ESPAsyncWebServer.h>
 #include <WebHandlerImpl.h>
 #include <WebResponseImpl.h>
+#include "esp_wifi.h"
 
 
 //#define DEBUG_PRINTF(...) Serial.printf(__VA_ARGS__) 
@@ -72,7 +73,7 @@ bool join_succeeded = false;
 const char* ap_ssid = "AUDIOLUX";
 const char* ap_password = "12345678";
 
-const char* DEFAULT_HOSTNAME = "AudioLuxOne";
+const char* DEFAULT_HOSTNAME = "audiolux";
 static String hostname;
 
 
@@ -121,9 +122,6 @@ typedef struct {
 
 
 AsyncWebServer webServer(80);
-
-
-
 
 /*
  * File system
@@ -290,15 +288,18 @@ inline bool initialize_wifi_connection() {
 }
 
 
-inline void initialize_mdns()
+inline void initialize_mdns(bool use_user_hostname)
 {
-    // The assumption is that we are connected. Setup mDNS
-    if (MDNS.begin(hostname.c_str())) {
-        DEBUG_PRINTF("mDNS connected. The AudioLux can be reached at %s.local\n", hostname.c_str());
-    }
-    else {
-        DEBUG_PRINTF("Unable to setup mDNS\n");
-    }
+  bool success = MDNS.begin(
+    (use_user_hostname ? hostname : DEFAULT_HOSTNAME).c_str()
+  ); 
+
+  // The assumption is that we are connected. Setup mDNS
+  if (success) {
+      ALWAYS_PRINTF("mDNS connected. The AudioLux can be reached at %s.local\n", hostname.c_str());
+  } else {
+      ALWAYS_PRINTF("Unable to setup mDNS\n");
+  }
 }
 
 
@@ -323,7 +324,7 @@ inline void on_join_timer(TimerHandle_t timer) {
                 join_in_progress = false;
                 join_succeeded = true;
                 xTimerStop(timer, 0);
-                DEBUG_PRINTF("Timer: WiFi join succeeded.\n");
+                ALWAYS_PRINTF("Timer: WiFi join succeeded.\n");
 
                 // Queue the settings for saving. Can't do it here
                 // because FreeRTOS croaks with a stack overflow.
@@ -332,7 +333,7 @@ inline void on_join_timer(TimerHandle_t timer) {
                 current_wifi.Key = candidate_wifi.Key;
                 dirty_settings = true;
 
-                initialize_mdns();
+                initialize_mdns(true);
             }
             else if (status != WL_IDLE_STATUS && status != WL_CONNECT_FAILED && status != WL_NO_SHIELD) {
                 join_in_progress = false;
@@ -626,7 +627,6 @@ inline void setup_networking(const char * password)
         wifi_okay = initialize_wifi_connection();
         if (wifi_okay) {
             ALWAYS_PRINTF("WiFi IP: %s\n", WiFi.localIP().toString().c_str());
-            initialize_mdns();
         }
     }
     else {
@@ -641,9 +641,13 @@ inline void setup_networking(const char * password)
     if(password[0] == '\0'){
       WiFi.softAP("AudioluxUnsecured");
       ALWAYS_PRINTF("WIFI IS UNSECURED!!!\n");
+      initialize_mdns(false);
     }else{
       WiFi.softAP(hostname, password);
+      initialize_mdns(true);
     }
+
+    
     
     delay(1000);
     const IPAddress ap_ip = WiFi.softAPIP();
@@ -680,7 +684,7 @@ inline void initialize_web_server(const APIGetHook api_get_hooks[], const int ge
     // Software timer to monitor async WiFi joins.
     join_timer = xTimerCreate(
         "WiFiJoinTimer",
-        pdMS_TO_TICKS(1000),
+        pdMS_TO_TICKS(200),
         pdTRUE,                                 // Auto re-trigger.
         nullptr,                                // Timer ID pointer, not used.
         on_join_timer
@@ -719,5 +723,6 @@ inline void initialize_web_server(const APIGetHook api_get_hooks[], const int ge
     DefaultHeaders::Instance().addHeader("Access-Control-Allow-Origin", "*");
     DefaultHeaders::Instance().addHeader("Access-Control-Allow-Methods", "GET, POST, PUT");
     DefaultHeaders::Instance().addHeader("Access-Control-Allow-Headers", "Content-Type");
+    esp_wifi_set_ps(WIFI_PS_NONE);
     webServer.begin();
 }
