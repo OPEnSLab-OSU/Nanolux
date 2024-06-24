@@ -207,8 +207,8 @@ void process_pattern(Pattern_Data * p, Strip_Buffer * buf, uint8_t len){
 
   // Pull the current postprocessing effects from the struct integer.
   uint8_t pp_mode = p->postprocessing_mode;
-  bool is_reversed = (pp_mode == 1) || (pp_mode == 3);
-  bool is_mirrored = (pp_mode == 2) || (pp_mode == 3);
+  bool is_reversed = pp_mode & 1;
+  bool is_mirrored = pp_mode & 2;
 
   getFhue(p->minhue, p->maxhue);
   getVbrightness();

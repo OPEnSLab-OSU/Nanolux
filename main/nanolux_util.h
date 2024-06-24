@@ -6,7 +6,7 @@
 // Uncomment this macro if using the new hardware
 // with the rotary encoder.
 
-//#define VERSION_2_HARDWARE
+#define VERSION_2_HARDWARE
 
 void IRAM_ATTR buttonISR();
 void reset_button_state();

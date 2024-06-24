@@ -599,6 +599,7 @@ inline void save_url(const String& url) {
         StaticJsonDocument<192> data;
 
         data["url"] = url;
+        Serial.println(url);
 
         serializeJson(data, saved_url);
         DEBUG_PRINTF("%s saved as Web App URL.\n", url.c_str());
@@ -721,8 +722,9 @@ inline void initialize_web_server(const APIGetHook api_get_hooks[], const int ge
 
     // "Disable" CORS.
     DefaultHeaders::Instance().addHeader("Access-Control-Allow-Origin", "*");
-    DefaultHeaders::Instance().addHeader("Access-Control-Allow-Methods", "GET, POST, PUT");
-    DefaultHeaders::Instance().addHeader("Access-Control-Allow-Headers", "Content-Type");
+    DefaultHeaders::Instance().addHeader("Access-Control-Allow-Methods", "*");
+    DefaultHeaders::Instance().addHeader("Access-Control-Allow-Headers", "*");
     esp_wifi_set_ps(WIFI_PS_NONE);
     webServer.begin();
+    MDNS.addService("http", "tcp", 80);
 }

@@ -67,7 +67,7 @@ void bound_user_data() {
 
   for(int i = 0; i < PATTERN_LIMIT; i++){
     bound_byte(&loaded_patterns.pattern[i].brightness, 0, 255);
-    bound_byte(&loaded_patterns.pattern[i].smoothing, 0, 175);
+    bound_byte(&loaded_patterns.pattern[i].smoothing, 0, 225);
     bound_byte(&loaded_patterns.pattern[i].idx, 0, NUM_PATTERNS);
   }
 }
