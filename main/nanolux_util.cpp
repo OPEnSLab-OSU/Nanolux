@@ -290,14 +290,14 @@ void setup_rotary_encoder(){
     rotaryEncoder.begin();
     rotaryEncoder.setup(readEncoderISR);
     rotaryEncoder.setBoundaries(0, 1000, true); //minValue, maxValue, circleValues true|false (when max go to min and vice versa)
-    rotaryEncoder.setAcceleration(250);
+    rotaryEncoder.setAcceleration(0);
 }
 
 /// @brief Calculates the pattern index the rotary encoder currently
 /// corresponds to.
 /// @returns The pattern index the encoder is set to.
 int calculate_pattern_index(){
-    return static_cast<int>(floor(rotaryEncoder.readEncoder() / ROTARY_ENCODER_STEPS)) % NUM_PATTERNS;
+    return static_cast<int>(floor(rotaryEncoder.readEncoder())) % NUM_PATTERNS;
 }
 
 /// @brief Returns the current state of the rotary encoder button.

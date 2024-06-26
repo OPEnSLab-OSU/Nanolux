@@ -440,8 +440,6 @@ APIGetHook apiGetHooks[] = {
   { "/api/getPattern", handle_pattern_get_request },
   { "/api/getStrip", handle_strip_get_request },
   { "/api/getSettings", handle_system_settings_get_request },
-
-
 };
 constexpr int API_GET_HOOK_COUNT = 4;
 

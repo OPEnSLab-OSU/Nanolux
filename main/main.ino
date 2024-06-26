@@ -117,6 +117,8 @@ void setup() {
   verify_saves();
   load_slot(0);
 
+
+
 #ifdef ENABLE_WEB_SERVER
   initialize_web_server(apiGetHooks, API_GET_HOOK_COUNT, apiPutHooks, API_PUT_HOOK_COUNT, config.pass);
   Serial.println(config.pass);
@@ -357,8 +359,10 @@ void update_hardware(){
 
   #ifdef VERSION_2_HARDWARE
 
-    if (isEncoderButtonPressed() == lastEncoderBtnPressed)
+    if (isEncoderButtonPressed() != lastEncoderBtnPressed)
       manual_pattern.postprocessing_mode = (manual_pattern.postprocessing_mode + 1) % 4;
+    
+    //Serial.println(manual_pattern.postprocessing_mode);
 
     lastEncoderBtnPressed = isEncoderButtonPressed();
 
@@ -367,8 +371,11 @@ void update_hardware(){
     uint8_t old_idx = manual_pattern.idx;
     manual_pattern.idx = calculate_pattern_index();
     
-    if (old_idx != manual_pattern.idx) 
+    if (old_idx != manual_pattern.idx){
+      pattern_changed = true;
       manual_control_enabled = true;
+    }
+      
 
   #else
 
@@ -392,6 +399,9 @@ void update_hardware(){
 void loop() {
   begin_loop_timer(config.loop_ms);  // Begin timing this loop
 
+  audio_analysis();  // Run the audio analysis pipeline
+  update_hardware(); // Pull updates from hardware (buttons, encoder)
+
   // Reset buffers if pattern settings were changed since
   // last program loop.
   if (pattern_changed) {
@@ -402,10 +412,8 @@ void loop() {
     histories[1] = Strip_Buffer();
     histories[2] = Strip_Buffer();
     histories[3] = Strip_Buffer();
+    manual_strip_buffer = Strip_Buffer();
   } 
-
-  audio_analysis();  // Run the audio analysis pipeline
-  update_hardware(); // Pull updates from hardware (buttons, encoder)
 
   if(manual_control_enabled){
 
