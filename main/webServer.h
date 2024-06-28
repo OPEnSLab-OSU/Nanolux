@@ -17,7 +17,7 @@
 #define ALWAYS_PRINTF(...) Serial.printf(__VA_ARGS__)
 
 // Uncomment to use the old LittleFS web app loader.
-#define SD_LOADER
+//#define SD_LOADER
 
 #ifdef SD_LOADER
   #include "FS.h"
@@ -142,14 +142,11 @@ AsyncWebServer webServer(80);
 inline void initialize_file_system() {
 
   #ifdef SD_LOADER
-    Serial.println("Initializing SD FS...");
+    DEBUG_PRINTF("Initializing SD FS...");
     SPI.begin(SCK, MISO, MOSI, CS);
-    if (!SD.begin(CS)) {
-      Serial.println("Card Mount Failed");
-      // Halt execution in case of a failure
-      while(true){}
-    }
-    Serial.println("Card mount successful.");
+    if (!SD.begin(CS))
+      DEBUG_PRINTF("Card Mount Failed");
+    DEBUG_PRINTF("Card mount successful.");
   #else
     DEBUG_PRINTF("Initializing FS...");
     if (LittleFS.begin()) {
@@ -159,7 +156,6 @@ inline void initialize_file_system() {
     }
   #endif 
 }
-
 
 /*
  * Settings Management
