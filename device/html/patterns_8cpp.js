@@ -18,7 +18,6 @@ var patterns_8cpp =
     [ "config", "patterns_8cpp.html#a771cac207619504c2bd44a4392428a04", null ],
     [ "delt", "patterns_8cpp.html#abde44bf7f909ccc0536377ee12ad046f", null ],
     [ "fbs", "patterns_8cpp.html#a5fe94530331e28002a3025747468de0a", null ],
-    [ "FFT", "patterns_8cpp.html#a06dc8755eca604de4444291b9dfe17a0", null ],
     [ "fHue", "patterns_8cpp.html#a7c08d24e884c11de984d2043cd9e0243", null ],
     [ "formants", "patterns_8cpp.html#afb4968a692d198acc4488d90bd1ecde0", null ],
     [ "manual_control_enabled", "patterns_8cpp.html#a2cc0e9634c531780594a5d10445e6458", null ],

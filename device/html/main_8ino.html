@@ -108,7 +108,6 @@ $(function(){initNavTree('main_8ino.html',''); initResizable(true); });
 <code>#include &lt;ArduinoJson.hpp&gt;</code><br />
 <code>#include &lt;FastLED.h&gt;</code><br />
 <code>#include &lt;Arduino.h&gt;</code><br />
-<code>#include &quot;arduinoFFT.h&quot;</code><br />
 <code>#include &quot;<a class="el" href="patterns_8h_source.html">patterns.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="nanolux__types_8h_source.html">nanolux_types.h</a>&quot;</code><br />
 <code>#include &quot;nanolux_util.h&quot;</code><br />
@@ -172,9 +171,6 @@ CRGB&#160;</td><td class="memItemRight" valign="bottom"><b>output_buffer</b> [MA
 CRGB&#160;</td><td class="memItemRight" valign="bottom"><b>smoothed_output</b> [MAX_LEDS]</td></tr>
 <tr class="memdesc:a54d0986e11a540072df62d5d7a6a3d92"><td class="mdescLeft">&#160;</td><td class="mdescRight">Postprocessed output buffer. <br /></td></tr>
 <tr class="separator:a54d0986e11a540072df62d5d7a6a3d92"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a06dc8755eca604de4444291b9dfe17a0" id="r_a06dc8755eca604de4444291b9dfe17a0"><td class="memItemLeft" align="right" valign="top">arduinoFFT&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a06dc8755eca604de4444291b9dfe17a0">FFT</a> = arduinoFFT()</td></tr>
-<tr class="memdesc:a06dc8755eca604de4444291b9dfe17a0"><td class="mdescLeft">&#160;</td><td class="mdescRight">FFT used for processing audio.  <br /></td></tr>
-<tr class="separator:a06dc8755eca604de4444291b9dfe17a0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af23a0eb11ff9589330539e6b763badc8" id="r_af23a0eb11ff9589330539e6b763badc8"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af23a0eb11ff9589330539e6b763badc8">button_pressed</a> = false</td></tr>
 <tr class="memdesc:af23a0eb11ff9589330539e6b763badc8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Contains the current state of the button (true is pressed).  <br /></td></tr>
 <tr class="separator:af23a0eb11ff9589330539e6b763badc8"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -622,23 +618,6 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><b>lastEncoderBtnPressed
 
 <p>The currently-loaded device config. </p>
 <p>The current config of the device, defined in <a class="el" href="main_8ino.html">main.ino</a>. Used to check if serial printing is allowed. </p>
-
-</div>
-</div>
-<a id="a06dc8755eca604de4444291b9dfe17a0" name="a06dc8755eca604de4444291b9dfe17a0"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a06dc8755eca604de4444291b9dfe17a0">&#9670;&#160;</a></span>FFT</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">arduinoFFT FFT = arduinoFFT()</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>FFT used for processing audio. </p>
-<p>FFT object used for audio processing. </p>
 
 </div>
 </div>

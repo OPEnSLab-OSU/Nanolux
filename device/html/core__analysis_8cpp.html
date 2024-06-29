@@ -103,10 +103,8 @@ $(function(){initNavTree('core__analysis_8cpp.html',''); initResizable(true); })
   <div class="headertitle"><div class="title">core_analysis.cpp File Reference</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><code>#include &lt;FastLED.h&gt;</code><br />
-<code>#include &lt;Arduino.h&gt;</code><br />
+<div class="textblock"><code>#include &lt;Arduino.h&gt;</code><br />
 <code>#include &quot;arduinoFFT.h&quot;</code><br />
-<code>#include &quot;<a class="el" href="patterns_8h_source.html">patterns.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="nanolux__types_8h_source.html">nanolux_types.h</a>&quot;</code><br />
 <code>#include &quot;nanolux_util.h&quot;</code><br />
 <code>#include &lt;cmath&gt;</code><br />
@@ -141,9 +139,9 @@ unsigned int&#160;</td><td class="memItemRight" valign="bottom"><b>sampling_peri
 <tr class="memitem:aa7fd5e56ed5028cc63702f999df5cbfd" id="r_aa7fd5e56ed5028cc63702f999df5cbfd"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa7fd5e56ed5028cc63702f999df5cbfd">peak</a></td></tr>
 <tr class="memdesc:aa7fd5e56ed5028cc63702f999df5cbfd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Global variable used to store preak audio frequency.  <br /></td></tr>
 <tr class="separator:aa7fd5e56ed5028cc63702f999df5cbfd"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a06dc8755eca604de4444291b9dfe17a0" id="r_a06dc8755eca604de4444291b9dfe17a0"><td class="memItemLeft" align="right" valign="top">arduinoFFT&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a06dc8755eca604de4444291b9dfe17a0">FFT</a></td></tr>
-<tr class="memdesc:a06dc8755eca604de4444291b9dfe17a0"><td class="mdescLeft">&#160;</td><td class="mdescRight">FFT object used for audio processing.  <br /></td></tr>
-<tr class="separator:a06dc8755eca604de4444291b9dfe17a0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae0f34ec17562f2f8abac338c13f710c0" id="r_ae0f34ec17562f2f8abac338c13f710c0"><td class="memItemLeft" align="right" valign="top"><a id="ae0f34ec17562f2f8abac338c13f710c0" name="ae0f34ec17562f2f8abac338c13f710c0"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>is_fft_initalized</b> = false</td></tr>
+<tr class="separator:ae0f34ec17562f2f8abac338c13f710c0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a57f2c8816172cdced570b65197701a22" id="r_a57f2c8816172cdced570b65197701a22"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a57f2c8816172cdced570b65197701a22">vReal</a> [SAMPLES]</td></tr>
 <tr class="separator:a57f2c8816172cdced570b65197701a22"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac8b0b4754c9725c69948f347ec5d7edf" id="r_ac8b0b4754c9725c69948f347ec5d7edf"><td class="memItemLeft" align="right" valign="top"><a id="ac8b0b4754c9725c69948f347ec5d7edf" name="ac8b0b4754c9725c69948f347ec5d7edf"></a>
@@ -156,6 +154,10 @@ double&#160;</td><td class="memItemRight" valign="bottom"><b>vImag</b> [SAMPLES]
 <tr class="separator:ac034086d3825bcc85e52bb87eafaffa3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abde44bf7f909ccc0536377ee12ad046f" id="r_abde44bf7f909ccc0536377ee12ad046f"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#abde44bf7f909ccc0536377ee12ad046f">delt</a> [SAMPLES]</td></tr>
 <tr class="separator:abde44bf7f909ccc0536377ee12ad046f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4c8c574ade89ba1bcecadc2544d2b2bf" id="r_a4c8c574ade89ba1bcecadc2544d2b2bf"><td class="memItemLeft" align="right" valign="top"><a id="a4c8c574ade89ba1bcecadc2544d2b2bf" name="a4c8c574ade89ba1bcecadc2544d2b2bf"></a>
+ArduinoFFT&lt; double &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>FFT</b> = ArduinoFFT&lt;double&gt;(<a class="el" href="#a57f2c8816172cdced570b65197701a22">vReal</a>, <a class="el" href="#ac034086d3825bcc85e52bb87eafaffa3">vImag</a>, SAMPLES, SAMPLING_FREQUENCY)</td></tr>
+<tr class="memdesc:a4c8c574ade89ba1bcecadc2544d2b2bf"><td class="mdescLeft">&#160;</td><td class="mdescRight">FFT used for processing audio. <br /></td></tr>
+<tr class="separator:a4c8c574ade89ba1bcecadc2544d2b2bf"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a66b3a012e977e080be29a2715d01047f" id="r_a66b3a012e977e080be29a2715d01047f"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a66b3a012e977e080be29a2715d01047f">maxDelt</a></td></tr>
 <tr class="separator:a66b3a012e977e080be29a2715d01047f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
@@ -289,31 +291,6 @@ double&#160;</td><td class="memItemRight" valign="bottom"><b>vImag</b> [SAMPLES]
 </table>
 </div><div class="memdoc">
 <p>Variable used to store the frequency delta between vReal and vRealHist. </p>
-
-</div>
-</div>
-<a id="a06dc8755eca604de4444291b9dfe17a0" name="a06dc8755eca604de4444291b9dfe17a0"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a06dc8755eca604de4444291b9dfe17a0">&#9670;&#160;</a></span>FFT</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">arduinoFFT FFT</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">extern</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>FFT object used for audio processing. </p>
-<p>FFT object used for audio processing. </p>
 
 </div>
 </div>
