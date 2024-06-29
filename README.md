@@ -16,11 +16,12 @@ Linux (http://docs.arduino.cc/software/ide-v1/tutorials/Linux)
 # Dependencies
 You will also need several libraries. See the [IDE Setup Guide](https://github.com/OPEnSLab-OSU/Nanolux/wiki/Arduino-IDE-Setting-Guide) Wiki Page for steps on how to install these libraries.
 
-* ArduinoFFT Library (1.5.6): https://github.com/kosme/arduinoFFT
-* ArduinoJson (6.20.1): https://arduinojson.org/
-* FastLED (3.4.0): http://fastled.io/ (You can also find this in the /dependencies)
-* LittleFS_esp32 (1.0.6): https://github.com/lorol/LITTLEFS
-* ArduinoJson (6.20.1): https://github.com/bblanchon/ArduinoJson
+- Ai ESP32 Rotary Encoder (1.6)
+- ArduinoJson (7.1.0)
+- FastLED (3.7.0)
+- ArduinoFFT (2.0.2)
+- ESP32 Board Library (2.0.17)
+
 
 All dependencies are above installable through the Library Manager of the Arduino IDE, or with the 
 [Arduino CLI](https://arduino.github.io/arduino-cli/0.28/) tool.
@@ -28,7 +29,7 @@ All dependencies are above installable through the Library Manager of the Arduin
 The following dependencies must be installed manually. Refer to Wiki for more info.
 
 * ESPAsynWebServer (1.2.3): https://github.com/me-no-dev/ESPAsyncWebServer
-* AsyncTCP (1.1.1): https://github.com/me-no-dev/AsyncTCP
+* AsyncTCP (1.1.4): https://github.com/me-no-dev/AsyncTCP
 
 
 # Install Board
