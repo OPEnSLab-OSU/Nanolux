@@ -12,6 +12,8 @@
 #include "patterns.h"
 #include "nanolux_types.h"
 #include "nanolux_util.h"
+#include <AudioPrism>
+#include "AnalysisModule.h"
 #include <cmath>
 
 /// Global variable used to access the current volume.
@@ -42,6 +44,9 @@ extern double formants[3];
 /// Global FIVE BAND SPLIT which stores changing bands
 /// based on raw frequencies
 extern double fbs[5]; 
+
+// AudioPrism modules
+Formants formantModule(3);  // Detects formants (F0, F1, F2)
 
 
 /// @brief Calculates the frequency bands with the highest density.
