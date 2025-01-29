@@ -117,7 +117,7 @@ void setup() {
   verify_saves();
   load_slot(0);
 
-
+  configure_AudioPrism_modules();
 
 #ifdef ENABLE_WEB_SERVER
   initialize_web_server(apiGetHooks, API_GET_HOOK_COUNT, apiPutHooks, API_PUT_HOOK_COUNT, config.pass);

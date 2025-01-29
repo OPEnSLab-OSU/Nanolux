@@ -44,6 +44,10 @@ extern double vImag[SAMPLES];
 /// vReal and vRealHist.
 extern double delt[SAMPLES];
 
+/// Global variable used to access the frequency band
+/// with the largest delta between iterations.
+extern double maxDelt;
+
 /// FFT used for processing audio.
 ArduinoFFT<double> FFT = ArduinoFFT<double>(vReal, vImag, SAMPLES, SAMPLING_FREQUENCY);
 
@@ -55,10 +59,6 @@ MeanAmplitude volumeModule = MeanAmplitude();
 
 // DeltaAmplitudes module to find the change between vreal and vrealhist
 DeltaAmplitudes deltaModule = DeltaAmplitudes();
-
-/// Global variable used to access the frequency band
-/// with the largest delta between iterations.
-extern double maxDelt;
 
 /// @brief Samples incoming audio and stores the signal in vReal.
 ///
@@ -83,35 +83,22 @@ void compute_FFT() {
   FFT.windowing(vReal, SAMPLES, FFT_WIN_TYP_HAMMING, FFT_FORWARD);
   FFT.compute(vReal, vImag, SAMPLES, FFT_FORWARD);
   FFT.complexToMagnitude(vReal, vImag, SAMPLES);
-
-  audioPrismInput[0] = (float*)vReal;       // Point to vReal
-  audioPrismInput[1] = (float*)vRealHist;   // Point to vRealHist
 }
 
 /// @brief Updates the current peak frequency.
 ///
 /// Places the calculated peak frequency in the "peak" variable.
 void update_peak() {
-  peaksModule.setWindowSize(SAMPLES);
-  peaksModule.setSampleRate(SAMPLING_FREQUENCY);
-
   peaksModule.doAnalysis(audioPrismInput);
   float** peakData = peaksModule.getOutput();  // Outputs (frequency, magnatiude) tuples
   float* peakFrequencies = peakData[MP_FREQ];  
-
-  peak = static_cast<double>(peakFrequencies[0]);
+  peak = peakFrequencies[0];
 }
 
 /// @brief Calculates and stores the current volume.
 ///
 /// Volume is stored in the "volume" global variable.
 void update_volume() {
-  int top = 3, bottom = 3;
-
-  volumeModule.setWindowSize(SAMPLES);
-  volumeModule.setSampleRate(SAMPLING_FREQUENCY);
-  volumeModule.setAnalysisRangeByBin(top, SAMPLES - bottom);
-  
   volumeModule.doAnalysis(audioPrismInput);
   volume = volumeModule.getOutput();
 }
@@ -120,16 +107,8 @@ void update_volume() {
 ///
 /// Places the calculated value in the "maxDelt" variable.
 void update_max_delta() {
-  int top = 3, bottom = 3;
-  deltaModule
-
-  deltaModule.setWindowSize(SAMPLES);
-  deltaModule.setSampleRate(SAMPLING_FREQUENCY);
-  deltaModule.setAnalysisRangeByBin(top, SAMPLES - bottom);
-
   deltaModule.doAnalysis(audioPrismInput);
   delt = deltaModule.getOutput();
-
   maxDelt = largest(delt, SAMPLES); 
 }
 
@@ -152,4 +131,27 @@ void noise_gate(int threshhold) {
 /// After the function completes, the vRealHist matches the the current vReal array
 void update_vRealHist() {
   memcpy(vRealHist, vReal, SAMPLES * sizeof(float));
+}
+
+/// @brief Congifures AudioPrism Modules
+///
+/// After the function completes, Audioprism Modules used elsewhere in this file
+/// are properly configured with window size, sample rate, and bin size
+/// MUST BE RUN BEFORE THE AUDIO ANALYSIS LOOP
+void configure_AudioPrism_modules() {
+  int top = 3, bottom = 3;
+
+  audioPrismInput[0] = (float*)vReal;       
+  audioPrismInput[1] = (float*)vRealHist;   
+
+  deltaModule.setWindowSize(SAMPLES);
+  deltaModule.setSampleRate(SAMPLING_FREQUENCY);
+  deltaModule.setAnalysisRangeByBin(top, SAMPLES - bottom);
+
+  volumeModule.setWindowSize(SAMPLES);
+  volumeModule.setSampleRate(SAMPLING_FREQUENCY);
+  volumeModule.setAnalysisRangeByBin(top, SAMPLES - bottom);
+
+  peaksModule.setWindowSize(SAMPLES);
+  peaksModule.setSampleRate(SAMPLING_FREQUENCY);
 }

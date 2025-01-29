@@ -2,9 +2,14 @@
 #define CORE_ANALYSIS_H
 
 void sample_audio();
-void noise_gate(int threshhold);
+void compute_FFT();
+void update_peak();
 void update_volume();
 void update_max_delta();
-void update_peak();
+void noise_gate(int threshhold);
+void update_vRealHist();
+void configure_AudioPrism_modules();
+
+
 
 #endif
