@@ -31,6 +31,7 @@ unsigned long microseconds;
 double vReal[SAMPLES];  // Sampling buffers
 double vImag[SAMPLES];
 double vRealHist[SAMPLES];  // Delta freq
+float* audioPrismInput[2];
 double delt[SAMPLES];
 double maxDelt = 0.;  // Frequency with the biggest change in amp.
 unsigned long myTime;     // For nvp

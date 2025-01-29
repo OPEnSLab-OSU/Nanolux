@@ -481,6 +481,8 @@ void audio_analysis() {
 
   sample_audio();
 
+  compute_FFT();
+
   update_peak();
 
   update_volume();
@@ -490,6 +492,8 @@ void audio_analysis() {
   update_formants();
 
   noise_gate(loaded_patterns.noise_thresh);
+
+  update_vRealHist();
 
   #ifdef SHOW_TIMINGS
     const int end = micros();
