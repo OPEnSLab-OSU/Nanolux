@@ -305,3 +305,8 @@ int calculate_pattern_index(){
 bool isEncoderButtonPressed(){
     return rotaryEncoder.isEncoderButtonClicked();
 }
+
+/// @brief Sets the rotary encoder's current position to a new value
+void update_encoder_value(long newValue){
+    rotaryEncoder.setEncoderValue(newValue);
+}
