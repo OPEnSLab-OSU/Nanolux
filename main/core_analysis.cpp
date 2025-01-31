@@ -8,9 +8,8 @@
 */
 
 #include <Arduino.h>
-#include <AudioPrism>
 #include "arduinoFFT.h"
-#include "AnalysisModule.h"
+#include "AudioPrism.h"
 #include "nanolux_types.h"
 #include "nanolux_util.h"
 #include <cmath>
@@ -89,7 +88,7 @@ void compute_FFT() {
 ///
 /// Places the calculated peak frequency in the "peak" variable.
 void update_peak() {
-  peaksModule.doAnalysis(audioPrismInput);
+  peaksModule.doAnalysis((const float**)audioPrismInput);
   float** peakData = peaksModule.getOutput();  // Outputs (frequency, magnatiude) tuples
   float* peakFrequencies = peakData[MP_FREQ];  
   peak = peakFrequencies[0];
@@ -99,7 +98,7 @@ void update_peak() {
 ///
 /// Volume is stored in the "volume" global variable.
 void update_volume() {
-  volumeModule.doAnalysis(audioPrismInput);
+  volumeModule.doAnalysis((const float**)audioPrismInput);
   volume = volumeModule.getOutput();
 }
 
@@ -107,8 +106,11 @@ void update_volume() {
 ///
 /// Places the calculated value in the "maxDelt" variable.
 void update_max_delta() {
-  deltaModule.doAnalysis(audioPrismInput);
-  delt = deltaModule.getOutput();
+  deltaModule.doAnalysis((const float**)audioPrismInput);
+  float* tempDelt = deltaModule.getOutput();
+  for (int i = 0; i < SAMPLES; i++) {
+      delt[i] = static_cast<double>(tempDelt[i]);
+  }
   maxDelt = largest(delt, SAMPLES); 
 }
 
