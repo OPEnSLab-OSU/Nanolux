@@ -382,9 +382,20 @@ void update_hardware(){
     // current pattern index.
     if (!manual_control_enabled) {
       uint8_t currentPatternIdx = loaded_patterns.pattern[0].idx;
+
+      /*
+      // print current encoder value to serial monitor
+      Serial.print("Rotary Encoder Value: ");
+      Serial.println(manual_pattern.idx);
+      */
       
       if (currentPatternIdx != manual_pattern.idx) {
         update_encoder_value(currentPatternIdx);
+        /*
+        // print the updated encoder value
+        Serial.print("Updated Encoder Value to: ");
+        Serial.println(calculate_pattern_index());
+        */
       }
     }
       
