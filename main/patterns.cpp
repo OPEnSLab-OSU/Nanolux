@@ -824,3 +824,42 @@ void bar_fill(Strip_Buffer * buf, int len, Pattern_Data* params){
   
 }
 
+
+// mapping MIDI note numbers to colors.
+CRGB getColorForNote(int noteNumber) {
+  
+  switch (noteNumber) {
+    case 60: return CRGB::Red;      // C
+    case 62: return CRGB::Orange;   // D
+    case 64: return CRGB::Yellow;   // E
+    case 65: return CRGB::Green;    // F
+    case 67: return CRGB::Blue;     // G
+    case 69: return CRGB::Indigo;   // A
+    case 71: return CRGB::Violet;   // B
+    default: return CRGB::White;    // Other
+  }
+}
+
+// Function to convert frequency to a MIDI note number.
+int frequencyToMidi(double frequency) {
+  
+  if (frequency <= 0) {
+    return -1;
+  }
+
+  double noteNumber = 12 * log(frequency / 440) / log(2.0) + 69;
+  return int(round(noteNumber));
+}
+
+// maps the current note to a color.
+void noteColorPattern(Strip_Buffer *buf, int len, Pattern_Data* params) {
+
+  extern double peak;
+
+  // Convert the frequency to a note number.
+  int midiNote = frequencyToMidi(peak);
+  CRGB noteColor = getColorForNote(midiNote);
+
+  fill_solid(buf->leds, len, noteColor);
+
+}
