@@ -65,6 +65,23 @@ const PatternSettings = ({num, patterns}) => {
     }, 100);
 
 	/**
+	 * @brief Continuously poll the Nanolux device for changes to the
+	 * hardware pattern index, updates the web app UI to reflect the change.
+	 */
+	useInterval(() => {
+		if (isConnected && !updated) {
+			getPattern(num).then(newData => {
+				console.log("Fetched pattern from ESP32:", newData.idx);
+
+				if (newData.idx !== data.idx) {
+					console.log("Updating UI with new pattern:", newData.idx)
+					setData(newData);
+				}
+			});
+		}
+	}, 1000);
+
+	/**
 	 * @brief Updates a parameter in the pattern data structure with a new value.
 	 * @param ref The string reference to update in the data structure
 	 * @param value The new value to update the data structure with
