@@ -1002,76 +1002,37 @@ void showcaseSalientFreqs(Strip_Buffer * buf, int len, Pattern_Data* params){
   }
 }
 
-void showcaseSalientFreqs(Strip_Buffer * buf, int len, Pattern_Data* params){
-  //salientFreqs is a hypothetical external array of ints that represent indexes with the greatest change in amplitude. By default it gives 3 points
-  
-  update_salient_freqs();
-  static int splatter[MAX_LEDS];
-
-  fadeToBlackBy(buf->leds, len, 50);
-
-  for(int i = 0; i < len; i++){
-    splatter[i] = -1;
-  }
-
-  for(int i = 0; i < 3; i++){
-    int startPos = salFreqs[i];
-    
-    for(int i = 0; i < 4; i++){
-      if (startPos + i <= len){
-        splatter[startPos + i] = i;
-      }
-      if(startPos - i >= 0){
-        splatter[startPos - i] = i;
-      }
-    }
-  }
-
-  for(int i = 0; i < len; i++){
-    if (splatter[i] == 0){
-      buf->leds[i] = CHSV(fHue, 255, vbrightness);
-      splatter[i] = -1;
-    }
-    else if (splatter[i] > 0){
-      splatter[i] -= 1;
-    }
-  }
-}
-
-
-// mapping MIDI note numbers to colors.
-CRGB getColorForNote(int noteNumber) {
-  
+// Mapping MIDI note numbers to CHSV colors.
+CHSV getColorForNote(int noteNumber) {
   switch (noteNumber) {
-    case 60: return CRGB::Red;      // C
-    case 62: return CRGB::Orange;   // D
-    case 64: return CRGB::Yellow;   // E
-    case 65: return CRGB::Green;    // F
-    case 67: return CRGB::Blue;     // G
-    case 69: return CRGB::Indigo;   // A
-    case 71: return CRGB::Violet;   // B
-    default: return CRGB::White;    // Other
+      case 60: return CHSV(0, 255, 255);    // C - Red
+      case 62: return CHSV(32, 255, 255);   // D - Orange
+      case 64: return CHSV(64, 255, 255);   // E - Yellow
+      case 65: return CHSV(96, 255, 255);   // F - Green
+      case 67: return CHSV(160, 255, 255);  // G - Blue
+      case 69: return CHSV(192, 255, 255);  // A - Indigo
+      case 71: return CHSV(224, 255, 255);  // B - Violet
+      default: return CHSV(0, 0, 255);      // Other - White
   }
 }
 
 // Function to convert frequency to a MIDI note number.
 int frequencyToMidi(double frequency) {
-  
   if (frequency <= 0) {
-    return -1;
+      return -1;
   }
-
   double noteNumber = 12 * log(frequency / 440) / log(2.0) + 69;
   return int(round(noteNumber));
 }
 
-// maps the current note to a color.
+// Maps the current note to a color.
 void noteColorPattern(Strip_Buffer *buf, int len, Pattern_Data* params) {
-
   // Convert the frequency to a note number.
   int midiNote = frequencyToMidi(peak);
-  CRGB noteColor = getColorForNote(midiNote);
+  CHSV noteColor = getColorForNote(midiNote);
+  
+  for(int i = 0; i < len; i++){
 
-  fill_solid(buf->leds, len, noteColor);
-
+    buf->leds[i] = noteColor;
+  }
 }

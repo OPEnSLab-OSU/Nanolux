@@ -110,4 +110,6 @@ void showcaseBread(Strip_Buffer * buf, int len, Pattern_Data* params);
 
 void showcaseSalientFreqs(Strip_Buffer * buf, int len, Pattern_Data* params);
 
+void noteColorPattern(Strip_Buffer *buf, int len, Pattern_Data* params)
+
 #endif
