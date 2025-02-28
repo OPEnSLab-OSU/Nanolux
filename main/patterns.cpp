@@ -944,6 +944,7 @@ void showcaseBread(Strip_Buffer * buf, int len, Pattern_Data* params){
   //     buf->leds[startingPos + j] = CHSV(sliceHue, 70, brit);
   //   }
   // }
+  return;
 }
 
 void showcaseSalientFreqs(Strip_Buffer * buf, int len, Pattern_Data* params){
