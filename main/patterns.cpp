@@ -45,13 +45,17 @@ extern double fbs[5];
 /// Global formant array, used for accessing.
 extern double formants[3];
 
+const uint8_t MAX_HUE = 255;
+const uint8_t MIN_HUE = 0;
+
+
 // get frequency hue
 void getFhue(uint8_t min_hue, uint8_t max_hue){
     fHue = remap(
     log(peak) / log(2),
     log(MIN_FREQUENCY) / log(2),
     log(MAX_FREQUENCY) / log(2),
-    min_hue, max_hue);
+    MIN_HUE, MAX_HUE);
     // disable min hue and max hue
     // 10, 240);
 }
@@ -575,43 +579,43 @@ void bands(Strip_Buffer* buf, int len, Pattern_Data* params) {
           delete [] fiveSamples;
           break;
         }
-        case 2 :
-        {
-            // Grab the formants
-            double *temp_formants = density_formant();
-            double f0Hue = remap(temp_formants[0], MIN_FREQUENCY, MAX_FREQUENCY, 0, 255);
-            double f1Hue = remap(temp_formants[1], MIN_FREQUENCY, MAX_FREQUENCY, 0, 255);
-            double f2Hue = remap(temp_formants[2], MIN_FREQUENCY, MAX_FREQUENCY, 0, 255);
+        // case 2 :
+        // {
+        //     // Grab the formants
+        //     double *temp_formants = density_formant();
+        //     double f0Hue = remap(temp_formants[0], MIN_FREQUENCY, MAX_FREQUENCY, 0, 255);
+        //     double f1Hue = remap(temp_formants[1], MIN_FREQUENCY, MAX_FREQUENCY, 0, 255);
+        //     double f2Hue = remap(temp_formants[2], MIN_FREQUENCY, MAX_FREQUENCY, 0, 255);
 
-            if(config.debug_mode == 1){
-              Serial.print("\t f0Hue: ");
-              Serial.print(temp_formants[0]);
-              Serial.print("\t f1Hue: ");
-              Serial.print(temp_formants[1]);
-              Serial.print("\t f2Hue: ");
-              Serial.print(temp_formants[2]);
-            }
+        //     if(config.debug_mode == 1){
+        //       Serial.print("\t f0Hue: ");
+        //       Serial.print(temp_formants[0]);
+        //       Serial.print("\t f1Hue: ");
+        //       Serial.print(temp_formants[1]);
+        //       Serial.print("\t f2Hue: ");
+        //       Serial.print(temp_formants[2]);
+        //     }
 
-            // Fill 1/3 with each formant
-            for (int i = 0; i < len; i++) {
-              if (i < len/3) {
-                buf->leds[i] = CHSV(f0Hue, 255, 255);
-              }
-              else if (len/3 <= i && i < 2*len/3) {
-                buf->leds[i] = CHSV(f1Hue, 255, 255);
-              } 
-              else { 
-                buf->leds[i] = CHSV(f2Hue, 255, 255);
-              }
-            }
+        //     // Fill 1/3 with each formant
+        //     for (int i = 0; i < len; i++) {
+        //       if (i < len/3) {
+        //         buf->leds[i] = CHSV(f0Hue, 255, 255);
+        //       }
+        //       else if (len/3 <= i && i < 2*len/3) {
+        //         buf->leds[i] = CHSV(f1Hue, 255, 255);
+        //       } 
+        //       else { 
+        //         buf->leds[i] = CHSV(f2Hue, 255, 255);
+        //       }
+        //     }
 
-            // Smooth out the result
-            for (int i = 0; i < 5; i++) {
-              blur1d(buf->leds, len, 50);
-            }
-            delete[] temp_formants;
-            break;
-          }
+        //     // Smooth out the result
+        //     for (int i = 0; i < 5; i++) {
+        //       blur1d(buf->leds, len, 50);
+        //     }
+        //     delete[] temp_formants;
+        //     break;
+        //   }
       }
 }
 
@@ -658,37 +662,37 @@ void tug_of_war(Strip_Buffer * buf, int len, Pattern_Data* params) {
     int splitPosition;
     //use this function with smoothing for better results
     // red is on the left, blue is on the right
-    switch(params->config) {
-      case 0: // frequency
-        {
+    // switch(params->config) {
+    //   case 0: // frequency
+    //     {
           
-        double *formants = density_formant();
-        double f0 = formants[0];
-        delete[] formants;
-        splitPosition = remap(f0, MIN_FREQUENCY, MAX_FREQUENCY, 0, len);
+    //     double *formants = density_formant();
+    //     double f0 = formants[0];
+    //     delete[] formants;
+    //     splitPosition = remap(f0, MIN_FREQUENCY, MAX_FREQUENCY, 0, len);
 
-        // red is on the left, blue is on the right
-        for (int i = 0; i < len; i++) {
-            if (i < splitPosition) {
-                buf->leds[i] = CHSV(params->minhue, 255, 255);
-            } else {
-                buf->leds[i] = CHSV(params->maxhue, 255, 255);
-            }
-        }
+    //     // red is on the left, blue is on the right
+    //     for (int i = 0; i < len; i++) {
+    //         if (i < splitPosition) {
+    //             buf->leds[i] = CHSV(MIN_HUE, 255, 255);
+    //         } else {
+    //             buf->leds[i] = CHSV(MAX_HUE, 255, 255);
+    //         }
+    //     }
     
-        }
-      case 1: // volume
-        {
-        splitPosition = remap(volume, MIN_VOLUME, MAX_VOLUME, 0, len);
-        for (int i = 0; i < len; i++) {
-            if (i < splitPosition) {
-                buf->leds[i] = CHSV(params->minhue, 255, 255);
-            } else {
-                buf->leds[i] = CHSV(params->maxhue, 255, 255);
-            }
-        }
-        }
-    }
+    //     }
+    //   case 1: // volume
+    //     {
+    //     splitPosition = remap(volume, MIN_VOLUME, MAX_VOLUME, 0, len);
+    //     for (int i = 0; i < len; i++) {
+    //         if (i < splitPosition) {
+    //             buf->leds[i] = CHSV(MIN_HUE, 255, 255);
+    //         } else {
+    //             buf->leds[i] = CHSV(MAX_HUE, 255, 255);
+    //         }
+    //     }
+    //     }
+    // }
 }
 
 
@@ -806,12 +810,12 @@ void bar_fill(Strip_Buffer * buf, int len, Pattern_Data* params){
     }
   }
 
-  uint8_t hue_step = (params->maxhue - params->minhue) / (len - 1);
+  uint8_t hue_step = (MAX_HUE - MIN_HUE) / (len - 1);
 
   // Apply the color to the strip.
   for(uint8_t i = 0; i < max_height; i++){
     buf->leds[i] = CHSV(
-      (params->minhue + hue_step * (i - 1)) % 255,
+      (MIN_HUE + hue_step * (i - 1)) % 255,
       255,
       255
     );

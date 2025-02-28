@@ -372,6 +372,8 @@ void update_hardware(){
     manual_pattern.idx = calculate_pattern_index();
     
     if (old_idx != manual_pattern.idx){
+      Serial.print("Pattern changed to: ");
+      Serial.println(manual_pattern.idx);
       pattern_changed = true;
       manual_control_enabled = true;
     }

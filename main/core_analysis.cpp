@@ -105,8 +105,6 @@ void compute_FFT() {
 /// Places the calculated peak frequency in the "peak" variable.
 void update_peak() {
 
-  arrays_are_equal(vRealHist, audioPrismInput[1], SAMPLES);
-
   peaksModule.doAnalysis((const float**)audioPrismInput);
   float** peakData = peaksModule.getOutput();  // Outputs (frequency, magnatiude) tuples
   float* peakFrequencies = peakData[MP_FREQ];  
@@ -147,11 +145,10 @@ void update_volume() {
 void noise_gate(int threshhold) {
 
   if (volume < threshhold) {
-    memset(vReal, 0, sizeof(double) * (SAMPLES - bottom - top));
-    memset(vRealHist, 0, sizeof(double) * (SAMPLES - bottom - top));
-    memset(delt, 0, sizeof(double) * (SAMPLES - bottom - top));
+    memset(vReal, 0, sizeof(double) * (SAMPLES));
+    memset(vRealHist, 0, sizeof(double) * (SAMPLES));
+    memset(delt, 0, sizeof(double) * (SAMPLES));
     volume = 0;
-    maxDelt = 0;
   }
 }
 
@@ -178,8 +175,8 @@ void configure_AudioPrism_modules() {
   audioPrismInput[0] = new float[SAMPLES];
   audioPrismInput[1] = new float[SAMPLES];
 
-  deltaModule.setWindowSize(SAMPLES);
-  deltaModule.setSampleRate(SAMPLING_FREQUENCY);
+  // deltaModule.setWindowSize(SAMPLES);
+  // deltaModule.setSampleRate(SAMPLING_FREQUENCY);
 
   volumeModule.setWindowSize(SAMPLES);
   volumeModule.setSampleRate(SAMPLING_FREQUENCY);
