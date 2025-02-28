@@ -487,9 +487,7 @@ void audio_analysis() {
 
   update_volume();
 
-  update_max_delta();
-
-  update_formants();
+  // update_max_delta();
 
   noise_gate(loaded_patterns.noise_thresh);
 

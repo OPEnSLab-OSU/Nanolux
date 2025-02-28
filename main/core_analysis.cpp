@@ -56,8 +56,8 @@ MajorPeaks peaksModule = MajorPeaks();
 // MeanAmplitude module to find the average volume
 MeanAmplitude volumeModule = MeanAmplitude(); 
 
-// DeltaAmplitudes module to find the change between vreal and vrealhist
-DeltaAmplitudes deltaModule = DeltaAmplitudes();
+// // DeltaAmplitudes module to find the change between vreal and vrealhist
+// DeltaAmplitudes deltaModule = DeltaAmplitudes();
 
 /// @brief Samples incoming audio and stores the signal in vReal.
 ///
@@ -93,20 +93,11 @@ void compute_FFT() {
   }
   Serial.println();
 
-  // nessacary because arduino FFT MUST takes a double array and audioPrism modules MUST take a float array
+  // arduino FFT MUST takes a double array and audioPrism modules MUST take a float array
   for (int i = 0; i < SAMPLES; i++) {
-    audioPrismInput[0][i] = static_cast<float>(vReal[i]);  // Casting each double to float
+    audioPrismInput[0][i] = static_cast<float>(vReal[i]);  
     audioPrismInput[1][i] = static_cast<float>(vRealHist[i]);
   }
-}
-
-bool arrays_are_equal(double* arr1, float* arr2, int size) {
-    for (int i = 0; i < size; i++) {
-       Serial.print(arr1[i]);
-       Serial.print("  ");
-       Serial.println(arr2[i]);
-    }
-    return true;
 }
 
 /// @brief Updates the current peak frequency.
@@ -136,30 +127,29 @@ void update_volume() {
   Serial.println(volume);
 }
 
-/// @brief Updates the largest frequency change in the last cycle.
-///
-/// Places the calculated value in the "maxDelt" variable.
-void update_max_delta() {
-  deltaModule.doAnalysis((const float**)audioPrismInput);
-  float* tempDelt = deltaModule.getOutput();
-  for (int i = 0; i < SAMPLES; i++) {
-      delt[i] = static_cast<double>(tempDelt[i]);
-  }
-  maxDelt = largest(delt, SAMPLES); 
+// /// @brief Updates the largest frequency change in the last cycle.
+// ///
+// /// Places the calculated value in the "maxDelt" variable.
+// void update_max_delta() {
+//   deltaModule.doAnalysis((const float**)audioPrismInput);
+//   float* tempDelt = deltaModule.getOutput();
+//   for (int i = 0; i < SAMPLES; i++) {
+//       delt[i] = static_cast<double>(tempDelt[i]);
+//   }
+//   maxDelt = largest(delt, SAMPLES); 
 
-  Serial.print("Max Delta: ");
-  Serial.println(maxDelt);
-}
+//   Serial.print("Max Delta: ");
+//   Serial.println(maxDelt);
+// }
 
 /// @brief Zeros all audio analysis arrays if the volume is too low.
 /// @param threshold  The threshold to compare the total volume against.
 void noise_gate(int threshhold) {
-  int top = 3, bottom = 3;
 
   if (volume < threshhold) {
-    memset(vReal, 0, sizeof(int)*(SAMPLES-bottom-top));
-    memset(vRealHist, 0, sizeof(int)*(SAMPLES-bottom-top));
-    memset(delt, 0, sizeof(int)*(SAMPLES-bottom-top));
+    memset(vReal, 0, sizeof(double) * (SAMPLES - bottom - top));
+    memset(vRealHist, 0, sizeof(double) * (SAMPLES - bottom - top));
+    memset(delt, 0, sizeof(double) * (SAMPLES - bottom - top));
     volume = 0;
     maxDelt = 0;
   }
@@ -167,9 +157,13 @@ void noise_gate(int threshhold) {
 
 /// @brief updates vRealHist with vReal
 ///
-/// After the function completes, the vRealHist matches the the current vReal array
+/// After the function completes, the vRealHist matches the the current vReal array and audioPrismInput is updated to matrch
 void update_vRealHist() {
-  memcpy(vRealHist, vReal, SAMPLES * sizeof(float));
+  memcpy(vRealHist, vReal, SAMPLES * sizeof(double));
+
+  for (int i = 0; i < SAMPLES; i++) {
+    audioPrismInput[1][i] = static_cast<float>(vRealHist[i]);
+  }
 }
 
 
@@ -180,18 +174,15 @@ void update_vRealHist() {
 /// are properly configured with window size, sample rate, and bin size
 /// MUST BE RUN BEFORE THE AUDIO ANALYSIS LOOP
 void configure_AudioPrism_modules() {
-  int top = 3, bottom = 3;  
 
   audioPrismInput[0] = new float[SAMPLES];
   audioPrismInput[1] = new float[SAMPLES];
 
   deltaModule.setWindowSize(SAMPLES);
   deltaModule.setSampleRate(SAMPLING_FREQUENCY);
-  deltaModule.setAnalysisRangeByBin(3, SAMPLES / 2 - bottom);
 
   volumeModule.setWindowSize(SAMPLES);
   volumeModule.setSampleRate(SAMPLING_FREQUENCY);
-  volumeModule.setAnalysisRangeByBin(3, SAMPLES / 2 - bottom);
 
   peaksModule.setWindowSize(SAMPLES);
   peaksModule.setSampleRate(SAMPLING_FREQUENCY);
