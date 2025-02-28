@@ -495,6 +495,8 @@ void audio_analysis() {
 
   update_vRealHist();
 
+  delay(60000);
+
   #ifdef SHOW_TIMINGS
     const int end = micros();
     Serial.printf("Audio analysis: %d ms\n", (end - start) / 1000);

@@ -21,7 +21,9 @@ typedef void (*SimplePatternList[])();
 //
 // When using a board with a version below 1.2, or an unmodified
 // v1.2 board, set this pin to A0.
-#define ANALOG_PIN          A3
+//#define ANALOG_PIN          A3
+#define ANALOG_PIN          A2
+// change to A2
 
 // Vowel recognition
 enum VowelSounds {
@@ -34,9 +36,15 @@ enum VowelSounds {
 };
 
 // Rotary Encoder Constants
-#define ROTARY_ENCODER_A_PIN 23
-#define ROTARY_ENCODER_B_PIN 22
-#define ROTARY_ENCODER_BUTTON_PIN 33
+//#define ROTARY_ENCODER_A_PIN 23
+#define ROTARY_ENCODER_A_PIN 27
+// change to 27
+//#define ROTARY_ENCODER_B_PIN 22
+#define ROTARY_ENCODER_B_PIN 33
+// change to 33
+#define ROTARY_ENCODER_BUTTON_PIN 32
+//#define ROTARY_ENCODER_BUTTON_PIN 33
+// change to 32
 #define ROTARY_ENCODER_VCC_PIN -1
 #define ROTARY_ENCODER_STEPS 4
 
@@ -93,3 +101,4 @@ enum VowelSounds {
 #define VOL_SHOW true
 
 #endif
+

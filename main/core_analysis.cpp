@@ -51,7 +51,7 @@ extern double maxDelt;
 ArduinoFFT<double> FFT = ArduinoFFT<double>(vReal, vImag, SAMPLES, SAMPLING_FREQUENCY);
 
 // MajorPeaks module set to find the single largest peak
-MajorPeaks peaksModule = MajorPeaks(1); 
+MajorPeaks peaksModule = MajorPeaks(); 
 
 // MeanAmplitude module to find the average volume
 MeanAmplitude volumeModule = MeanAmplitude(); 
@@ -79,19 +79,50 @@ void sample_audio() {
 ///
 /// After the function completes, the vReal array contains the magnitude spectrum of the FFT result
 void compute_FFT() {
+  FFT.dcRemoval(vReal, SAMPLES);
   FFT.windowing(vReal, SAMPLES, FFT_WIN_TYP_HAMMING, FFT_FORWARD);
   FFT.compute(vReal, vImag, SAMPLES, FFT_FORWARD);
   FFT.complexToMagnitude(vReal, vImag, SAMPLES);
+
+  Serial.println("vReal after FFT (Frequency Bin | Magnitude):");
+  for (int i = 0; i < SAMPLES / 2; i++) {
+    double frequency = (i * SAMPLING_FREQUENCY) / SAMPLES;
+    Serial.print(frequency);
+    Serial.print(" Hz: ");
+    Serial.println(vReal[i]);
+  }
+  Serial.println();
+
+  // nessacary because arduino FFT MUST takes a double array and audioPrism modules MUST take a float array
+  for (int i = 0; i < SAMPLES; i++) {
+    audioPrismInput[0][i] = static_cast<float>(vReal[i]);  // Casting each double to float
+    audioPrismInput[1][i] = static_cast<float>(vRealHist[i]);
+  }
+}
+
+bool arrays_are_equal(double* arr1, float* arr2, int size) {
+    for (int i = 0; i < size; i++) {
+       Serial.print(arr1[i]);
+       Serial.print("  ");
+       Serial.println(arr2[i]);
+    }
+    return true;
 }
 
 /// @brief Updates the current peak frequency.
 ///
 /// Places the calculated peak frequency in the "peak" variable.
 void update_peak() {
+
+  arrays_are_equal(vRealHist, audioPrismInput[1], SAMPLES);
+
   peaksModule.doAnalysis((const float**)audioPrismInput);
   float** peakData = peaksModule.getOutput();  // Outputs (frequency, magnatiude) tuples
   float* peakFrequencies = peakData[MP_FREQ];  
   peak = peakFrequencies[0];
+
+  Serial.print("Peak Frequency: ");
+  Serial.println(peak);
 }
 
 /// @brief Calculates and stores the current volume.
@@ -100,6 +131,9 @@ void update_peak() {
 void update_volume() {
   volumeModule.doAnalysis((const float**)audioPrismInput);
   volume = volumeModule.getOutput();
+
+  Serial.print("Volume: ");
+  Serial.println(volume);
 }
 
 /// @brief Updates the largest frequency change in the last cycle.
@@ -112,6 +146,9 @@ void update_max_delta() {
       delt[i] = static_cast<double>(tempDelt[i]);
   }
   maxDelt = largest(delt, SAMPLES); 
+
+  Serial.print("Max Delta: ");
+  Serial.println(maxDelt);
 }
 
 /// @brief Zeros all audio analysis arrays if the volume is too low.
@@ -135,25 +172,28 @@ void update_vRealHist() {
   memcpy(vRealHist, vReal, SAMPLES * sizeof(float));
 }
 
+
+
 /// @brief Congifures AudioPrism Modules
 ///
 /// After the function completes, Audioprism Modules used elsewhere in this file
 /// are properly configured with window size, sample rate, and bin size
 /// MUST BE RUN BEFORE THE AUDIO ANALYSIS LOOP
 void configure_AudioPrism_modules() {
-  int top = 3, bottom = 3;
+  int top = 3, bottom = 3;  
 
-  audioPrismInput[0] = (float*)vReal;       
-  audioPrismInput[1] = (float*)vRealHist;   
+  audioPrismInput[0] = new float[SAMPLES];
+  audioPrismInput[1] = new float[SAMPLES];
 
   deltaModule.setWindowSize(SAMPLES);
   deltaModule.setSampleRate(SAMPLING_FREQUENCY);
-  deltaModule.setAnalysisRangeByBin(top, SAMPLES - bottom);
+  deltaModule.setAnalysisRangeByBin(3, SAMPLES / 2 - bottom);
 
   volumeModule.setWindowSize(SAMPLES);
   volumeModule.setSampleRate(SAMPLING_FREQUENCY);
-  volumeModule.setAnalysisRangeByBin(top, SAMPLES - bottom);
+  volumeModule.setAnalysisRangeByBin(3, SAMPLES / 2 - bottom);
 
   peaksModule.setWindowSize(SAMPLES);
   peaksModule.setSampleRate(SAMPLING_FREQUENCY);
+  peaksModule.setNumPeaks(1);
 }
