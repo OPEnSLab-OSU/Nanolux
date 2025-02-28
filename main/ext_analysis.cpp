@@ -62,8 +62,8 @@ void update_percussion_dectection() {
 
 void update_salient_freqs() {
   salientModule.doAnalysis((const float**)audioPrismInput);
-  int* output = salientModule.getOutput(); // Get the pointer to output array
-  memcpy(salFreqs, output, sizeof(salFreqs)); // Copy data into salFreqs
+  int* output = salientModule.getOutput(); 
+  memcpy(salFreqs, output, sizeof(salFreqs)); 
 }
 
 

@@ -1002,16 +1002,17 @@ void showcaseSalientFreqs(Strip_Buffer * buf, int len, Pattern_Data* params){
   }
 }
 
-// Mapping MIDI note numbers to CHSV colors.
+// Mapping MIDI note numbers to CHSV colors across all octaves.
 CHSV getColorForNote(int noteNumber) {
-  switch (noteNumber) {
-      case 60: return CHSV(0, 255, 255);    // C - Red
-      case 62: return CHSV(32, 255, 255);   // D - Orange
-      case 64: return CHSV(64, 255, 255);   // E - Yellow
-      case 65: return CHSV(96, 255, 255);   // F - Green
-      case 67: return CHSV(160, 255, 255);  // G - Blue
-      case 69: return CHSV(192, 255, 255);  // A - Indigo
-      case 71: return CHSV(224, 255, 255);  // B - Violet
+  int baseNote = noteNumber % 12; // Normalize to a single octave
+  switch (baseNote) {
+      case 0: return CHSV(0, 255, 255);    // C - Red
+      case 2: return CHSV(32, 255, 255);   // D - Orange
+      case 4: return CHSV(64, 255, 255);   // E - Yellow
+      case 5: return CHSV(96, 255, 255);   // F - Green
+      case 7: return CHSV(160, 255, 255);  // G - Blue
+      case 9: return CHSV(192, 255, 255);  // A - Indigo
+      case 11: return CHSV(224, 255, 255); // B - Violet
       default: return CHSV(0, 0, 255);      // Other - White
   }
 }
@@ -1027,12 +1028,47 @@ int frequencyToMidi(double frequency) {
 
 // Maps the current note to a color.
 void noteColorPattern(Strip_Buffer *buf, int len, Pattern_Data* params) {
-  // Convert the frequency to a note number.
+  // Convert the frequency to a note number
+  Serial.println(peak);
   int midiNote = frequencyToMidi(peak);
   CHSV noteColor = getColorForNote(midiNote);
   
-  for(int i = 0; i < len; i++){
-
-    buf->leds[i] = noteColor;
+  // Mapping MIDI note numbers to CHSV colors across all octaves.
+CHSV getColorForNote(int noteNumber) {
+  int baseNote = noteNumber % 12; // Normalize to a single octave
+  switch (baseNote) {
+      case 0: return CHSV(0, 255, 255);    // C - Red
+      case 2: return CHSV(32, 255, 255);   // D - Orange
+      case 4: return CHSV(64, 255, 255);   // E - Yellow
+      case 5: return CHSV(96, 255, 255);   // F - Green
+      case 7: return CHSV(160, 255, 255);  // G - Blue
+      case 9: return CHSV(192, 255, 255);  // A - Indigo
+      case 11: return CHSV(224, 255, 255); // B - Violet
+      default: return CHSV(0, 0, 255);      // Other - White
   }
+}
+
+// Function to convert frequency to a MIDI note number.
+int frequencyToMidi(double frequency) {
+  if (frequency <= 0) {
+      return -1;
+  }
+  double noteNumber = 12 * log(frequency / 440) / log(2.0) + 69;
+  return int(round(noteNumber));
+}
+
+// Maps the current note to a color.
+void noteColorPattern(Strip_Buffer *buf, int len, Pattern_Data* params) {
+  // Convert the frequency to a note number
+  Serial.println(peak);
+  int midiNote = frequencyToMidi(peak);
+  CHSV noteColor = getColorForNote(midiNote);
+  
+  // Shift LEDs to the right (moving each LED one position towards the end)
+  for(int i = len - 1; i > 0; i--){
+      buf->leds[i] = buf->leds[i - 1];
+  }
+  
+  // Set the first LED to the new note color
+  buf->leds[0] = noteColor;
 }
