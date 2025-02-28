@@ -22,6 +22,9 @@ bool noise;          // Master Noisiness versus Periodic flag that is TRUE when 
 bool drums[3];       // Master drums array that stores whether a KICK, SNARE, or CYMBAL is happening in each element of the array;
 double fbs[5];       // Master FIVE BAND SPLIT which stores changing bands based on raw frequencies
 double fss[5];       // Master FIVE SAMPLE SPLIT which stores changing bands based on splitting up the samples
+int salFreqs[3];
+float centroid;
+bool percussionPresent = false;
 int advanced_size = 20;
 unsigned int sampling_period_us = round(1000000 / SAMPLING_FREQUENCY);
 int F0arr[20];
@@ -35,6 +38,7 @@ float* audioPrismInput[2];
 double delt[SAMPLES];
 double maxDelt = 0.;  // Frequency with the biggest change in amp.
 unsigned long myTime;     // For nvp
+
 
 //
 // Patterns structure.
@@ -72,7 +76,13 @@ Pattern mainPatterns[]{
     { 12, "Fire 2012", true, Fire2012},
     { 13, "Bar Fill", true, bar_fill},
     { 14, "Vowel Rain Drop", true, vowels_raindrop},
+    {15, "Blend In", true, blendIn},
+    {16, "Bleed Through", true, bleedThrough},
+    {17, "Percussion Case", true, showcasePercussion},
+    {18, "Centroid Case", true, showcaseCentroid},
+    {19, "Bread Case", true, showcaseBread},
+    {20, "Salient Freqs Case", true, showcaseSalientFreqs},
 };
-int NUM_PATTERNS = 15;  // MAKE SURE TO UPDATE THIS WITH THE ACTUAL NUMBER OF PATTERNS (+1 last array pos)
+int NUM_PATTERNS = 21;  // MAKE SURE TO UPDATE THIS WITH THE ACTUAL NUMBER OF PATTERNS (+1 last array pos) pos)
 
 #endif

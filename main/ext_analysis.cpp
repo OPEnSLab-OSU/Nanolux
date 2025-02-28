@@ -24,9 +24,46 @@ extern double peak;
 /// Processing is done in place.
 extern double vReal[SAMPLES];
 
+// Array of pointers for vReal and vRealHist
+extern float* audioPrismInput[2];
+
 /// Global FIVE BAND SPLIT which stores changing bands
 /// based on raw frequencies
 extern double fbs[5]; 
+
+/// @brief  for showcaseSalientFreqs
+extern int salFreqs[3];
+
+/// @brief for showcaseCentroid
+extern float centroid;
+
+/// @brief for showcasePercussion
+extern bool percussionPresent;
+
+// SalientFreqs module 
+SalientFreqs salientModule = SalientFreqs(); 
+
+// PercussionDetection module 
+PercussionDetection percussionModule = PercussionDetection(); 
+
+// Centroid module 
+Centroid centroidModule = Centroid(); 
+
+void update_centroid() {
+  centroidModule.doAnalysis((const float**)audioPrismInput);
+  centroid = centroidModule.getOutput();
+}
+
+void update_percussion_dectection() {
+  percussionModule.doAnalysis((const float**)audioPrismInput);
+  percussionPresent = percussionModule.getOutput();
+}
+
+void update_salient_freqs() {
+  salientModule.doAnalysis((const float**)audioPrismInput);
+  salFreqs = salientModule.getOutput();
+}
+
 
 /// @brief Outputs the average volume of 5 buckets given a sample length.
 /// @param len  The number of samples the buckets should stretch across.
@@ -109,4 +146,15 @@ void update_five_band_split(int len) {
   temp_to_array(band_split_bounce(len), fbs, 5);
 }
 
+void configure_ext_AudioPrism_modules() {
+
+  salientModule.setWindowSize(SAMPLES);
+  salientModule.setSampleRate(SAMPLING_FREQUENCY);
+
+  percussionModule.setWindowSize(SAMPLES);
+  percussionModule.setSampleRate(SAMPLING_FREQUENCY);
+
+  centroidModule.setWindowSize(SAMPLES);
+  centroidModule.setSampleRate(SAMPLING_FREQUENCY);
+}
 

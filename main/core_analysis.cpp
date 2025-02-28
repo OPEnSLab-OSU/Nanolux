@@ -84,19 +84,18 @@ void compute_FFT() {
   FFT.compute(vReal, vImag, SAMPLES, FFT_FORWARD);
   FFT.complexToMagnitude(vReal, vImag, SAMPLES);
 
-  Serial.println("vReal after FFT (Frequency Bin | Magnitude):");
-  for (int i = 0; i < SAMPLES / 2; i++) {
-    double frequency = (i * SAMPLING_FREQUENCY) / SAMPLES;
-    Serial.print(frequency);
-    Serial.print(" Hz: ");
-    Serial.println(vReal[i]);
-  }
-  Serial.println();
+  // Serial.println("vReal after FFT (Frequency Bin | Magnitude):");
+  // for (int i = 0; i < SAMPLES / 2; i++) {
+  //   double frequency = (i * SAMPLING_FREQUENCY) / SAMPLES;
+  //   Serial.print(frequency);
+  //   Serial.print(" Hz: ");
+  //   Serial.println(vReal[i]);
+  // }
+  // Serial.println();
 
   // arduino FFT MUST takes a double array and audioPrism modules MUST take a float array
   for (int i = 0; i < SAMPLES; i++) {
     audioPrismInput[0][i] = static_cast<float>(vReal[i]);  
-    audioPrismInput[1][i] = static_cast<float>(vRealHist[i]);
   }
 }
 
@@ -110,8 +109,8 @@ void update_peak() {
   float* peakFrequencies = peakData[MP_FREQ];  
   peak = peakFrequencies[0];
 
-  Serial.print("Peak Frequency: ");
-  Serial.println(peak);
+  // Serial.print("Peak Frequency: ");
+  // Serial.println(peak);
 }
 
 /// @brief Calculates and stores the current volume.
@@ -121,8 +120,8 @@ void update_volume() {
   volumeModule.doAnalysis((const float**)audioPrismInput);
   volume = volumeModule.getOutput();
 
-  Serial.print("Volume: ");
-  Serial.println(volume);
+  // Serial.print("Volume: ");
+  // Serial.println(volume);
 }
 
 // /// @brief Updates the largest frequency change in the last cycle.
@@ -170,7 +169,7 @@ void update_vRealHist() {
 /// After the function completes, Audioprism Modules used elsewhere in this file
 /// are properly configured with window size, sample rate, and bin size
 /// MUST BE RUN BEFORE THE AUDIO ANALYSIS LOOP
-void configure_AudioPrism_modules() {
+void configure_core_ AudioPrism_modules() {
 
   audioPrismInput[0] = new float[SAMPLES];
   audioPrismInput[1] = new float[SAMPLES];

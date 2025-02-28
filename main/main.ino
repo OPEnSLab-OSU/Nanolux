@@ -117,7 +117,8 @@ void setup() {
   verify_saves();
   load_slot(0);
 
-  configure_AudioPrism_modules();
+  configure_core_AudioPrism_modules();
+  configure_ext_AudioPrism_modules();
 
 #ifdef ENABLE_WEB_SERVER
   initialize_web_server(apiGetHooks, API_GET_HOOK_COUNT, apiPutHooks, API_PUT_HOOK_COUNT, config.pass);
@@ -494,8 +495,6 @@ void audio_analysis() {
   noise_gate(loaded_patterns.noise_thresh);
 
   update_vRealHist();
-
-  delay(60000);
 
   #ifdef SHOW_TIMINGS
     const int end = micros();

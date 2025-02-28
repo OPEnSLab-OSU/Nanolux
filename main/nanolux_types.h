@@ -68,7 +68,7 @@ enum VowelSounds {
 #define Z_LAYERING      1
 
 // Button Input
-#define BUTTON_PIN 33
+#define BUTTON_PIN 32
 
 // MAX - MIN | Freq Volume
 #define MAX_FREQUENCY       4000.0
