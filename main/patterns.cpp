@@ -832,47 +832,50 @@ void bar_fill(Strip_Buffer * buf, int len, Pattern_Data* params){
 }
 
 void blendIn(Strip_Buffer * buf, int len, Pattern_Data* params){
-  CHSV backColor;
-  CHSV corrColor;
-  switch(params->config){
-          case 0:
-          default:
-              backColor = CHSV(0, 0, 0);
-              corrColor = CHSV(0, 0, 255);
-  }
-  for(int i = 0; i < len; i++){
-      int blending = remap(vReal[i], MIN_FREQUENCY, MAX_FREQUENCY, 0, 256);
-      buf->leds[i] = blend(backColor, corrColor, blending);
-  }
+  // CHSV backColor;
+  // CHSV corrColor;
+  // switch(params->config){
+  //         case 0:
+  //         default:
+  //             backColor = CHSV(0, 0, 0);
+  //             corrColor = CHSV(0, 0, 255);
+  // }
+  // for(int i = 0; i < len; i++){
+  //     int blending = remap(vReal[i], MIN_FREQUENCY, MAX_FREQUENCY, 0, 256);
+  //     buf->leds[i] = blend(backColor, corrColor, blending);
+  // }
 }
 
+
 void bleedThrough(Strip_Buffer * buf, int len, Pattern_Data* params){
-  CHSV backColor;
-  CHSV corrColor;
-  fadeToBlackBy(buf->leds, len, 20);
-  switch(params->config){
-      case 0:
-      default:
-          backColor = CHSV(0, 0, 0);
-          corrColor = CHSV(0, 0, 255);
-  }
-  int blending = remap(peak, MIN_FREQUENCY, MAX_FREQUENCY, 0, 256);
-  buf->vol_pos += blending;
-  if (buf->vol_pos > 256){
-      buf->vol_pos = 256;
-  }
-  fill_solid(buf->leds, len, blend(backColor, corrColor, buf->vol_pos));
-  if (buf->vol_pos == 256){
-      CHSV tempColor = backColor;
-      backColor = corrColor;
-      corrColor = tempColor;
-      buf->vol_pos = 0;
-  }
+  // CHSV backColor;
+  // CHSV corrColor;
+  // fadeToBlackBy(buf->leds, len, 20);
+  // switch(params->config){
+  //     case 0:
+  //     default:
+  //         backColor = CHSV(0, 0, 0);
+  //         corrColor = CHSV(0, 0, 255);
+  // }
+  // int blending = remap(peak, MIN_FREQUENCY, MAX_FREQUENCY, 0, 256);
+  // buf->vol_pos += blending;
+  // if (buf->vol_pos > 256){
+  //     buf->vol_pos = 256;
+  // }
+  // fill_solid(buf->leds, len, blend(backColor, corrColor, buf->vol_pos));
+  // if (buf->vol_pos == 256){
+  //     CHSV tempColor = backColor;
+  //     backColor = corrColor;
+  //     corrColor = tempColor;
+  //     buf->vol_pos = 0;
+  // }
 }
+
 
 void showcasePercussion(Strip_Buffer * buf, int len, Pattern_Data* params){
   update_percussion_dectection();
   static bool perc = false;
+
 
   //percussionPresent is a hypothetical external bool that detects if percussion is present
   if (percussionPresent != perc){
@@ -886,23 +889,30 @@ void showcasePercussion(Strip_Buffer * buf, int len, Pattern_Data* params){
   }
 }
 
+
 void showcaseCentroid(Strip_Buffer * buf, int len, Pattern_Data* params){
   update_centroid();
-  
+
+
+  Serial.println(centroid);
+ 
   //centroid is a hypothetical external float that showcases the frequency of the center of mass, characterizing brightness
   for(int i = 0; i < len; i++){
 
-    int brit = map(vReal[i], MIN_FREQUENCY, MAX_FREQUENCY, 0, 255); // The brightness is based on HOW MUCH of the frequency exists
-    
-    if(vReal[i] >= centroid){
-      buf->leds[i] = blend(buf->leds[i], CHSV(194, 79, brit));
+
+    float value = (MAX_FREQUENCY - MIN_FREQUENCY) / centroid;
+    float lenValue = len / (i + 1) * 2;
+
+
+    if(value >= lenValue){
+      buf->leds[i] = CHSV(194, 255, 255);
     }
-    
     else{
-      buf->leds[i] = blend(buf->leds[i], CHSV(83, 38, brit));
+      buf->leds[i] = CHSV(83, 38, 255);
     }
   }
 }
+
 
 /*
 void showcaseNoisiness(Strip_Buffer * buf, int len, Pattern_Data* params){
@@ -910,6 +920,7 @@ void showcaseNoisiness(Strip_Buffer * buf, int len, Pattern_Data* params){
 //maybe use noisiness to set a blurring effect? to represent the erratic nature. Or maybe the speed for like a sin beat scenario
 }
 */
+
 
 void showcaseBread(Strip_Buffer * buf, int len, Pattern_Data* params){
   // //breadSlicer is a hypothetical external array of floats, where each value corresponds to the sum of amps in that sector
@@ -933,12 +944,15 @@ void showcaseBread(Strip_Buffer * buf, int len, Pattern_Data* params){
   // setBreadSlicer(bands, slices);
   // float* amps = slicerOutput();
 
+
   // for(int i = 0; i < slices - 1; i++){
+
 
   //   amps[i] = amps[i] / (MAX_FREQUENCY / slices); //set to average of that area
   //   int brit = remap(amps[i], MIN_FREQUENCY, MAX_FREQUENCY, 0, 255); //set brightness to average amp
   //   int startingPos = len / (slices - 1) * i; //set position that this slice occupies
   //   int sliceHue = 255 / (slices - 1); //set hue based on each slice
+
 
   //   for(int j = 0; j < len / (slices - 1); j++){
   //     buf->leds[startingPos + j] = CHSV(sliceHue, 70, brit);
@@ -947,11 +961,52 @@ void showcaseBread(Strip_Buffer * buf, int len, Pattern_Data* params){
   return;
 }
 
+
+void showcaseSalientFreqs(Strip_Buffer * buf, int len, Pattern_Data* params){
+  //salientFreqs is a hypothetical external array of ints that represent indexes with the greatest change in amplitude. By default it gives 3 points
+ 
+  update_salient_freqs();
+  static int splatter[MAX_LEDS];
+
+
+  fadeToBlackBy(buf->leds, len, 50);
+
+
+  for(int i = 0; i < len; i++){
+    splatter[i] = -1;
+  }
+
+
+  for(int i = 0; i < 3; i++){
+    int startPos = salFreqs[i];
+   
+    for(int i = 0; i < 4; i++){
+      if (startPos + i <= len){
+        splatter[startPos + i] = i;
+      }
+      if(startPos - i >= 0){
+        splatter[startPos - i] = i;
+      }
+    }
+  }
+
+
+  for(int i = 0; i < len; i++){
+    if (splatter[i] == 0){
+      buf->leds[i] = CHSV(fHue, 255, vbrightness);
+      splatter[i] = -1;
+    }
+    else if (splatter[i] > 0){
+      splatter[i] -= 1;
+    }
+  }
+}
+
 void showcaseSalientFreqs(Strip_Buffer * buf, int len, Pattern_Data* params){
   //salientFreqs is a hypothetical external array of ints that represent indexes with the greatest change in amplitude. By default it gives 3 points
   
   update_salient_freqs();
-  static int splatter[len];
+  static int splatter[MAX_LEDS];
 
   fadeToBlackBy(buf->leds, len, 50);
 
@@ -984,39 +1039,39 @@ void showcaseSalientFreqs(Strip_Buffer * buf, int len, Pattern_Data* params){
 }
 
 
-// // mapping MIDI note numbers to colors.
-// CRGB getColorForNote(int noteNumber) {
+// mapping MIDI note numbers to colors.
+CRGB getColorForNote(int noteNumber) {
   
-//   switch (noteNumber) {
-//     case 60: return CRGB::Red;      // C
-//     case 62: return CRGB::Orange;   // D
-//     case 64: return CRGB::Yellow;   // E
-//     case 65: return CRGB::Green;    // F
-//     case 67: return CRGB::Blue;     // G
-//     case 69: return CRGB::Indigo;   // A
-//     case 71: return CRGB::Violet;   // B
-//     default: return CRGB::White;    // Other
-//   }
-// }
+  switch (noteNumber) {
+    case 60: return CRGB::Red;      // C
+    case 62: return CRGB::Orange;   // D
+    case 64: return CRGB::Yellow;   // E
+    case 65: return CRGB::Green;    // F
+    case 67: return CRGB::Blue;     // G
+    case 69: return CRGB::Indigo;   // A
+    case 71: return CRGB::Violet;   // B
+    default: return CRGB::White;    // Other
+  }
+}
 
-// // Function to convert frequency to a MIDI note number.
-// int frequencyToMidi(double frequency) {
+// Function to convert frequency to a MIDI note number.
+int frequencyToMidi(double frequency) {
   
-//   if (frequency <= 0) {
-//     return -1;
-//   }
+  if (frequency <= 0) {
+    return -1;
+  }
 
-//   double noteNumber = 12 * log(frequency / 440) / log(2.0) + 69;
-//   return int(round(noteNumber));
-// }
+  double noteNumber = 12 * log(frequency / 440) / log(2.0) + 69;
+  return int(round(noteNumber));
+}
 
-// // maps the current note to a color.
-// void noteColorPattern(Strip_Buffer *buf, int len, Pattern_Data* params) {
+// maps the current note to a color.
+void noteColorPattern(Strip_Buffer *buf, int len, Pattern_Data* params) {
 
-//   // Convert the frequency to a note number.
-//   int midiNote = frequencyToMidi(peak);
-//   CRGB noteColor = getColorForNote(midiNote);
+  // Convert the frequency to a note number.
+  int midiNote = frequencyToMidi(peak);
+  CRGB noteColor = getColorForNote(midiNote);
 
-//   fill_solid(buf->leds, len, noteColor);
+  fill_solid(buf->leds, len, noteColor);
 
-// }
+}
