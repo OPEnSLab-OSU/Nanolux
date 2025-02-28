@@ -861,7 +861,7 @@ void bleedThrough(Strip_Buffer * buf, int len, Pattern_Data* params){
   if (buf->vol_pos > 256){
       buf->vol_pos = 256;
   }
-  fill_solid(buf->leds, len, blend(backColor, corrColor, buf->vol_pos))
+  fill_solid(buf->leds, len, blend(backColor, corrColor, buf->vol_pos));
   if (buf->vol_pos == 256){
       CHSV tempColor = backColor;
       backColor = corrColor;
