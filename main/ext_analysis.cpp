@@ -9,6 +9,7 @@
 
 #include <FastLED.h>
 #include <Arduino.h>
+#include "AudioPrism.h"
 #include "patterns.h"
 #include "nanolux_types.h"
 #include "nanolux_util.h"

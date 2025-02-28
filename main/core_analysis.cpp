@@ -169,7 +169,7 @@ void update_vRealHist() {
 /// After the function completes, Audioprism Modules used elsewhere in this file
 /// are properly configured with window size, sample rate, and bin size
 /// MUST BE RUN BEFORE THE AUDIO ANALYSIS LOOP
-void configure_core_ AudioPrism_modules() {
+void configure_core_AudioPrism_modules() {
 
   audioPrismInput[0] = new float[SAMPLES];
   audioPrismInput[1] = new float[SAMPLES];

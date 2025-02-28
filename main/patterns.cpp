@@ -877,7 +877,7 @@ void showcasePercussion(Strip_Buffer * buf, int len, Pattern_Data* params){
   //percussionPresent is a hypothetical external bool that detects if percussion is present
   if (percussionPresent != perc){
     if (percussionPresent){
-      buf->leds[len] = CHSV(fhue, 255, vbrightness);
+      buf->leds[len] = CHSV(fHue, 255, vbrightness);
     }
     perc = percussionPresent;
   }
@@ -974,7 +974,7 @@ void showcaseSalientFreqs(Strip_Buffer * buf, int len, Pattern_Data* params){
 
   for(int i = 0; i < len; i++){
     if (splatter[i] == 0){
-      buf->leds[i] = CHSV(fhue, 255, vbrightness);
+      buf->leds[i] = CHSV(fHue, 255, vbrightness);
       splatter[i] = -1;
     }
     elif(splatter[i] > 0){
