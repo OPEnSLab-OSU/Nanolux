@@ -977,7 +977,7 @@ void showcaseSalientFreqs(Strip_Buffer * buf, int len, Pattern_Data* params){
       buf->leds[i] = CHSV(fHue, 255, vbrightness);
       splatter[i] = -1;
     }
-    elif(splatter[i] > 0){
+    else if (splatter[i] > 0){
       splatter[i] -= 1;
     }
   }
