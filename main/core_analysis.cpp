@@ -104,11 +104,13 @@ void compute_FFT() {
 /// Places the calculated peak frequency in the "peak" variable.
 void update_peak() {
 
-  peaksModule.doAnalysis((const float**)audioPrismInput);
-  float** peakData = peaksModule.getOutput();  // Outputs (frequency, magnatiude) tuples
-  float* peakFrequencies = peakData[MP_FREQ];  
-  peak = peakFrequencies[0];
+  // peaksModule.doAnalysis((const float**)audioPrismInput);
+  // float** peakData = peaksModule.getOutput();  // Outputs (frequency, magnatiude) tuples
+  // float* peakFrequencies = peakData[MP_FREQ];  
+  // peak = peakFrequencies[0];
 
+  peak = FFT.majorPeak(vReal, SAMPLES, SAMPLING_FREQUENCY);
+  
   // Serial.print("Peak Frequency: ");
   // Serial.println(peak);
 }

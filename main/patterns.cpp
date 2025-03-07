@@ -1002,24 +1002,24 @@ void showcaseSalientFreqs(Strip_Buffer * buf, int len, Pattern_Data* params){
   }
 }
 
-// Mapping MIDI note numbers to CHSV colors across all octaves.
+// Mapping MIDI note numbers to CHSV colors across all octaves. Based on common synesthesia associations.
 CHSV getColorForNote(int noteNumber) {
-  int baseNote = noteNumber % 12; // Normalize to a single octave
+  int baseNote = noteNumber % 12; 
   
   switch (baseNote) {
-      case 0:  return CHSV(0, 255, 255);      // C - Red
-      case 1:  return CHSV(32, 255, 255);     // C# - Orange
-      case 2:  return CHSV(64, 255, 255);     // D - Yellow
-      case 3:  return CHSV(84, 255, 255);     // D# - Green-Yellow
-      case 4:  return CHSV(96, 255, 255);     // E - Green
-      case 5:  return CHSV(160, 255, 255);    // F - Cyan
-      case 6:  return CHSV(170, 255, 255);    // F# - Blue
-      case 7:  return CHSV(190, 255, 255);    // G - Purple
-      case 8:  return CHSV(210, 255, 255);    // G# - Pink
-      case 9:  return CHSV(230, 255, 255);    // A - Blue
-      case 10: return CHSV(250, 255, 255);    // A# - Lavender
-      case 11: return CHSV(60, 255, 255);     // B - Yellow-Green
-      default: return CHSV(0, 0, 255);        // For debugging (shouldn't occur under normal circumstances)
+    case 0:  return CHSV(0, 255, 255);      // C - Red
+    case 1:  return CHSV(21, 255, 255);     // C# - Reddish-Orange
+    case 2:  return CHSV(43, 255, 255);     // D - Yellow
+    case 3:  return CHSV(64, 255, 255);     // D# - Yellow-Green
+    case 4:  return CHSV(85, 255, 255);     // E - Green
+    case 5:  return CHSV(106, 255, 255);    // F - Cyan-Green
+    case 6:  return CHSV(127, 255, 255);    // F# - Cyan
+    case 7:  return CHSV(148, 255, 255);    // G - Blue
+    case 8:  return CHSV(170, 255, 255);    // G# - Indigo/Purple
+    case 9:  return CHSV(191, 200, 255);    // A - Magenta
+    case 10: return CHSV(212, 255, 255);    // A# - Pinkish
+    case 11: return CHSV(234, 100, 255);    // B - Violet
+    default: return CHSV(0, 0, 255);        // Debugging case (shouldn't occur)
   }
 }
 
@@ -1037,9 +1037,9 @@ void synesthesiaRolling(Strip_Buffer *buf, int len, Pattern_Data* params) {
   static float fadeFactor = 1.0;            // Controls the fadeing effect
 
   // Smoothing factors
-  const float DECAY_FACTOR = 0.97;          // Controls how slowly max volume decreases
-  const float BRIGHTNESS_SMOOTHING = 0.25;  // 0 = slowest brightness update, 1 = instant
-  const float NOTE_SMOOTHING = 0.3;         // 0 = slowest note transition, 1 = instant
+  const float DECAY_FACTOR = 0.97;         // Controls how slowly max volume decreases
+  const float BRIGHTNESS_SMOOTHING = 0.8;  // 0 = slowest brightness update, 1 = instant
+  const float NOTE_SMOOTHING = 0.125;      // 0 = slowest note transition, 1 = instant
 
   // Smooth the note
   smoothedNote = smoothedNote * (1 - NOTE_SMOOTHING) + currentNote * NOTE_SMOOTHING;
@@ -1050,27 +1050,21 @@ void synesthesiaRolling(Strip_Buffer *buf, int len, Pattern_Data* params) {
   float targetBrightness = (volume / maxVolume) * 255;
   smoothedBrightness = smoothedBrightness * (1 - BRIGHTNESS_SMOOTHING) + targetBrightness * BRIGHTNESS_SMOOTHING;
   chsvNote.v = smoothedBrightness;
-
-  // Fade the brightness down to 50% of original brightness over time if the note stays the same
-  /// if (params->config == 1) {
     
-    if (currentNote == lastNote) {
-      fadeFactor = max(0.5, fadeFactor - 0.1);  
-    } else {
-      fadeFactor = 1;
-    }
+  if (currentNote == lastNote) {
+    fadeFactor = max(0.35, fadeFactor - 0.1625);  
+  } else {
+    fadeFactor = 1.0;
+  }
 
-    chsvNote.v *= fadeFactor;
-  /// }
+  chsvNote.v *= fadeFactor;
+  lastNote = currentNote;
 
-  // Shift LEDs from the end down
   for (int i = len - 1; i > 0; i--) {
     buf->leds[i] = buf->leds[i - 1];
   }
 
   buf->leds[0] = chsvNote;
-
-  lastNote = currentNote;
 }
 
 // Maps the current note to a section on the led strip
@@ -1085,14 +1079,14 @@ void noteEQ(Strip_Buffer *buf, int len, Pattern_Data* params) {
   const int SECTION_LENGTH = len / NUM_SECTIONS; 
 
   // Smoothing factors
-  const float DECAY_FACTOR = 0.97;         // Controls how slowly max volume decreases
-  const float BRIGHTNESS_SMOOTHING = 0.25; // 0 = slowest brightness update, 1 = instant
-  const float DIM_FACTOR = 0.9;
+  const float DECAY_FACTOR = 0.97;           // Controls how slowly max volume decreases
+  const float BRIGHTNESS_SMOOTHING = 0.75;   // 0 = slowest brightness update, 1 = instant
+  const float DIM_FACTOR = 0.875;
 
   // Get the color for the current note
   float currentNote = 12 * log(peak / 440) / log(2.0) + 69;
+  CHSV chsvNote = getColorForNote(round(currentNote)); 
   int activeSegment = static_cast<int>(round(currentNote)) % NUM_SECTIONS;
-  CHSV chsvNote = getColorForNote(activeSegment);
   
   // Smooth the brightness (volume is considered relative here)
   maxVolume = max(static_cast<float>(volume), maxVolume * DECAY_FACTOR);
@@ -1101,18 +1095,19 @@ void noteEQ(Strip_Buffer *buf, int len, Pattern_Data* params) {
   chsvNote.v = smoothedBrightness;
 
   for (int i = 0; i < NUM_SECTIONS; i++) {
+    int ledIndex = i * SECTION_LENGTH;
     // Set the leds in the note section to proper color and brightness
     if (i == activeSegment) {
-      for (int j = (i * SECTION_LENGTH); j < (i * (SECTION_LENGTH + 1)); j++) {
+      for (int j = ledIndex; j < ledIndex + SECTION_LENGTH; j++) { 
         buf->leds[j] = chsvNote;  
       }
     }
     // Dim leds not in the relevent section to get the fading effect
     else {
-      CRGB currentColor = buf->leds[i * SECTION_LENGTH];  
+      CRGB currentColor = buf->leds[ledIndex];  
       currentColor.fadeToBlackBy(255 - (255 * DIM_FACTOR));  // CRGB brightness adjustment 
 
-      for (int j = (i * SECTION_LENGTH); j < (i * (SECTION_LENGTH + 1)); j++) {
+      for (int j = ledIndex; j < ledIndex + SECTION_LENGTH; j++) { 
         buf->leds[j] = currentColor;  
       }
     }

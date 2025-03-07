@@ -289,7 +289,7 @@ void IRAM_ATTR readEncoderISR(){
 void setup_rotary_encoder(){
     rotaryEncoder.begin();
     rotaryEncoder.setup(readEncoderISR);
-    rotaryEncoder.setBoundaries(0, 1000, true); //minValue, maxValue, circleValues true|false (when max go to min and vice versa)
+    rotaryEncoder.setBoundaries(0, NUM_PATTERNS, true); //minValue, maxValue, circleValues true|false (when max go to min and vice versa)
     rotaryEncoder.setAcceleration(0);
 }
 
