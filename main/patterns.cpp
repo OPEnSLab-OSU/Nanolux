@@ -1046,7 +1046,7 @@ void synesthesiaRolling(Strip_Buffer *buf, int len, Pattern_Data* params) {
   CHSV chsvNote = getColorForNote(round(smoothedNote));  
 
   // Smooth the brightness (volume is considered relative here)
-  maxVolume = max(volume, maxVolume * DECAY_FACTOR);
+  maxVolume = max(static_cast<float>(volume), maxVolume * DECAY_FACTOR);
   float targetBrightness = (volume / maxVolume) * 255;
   smoothedBrightness = smoothedBrightness * (1 - BRIGHTNESS_SMOOTHING) + targetBrightness * BRIGHTNESS_SMOOTHING;
   chsvNote.v = smoothedBrightness;
@@ -1079,7 +1079,6 @@ void noteEQ(Strip_Buffer *buf, int len, Pattern_Data* params) {
   // Static variables for smoothing and tracking previous states
   static float maxVolume = volume;
   static float smoothedBrightness = 0;
-  static float dimFactor = 0.9;
 
   // Number of sections (ajust as notes included change) 
   const int NUM_SECTIONS = 12;  
@@ -1088,34 +1087,34 @@ void noteEQ(Strip_Buffer *buf, int len, Pattern_Data* params) {
   // Smoothing factors
   const float DECAY_FACTOR = 0.97;         // Controls how slowly max volume decreases
   const float BRIGHTNESS_SMOOTHING = 0.25; // 0 = slowest brightness update, 1 = instant
-
-  // Smooth the brightness (volume is considered relative here)
-  maxVolume = max(volume, maxVolume * DECAY_FACTOR);
-  float targetBrightness = (volume / maxVolume) * 255;
+  const float DIM_FACTOR = 0.9;
 
   // Get the color for the current note
   float currentNote = 12 * log(peak / 440) / log(2.0) + 69;
-  int activeSegment = round(currentNote) % 12;
+  int activeSegment = static_cast<int>(round(currentNote)) % NUM_SECTIONS;
   CHSV chsvNote = getColorForNote(activeSegment);
   
-  // Assign brightness
+  // Smooth the brightness (volume is considered relative here)
+  maxVolume = max(static_cast<float>(volume), maxVolume * DECAY_FACTOR);
+  float targetBrightness = (volume / maxVolume) * 255;
   smoothedBrightness = smoothedBrightness * (1 - BRIGHTNESS_SMOOTHING) + targetBrightness * BRIGHTNESS_SMOOTHING;
   chsvNote.v = smoothedBrightness;
 
-  int sectionStart = activeSegment * SECTION_LENGTH;
-  int sectionEnd = activeSegment * (SECTION_LENGTH + 1);
-
-  // Dim leds not in the relevent section to get the fading effect
-  for (int i = 0; i < len; i++) {
-
-    if (i >= sectionStart && i < sectionEnd) {
-      buf->leds[i] = chsvNote;
+  for (int i = 0; i < NUM_SECTIONS; i++) {
+    // Set the leds in the note section to proper color and brightness
+    if (i == activeSegment) {
+      for (int j = (i * SECTION_LENGTH); j < (i * (SECTION_LENGTH + 1)); j++) {
+        buf->leds[j] = chsvNote;  
+      }
     }
-    
+    // Dim leds not in the relevent section to get the fading effect
     else {
-      CHSV currentColor = buf->leds[i];
-      currentColor.v = currentColor.v * dimFactor;
-      buf->leds[i] = currentColor;
+      CRGB currentColor = buf->leds[i * SECTION_LENGTH];  
+      currentColor.fadeToBlackBy(255 - (255 * DIM_FACTOR));  // CRGB brightness adjustment 
+
+      for (int j = (i * SECTION_LENGTH); j < (i * (SECTION_LENGTH + 1)); j++) {
+        buf->leds[j] = currentColor;  
+      }
     }
   }
 }
