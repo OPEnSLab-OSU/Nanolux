@@ -21,8 +21,7 @@ void process_reset_button(int button_value);
 void nanolux_serial_print(char * msg);
 void IRAM_ATTR readEncoderISR();
 void setup_rotary_encoder();
-int calculate_pattern_index();
 bool isEncoderButtonPressed();
-void update_encoder_value(long newValue);
+int encoder_delta();
 
 #endif

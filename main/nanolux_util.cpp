@@ -293,21 +293,14 @@ void setup_rotary_encoder(){
     rotaryEncoder.disableAcceleration();
 }
 
-/// @brief Calculates the pattern index the rotary encoder currently
-/// corresponds to.
-/// @returns The pattern index the encoder is set to.
-int calculate_pattern_index(){
-    return static_cast<int>(floor(rotaryEncoder.readEncoder())) % NUM_PATTERNS;
-}
-
 /// @brief Returns the current state of the rotary encoder button.
 /// @returns True if pressed, false if not.
 bool isEncoderButtonPressed(){
     return rotaryEncoder.isEncoderButtonClicked();
 }
 
-/// @brief Sets the rotary encoder's current position to a new value.
-/// @param newValue The new index value that the rotary encoder is set to.
-void update_encoder_value(long newValue) {
-  rotaryEncoder.setEncoderValue(newValue);
+/// @brief Returns the difference between the encoder's previous and new position.
+/// @return An integer representing the change in the encoder's position.
+int encoder_delta(){
+  return static_cast<int>(floor(rotaryEncoder.encoderChanged())) % NUM_PATTERNS;
 }

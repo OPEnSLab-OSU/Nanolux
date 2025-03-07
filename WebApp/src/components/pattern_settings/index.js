@@ -71,15 +71,15 @@ const PatternSettings = ({num, patterns}) => {
 	useInterval(() => {
 		if (isConnected && !updated) {
 			getPattern(num).then(newData => {
-				console.log("Fetched pattern from ESP32:", newData.idx);
+				//console.log("Fetched pattern from ESP32:", newData.idx);
 
 				if (newData.idx !== data.idx) {
-					console.log("Updating UI with new pattern:", newData.idx)
+					//console.log("Updating UI with new pattern:", newData.idx)
 					setData(newData);
 				}
 			});
 		}
-	}, 1000);
+	}, 200);
 
 	/**
 	 * @brief Updates a parameter in the pattern data structure with a new value.

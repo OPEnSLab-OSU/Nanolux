@@ -68,6 +68,7 @@ extern Pattern mainPatterns[];
 
 /// MANUAL CONTROL VARIABLES
 volatile bool manual_control_enabled = false;
+int encoderDelta;
 Strip_Buffer manual_strip_buffer;
 Pattern_Data manual_pattern;
 
@@ -360,45 +361,24 @@ void update_hardware(){
   #ifdef VERSION_2_HARDWARE
 
     if (isEncoderButtonPressed() != lastEncoderBtnPressed)
-      manual_pattern.postprocessing_mode = (manual_pattern.postprocessing_mode + 1) % 4;
+      loaded_patterns.pattern[0].postprocessing_mode = (uint8_t) (loaded_patterns.pattern[0].postprocessing_mode + 1) % 4;
     
-    //Serial.println(manual_pattern.postprocessing_mode);
+    //Serial.println(loaded_patterns.pattern[0].postprocessing_mode);
 
     lastEncoderBtnPressed = isEncoderButtonPressed();
 
     process_reset_button(isEncoderButtonPressed());
 
-    uint8_t old_idx = manual_pattern.idx;
-    manual_pattern.idx = calculate_pattern_index();
-    
-    if (old_idx != manual_pattern.idx){
+    encoderDelta = encoder_delta();
+
+    if (encoderDelta != 0) {
+      //Serial.print("Encoder changed by: "); Serial.println(encoderDelta);
+
+      loaded_patterns.pattern[0].idx = (uint8_t) (loaded_patterns.pattern[0].idx + encoderDelta + NUM_PATTERNS) % NUM_PATTERNS;
       pattern_changed = true;
       manual_control_enabled = true;
-    }
 
-    /*
-    Check if the webapp has been updated and
-    update the rotary encoder's value to the 
-    current pattern index.
-    */
-    if (!manual_control_enabled) {
-      uint8_t currentPatternIdx = loaded_patterns.pattern[0].idx;
-
-      /*
-      print current encoder value to serial monitor
-      Serial.print("Rotary Encoder Value: ");
-      Serial.println(manual_pattern.idx);
-      */
-
-      if (currentPatternIdx != manual_pattern.idx) {
-        update_encoder_value(currentPatternIdx);
-
-        /*
-        print the updated encoder value
-        Serial.print("Updated Encoder Value to: ");
-        Serial.println(calculate_pattern_index());
-        */
-      }
+      //Serial.print("New pattern index: "); Serial.println(loaded_patterns.pattern[0].idx);
     }
       
 
@@ -437,46 +417,19 @@ void loop() {
     histories[1] = Strip_Buffer();
     histories[2] = Strip_Buffer();
     histories[3] = Strip_Buffer();
-    manual_strip_buffer = Strip_Buffer();
   } 
 
-  if(manual_control_enabled){
+  switch (loaded_patterns.mode) {
 
-    process_pattern(
-      &manual_pattern,
-      &manual_strip_buffer,
-      config.length
-    );
+    case STRIP_SPLITTING:
+    default:
+      run_strip_splitting();
+      break;
 
-    // Copy the processed segment to the temp buffer
-    memcpy(
-      output_buffer,
-      manual_strip_buffer.leds,
-      sizeof(CRGB) * config.length
-    );
+    case Z_LAYERING:
+      run_pattern_layering();
+      break;
 
-    // Smooth the brightness-adjusted output and put it
-    // into the main output buffer.
-    calculate_layering(
-      smoothed_output,
-      output_buffer,
-      smoothed_output,
-      config.length,
-      255 - 125);
-
-  }else{
-    switch (loaded_patterns.mode) {
-
-      case STRIP_SPLITTING:
-      default:
-        run_strip_splitting();
-        break;
-
-      case Z_LAYERING:
-        run_pattern_layering();
-        break;
-
-    }
   }
 
   FastLED.show();  // Push changes from the smoothed buffer to the LED strip

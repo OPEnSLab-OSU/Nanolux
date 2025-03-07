@@ -83,10 +83,7 @@ inline void handle_pattern_get_request(AsyncWebServerRequest* request) {
   uint8_t pattern_num = request->getParam(0)->value().toInt();
   bound_byte(&pattern_num, 0, PATTERN_LIMIT);
 
-  Pattern_Data p = manual_control_enabled ? manual_pattern : loaded_patterns.pattern[pattern_num];
-
-  Serial.println("ESP32 API: Sending Pattern Data:");
-  Serial.println("idx: " + String(p.idx) + " brightness: " + String(p.brightness) + " smoothing: " + String(p.smoothing) + " hue min/max: " + String(p.minhue) + "/" + String(p.maxhue) + " config: " + String(p.config) + " pp mode: " + String(p.postprocessing_mode));
+  Pattern_Data p = loaded_patterns.pattern[pattern_num];
 
   // Create response substrings
   String idx = String(" \"idx\": ") + p.idx;
