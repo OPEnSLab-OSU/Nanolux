@@ -1051,8 +1051,8 @@ void synesthesiaRolling(Strip_Buffer *buf, int len, Pattern_Data* params) {
   smoothedBrightness = smoothedBrightness * (1 - BRIGHTNESS_SMOOTHING) + targetBrightness * BRIGHTNESS_SMOOTHING;
   chsvNote.v = smoothedBrightness;
     
-  if (currentNote == lastNote) {
-    fadeFactor = max(0.35, fadeFactor - 0.1625);  
+  if (round(currentNote) == round(lastNote)) {
+    fadeFactor = max(0.35, fadeFactor - 0.05);  
   } else {
     fadeFactor = 1.0;
   }
