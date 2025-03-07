@@ -47,17 +47,10 @@ extern double delt[SAMPLES];
 /// with the largest delta between iterations.
 extern double maxDelt;
 
-/// FFT used for processing audio.
 ArduinoFFT<double> FFT = ArduinoFFT<double>(vReal, vImag, SAMPLES, SAMPLING_FREQUENCY);
-
-// MajorPeaks module set to find the single largest peak
-MajorPeaks peaksModule = MajorPeaks(); 
-
-// MeanAmplitude module to find the average volume
-MeanAmplitude volumeModule = MeanAmplitude(); 
-
-// // DeltaAmplitudes module to find the change between vreal and vrealhist
-// DeltaAmplitudes deltaModule = DeltaAmplitudes();
+MajorPeaks peaksModule = MajorPeaks();          // MajorPeaks module set to find the single largest peak
+MeanAmplitude volumeModule = MeanAmplitude();   // MeanAmplitude module to find the average volume
+DeltaAmplitudes deltaModule = DeltaAmplitudes(); // DeltaAmplitudes module to find the change between vreal and vrealhist
 
 /// @brief Samples incoming audio and stores the signal in vReal.
 ///
@@ -126,20 +119,20 @@ void update_volume() {
   // Serial.println(volume);
 }
 
-// /// @brief Updates the largest frequency change in the last cycle.
-// ///
-// /// Places the calculated value in the "maxDelt" variable.
-// void update_max_delta() {
-//   deltaModule.doAnalysis((const float**)audioPrismInput);
-//   float* tempDelt = deltaModule.getOutput();
-//   for (int i = 0; i < SAMPLES; i++) {
-//       delt[i] = static_cast<double>(tempDelt[i]);
-//   }
-//   maxDelt = largest(delt, SAMPLES); 
+/// @brief Updates the largest frequency change in the last cycle.
+///
+/// Places the calculated value in the "maxDelt" variable.
+void update_max_delta() {
+  deltaModule.doAnalysis((const float**)audioPrismInput);
+  float* tempDelt = deltaModule.getOutput();
+  for (int i = 0; i < SAMPLES; i++) {
+      delt[i] = static_cast<double>(tempDelt[i]);
+  }
+  maxDelt = largest(delt, SAMPLES); 
 
-//   Serial.print("Max Delta: ");
-//   Serial.println(maxDelt);
-// }
+  // Serial.print("Max Delta: ");
+  // Serial.println(maxDelt);
+}
 
 /// @brief Zeros all audio analysis arrays if the volume is too low.
 /// @param threshold  The threshold to compare the total volume against.
@@ -176,8 +169,8 @@ void configure_core_AudioPrism_modules() {
   audioPrismInput[0] = new float[SAMPLES];
   audioPrismInput[1] = new float[SAMPLES];
 
-  // deltaModule.setWindowSize(SAMPLES);
-  // deltaModule.setSampleRate(SAMPLING_FREQUENCY);
+  deltaModule.setWindowSize(SAMPLES);
+  deltaModule.setSampleRate(SAMPLING_FREQUENCY);
 
   volumeModule.setWindowSize(SAMPLES);
   volumeModule.setSampleRate(SAMPLING_FREQUENCY);
