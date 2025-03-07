@@ -82,8 +82,9 @@ Pattern mainPatterns[]{
     {18, "Centroid Case", true, showcaseCentroid},
     {19, "Bread Case", true, showcaseBread},
     {20, "Salient Freqs Case", true, showcaseSalientFreqs},
-    {21, "Note Colors", true, noteColorPattern},
+    {21, "Synesthesia Rolling", true, synesthesiaRolling},
+    {22, "Note EQ", true, noteEq}
 };
-int NUM_PATTERNS = 22;  // MAKE SURE TO UPDATE THIS WITH THE ACTUAL NUMBER OF PATTERNS (+1 last array pos) pos)
+int NUM_PATTERNS = 23;  // MAKE SURE TO UPDATE THIS WITH THE ACTUAL NUMBER OF PATTERNS (+1 last array pos) pos)
 
 #endif

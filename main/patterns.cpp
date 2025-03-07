@@ -1024,7 +1024,7 @@ CHSV getColorForNote(int noteNumber) {
 }
 
 // Maps the current note to a color.
-void noteColorPattern(Strip_Buffer *buf, int len, Pattern_Data* params) {
+void synesthesiaRolling(Strip_Buffer *buf, int len, Pattern_Data* params) {
 
   // Convert peak to a midi note
   float currentNote = 12 * log(peak / 440) / log(2.0) + 69;
@@ -1055,7 +1055,7 @@ void noteColorPattern(Strip_Buffer *buf, int len, Pattern_Data* params) {
   /// if (params->config == 1) {
     
     if (currentNote == lastNote) {
-      fadeFactor = max(0.5, fadeFactor - 0.06);  
+      fadeFactor = max(0.5, fadeFactor - 0.1);  
     } else {
       fadeFactor = 1;
     }
@@ -1071,4 +1071,51 @@ void noteColorPattern(Strip_Buffer *buf, int len, Pattern_Data* params) {
   buf->leds[0] = chsvNote;
 
   lastNote = currentNote;
+}
+
+// Maps the current note to a section on the led strip
+void noteEQ(Strip_Buffer *buf, int len, Pattern_Data* params) {
+
+  // Static variables for smoothing and tracking previous states
+  static float maxVolume = volume;
+  static float smoothedBrightness = 0;
+  static float dimFactor = 0.9;
+
+  // Number of sections (ajust as notes included change) 
+  const int NUM_SECTIONS = 12;  
+  const int SECTION_LENGTH = len / NUM_SECTIONS; 
+
+  // Smoothing factors
+  const float DECAY_FACTOR = 0.97;         // Controls how slowly max volume decreases
+  const float BRIGHTNESS_SMOOTHING = 0.25; // 0 = slowest brightness update, 1 = instant
+
+  // Smooth the brightness (volume is considered relative here)
+  maxVolume = max(volume, maxVolume * DECAY_FACTOR);
+  float targetBrightness = (volume / maxVolume) * 255;
+
+  // Get the color for the current note
+  float currentNote = 12 * log(peak / 440) / log(2.0) + 69;
+  int activeSegment = round(currentNote) % 12;
+  CHSV chsvNote = getColorForNote(activeSegment);
+  
+  // Assign brightness
+  smoothedBrightness = smoothedBrightness * (1 - BRIGHTNESS_SMOOTHING) + targetBrightness * BRIGHTNESS_SMOOTHING;
+  chsvNote.v = smoothedBrightness;
+
+  int sectionStart = activeSegment * SECTION_LENGTH;
+  int sectionEnd = activeSegment * (SECTION_LENGTH + 1);
+
+  // Dim leds not in the relevent section to get the fading effect
+  for (int i = 0; i < len; i++) {
+
+    if (i >= sectionStart && i < sectionEnd) {
+      buf->leds[i] = chsvNote;
+    }
+    
+    else {
+      CHSV currentColor = buf->leds[i];
+      currentColor.v = currentColor.v * dimFactor;
+      buf->leds[i] = currentColor;
+    }
+  }
 }
