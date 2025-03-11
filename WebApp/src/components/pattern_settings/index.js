@@ -11,6 +11,7 @@ import RANGE_CONSTANTS from '../../utils/constants';
 import style from './style.css';
 import MultiRangeSliderWrapper from '../../components/multi_range_slider';
 import ConfigDropDown from "../config_drop_down";
+import RainbowSlider from '../../components/rainbow_slider';
 
 /**
  * @brief An object meant to hold and display settings for a specific pattern
@@ -183,6 +184,17 @@ const PatternSettings = ({num, patterns}) => {
 				selectedHigh={data.hue_max}
 				minRef={"hue_min"}
 				maxRef={"hue_max"}
+				update={update}
+			/>
+			<br/>
+			<RainbowSlider
+				//className="slider"
+				//className={styles.slider-container}
+				className={style.settings_control}
+				label="Test"
+				min={0}
+				max={255}
+				initial={50}
 				update={update}
 			/>
 		</div> : <LabelSpinner></LabelSpinner>
