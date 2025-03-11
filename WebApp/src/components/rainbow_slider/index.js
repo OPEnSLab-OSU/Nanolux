@@ -1,7 +1,5 @@
 import React from 'react';
 import {useSignal} from "@preact/signals";
-//import './style.css';
-//import './test.css';
 import style from './style.css';
 import { useEffect } from "preact/hooks";
 

@@ -188,8 +188,6 @@ const PatternSettings = ({num, patterns}) => {
 			/>
 			<br/>
 			<RainbowSlider
-				//className="slider"
-				//className={styles.slider-container}
 				className={style.settings_control}
 				label="Test"
 				min={0}
