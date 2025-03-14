@@ -77,15 +77,6 @@ void compute_FFT() {
   FFT.compute(vReal, vImag, SAMPLES, FFT_FORWARD);
   FFT.complexToMagnitude(vReal, vImag, SAMPLES);
 
-  // Serial.println("vReal after FFT (Frequency Bin | Magnitude):");
-  // for (int i = 0; i < SAMPLES / 2; i++) {
-  //   double frequency = (i * SAMPLING_FREQUENCY) / SAMPLES;
-  //   Serial.print(frequency);
-  //   Serial.print(" Hz: ");
-  //   Serial.println(vReal[i]);
-  // }
-  // Serial.println();
-
   // arduino FFT MUST takes a double array and audioPrism modules MUST take a float array
   for (int i = 0; i < SAMPLES; i++) {
     audioPrismInput[0][i] = static_cast<float>(vReal[i]);  
@@ -103,9 +94,6 @@ void update_peak() {
   // peak = peakFrequencies[0];
 
   peak = FFT.majorPeak(vReal, SAMPLES, SAMPLING_FREQUENCY);
-  
-  // Serial.print("Peak Frequency: ");
-  // Serial.println(peak);
 }
 
 /// @brief Calculates and stores the current volume.
@@ -114,9 +102,6 @@ void update_peak() {
 void update_volume() {
   volumeModule.doAnalysis((const float**)audioPrismInput);
   volume = volumeModule.getOutput();
-
-  // Serial.print("Volume: ");
-  // Serial.println(volume);
 }
 
 /// @brief Updates the largest frequency change in the last cycle.
@@ -129,9 +114,6 @@ void update_max_delta() {
       delt[i] = static_cast<double>(tempDelt[i]);
   }
   maxDelt = largest(delt, SAMPLES); 
-
-  // Serial.print("Max Delta: ");
-  // Serial.println(maxDelt);
 }
 
 /// @brief Zeros all audio analysis arrays if the volume is too low.

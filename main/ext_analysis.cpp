@@ -63,12 +63,6 @@ void update_percussion_dectection() {
 void update_salient_freqs() {
   salientModule.doAnalysis((const float**)audioPrismInput);
   int* output = salientModule.getOutput(); 
-  // Serial.print("Output values: ");
-  // for (int i = 0; i < 3; ++i) {
-  //     Serial.print(output[i]);
-  //     Serial.print(" ");
-  // }
-  // Serial.println();  
   memcpy(salFreqs, output, sizeof(salFreqs)); 
 }
 
