@@ -152,6 +152,7 @@ const StripSettings = ({patterns}) => {
 				<button type="button" onClick={incrementPatterns}>+</button>
 				<button type="button" onClick={decrementPatterns}>-</button>
 				<hr></hr>
+				<br></br>
 
 				{inRange(data.pattern_count).map((data) => {
 					if(data.idx == selectedPattern){

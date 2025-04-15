@@ -1,4 +1,6 @@
-import MultiRangeSlider from "multi-range-slider-react";
+import MultiRangeSlider from "audiolux-multi-range-slider";
+import { useState } from "preact/hooks";
+
 
 /**
  * @brief A NanoLux wrapper for the Multi Range Slider object.A
@@ -23,6 +25,16 @@ const MultiRangeSliderWrapper = ({
     update
 }) => {
 
+    const getHueColor = (value) => `hsl(${(value / 255) * 360}, 100%, 50%)`;
+
+    const [thumbMinColor, setThumbMinColor] = useState(getHueColor(selectedLow));
+    const [thumbMaxColor, setThumbMaxColor] = useState(getHueColor(selectedHigh));
+
+    const handleThumbs = (e) => {
+        setThumbMinColor(getHueColor(e.minValue));
+        setThumbMaxColor(getHueColor(e.maxValue));
+    }
+
     // SOURCE: https://github.com/developergovindgupta/multi-range-slider-react
 
     const handleInput = (e) => {
@@ -36,11 +48,21 @@ const MultiRangeSliderWrapper = ({
             min={min}
             max={max}
             step={50}
+            ruler={false}
             minValue={selectedLow}
             maxValue={selectedHigh}
             onChange={(e) => {
                 handleInput(e);
             }}
+            onInput={(e) => {
+                handleThumbs(e);
+            }}
+            barLeftColor="transparent"
+            barInnerColor="transparent"
+            barRightColor="transparent"
+            thumbLeftColor={thumbMinColor}
+            thumbRightColor={thumbMaxColor}
+            style={{ border: "none", boxShadow: "none" }}
         />
 
     </div>)

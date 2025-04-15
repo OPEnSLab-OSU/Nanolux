@@ -193,6 +193,8 @@ const PatternSettings = ({num, patterns}) => {
 					}}
 				/>
             </div>
+			<br></br>
+			<label>Color Range</label>
 			<MultiRangeSliderWrapper
 				min={0}
 				max={255}

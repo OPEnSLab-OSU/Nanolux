@@ -5,13 +5,13 @@
 	-moz-osx-font-smoothing: grayscale;
 
 	color-scheme: light dark;
-	color: #444;
-	background: #fafafa;
+	color: #000000;
+	background: #fff1dd;
 }
 
 @media (prefers-color-scheme: dark) {
 	:root {
-		color: #fff;
+		color: #ffffff;
 		background: #1c1c1c;
 	}
 }
@@ -24,7 +24,6 @@ body {
 
 #app > main {
 	display: flex;
-	padding-top: 3.5rem;
 	margin: 0 auto;
 	min-height: calc(100vh - 3.5rem);
 	max-width: 1280px;

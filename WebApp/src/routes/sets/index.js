@@ -32,8 +32,8 @@ const Settings = () => {
 		<div>
 			<table>
 				<tr>
-					<th>Pattern Settings</th>
-					<th>System Settings</th>	
+					<th style="font-size: 20px;">Pattern Settings</th>
+					<th style="font-size: 20px;">System Settings</th>	
 				</tr>
 				<tr>
 					<td>
@@ -51,7 +51,6 @@ const Settings = () => {
 								idx='0'
 							/>
 						</div>
-						<br></br>
 						<div className={style.background1}>
 							<Save_Entry
 								name="Saved Pattern 1"

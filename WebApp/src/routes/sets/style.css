@@ -1,6 +1,12 @@
 table td, table td * {
     vertical-align: top;
 	text-align:center;
+	border-spacing: 10px;
+	margin-bottom: 5px;
+}
+
+table {
+	border-spacing: 40px;
 }
 
 .home {
@@ -122,23 +128,15 @@ td, th {
 }
 
 .background0{
-	background-color: rgb(70,25,25);
+	background-color: #aaaaaa;
 	border-radius: 5px;
 }
 .background1{
-	background-color: #3b3b3b;
+	background-color: #7c7c7c;
 	border-radius: 5px;
 }
 .background2{
-	background-color: #303030;
-	border-radius: 5px;
-}
-.background3{
-	background-color: #262626;
-	border-radius: 5px;
-}
-.background4{
-	background-color: #212121;
+	background-color: #7c7c7c;
 	border-radius: 5px;
 }
 .label {
