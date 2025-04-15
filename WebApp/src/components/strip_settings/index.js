@@ -10,6 +10,7 @@ import { LabelSpinner } from '../spinner';
 import SimpleChooser from '../single_chooser';
 import style from './style.css';
 import PatternSettings from '../pattern_settings';
+import { Tooltip } from 'react-tooltip';
 
 const StripSettings = ({patterns}) => {
 
@@ -117,8 +118,12 @@ const StripSettings = ({patterns}) => {
 	return (
 		(!loading ? 
 			<div>
+				<label>Mode</label>
+				<label data-tooltip-id="mode" data-tooltip-offset={10}> (?)</label>
+				<Tooltip id="mode" content="The mode the patterns will be displayed in.
+				Strip Splitting splits multiple patterns separately, while Z-Layering layers patterns onto each other."/>
 				<SimpleChooser
-					label="Mode"
+					//label="Mode"
 					options={[
 						{option : "Strip Splitting", idx : RANGE_CONSTANTS.STRIP_SPLITTING_ID},
 						{option : "Z-Layering", idx : RANGE_CONSTANTS.Z_LAYERING_ID},
@@ -129,9 +134,12 @@ const StripSettings = ({patterns}) => {
 					update={update}
 				/>
 				<br/>
+				<label>Transparency</label>
+				<label data-tooltip-id="transparency" data-tooltip-offset={10}> (?)</label>
+				<Tooltip id="transparency" content="This slider adjusts the transparency of the LED strip."/>
 				<NumericSlider
 					className={style.settings_control}
-					label="Transparency"
+					//label="Transparency"
 					min={RANGE_CONSTANTS.ALPHA_MIN}
 					max={RANGE_CONSTANTS.ALPHA_MAX}
 					initial={data.alpha}
@@ -139,9 +147,12 @@ const StripSettings = ({patterns}) => {
 					update={update}
 				/>
 				<br/>
+				<label>Noise Threshold</label>
+				<label data-tooltip-id="threshold" data-tooltip-offset={10}> (?)</label>
+				<Tooltip id="threshold" content="This slider adjusts how much noise it takes to display the pattern."/>
 				<NumericSlider
 					className={style.settings_control}
-					label="Noise Threshold"
+					//label="Noise Threshold"
 					min={RANGE_CONSTANTS.NOISE_MIN}
 					max={RANGE_CONSTANTS.NOISE_MAX}
 					initial={data.noise}

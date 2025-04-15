@@ -1,13 +1,14 @@
 .rainbow-container{
-    width: 300px;
+    width: 200px;
     background: green;
 }
 
-input.rainbow_input {
+.rainbow_input {
     -webkit-appearance: none;
     width: 100%;
     height: 10px;
     outline: none;
+    position: relative;
     border-radius: 5px;
     background: linear-gradient(to right, red, orange, yellow, 
     lime, green, Turquoise, Cyan, Blue, Violet, Magenta, Crimson, red);
@@ -17,22 +18,33 @@ input.rainbow_input {
     
 }
 
-input.rainbow_input::-webkit-slider-thumb{
+.rainbow_input > input.min{
     -webkit-appearance: none;
     appearance: none;
     width: 20px;
     height: 20px;
-    background: black;
-    border-radius: 50%;
+    position: relative;
+    background: transparent;
+    border-radius: 5px;
     cursor: pointer;
 }
 
-input.rainbow_input::-webkit-slider-track{
+.rainbow_input > input.max{
+    -webkit-appearance: none;
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    position: relative;
+    background: transparent;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.rainbow_input::-webkit-slider-track{
     width: 100%;
     height: 5px;
     background: linear-gradient(to right, red, orange, yellow, 
     lime, green, Turquoise, Cyan, Blue, Violet, Magenta, Crimson, red);
-    position: absoulte;
     top: 50%;
     outline: 'none'
 }

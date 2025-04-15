@@ -11,7 +11,6 @@ import RANGE_CONSTANTS from '../../utils/constants';
 import style from './style.css';
 import MultiRangeSliderWrapper from '../../components/multi_range_slider';
 import ConfigDropDown from "../config_drop_down";
-import RainbowSlider from '../../components/rainbow_slider';
 
 /**
  * @brief An object meant to hold and display settings for a specific pattern
@@ -104,9 +103,12 @@ const PatternSettings = ({num, patterns}) => {
 				initial={data.config}
 			/>
 			<br/>
+			<label data-tooltip-id="my-tooltip" data-tooltip-content="This slider adjusts how bright the LED strip is.">
+			Brightness
+			</label>
 			<NumericSlider
 				className={style.settings_control}
-				label="Brightness"
+				//label="Brightness"
 				min={RANGE_CONSTANTS.BRIGHTNESS_MIN}
 				max={RANGE_CONSTANTS.BRIGHTNESS_MAX}
 				initial={data.brightness}
@@ -114,9 +116,12 @@ const PatternSettings = ({num, patterns}) => {
 				update={update}
 			/>
 			<br/>
+			<label data-tooltip-id="my-tooltip" data-tooltip-content="Adjusts the smoothing of the LED strip.">
+			Smoothing
+			</label>
 			<NumericSlider
 				className={style.settings_control}
-				label="Smoothing"
+				//label="Smoothing"
 				min={RANGE_CONSTANTS.SMOOTHING_MIN}
 				max={RANGE_CONSTANTS.SMOOTHING_MAX}
 				initial={data.smoothing}
@@ -177,6 +182,9 @@ const PatternSettings = ({num, patterns}) => {
 					}}
 				/>
             </div>
+			<label data-tooltip-id="my-tooltip" data-tooltip-content="Adjusts the range of colors that are displayed on the LED strip.">
+			Color Range
+			</label>
 			<MultiRangeSliderWrapper
 				min={0}
 				max={255}
@@ -186,15 +194,7 @@ const PatternSettings = ({num, patterns}) => {
 				maxRef={"hue_max"}
 				update={update}
 			/>
-			<br/>
-			<RainbowSlider
-				className={style.settings_control}
-				label="Test"
-				min={0}
-				max={255}
-				initial={50}
-				update={update}
-			/>
+			<br/> 
 		</div> : <LabelSpinner></LabelSpinner>
 		)
 	);
