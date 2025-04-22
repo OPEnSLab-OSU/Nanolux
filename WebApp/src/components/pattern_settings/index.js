@@ -140,61 +140,65 @@ const PatternSettings = ({num, patterns}) => {
 				update={update}
 			/>
 			<div className={style.settings_control}>
-                <label for="reverse">Reverse</label>
-				<input 
-					type="checkbox" 
-					id="reverse" 
-					name="reverse" 
-					checked={(data.postprocess == 1) || (data.postprocess == 3)}
-					onChange={() => {
-						switch (data.postprocess) {
-							case 0:
-								update("postprocess", 1);
-								break;
+                <label className={style.checkboxOption}>
+					<input 
+						type="checkbox" 
+						id="reverse" 
+						name="reverse" 
+						checked={(data.postprocess == 1) || (data.postprocess == 3)}
+						onChange={() => {
+							switch (data.postprocess) {
+								case 0:
+									update("postprocess", 1);
+									break;
+								
+								case 1:
+									update("postprocess", 0);
+									break;
+								
+								case 2:
+									update("postprocess", 3);
+									break;
 							
-							case 1:
-								update("postprocess", 0);
-								break;
+								default:
+									update("postprocess", 2);
+									break;
+							}
+						}}
+					/>
+					Reverse
+				</label>
+				<label className={style.checkboxOption}>
+					<input 
+						type="checkbox" 
+						id="mirror" 
+						name="mirror" 
+						checked={(data.postprocess == 2) || (data.postprocess == 3)}
+						onChange={() => {
+							switch (data.postprocess) {
+								case 0:
+									update("postprocess", 2);
+									break;
+								
+								case 1:
+									update("postprocess", 3);
+									break;
+								
+								case 2:
+									update("postprocess", 0);
+									break;
 							
-							case 2:
-								update("postprocess", 3);
-								break;
-						
-							default:
-								update("postprocess", 2);
-								break;
-						}
-					}}
-				/>
-				<label for="mirror">Mirror</label>
-				<input 
-					type="checkbox" 
-					id="mirror" 
-					name="mirror" 
-					checked={(data.postprocess == 2) || (data.postprocess == 3)}
-					onChange={() => {
-						switch (data.postprocess) {
-							case 0:
-								update("postprocess", 2);
-								break;
-							
-							case 1:
-								update("postprocess", 3);
-								break;
-							
-							case 2:
-								update("postprocess", 0);
-								break;
-						
-							default:
-								update("postprocess", 1);
-								break;
-						}
-					}}
-				/>
+								default:
+									update("postprocess", 1);
+									break;
+							}
+						}}
+					/>
+					Mirror
+				</label>
             </div>
 			<br></br>
-			<label>Color Range</label>
+			<label style={{fontSize:'1.2rem'}}>Color Range</label>
 			<MultiRangeSliderWrapper
 				min={0}
 				max={255}

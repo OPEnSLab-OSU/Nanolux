@@ -1,8 +1,18 @@
-.label {
-    display: inline;
-    padding-right: 4px;
+:root {
+    --ctl-h:    2rem;
+    --ctl-pad:  0 0.75rem;
 }
 
-.select {
-    margin-top: 4px;
+.label{
+    font-size: var(--font-size);
+    margin-right: .5rem;
+}
+
+.select{
+    font-size: var(--font-size);
+    height: var(--ctl-h);
+    padding: var(--ctl-pad);
+    border-radius:.5rem;
+    border:2px solid var(--brand);
+    cursor:pointer;
 }

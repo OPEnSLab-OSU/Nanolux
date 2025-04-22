@@ -149,18 +149,18 @@ const StripSettings = ({patterns}) => {
 					update={update}
 				/>
 				<br/>
-				<button type="button" onClick={incrementPatterns}>+</button>
-				<button type="button" onClick={decrementPatterns}>-</button>
+				<button className={style.incBtn} onClick={incrementPatterns}>+</button>
+				<button className={style.incBtn} onClick={decrementPatterns}>-</button>
 				<hr></hr>
 				<br></br>
 
 				{inRange(data.pattern_count).map((data) => {
 					if(data.idx == selectedPattern){
-						return <button type="button" onClick={function() {setPattern(data.idx);}} key={data.idx} style="border-style:inset;">
+						return <button className={style.patternBtn} onClick={function() {setPattern(data.idx);}} key={data.idx} style="border-style:inset;">
 							Pattern {data.idx}
 						</button>
 					}else{
-						return <button type="button" onClick={function() {setPattern(data.idx);}} key={data.idx}>
+						return <button className={style.patternBtn} onClick={function() {setPattern(data.idx);}} key={data.idx}>
 							Pattern {data.idx}
 						</button>
 					}

@@ -44,7 +44,7 @@ const Patterns = ({
         <div>
             <div>
                 <label className={style.label} htmlFor="pattern-options">Current Pattern</label>
-                <select className={style.label}
+                <select className={style.select}
                         id="pattern-options"
                         value={initialID}
                         onChange={handleSelection}

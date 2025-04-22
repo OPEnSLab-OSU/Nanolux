@@ -7,6 +7,10 @@
 	color-scheme: light dark;
 	color: #000000;
 	background: #fff1dd;
+
+	/* COMPONENT VARIABLES */
+	--font-size: 1.2rem;
+	--brand:    #0067c5;
 }
 
 @media (prefers-color-scheme: dark) {

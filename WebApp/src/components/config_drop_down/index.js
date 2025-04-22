@@ -2,6 +2,7 @@ import { useSignal } from '@preact/signals';
 import Select from 'preact-material-components/Select';
 import { useEffect } from 'preact/hooks';
 import useInterval from '../../utils/use_interval';
+import style from './style.css';
 
 // SOURCE:
 // https://material.preactjs.com/component/select/
@@ -48,10 +49,11 @@ const ConfigDropDown = ({
     return (
         <div>
             <Select
+                
                 selectedIndex={current.value}
                 onChange={(e)=>{
                     current.value = e.target.selectedIndex;
-                    update(structureRef, current);
+                    update(structureRef, current.value);
             }}>
                 {(patternIdx <= configs.length && patternIdx >= 0) ?
                     

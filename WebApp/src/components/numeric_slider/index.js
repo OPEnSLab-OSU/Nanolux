@@ -53,7 +53,7 @@ const NumericSlider = ({
     return (
         <div>
             <div>
-                <span>{label}</span>
+                <span style={{fontSize: '1.2rem'}}>{label}</span>
             </div>
             <div>
                 <input

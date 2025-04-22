@@ -1,3 +1,4 @@
+import style from './style.css';
 
 /**
  * @brief A simple single-choice checkbox selector
@@ -45,15 +46,17 @@ const SimpleChooser = ({
      */
     const options_list = options.map((option) => {
         return <span>
-            <input
-                type="checkbox"
-                id={option.option}
-                name={option.option}
-                value={option.idx}
-                onChange={changeSelection}
-                checked={initial===option.idx}
-            />
-            <label for={option.option}>{option.option}</label>
+            <label key={option.idx} className={style.option_group}>
+                <input
+                    type="checkbox"
+                    id={option.option}
+                    name={option.option}
+                    value={option.idx}
+                    onChange={changeSelection}
+                    checked={initial===option.idx}
+                />
+                {option.option}
+            </label>
         </span>
     });
 
@@ -62,7 +65,7 @@ const SimpleChooser = ({
      */
     return (
         <div>
-            {label}:
+            <label style={{fontSize: '1.2rem'}}>{label}:</label>
             <br></br>
             {options_list}
         </div>
