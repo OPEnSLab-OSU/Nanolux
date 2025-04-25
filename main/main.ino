@@ -13,6 +13,7 @@
 #include "nanolux_util.h"
 #include "core_analysis.h"
 #include "ext_analysis.h"
+#include "audio_analysis.h"
 #include "storage.h"
 #include "globals.h"
 
@@ -402,7 +403,12 @@ void update_hardware(){
 void loop() {
   begin_loop_timer(config.loop_ms);  // Begin timing this loop
 
+  audioAnalysis.runSampleAudio();
+
+  audioAnalysis.runSamrunComputeFFT();
+
   audio_analysis();  // Run the audio analysis pipeline
+
   update_hardware(); // Pull updates from hardware (buttons, encoder)
 
   // Reset buffers if pattern settings were changed since
@@ -470,6 +476,8 @@ void loop() {
   } while (timer_overrun() == 0);
 
   update_web_server();
+
+  audioAnalysis.resetCache();
 }
 
 /// @brief Performs audio analysis by running audio_analysis.cpp's
@@ -478,23 +486,9 @@ void loop() {
 /// If the macro SHOW_TIMINGS is defined, it will print out the amount
 /// of time audio processing takes via serial.
 void audio_analysis() {
-#ifdef SHOW_TIMINGS
-  const int start = micros();
-#endif
-
-  sample_audio();
-
-  compute_FFT();
-
-  update_peak();
-
-  update_volume();
-
-  // update_max_delta();
-
-  noise_gate(loaded_patterns.noise_thresh);
-
-  update_vRealHist();
+  #ifdef SHOW_TIMINGS
+    const int start = micros();
+  #endif
 
   #ifdef SHOW_TIMINGS
     const int end = micros();

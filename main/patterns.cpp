@@ -964,8 +964,7 @@ void showcaseBread(Strip_Buffer * buf, int len, Pattern_Data* params){
 
 void showcaseSalientFreqs(Strip_Buffer * buf, int len, Pattern_Data* params){
   //salientFreqs is a hypothetical external array of ints that represent indexes with the greatest change in amplitude. By default it gives 3 points
- 
-  update_salient_freqs();
+
   static int splatter[MAX_LEDS];
 
 
@@ -1093,7 +1092,7 @@ void noteEQ(Strip_Buffer *buf, int len, Pattern_Data* params) {
   float targetBrightness = (volume / maxVolume) * 255;
   smoothedBrightness = smoothedBrightness * (1 - BRIGHTNESS_SMOOTHING) + targetBrightness * BRIGHTNESS_SMOOTHING;
   chsvNote.v = smoothedBrightness;
-
+  
   for (int i = 0; i < NUM_SECTIONS; i++) {
     int ledIndex = i * SECTION_LENGTH;
     // Set the leds in the note section to proper color and brightness

@@ -7,7 +7,6 @@ void update_peak();
 void update_volume();
 void update_max_delta();
 void noise_gate(int threshhold);
-void update_vRealHist();
 void configure_core_AudioPrism_modules();
 
 

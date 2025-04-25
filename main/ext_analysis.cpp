@@ -26,7 +26,7 @@ extern double peak;
 extern double vReal[SAMPLES];
 
 // Array of pointers for vReal and vRealHist
-extern float* audioPrismInput[2];
+extern float audioPrismInput[SAMPLES];
 
 /// Global FIVE BAND SPLIT which stores changing bands
 /// based on raw frequencies
@@ -38,11 +38,18 @@ extern int salFreqs[3];
 /// @brief for showcaseCentroid
 extern float centroid;
 
+extern float noisiness;
+
 /// @brief for showcasePercussion
 extern bool percussionPresent;
 
+extern Spectrogram fftHistory;
+
 // SalientFreqs module 
-SalientFreqs salientModule = SalientFreqs(3); 
+// SalientFreqs salientModule = SalientFreqs(3); 
+
+// Noisiness module
+Noisiness noisinessModule = Noisiness();
 
 // PercussionDetection module 
 PercussionDetection percussionModule = PercussionDetection(); 
@@ -51,27 +58,31 @@ PercussionDetection percussionModule = PercussionDetection();
 Centroid centroidModule = Centroid(); 
 
 void update_centroid() {
-  centroidModule.doAnalysis((const float**)audioPrismInput);
+  centroidModule.doAnalysis();
   centroid = centroidModule.getOutput();
 }
 
 void update_percussion_dectection() {
-  percussionModule.doAnalysis((const float**)audioPrismInput);
+  percussionModule.doAnalysis();
   percussionPresent = percussionModule.getOutput();
 }
 
-void update_salient_freqs() {
-  salientModule.doAnalysis((const float**)audioPrismInput);
-  int* output = salientModule.getOutput(); 
-  // Serial.print("Output values: ");
-  // for (int i = 0; i < 3; ++i) {
-  //     Serial.print(output[i]);
-  //     Serial.print(" ");
-  // }
-  // Serial.println();  
-  memcpy(salFreqs, output, sizeof(salFreqs)); 
-}
+// void update_salient_freqs() {
+//   salientModule.doAnalysis();
+//   int* output = salientModule.getOutput(); 
+//   Serial.print("Output values: ");
+//   for (int i = 0; i < 3; ++i) {
+//       Serial.print(output[i]);
+//       Serial.print(" ");
+//   }
+//   Serial.println();  
+//   memcpy(salFreqs, output, sizeof(salFreqs)); 
+// }
 
+void update_noisiness() {
+  noisinessModule.doAnalysis();
+  noisiness = noisinessModule.getOutput();
+}
 
 /// @brief Outputs the average volume of 5 buckets given a sample length.
 /// @param len  The number of samples the buckets should stretch across.
@@ -156,13 +167,20 @@ void update_five_band_split(int len) {
 
 void configure_ext_AudioPrism_modules() {
 
-  salientModule.setWindowSize(SAMPLES);
-  salientModule.setSampleRate(SAMPLING_FREQUENCY);
+  // salientModule.setWindowSize(SAMPLES);
+  // salientModule.setSampleRate(SAMPLING_FREQUENCY);
+  // salientModule.setSpectrogram(&fftHistory);
 
   percussionModule.setWindowSize(SAMPLES);
   percussionModule.setSampleRate(SAMPLING_FREQUENCY);
+  percussionModule.setSpectrogram(&fftHistory);
 
   centroidModule.setWindowSize(SAMPLES);
   centroidModule.setSampleRate(SAMPLING_FREQUENCY);
+  centroidModule.setSpectrogram(&fftHistory);
+
+  noisinessModule.setWindowSize(SAMPLES);
+  noisinessModule.setSampleRate(SAMPLING_FREQUENCY);
+  noisinessModule.setSpectrogram(&fftHistory);
 }
 

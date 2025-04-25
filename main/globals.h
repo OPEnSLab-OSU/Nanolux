@@ -15,6 +15,8 @@
 #define GLOBALS_H
 
 #include "nanolux_types.h"
+#include "audio_analysis.h"
+#include "AudioPrism.h"
 
 int formant_pose = 0;
 double formants[3];  // Master formants array that constantly changes;
@@ -24,6 +26,7 @@ double fbs[5];       // Master FIVE BAND SPLIT which stores changing bands based
 double fss[5];       // Master FIVE SAMPLE SPLIT which stores changing bands based on splitting up the samples
 int salFreqs[3];
 float centroid;
+float noisiness;
 bool percussionPresent = false;
 int advanced_size = 20;
 unsigned int sampling_period_us = round(1000000 / SAMPLING_FREQUENCY);
@@ -34,10 +37,12 @@ unsigned long microseconds;
 double vReal[SAMPLES];  // Sampling buffers
 double vImag[SAMPLES];
 double vRealHist[SAMPLES];  // Delta freq
-float* audioPrismInput[2];
+float audioPrismInput[SAMPLES];
+extern Spectrogram fftHistory;
 double delt[SAMPLES];
 double maxDelt = 0.;  // Frequency with the biggest change in amp.
 unsigned long myTime;     // For nvp
+AudioAnalysis audioAnalysis;
 
 
 //
