@@ -119,8 +119,8 @@ void update_max_delta() {
   for (int i = 0; i < SAMPLES; i++) {
       delt[i] = static_cast<double>(tempDelt[i]);
   }
-  // Print first ten elements of delt
-  maxDelt = static_cast<double>(largest(delt, SAMPLES)); 
+  // // Print first ten elements of delt
+  // maxDelt = static_cast<double>(largest(delt, SAMPLES)); 
 }
 
 /// @brief Zeros all audio analysis arrays if the volume is too low.

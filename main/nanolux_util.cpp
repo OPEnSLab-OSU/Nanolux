@@ -129,9 +129,9 @@ int remap( double x,double oMin,double oMax,double nMin,double nMax ){
 /// @param n    The number of elements to check.
 ///
 /// @return   The index of the largest element in arr.
-int largest(double arr[], int n){
-  double max = arr[0];
-  
+int largest(float arr[], int n){
+  float max = arr[0];
+ 
   for (int i = 1; i < n; i++)
     if (arr[i] > max){
       max = i;
@@ -139,6 +139,7 @@ int largest(double arr[], int n){
 
   return max;
 }
+
 
 /************************************************
  *

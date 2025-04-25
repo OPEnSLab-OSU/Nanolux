@@ -405,7 +405,7 @@ void loop() {
 
   audioAnalysis.runSampleAudio();
 
-  audioAnalysis.runSamrunComputeFFT();
+  audioAnalysis.runComputeFFT();
 
   audio_analysis();  // Run the audio analysis pipeline
 
