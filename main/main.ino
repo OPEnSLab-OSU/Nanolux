@@ -11,8 +11,6 @@
 #include "patterns.h"
 #include "nanolux_types.h"
 #include "nanolux_util.h"
-#include "core_analysis.h"
-#include "ext_analysis.h"
 #include "audio_analysis.h"
 #include "storage.h"
 #include "globals.h"
@@ -117,9 +115,6 @@ void setup() {
   load_from_nvs();
   verify_saves();
   load_slot(0);
-
-  configure_core_AudioPrism_modules();
-  configure_ext_AudioPrism_modules();
 
 #ifdef ENABLE_WEB_SERVER
   initialize_web_server(apiGetHooks, API_GET_HOOK_COUNT, apiPutHooks, API_PUT_HOOK_COUNT, config.pass);

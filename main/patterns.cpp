@@ -13,8 +13,6 @@
 #include "nanolux_types.h"
 #include "nanolux_util.h"
 #include "storage.h"
-#include "core_analysis.h"
-#include "ext_analysis.h"
 #include "audio_analysis.h"
 #include "palettes.h"
 
@@ -475,8 +473,6 @@ void bands(Strip_Buffer* buf, int len, Pattern_Data* params) {
           }
           avg5 /= advanced_size;
 
-          double *fiveSamples = band_split_bounce(len);
-
           vol1 = fbs[0];
           vol2 = fbs[1];
           vol3 = fbs[2];
@@ -576,7 +572,6 @@ void bands(Strip_Buffer* buf, int len, Pattern_Data* params) {
           buf->leds[(int) 4*len/5+(int) avg5+ (int) vol5] = CRGB(255,255,255);
           fadeToBlackBy(buf->leds, len, 90);
 
-          delete [] fiveSamples;
           break;
         }
         // case 2 :
