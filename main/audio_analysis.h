@@ -22,6 +22,7 @@ public:
 
 
   // Accessors (cache their analysis on first call each loop)
+  double* getVReal();
   double  getPeak();
   double  getVolume();
   int     getMaxDelta();
@@ -94,14 +95,8 @@ private:
   void update_percussion_detection();
   void update_noisiness();
   void update_five_band_split(int len);
-
-
-  // for five‑band split
-  double* band_split_bounce(int len);
 };
 
-
 extern AudioAnalysis audioAnalysis;
-
 
 #endif

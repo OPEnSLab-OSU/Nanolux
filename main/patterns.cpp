@@ -15,26 +15,19 @@
 #include "storage.h"
 #include "core_analysis.h"
 #include "ext_analysis.h"
+#include "audio_analysis.h"
 #include "palettes.h"
 
 extern unsigned long microseconds;
-extern double vReal[SAMPLES];      // Sampling buffers
-extern double vImag[SAMPLES];
-extern double vRealHist[SAMPLES];  // for delta freq
-extern double delt[SAMPLES];
+extern AudioAnalysis audioAnalysis; // Audio Analysis object with getters
 extern bool button_pressed;
 extern SimplePatternList gPatterns;
 extern int NUM_PATTERNS;
 extern SimplePatternList gPatterns_layer;
-extern double peak;                       //  peak frequency
-extern uint8_t fHue;                      // hue value based on peak frequency
-extern double volume;                     //  NOOOOTEEEE:  static?? 
+extern double a;                       //  a frequency
+extern uint8_t fHue;                      // hue value based on a frequency
 extern uint8_t vbrightness;
-extern double maxDelt;                    // Frequency with the biggest change in amp.
 extern int advanced_size;
-extern int salFreqs[3];
-extern float centroid;
-extern bool percussionPresent;
 CRGBPalette16 gPal = GMT_hot_gp; //store all palettes in array
 bool gReverseDirection = false;
 
@@ -43,7 +36,6 @@ extern Pattern_Data params;
 
 extern uint8_t manual_pattern_idx;
 extern bool manual_control_enabled;
-extern double fbs[5]; 
 
 /// Global formant array, used for accessing.
 extern double formants[3];
@@ -54,19 +46,19 @@ const uint8_t MIN_HUE = 0;
 
 // get frequency hue
 void getFhue(uint8_t min_hue, uint8_t max_hue){
-    fHue = remap(
-    log(peak) / log(2),
-    log(MIN_FREQUENCY) / log(2),
-    log(MAX_FREQUENCY) / log(2),
-    MIN_HUE, MAX_HUE);
-    // disable min hue and max hue
-    // 10, 240);
+  fHue = remap(
+  log(audioAnalysis.getPeak()) / log(2),
+  log(MIN_FREQUENCY) / log(2),
+  log(MAX_FREQUENCY) / log(2),
+  MIN_HUE, MAX_HUE);
+  // disable min hue and max hue
+  // 10, 240);
 }
 
 /// get vol brightness
 void getVbrightness(){
     vbrightness = remap(
-    volume,
+    audioAnalysis.getVolume(),
     MIN_VOLUME,
     MAX_VOLUME,
     0,
@@ -106,6 +98,8 @@ void setColorHSV(CRGB* leds, byte h, byte s, byte v, int len) {
 /// @param len The length of LEDs to process
 /// @param params Pointer to Pattern_Data structure containing configuration options.
 void pix_freq(Strip_Buffer * buf, int len, Pattern_Data* params) {
+  double volume = audioAnalysis.getVolume();
+  double peak   = audioAnalysis.getPeak();
     //switch(params->config){
       //case 0:
       //default:
@@ -202,6 +196,7 @@ void hue_trail(Strip_Buffer* buf, int len, Pattern_Data* params) {
 /// @param len The length of LEDs to process
 /// @param params Pointer to Pattern_Data structure containing configuration options.
 void saturated(Strip_Buffer* buf, int len, Pattern_Data* params){
+  double volume = audioAnalysis.getVolume();
   //Set params for fill_noise16()
   uint8_t octaves = 1;
   uint16_t x = 0;
@@ -211,29 +206,30 @@ void saturated(Strip_Buffer* buf, int len, Pattern_Data* params){
   int hue_scale = 20; 
   uint16_t ntime = millis() / 3;
   uint8_t hue_shift =  50;
-   switch (params->config) {
-        case 0: // Default, no additional values changed
-            fill_noise16 (buf->leds, len, octaves, x, scale, hue_octaves, hue_x, hue_scale, ntime, hue_shift);
-          break;
-        case 1: { // Hue octaves 
-            hue_octaves = remap(volume, MIN_VOLUME, MAX_VOLUME, 1, 10);
-            fill_noise16 (buf->leds, len, octaves, x, scale, hue_octaves, hue_x, hue_scale, ntime, hue_shift);
-            }
-            break;
-            
-        case 2: {// Hue shift 
-            octaves = remap(volume, MIN_VOLUME, MAX_VOLUME, 50, 100);
-            hue_shift = remap(volume, MIN_VOLUME, MAX_VOLUME, 50, 100);
-            scale = 230;
-            hue_x = 150;
-            fill_noise16 (buf->leds, len, octaves, x, scale, hue_octaves, hue_x, hue_scale, ntime, hue_shift);            }
-            break;
-        case 3:{ // Compression
-            hue_x = remap(volume, MIN_VOLUME, MAX_VOLUME, 1, 8);
-            ntime = millis() / 4;
-            fill_noise16 (buf->leds, len, octaves, x, scale, hue_octaves, hue_x, hue_scale, ntime, hue_shift);
-            }
-            break;
+
+  switch (params->config) {
+    case 0: // Default, no additional values changed
+        fill_noise16 (buf->leds, len, octaves, x, scale, hue_octaves, hue_x, hue_scale, ntime, hue_shift);
+      break;
+    case 1: { // Hue octaves 
+        hue_octaves = remap(volume, MIN_VOLUME, MAX_VOLUME, 1, 10);
+        fill_noise16 (buf->leds, len, octaves, x, scale, hue_octaves, hue_x, hue_scale, ntime, hue_shift);
+        }
+        break;
+        
+    case 2: {// Hue shift 
+        octaves = remap(volume, MIN_VOLUME, MAX_VOLUME, 50, 100);
+        hue_shift = remap(volume, MIN_VOLUME, MAX_VOLUME, 50, 100);
+        scale = 230;
+        hue_x = 150;
+        fill_noise16 (buf->leds, len, octaves, x, scale, hue_octaves, hue_x, hue_scale, ntime, hue_shift);            }
+        break;
+    case 3:{ // Compression
+        hue_x = remap(volume, MIN_VOLUME, MAX_VOLUME, 1, 8);
+        ntime = millis() / 4;
+        fill_noise16 (buf->leds, len, octaves, x, scale, hue_octaves, hue_x, hue_scale, ntime, hue_shift);
+        }
+        break;
   //Add blur
   blur1d(buf->leds, len, 80);
   }
@@ -247,6 +243,7 @@ void saturated(Strip_Buffer* buf, int len, Pattern_Data* params){
 /// @param len The length of LEDs to process
 /// @param params Pointer to Pattern_Data structure containing configuration options.
 void groovy(Strip_Buffer* buf, int len, Pattern_Data* params) {
+  double volume = audioAnalysis.getVolume();
   uint8_t octaves = 1;
   uint16_t x = 0;
   int scale = 100;
@@ -290,6 +287,7 @@ void groovy(Strip_Buffer* buf, int len, Pattern_Data* params) {
 /// @param len The length of LEDs to process
 /// @param params Pointer to Pattern_Data structure containing configuration options.
 void talking(Strip_Buffer *buf, int len, Pattern_Data *params) {
+  double volume = audioAnalysis.getVolume();
   // Common variables
   int offsetFromVolume;
   int midpoint = len / 2;
@@ -346,6 +344,7 @@ void talking(Strip_Buffer *buf, int len, Pattern_Data *params) {
 /// @param len The length of LEDs to process
 /// @param params Pointer to Pattern_Data structure containing configuration options.
 void glitch(Strip_Buffer * buf, int len, Pattern_Data * params ) {
+    double volume = audioAnalysis.getVolume();
     int offsetFromVolume, speedFromVolume;
     uint16_t sinBeat[4]; 
     double f0Hue;
@@ -416,10 +415,8 @@ void glitch(Strip_Buffer * buf, int len, Pattern_Data * params ) {
 /// @param len The length of LEDs to process
 /// @param params Pointer to Pattern_Data structure containing configuration options.
 void bands(Strip_Buffer* buf, int len, Pattern_Data* params) {
-    //double *fiveSamples = band_sample_bounce();
-    
-    update_five_band_split(len); // Maybe use above if you want, but its generally agreed this one looks better
-    
+    double *fbs = audioAnalysis.getFiveBandSplit(len);
+        
     double avg1 = 0;
     double avg2 = 0;
     double avg3 = 0;
@@ -628,7 +625,8 @@ void bands(Strip_Buffer* buf, int len, Pattern_Data* params) {
 /// @param len The length of LEDs to process
 /// @param params Pointer to Pattern_Data structure containing configuration options.
 void eq(Strip_Buffer * buf, int len, Pattern_Data* params) {
-  
+  double* vReal = audioAnalysis.getVReal();
+
   for (int i = 0; i < len; i++) {
     int brit = map(vReal[i], MIN_FREQUENCY, MAX_FREQUENCY, 0, 255); // The brightness is based on HOW MUCH of the frequency exists
     int hue = map(i, 0, len, 0, 255); // The fue is based on position on the light strip, ergo, what frequency it is at
@@ -686,7 +684,7 @@ void tug_of_war(Strip_Buffer * buf, int len, Pattern_Data* params) {
     //     }
     //   case 1: // volume
     //     {
-    //     splitPosition = remap(volume, MIN_VOLUME, MAX_VOLUME, 0, len);
+    //     splitPosition = remap(audioAnalysis.getVolume(), MIN_VOLUME, MAX_VOLUME, 0, len);
     //     for (int i = 0; i < len; i++) {
     //         if (i < splitPosition) {
     //             buf->leds[i] = CHSV(MIN_HUE, 255, 255);
@@ -705,7 +703,9 @@ void tug_of_war(Strip_Buffer * buf, int len, Pattern_Data* params) {
 /// @param len The length of LEDs to process
 /// @param params Pointer to Pattern_Data structure containing configuration options.
 void Fire2012(Strip_Buffer * buf, int len, Pattern_Data* params){
-  
+  double volume = audioAnalysis.getVolume();
+  double* vReal = audioAnalysis.getVReal();
+
   int sparkVolume = remap(volume, MIN_VOLUME, MAX_VOLUME, 10,200);
   //int coolingVolume = remap(volume, MIN_VOLUME, MAX_VOLUME, 60, 40);
   //Serial.println(sparkVolume);
@@ -797,7 +797,7 @@ void vowels_raindrop(Strip_Buffer * buf, int len, Pattern_Data* params){
 /// @param len The length of LEDs to process
 /// @param params Pointer to Pattern_Data structure containing configuration options.
 void bar_fill(Strip_Buffer * buf, int len, Pattern_Data* params){
-
+  double volume = audioAnalysis.getVolume();
   uint8_t max_height = 0;
 
   switch(params->config) {
@@ -808,7 +808,7 @@ void bar_fill(Strip_Buffer * buf, int len, Pattern_Data* params){
     }
 
     case FREQUENCY: {
-      max_height = map(peak, MIN_FREQUENCY * 4, MAX_FREQUENCY/2, 0, len-1);
+      max_height = map(audioAnalysis.getPeak(), MIN_FREQUENCY * 4, MAX_FREQUENCY/2, 0, len-1);
       break;
     }
   }
@@ -832,6 +832,7 @@ void bar_fill(Strip_Buffer * buf, int len, Pattern_Data* params){
 }
 
 void blendIn(Strip_Buffer * buf, int len, Pattern_Data* params){
+  // double* vReal = audioAnalysis.getVReal();
   // CHSV backColor;
   // CHSV corrColor;
   // switch(params->config){
@@ -857,7 +858,7 @@ void bleedThrough(Strip_Buffer * buf, int len, Pattern_Data* params){
   //         backColor = CHSV(0, 0, 0);
   //         corrColor = CHSV(0, 0, 255);
   // }
-  // int blending = remap(peak, MIN_FREQUENCY, MAX_FREQUENCY, 0, 256);
+  // int blending = remap(audioAnalysis.getPeak(), MIN_FREQUENCY, MAX_FREQUENCY, 0, 256);
   // buf->vol_pos += blending;
   // if (buf->vol_pos > 256){
   //     buf->vol_pos = 256;
@@ -873,7 +874,7 @@ void bleedThrough(Strip_Buffer * buf, int len, Pattern_Data* params){
 
 
 void showcasePercussion(Strip_Buffer * buf, int len, Pattern_Data* params){
-  update_percussion_dectection();
+  bool percussionPresent = audioAnalysis.getPercussionPresence();
   static bool perc = false;
 
 
@@ -891,16 +892,11 @@ void showcasePercussion(Strip_Buffer * buf, int len, Pattern_Data* params){
 
 
 void showcaseCentroid(Strip_Buffer * buf, int len, Pattern_Data* params){
-  update_centroid();
-
-
-  Serial.println(centroid);
- 
   //centroid is a hypothetical external float that showcases the frequency of the center of mass, characterizing brightness
   for(int i = 0; i < len; i++){
 
 
-    float value = (MAX_FREQUENCY - MIN_FREQUENCY) / centroid;
+    float value = (MAX_FREQUENCY - MIN_FREQUENCY) / audioAnalysis.getCentroid();
     float lenValue = len / (i + 1) * 2;
 
 
@@ -964,7 +960,7 @@ void showcaseBread(Strip_Buffer * buf, int len, Pattern_Data* params){
 
 void showcaseSalientFreqs(Strip_Buffer * buf, int len, Pattern_Data* params){
   //salientFreqs is a hypothetical external array of ints that represent indexes with the greatest change in amplitude. By default it gives 3 points
-
+  int* salFreqs = audioAnalysis.getSalientFreqs();
   static int splatter[MAX_LEDS];
 
 
@@ -1024,6 +1020,8 @@ CHSV getColorForNote(int noteNumber) {
 
 // Maps the current note to a color.
 void synesthesiaRolling(Strip_Buffer *buf, int len, Pattern_Data* params) {
+  double volume = audioAnalysis.getVolume();
+  double peak   = audioAnalysis.getPeak();
 
   // Convert peak to a midi note
   float currentNote = 12 * log(peak / 440) / log(2.0) + 69;
@@ -1068,6 +1066,8 @@ void synesthesiaRolling(Strip_Buffer *buf, int len, Pattern_Data* params) {
 
 // Maps the current note to a section on the led strip
 void noteEQ(Strip_Buffer *buf, int len, Pattern_Data* params) {
+  double volume = audioAnalysis.getVolume();
+  double peak   = audioAnalysis.getPeak();
 
   // Static variables for smoothing and tracking previous states
   static float maxVolume = volume;

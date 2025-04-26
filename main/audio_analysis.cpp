@@ -84,6 +84,9 @@ void AudioAnalysis::runComputeFFT() {
 
 // Getters (with caching)
 
+double* AudioAnalysis::getVReal() {
+  return vReal;
+}
 
 double AudioAnalysis::getPeak() {
   if (!peakUpdated) {
@@ -246,26 +249,19 @@ void AudioAnalysis::update_noisiness() {
   noisiness = noisinessModule.getOutput();
 }
 
-
-double* AudioAnalysis::band_split_bounce(int len) {
-  double *tmp = new double[5];
-  double sum[5] = {0,0,0,0,0};
-  // accumulate
-  for (int i = 5; i < SAMPLES-3; i++) {
-    int band = ((i * 5) / len);
-    if (band >= 0 && band < 5) sum[band] += vReal[i];
-  }
-  for (int b = 0; b < 5; b++) {
-    sum[b] /= (len/6);
-    sum[b] = map(sum[b], MIN_VOLUME, MAX_VOLUME, 0, len/6);
-    tmp[b] = sum[b];
-  }
-  return tmp;
-}
-
-
 void AudioAnalysis::update_five_band_split(int len) {
-  double* tmp = band_split_bounce(len);
-  memcpy(fbs, tmp, sizeof(fbs));
-  delete[] tmp;
+  double sum[5] = {0,0,0,0,0};
+
+  for (int i = 5; i < SAMPLES - 3; i++) {
+    int band = ((i * 5) / len);
+    if (band >= 0 && band < 5) {
+      sum[band] += vReal[i];
+    }
+  }
+
+  for (int b = 0; b < 5; b++) {
+    sum[b] /= (len / 6);
+    sum[b] = map(sum[b], MIN_VOLUME, MAX_VOLUME, 0, len / 6);
+    fbs[b] = sum[b];
+  }
 }
