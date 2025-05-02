@@ -250,18 +250,52 @@ void AudioAnalysis::update_noisiness() {
 }
 
 void AudioAnalysis::update_five_band_split(int len) {
-  double sum[5] = {0,0,0,0,0};
-
-  for (int i = 5; i < SAMPLES - 3; i++) {
-    int band = ((i * 5) / len);
-    if (band >= 0 && band < 5) {
-      sum[band] += vReal[i];
+  // Define the volumes to be calculated
+  double vol1 = 0;
+  double vol2 = 0;
+  double vol3 = 0;
+  double vol4 = 0;
+  double vol5 = 0;
+  // Sum the frequencies
+  for (int i = 5; i < SAMPLES-3; i++) {
+    if (0 <= i && i < len/6) {
+      vol1 += vReal[i];
+    }
+    if (len/6 <= i && i < 2*len/6) {
+      vol2 += vReal[i];
+    }
+    if (2*len/6 <= i && i < 3*len/6) {
+      vol3 += vReal[i];
+    }
+    if (3*len/6 <= i && i < 4*len/6) {
+      vol4 += vReal[i];
+    }
+    if (4*len/6 <= i && i < 5*len/6) {
+      vol5 += vReal[i];
     }
   }
+  
+  // Average the frequencies
+  vol1 /= (len/6);
+  vol2 /= (len/6);
+  vol3 /= (len/6);
+  vol4 /= (len/6);
+  vol5 /= (len/6);
 
-  for (int b = 0; b < 5; b++) {
-    sum[b] /= (len / 6);
-    sum[b] = map(sum[b], MIN_VOLUME, MAX_VOLUME, 0, len / 6);
-    fbs[b] = sum[b];
-  }
+  // Map to frequency based values
+  vol1 = map(vol1, MIN_VOLUME, MAX_VOLUME, 0, len/6);
+  vol2 = map(vol2, MIN_VOLUME, MAX_VOLUME, 0, len/6);
+  vol3 = map(vol3, MIN_VOLUME, MAX_VOLUME, 0, len/6);
+  vol4 = map(vol4, MIN_VOLUME, MAX_VOLUME, 0, len/6);
+  vol5 = map(vol5, MIN_VOLUME, MAX_VOLUME, 0, len/6);
+
+  // Store the results
+  fbs[0] = vol1;
+  fbs[1] = vol2;
+  fbs[2] = vol3;
+  fbs[3] = vol4;
+  fbs[4] = vol5;
+
+  // Return the five-band-split
+  return;
 }

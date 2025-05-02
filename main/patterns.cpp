@@ -718,18 +718,19 @@ void Fire2012(Strip_Buffer * buf, int len, Pattern_Data* params){
   for( int k= config.length - 1; k >= 2; k--) {
     heat[k] = (heat[k - 1] + heat[k - 2] + heat[k - 2] ) / 3;
   }
-  
+
   // Step 3.  Randomly ignite new 'sparks' of heat near the bottom
   if( random8() < sparkVolume ) {
     int y = random8(7);
     heat[y] = qadd8( heat[y], random8(160,255) );
   }
 
-  //Step 3.5. Calcualate Brightness from low frequencies
+  //Step 3.5. Calcualate Brightness from low frencies
   int l = (sizeof(vReal)/sizeof(vReal[0])) / 7;
   double smol_arr[l];
-  memcpy(smol_arr, vReal, l-1);
-    
+  memcpy(smol_arr, vReal, l * sizeof(double));
+  
+
   // Step 4.  Map from heat cells to LED colors
   for( int j = 0; j < config.length; j++) {
     // Scale the heat value from 0-255 down to 0-240
