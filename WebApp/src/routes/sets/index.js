@@ -32,8 +32,8 @@ const Settings = () => {
 		<div>
 			<table>
 				<tr>
-					<th style="font-size: 20px;">Pattern Settings</th>
-					<th style="font-size: 20px;">System Settings</th>	
+					<th style="font-size: 1.6rem;">Pattern Settings</th>
+					<th style="font-size: 1.6rem;">System Settings</th>	
 				</tr>
 				<tr>
 					<td>

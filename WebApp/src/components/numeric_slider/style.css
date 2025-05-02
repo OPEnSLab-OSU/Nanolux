@@ -4,8 +4,9 @@
     --ctl-radius:   0.5rem;
     --ctl-track:    0.6rem;
     --ctl-gap:      0.75rem;
-    --thumb-size:   0.6rem;
+    --thumb-size:   1rem;
 }
+
 .slider,
 .spin_button {
     height: var(--ctl-height);
@@ -25,11 +26,17 @@
     background: #ddd;
     border-radius: var(--ctl-radius);
 }
-.slider::-moz-range-track {
-    height: var(--ctl-track);
-    background: #ddd;
+
+.slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: var(--thumb-size);
+    height: var(--thumb-size);
     border-radius: var(--ctl-radius);
-}
+    background: var(--brand);
+    cursor: pointer;
+    margin-top: calc((var(--ctl-track) - var(--thumb-size)) / 2);
+  }
 
 .spin_button {
     width: 5.5rem;

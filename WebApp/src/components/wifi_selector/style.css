@@ -16,8 +16,8 @@
     text-align: left;
     border: 1px solid #ccc;
     position: relative;
-    border-radius: 5px;
-    width: 50vw;
+    border-radius: .4rem;
+    width: 30vw;
     background: white;
 }
 
@@ -34,7 +34,7 @@
     transform: translateY(4px);
     width: 100%;
     border: 1px solid #ccc;
-    border-radius: 5px;
+    border-radius: .4rem;
     overflow: auto;
     max-height: 150px;
     z-index: 100;
@@ -81,4 +81,6 @@
 .scanButton {
     margin-left: 8px;
     padding: 3px;
+    font-size: var(--font-size);
+    border-radius: .4rem;
 }

@@ -1,8 +1,8 @@
 import { useSignal } from '@preact/signals';
 import Select from 'preact-material-components/Select';
 import { useEffect } from 'preact/hooks';
-import useInterval from '../../utils/use_interval';
-import style from './style.css';
+// import useInterval from '../../utils/use_interval';
+import style from '../patterns/style.css';
 
 // SOURCE:
 // https://material.preactjs.com/component/select/
@@ -33,22 +33,22 @@ const ConfigDropDown = ({
 
     const current = useSignal(initial);
 
-    /**
-     * @brief Checks if the set config is greater than the number
-     * of configs. Sets the config to 0 if this happens.
-     */
-    const checkBounds = () => {
-        if(current.value > configs[patternIdx].length){
+    useEffect(() => {
+        if (current.value >= (configs[patternIdx]?.length ?? 0)) {
             current.value = 0;
-            update(structureRef, current.value);
+            update(structureRef, 0);
         }
-    }
+    }, [patternIdx]);
 
-    useInterval(() => {checkBounds()}, 100)
+    const handleChange = e => {
+        const idx = Number(e.target.value);
+        current.value = idx;
+        update(structureRef, idx);
+    }
 
     return (
         <div>
-            <Select
+            {/* <Select
                 
                 selectedIndex={current.value}
                 onChange={(e)=>{
@@ -67,7 +67,18 @@ const ConfigDropDown = ({
                     })
 
                 }
-            </Select>
+            </Select> */}
+            <label className={style.label} htmlFor="config-options">Config</label>
+            <select
+                id="config-options"
+                className={style.select}
+                value={current.value}
+                onChange={handleChange}
+            >
+                {(configs[patternIdx] ?? configs[0]).map((optionName, i) => (
+                    <option key={i} value={i}>{optionName}</option>
+                ))}
+            </select>
         </div>
     );
 }

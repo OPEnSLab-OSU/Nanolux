@@ -1,3 +1,11 @@
 .formButton {
     margin: .7rem;
+    font-size: var(--font-size);
+    border-radius: 0.4rem;
+}
+
+.label {
+    height: 1.6rem;
+    font-size: var(--font-size);
+    border-radius: .4rem;
 }
