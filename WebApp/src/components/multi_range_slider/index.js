@@ -62,7 +62,7 @@ const MultiRangeSliderWrapper = ({
             barRightColor="transparent"
             thumbLeftColor={thumbMinColor}
             thumbRightColor={thumbMaxColor}
-            style={{ border: "none", boxShadow: "none" }}
+            style={{ border: "none", boxShadow: "none", background: '#FFFFFF', color: '#000000' }}
         />
 
     </div>)

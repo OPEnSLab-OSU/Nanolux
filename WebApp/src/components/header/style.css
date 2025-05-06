@@ -17,7 +17,8 @@
 .header a {
 	display: inline-block;
 	padding: 0 1rem;
-	color: #333333;
+	color: #000000;
+	font-size: var(--font-size);
 	text-decoration: none;
 	line-height: 3.5rem;
 }
@@ -48,4 +49,9 @@
 
 .header nav a.active {
 	background: rgba(0, 0, 0, 0.4);
+}
+
+.palette {
+	margin-left: auto;
+	margin-right: 2rem;
 }

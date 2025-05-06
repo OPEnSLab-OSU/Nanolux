@@ -9,6 +9,8 @@
 
 .slider,
 .spin_button {
+    display: inline-block;
+    vertical-align: middle;
     height: var(--ctl-height);
     font-size: var(--font-size);
     border-radius: var(--ctl-radius);

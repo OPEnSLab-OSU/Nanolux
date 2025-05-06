@@ -17,7 +17,7 @@ import ConfigDropDown from "../config_drop_down";
  * @param num 	The ID of the pattern to display
  * @param patterns	A list of patterns and their IDs
  */
-const PatternSettings = ({num, patterns}) => {
+const PatternSettings = ({num, patterns, advanced = false}) => {
 
 	// Checks if the web app is connected to the device.
 	const { isConnected } = useConnectivity();
@@ -113,13 +113,17 @@ const PatternSettings = ({num, patterns}) => {
 				patterns={patterns}
 			/>
 			<br/>
-			<ConfigDropDown
-				patternIdx={data.idx}
-				structureRef={"config"}
-				update={update}
-				initial={data.config}
-			/>
-			<br/>
+			{advanced && (
+				<>
+				<ConfigDropDown
+					patternIdx={data.idx}
+					structureRef={"config"}
+					update={update}
+					initial={data.config}
+				/>
+				<br/>
+				</>
+			)}
 			<NumericSlider
 				className={style.settings_control}
 				label="Brightness"
@@ -139,6 +143,7 @@ const PatternSettings = ({num, patterns}) => {
 				structure_ref="smoothing"
 				update={update}
 			/>
+			<br/>
 			<div className={style.settings_control}>
                 <label className={style.checkboxOption}>
 					<input 
@@ -198,16 +203,20 @@ const PatternSettings = ({num, patterns}) => {
 				</label>
             </div>
 			<br></br>
-			<label style={{fontSize:'1.2rem'}}>Color Range</label>
-			<MultiRangeSliderWrapper
-				min={0}
-				max={255}
-				selectedLow={data.hue_min}
-				selectedHigh={data.hue_max}
-				minRef={"hue_min"}
-				maxRef={"hue_max"}
-				update={update}
-			/>
+			{advanced && (
+				<>
+				<label style={{fontSize:'1.2rem'}}>Color Range</label>
+				<MultiRangeSliderWrapper
+					min={0}
+					max={255}
+					selectedLow={data.hue_min}
+					selectedHigh={data.hue_max}
+					minRef={"hue_min"}
+					maxRef={"hue_max"}
+					update={update}
+				/>
+				</>
+			)}
 		</div> : <LabelSpinner></LabelSpinner>
 		)
 	);

@@ -4,22 +4,20 @@
     --se-gap:  0.5rem;
 }
 
-.row{
+.row {
     display: inline-flex;
-    flex-wrap: wrap;
     align-items: center;
     margin-bottom: .75rem;
 }
 
-.slot{
+.slot {
     width: 8rem;
     font-size: var(--font-size);
     font-weight: bold;
-    margin: .5rem;
-    margin-top: .8rem;
+    margin: 0.8rem 0.5rem 0 0.5rem;
 }
 
-.btn{
+.btn {
     height: var(--se-h);
     padding: var(--se-pad);
     font-size: var(--font-size);
@@ -30,7 +28,7 @@
     margin-bottom: 0rem;
 }
 
-.btnPrimary{
+.btnPrimary {
     background: var(--brand);
     color: #fff;
 }

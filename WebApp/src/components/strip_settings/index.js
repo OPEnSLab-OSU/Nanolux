@@ -1,17 +1,15 @@
 import RANGE_CONSTANTS from '../../utils/constants';
 import NumericSlider from "../numeric_slider";
-import {useState, useEffect} from "preact/hooks";
-import {
-	getStripSettings,
-	updateStripSettings} from "../../utils/api";
-import {useConnectivity} from "../../context/online_context";
+import { useState, useEffect } from "preact/hooks";
+import { getStripSettings, updateStripSettings } from "../../utils/api";
+import { useConnectivity } from "../../context/online_context";
 import useInterval from "../../utils/use_interval";
 import { LabelSpinner } from '../spinner';
 import SimpleChooser from '../single_chooser';
 import style from './style.css';
 import PatternSettings from '../pattern_settings';
 
-const StripSettings = ({patterns}) => {
+const StripSettings = ({patterns, advanced = false}) => {
 
 	// Checks if the web app is connected to the device.
 	const { isConnected } = useConnectivity();
@@ -115,66 +113,73 @@ const StripSettings = ({patterns}) => {
 	 * @brief Generates the Pattern UI element and it's selected subpattern.
 	 */
 	return (
-		(!loading ? 
+		(!loading ?
 			<div>
-				<SimpleChooser
-					label="Mode"
-					options={[
+				{advanced && (
+					<>
+					<br/>
+					<SimpleChooser
+					  label="Mode"
+					  options={[
 						{option : "Strip Splitting", idx : RANGE_CONSTANTS.STRIP_SPLITTING_ID},
 						{option : "Z-Layering", idx : RANGE_CONSTANTS.Z_LAYERING_ID},
-					]}
-					noSelection={false}
-					initial={data.mode}
-					structure_ref="mode"
-					update={update}
-				/>
-				<br/>
-				<NumericSlider
-					className={style.settings_control}
-					label="Transparency"
-					min={RANGE_CONSTANTS.ALPHA_MIN}
-					max={RANGE_CONSTANTS.ALPHA_MAX}
-					initial={data.alpha}
-					structure_ref="alpha"
-					update={update}
-				/>
-				<br/>
-				<NumericSlider
-					className={style.settings_control}
-					label="Noise Threshold"
-					min={RANGE_CONSTANTS.NOISE_MIN}
-					max={RANGE_CONSTANTS.NOISE_MAX}
-					initial={data.noise}
-					structure_ref="noise"
-					update={update}
-				/>
-				<br/>
-				<button className={style.incBtn} onClick={incrementPatterns}>+</button>
-				<button className={style.incBtn} onClick={decrementPatterns}>-</button>
-				<hr></hr>
-				<br></br>
+					  ]}
+					  noSelection={false}
+					  initial={data.mode}
+					  structure_ref="mode"
+					  update={update}
+					/>
+					<br/>
+					<NumericSlider
+					  className={style.settings_control}
+					  label="Transparency"
+					  min={RANGE_CONSTANTS.ALPHA_MIN}
+					  max={RANGE_CONSTANTS.ALPHA_MAX}
+					  initial={data.alpha}
+					  structure_ref="alpha"
+					  update={update}
+					/>
+					<br/>
+					</>
+				)}
 
-				{inRange(data.pattern_count).map((data) => {
-					if(data.idx == selectedPattern){
-						return <button className={style.patternBtn} onClick={function() {setPattern(data.idx);}} key={data.idx} style="border-style:inset;">
-							Pattern {data.idx}
-						</button>
-					}else{
-						return <button className={style.patternBtn} onClick={function() {setPattern(data.idx);}} key={data.idx}>
-							Pattern {data.idx}
-						</button>
-					}
-					
-				})}
+				<NumericSlider
+				  className={style.settings_control}
+				  label="Noise Threshold"
+				  min={RANGE_CONSTANTS.NOISE_MIN}
+				  max={RANGE_CONSTANTS.NOISE_MAX}
+				  initial={data.noise}
+				  structure_ref="noise"
+				  update={update}
+				/>
+				<br/>
+				{advanced && (
+					<>
+					<button className={style.incBtn} onClick={incrementPatterns}>+</button>
+					<button className={style.incBtn} onClick={decrementPatterns}>-</button>
+					<hr></hr>
 
+					{inRange(data.pattern_count).map((data) => {
+						if(data.idx == selectedPattern){
+							return <button className={style.patternBtn} onClick={function() {setPattern(data.idx);}} key={data.idx} style="border-style:inset;">
+								Pattern {data.idx}
+							</button>
+						}else{
+							return <button className={style.patternBtn} onClick={function() {setPattern(data.idx);}} key={data.idx}>
+								Pattern {data.idx}
+							</button>
+						}
+					})}
+					</>
+				)}
 				<PatternSettings
-					num={selectedPattern}
-					patterns={patterns}
-					key={selectedPattern}
-				/>	
-			</div> 
+				  num={selectedPattern}
+				  patterns={patterns}
+				  advanced={advanced}
+				  key={selectedPattern}
+				/>
+			</div>
 		: <LabelSpinner></LabelSpinner>)
-		
 	);
 }
 

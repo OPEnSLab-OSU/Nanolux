@@ -1,0 +1,10 @@
+.label {
+    font-size: var(--font-size);
+    margin-right: 0.5rem;
+}
+
+.selector {
+    font-size: var(--font-size);
+    padding: 0.25rem;
+    margin-top: 0.6rem;
+}
