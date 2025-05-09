@@ -11,8 +11,7 @@
 #include "patterns.h"
 #include "nanolux_types.h"
 #include "nanolux_util.h"
-#include "core_analysis.h"
-#include "ext_analysis.h"
+#include "audio_analysis.h"
 #include "storage.h"
 #include "globals.h"
 
@@ -117,8 +116,6 @@ void setup() {
   load_from_nvs();
   verify_saves();
   load_slot(0);
-
-
 
 #ifdef ENABLE_WEB_SERVER
   initialize_web_server(apiGetHooks, API_GET_HOOK_COUNT, apiPutHooks, API_PUT_HOOK_COUNT, config.pass);
@@ -404,7 +401,12 @@ void update_hardware(){
 void loop() {
   begin_loop_timer(config.loop_ms);  // Begin timing this loop
 
+  audioAnalysis.runSampleAudio();
+
+  audioAnalysis.runComputeFFT();
+
   audio_analysis();  // Run the audio analysis pipeline
+
   update_hardware(); // Pull updates from hardware (buttons, encoder)
 
   // Reset buffers if pattern settings were changed since
@@ -445,6 +447,8 @@ void loop() {
   } while (timer_overrun() == 0);
 
   update_web_server();
+
+  audioAnalysis.resetCache();
 }
 
 /// @brief Performs audio analysis by running audio_analysis.cpp's
@@ -453,21 +457,9 @@ void loop() {
 /// If the macro SHOW_TIMINGS is defined, it will print out the amount
 /// of time audio processing takes via serial.
 void audio_analysis() {
-#ifdef SHOW_TIMINGS
-  const int start = micros();
-#endif
-
-  sample_audio();
-
-  update_peak();
-
-  update_volume();
-
-  update_max_delta();
-
-  update_formants();
-
-  noise_gate(loaded_patterns.noise_thresh);
+  #ifdef SHOW_TIMINGS
+    const int start = micros();
+  #endif
 
   #ifdef SHOW_TIMINGS
     const int end = micros();
