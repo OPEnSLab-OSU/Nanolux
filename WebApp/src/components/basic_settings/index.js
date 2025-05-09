@@ -1,0 +1,204 @@
+import Patterns from "../../components/patterns";
+import NumericSlider from "../../components/numeric_slider";
+import {useState, useEffect} from "preact/hooks";
+import {
+	getPattern,
+	updatePattern} from "../../utils/api";
+import {useConnectivity} from "../../context/online_context";
+import useInterval from "../../utils/use_interval";
+import { LabelSpinner } from '../../components/spinner';
+import RANGE_CONSTANTS from '../../utils/constants';
+import style from './style.css';
+import ConfigDropDown from "../config_drop_down";
+import { Tooltip } from 'react-tooltip';
+
+/**
+ * @brief An object meant to hold and display settings for a specific pattern
+ * @param num 	The ID of the pattern to display
+ * @param patterns	A list of patterns and their IDs
+ */
+const BasicSettings = ({num, patterns}) => {
+
+	// Checks if the web app is connected to the device.
+	const { isConnected } = useConnectivity();
+
+	// Flag representing if initial data has been obtained from
+	// the device.
+	const [loading, setLoading] = useState(true);
+
+	// Flag that tells the object to update the NanoLux device with new data.
+	const [updated, setUpdated] = useState(false);
+
+	// Pattern-level data structure
+	const [data, setData] = useState({
+		idx: 0,
+		hue_max: 255,
+		hue_min: 0,
+		brightness: 255,
+		smoothing: 0,
+		postprocess: 0,
+		config: 0
+	});
+
+	/**
+	 * @brief Manages initial querying of the data from the NanoLux device.
+	 * 		  Sets the loading flag to false when done.
+	 */
+	useEffect(() => {
+        if (isConnected) {
+            getPattern(num)
+			.then(data => {setData(data)})
+			.then(setLoading(false));
+        }  
+    }, [isConnected])
+
+	/**
+	 * @brief Updates the pattern on the Nanolux device 
+	 * if it is connected and has modified data,
+	 * then flags the data structure.
+	 */
+	useInterval(() => {
+        if (isConnected && updated) {
+            updatePattern(num, data);
+			setUpdated(false);
+        }
+    }, 100);
+
+	/**
+	 * @brief Updates a parameter in the pattern data structure with a new value.
+	 * @param ref The string reference to update in the data structure
+	 * @param value The new value to update the data structure with
+	 */
+	const update = (ref, value) => {
+		if(!loading){		
+			setData((oldData) => {
+				let newData = Object.assign({}, oldData);
+				newData[ref] = value;
+				return newData;
+			})
+		}
+		
+		setUpdated(true);
+	}
+
+	/**
+	 * @brief Generates the Subpattern UI element itself. If initial data is not
+	 * loaded, show a spinner instead.
+	 */
+	return (
+		(!loading ? 
+		<div>
+			<br/>
+			<Patterns
+				initialID={data.idx}
+				structure_ref={"idx"}
+				update={update}
+				patterns={patterns}
+			/>
+			<br/>
+			<ConfigDropDown
+				patternIdx={data.idx}
+				structureRef={"config"}
+				update={update}
+				initial={data.config}
+			/>
+			<br/>
+			<label>Brightness</label>
+			<label data-tooltip-id="brightness" data-tooltip-offset={10}> (?)</label>
+			<Tooltip id="brightness" content="This slider adjusts how bright the LED strip is."/>
+			<NumericSlider
+				className={style.settings_control}
+				//label="Brightness"
+				min={RANGE_CONSTANTS.BRIGHTNESS_MIN}
+				max={RANGE_CONSTANTS.BRIGHTNESS_MAX}
+				initial={data.brightness}
+				structure_ref="brightness"
+				update={update}
+			/>
+			<br/>
+			<label>Smoothing</label>
+			<label data-tooltip-id="smoothing" data-tooltip-offset={10}> (?)</label>
+			<Tooltip id="smoothing" content="Adjusts the smoothing of the LED strip."/>
+			<NumericSlider
+				className={style.settings_control}
+				//label="Smoothing"
+				min={RANGE_CONSTANTS.SMOOTHING_MIN}
+				max={RANGE_CONSTANTS.SMOOTHING_MAX}
+				initial={data.smoothing}
+				structure_ref="smoothing"
+				update={update}
+			/>
+			<div className={style.settings_control}>
+                <label for="reverse">Reverse</label>
+				<input 
+					type="checkbox" 
+					id="reverse" 
+					name="reverse" 
+					checked={(data.postprocess == 1) || (data.postprocess == 3)}
+					onChange={() => {
+						switch (data.postprocess) {
+							case 0:
+								update("postprocess", 1);
+								break;
+							
+							case 1:
+								update("postprocess", 0);
+								break;
+							
+							case 2:
+								update("postprocess", 3);
+								break;
+						
+							default:
+								update("postprocess", 2);
+								break;
+						}
+					}}
+				/>
+				<label for="mirror">Mirror</label>
+				<input 
+					type="checkbox" 
+					id="mirror" 
+					name="mirror" 
+					checked={(data.postprocess == 2) || (data.postprocess == 3)}
+					onChange={() => {
+						switch (data.postprocess) {
+							case 0:
+								update("postprocess", 2);
+								break;
+							
+							case 1:
+								update("postprocess", 3);
+								break;
+							
+							case 2:
+								update("postprocess", 0);
+								break;
+						
+							default:
+								update("postprocess", 1);
+								break;
+						}
+					}}
+				/>
+            </div>
+			<br/>
+			<label>Noise Threshold</label>
+				<label data-tooltip-id="threshold" data-tooltip-offset={10}> (?)</label>
+				<Tooltip id="threshold" content="This slider adjusts how much noise it takes to display the pattern."/>
+				<NumericSlider
+					className={style.settings_control}
+					//label="Noise Threshold"
+					min={RANGE_CONSTANTS.NOISE_MIN}
+					max={RANGE_CONSTANTS.NOISE_MAX}
+					initial={data.noise}
+					structure_ref="noise"
+					update={update}
+				/>
+				<br/> 
+		</div> : <LabelSpinner></LabelSpinner>
+		)
+	);
+}
+
+export default BasicSettings;
