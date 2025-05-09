@@ -2,6 +2,7 @@ import {Router} from 'preact-router';
 import Header from './header';
 import Settings from '../routes/sets';
 // import Profile from '../routes/user';
+import Test from '../routes/test';
 import Wifi from "../routes/wifi";
 import Modal from "./network_modal";
 import {ModalProvider, useModal} from "../context/global_modal_context";
@@ -45,6 +46,7 @@ const AppContent = () => {
                     <Settings path="/" />
                     {/*<Profile path="/user/" user="me"/>*/}
                     <Wifi path="/wifi" />
+                    <Test path="/test"/>
                 </Router>
                 {isModalOpen && <Modal isOpen={isModalOpen} onClose={closeModal} />}
                 {toastConfig && <Toast message={toastConfig.message} type={toastConfig.type} />}

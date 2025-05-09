@@ -1,5 +1,5 @@
 import style from './style.css';
-import React from "react";
+import React, { useState } from "react";
 import { useSignal } from '@preact/signals';
 
 /**
@@ -40,6 +40,30 @@ const Patterns = ({
         update(structure_ref, current.value);
     }
 
+    const increment = () => {
+        
+        if (current.value == patternOptions.length - 1){
+            current.value = 0;
+        }
+        else{
+            current.value++;
+        }
+        //current.value = ((current.value + 1) % length(patternOptions));
+        update(structure_ref, current.value);
+    }
+
+    const decrement = () => {
+        
+        if (current.value == 0){
+            current.value = patternOptions.length - 1;
+        }
+        else{
+            current.value--;
+        }
+        //current.value = ((current.value - 1) % length(patternOptions));
+        update(structure_ref, current.value);
+    }
+
     return (
         <div>
             <div>
@@ -51,6 +75,8 @@ const Patterns = ({
                 >
                     {patternOptions}
                 </select>
+                <button onClick={decrement}>Prev</button>
+                <button onClick={increment}>Next</button>
             </div>
         </div>
     );

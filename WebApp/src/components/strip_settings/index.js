@@ -8,9 +8,13 @@ import { LabelSpinner } from '../spinner';
 import SimpleChooser from '../single_chooser';
 import style from './style.css';
 import PatternSettings from '../pattern_settings';
+import { Tooltip } from 'react-tooltip';
+import PatternModal from "../../components/pattern_modal";
 
 const StripSettings = ({patterns, advanced = false}) => {
 
+	const [isModalOpen, setIsModalOpen] = useState(false);
+	
 	// Checks if the web app is connected to the device.
 	const { isConnected } = useConnectivity();
 
@@ -96,6 +100,14 @@ const StripSettings = ({patterns, advanced = false}) => {
 		}
 	}
 
+	const openModal = () => {
+		setIsModalOpen(true);
+	}
+
+	const closeModal = () => {
+		setIsModalOpen(false);
+	}
+
 	/**
 	 * @brief Generates a list from 0 to end. Analagous to Python's
 	 * range() function.
@@ -118,47 +130,54 @@ const StripSettings = ({patterns, advanced = false}) => {
 				{advanced && (
 					<>
 					<br/>
+					<label>Mode</label>
+					<label data-tooltip-id="mode" data-tooltip-offset={10}> (?)</label>
+					<Tooltip id="mode" content="The mode the patterns will be displayed in.
+					Strip Splitting splits multiple patterns separately, while Z-Layering layers patterns onto each other."/>
 					<SimpleChooser
-					  label="Mode"
-					  options={[
-						{option : "Strip Splitting", idx : RANGE_CONSTANTS.STRIP_SPLITTING_ID},
-						{option : "Z-Layering", idx : RANGE_CONSTANTS.Z_LAYERING_ID},
-					  ]}
-					  noSelection={false}
-					  initial={data.mode}
-					  structure_ref="mode"
-					  update={update}
+						//label="Mode"
+						options={[
+							{option : "Strip Splitting", idx : RANGE_CONSTANTS.STRIP_SPLITTING_ID},
+							{option : "Z-Layering", idx : RANGE_CONSTANTS.Z_LAYERING_ID},
+						]}
+						noSelection={false}
+						initial={data.mode}
+						structure_ref="mode"
+						update={update}
 					/>
 					<br/>
+					<label>Noise Threshold</label>
+					<label data-tooltip-id="threshold" data-tooltip-offset={10}> (?)</label>
+					<Tooltip id="threshold" content="This slider adjusts how much noise it takes to display the pattern."/>
 					<NumericSlider
-					  className={style.settings_control}
-					  label="Transparency"
-					  min={RANGE_CONSTANTS.ALPHA_MIN}
-					  max={RANGE_CONSTANTS.ALPHA_MAX}
-					  initial={data.alpha}
-					  structure_ref="alpha"
-					  update={update}
+						className={style.settings_control}
+						//label="Transparency"
+						min={RANGE_CONSTANTS.ALPHA_MIN}
+						max={RANGE_CONSTANTS.ALPHA_MAX}
+						initial={data.alpha}
+						structure_ref="alpha"
+						update={update}
 					/>
 					<br/>
 					</>
 				)}
-
+				<label>Noise Threshold</label>
+				<label data-tooltip-id="threshold" data-tooltip-offset={10}> (?)</label>
+				<Tooltip id="threshold" content="This slider adjusts how much noise it takes to display the pattern."/>
 				<NumericSlider
-				  className={style.settings_control}
-				  label="Noise Threshold"
-				  min={RANGE_CONSTANTS.NOISE_MIN}
-				  max={RANGE_CONSTANTS.NOISE_MAX}
-				  initial={data.noise}
-				  structure_ref="noise"
-				  update={update}
+					className={style.settings_control}
+					//label="Noise Threshold"
+					min={RANGE_CONSTANTS.NOISE_MIN}
+					max={RANGE_CONSTANTS.NOISE_MAX}
+					initial={data.noise}
+					structure_ref="noise"
+					update={update}
 				/>
 				<br/>
 				{advanced && (
 					<>
 					<button className={style.incBtn} onClick={incrementPatterns}>+</button>
 					<button className={style.incBtn} onClick={decrementPatterns}>-</button>
-					<hr></hr>
-
 					{inRange(data.pattern_count).map((data) => {
 						if(data.idx == selectedPattern){
 							return <button className={style.patternBtn} onClick={function() {setPattern(data.idx);}} key={data.idx} style="border-style:inset;">
@@ -172,11 +191,19 @@ const StripSettings = ({patterns, advanced = false}) => {
 					})}
 					</>
 				)}
+				<button type="button" onClick={openModal}>Help</button>
+				<br/>
+				<hr></hr>
+
 				<PatternSettings
 				  num={selectedPattern}
 				  patterns={patterns}
 				  advanced={advanced}
 				  key={selectedPattern}
+				/>
+				<PatternModal
+					isOpen={isModalOpen}
+					onClose={closeModal}
 				/>
 			</div>
 		: <LabelSpinner></LabelSpinner>)

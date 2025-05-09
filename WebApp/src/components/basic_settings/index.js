@@ -9,7 +9,6 @@ import useInterval from "../../utils/use_interval";
 import { LabelSpinner } from '../../components/spinner';
 import RANGE_CONSTANTS from '../../utils/constants';
 import style from './style.css';
-import MultiRangeSliderWrapper from '../../components/multi_range_slider';
 import ConfigDropDown from "../config_drop_down";
 import { Tooltip } from 'react-tooltip';
 
@@ -18,7 +17,7 @@ import { Tooltip } from 'react-tooltip';
  * @param num 	The ID of the pattern to display
  * @param patterns	A list of patterns and their IDs
  */
-const PatternSettings = ({num, patterns, advanced = false}) => {
+const BasicSettings = ({num, patterns}) => {
 
 	// Checks if the web app is connected to the device.
 	const { isConnected } = useConnectivity();
@@ -66,23 +65,6 @@ const PatternSettings = ({num, patterns, advanced = false}) => {
     }, 100);
 
 	/**
-	 * @brief Continuously poll the Nanolux device for changes to the
-	 * hardware pattern index, updates the web app UI to reflect the change.
-	 */
-	useInterval(() => {
-		if (isConnected && !updated) {
-			getPattern(num).then(newData => {
-				//console.log("Fetched pattern from ESP32:", newData.idx);
-
-				if (newData.idx !== data.idx) {
-					//console.log("Updating UI with new pattern:", newData.idx)
-					setData(newData);
-				}
-			});
-		}
-	}, 200);
-
-	/**
 	 * @brief Updates a parameter in the pattern data structure with a new value.
 	 * @param ref The string reference to update in the data structure
 	 * @param value The new value to update the data structure with
@@ -114,17 +96,13 @@ const PatternSettings = ({num, patterns, advanced = false}) => {
 				patterns={patterns}
 			/>
 			<br/>
-			{advanced && (
-				<>
-				<ConfigDropDown
-					patternIdx={data.idx}
-					structureRef={"config"}
-					update={update}
-					initial={data.config}
-				/>
-				<br/>
-				</>
-			)}
+			<ConfigDropDown
+				patternIdx={data.idx}
+				structureRef={"config"}
+				update={update}
+				initial={data.config}
+			/>
+			<br/>
 			<label>Brightness</label>
 			<label data-tooltip-id="brightness" data-tooltip-offset={10}> (?)</label>
 			<Tooltip id="brightness" content="This slider adjusts how bright the LED strip is."/>
@@ -150,86 +128,77 @@ const PatternSettings = ({num, patterns, advanced = false}) => {
 				structure_ref="smoothing"
 				update={update}
 			/>
-			<br/>
 			<div className={style.settings_control}>
-                <label className={style.checkboxOption}>
-					<input 
-						type="checkbox" 
-						id="reverse" 
-						name="reverse" 
-						checked={(data.postprocess == 1) || (data.postprocess == 3)}
-						onChange={() => {
-							switch (data.postprocess) {
-								case 0:
-									update("postprocess", 1);
-									break;
-								
-								case 1:
-									update("postprocess", 0);
-									break;
-								
-								case 2:
-									update("postprocess", 3);
-									break;
+                <label for="reverse">Reverse</label>
+				<input 
+					type="checkbox" 
+					id="reverse" 
+					name="reverse" 
+					checked={(data.postprocess == 1) || (data.postprocess == 3)}
+					onChange={() => {
+						switch (data.postprocess) {
+							case 0:
+								update("postprocess", 1);
+								break;
 							
-								default:
-									update("postprocess", 2);
-									break;
-							}
-						}}
-					/>
-					Reverse
-				</label>
-				<label className={style.checkboxOption}>
-					<input 
-						type="checkbox" 
-						id="mirror" 
-						name="mirror" 
-						checked={(data.postprocess == 2) || (data.postprocess == 3)}
-						onChange={() => {
-							switch (data.postprocess) {
-								case 0:
-									update("postprocess", 2);
-									break;
-								
-								case 1:
-									update("postprocess", 3);
-									break;
-								
-								case 2:
-									update("postprocess", 0);
-									break;
+							case 1:
+								update("postprocess", 0);
+								break;
 							
-								default:
-									update("postprocess", 1);
-									break;
-							}
-						}}
-					/>
-					Mirror
-				</label>
-            </div>
-			<br></br>
-			{advanced && (
-				<>
-				<label style={{fontSize:'1.2rem'}}>Color Range</label>
-				<label data-tooltip-id="color" data-tooltip-offset={10}> (?)</label>
-				<Tooltip id="color" content="Adjusts the range of colors that are displayed on the LED strip."/>
-				<MultiRangeSliderWrapper
-						min={0}
-						max={255}
-						selectedLow={data.hue_min}
-						selectedHigh={data.hue_max}
-						minRef={"hue_min"}
-						maxRef={"hue_max"}
-						update={update}
+							case 2:
+								update("postprocess", 3);
+								break;
+						
+							default:
+								update("postprocess", 2);
+								break;
+						}
+					}}
 				/>
-				</>
-			)}
-			<br/> 
+				<label for="mirror">Mirror</label>
+				<input 
+					type="checkbox" 
+					id="mirror" 
+					name="mirror" 
+					checked={(data.postprocess == 2) || (data.postprocess == 3)}
+					onChange={() => {
+						switch (data.postprocess) {
+							case 0:
+								update("postprocess", 2);
+								break;
+							
+							case 1:
+								update("postprocess", 3);
+								break;
+							
+							case 2:
+								update("postprocess", 0);
+								break;
+						
+							default:
+								update("postprocess", 1);
+								break;
+						}
+					}}
+				/>
+            </div>
+			<br/>
+			<label>Noise Threshold</label>
+				<label data-tooltip-id="threshold" data-tooltip-offset={10}> (?)</label>
+				<Tooltip id="threshold" content="This slider adjusts how much noise it takes to display the pattern."/>
+				<NumericSlider
+					className={style.settings_control}
+					//label="Noise Threshold"
+					min={RANGE_CONSTANTS.NOISE_MIN}
+					max={RANGE_CONSTANTS.NOISE_MAX}
+					initial={data.noise}
+					structure_ref="noise"
+					update={update}
+				/>
+				<br/> 
 		</div> : <LabelSpinner></LabelSpinner>
 		)
 	);
 }
 
-export default PatternSettings;
+export default BasicSettings;

@@ -1,7 +1,6 @@
 import MultiRangeSlider from "audiolux-multi-range-slider";
 import { useState } from "preact/hooks";
 
-
 /**
  * @brief A NanoLux wrapper for the Multi Range Slider object.A
  * 
@@ -24,7 +23,7 @@ const MultiRangeSliderWrapper = ({
     maxRef,
     update
 }) => {
-
+    
     const getHueColor = (value) => `hsl(${(value / 255) * 360}, 100%, 50%)`;
 
     const [thumbMinColor, setThumbMinColor] = useState(getHueColor(selectedLow));
