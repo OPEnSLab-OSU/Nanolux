@@ -11,6 +11,7 @@ import RANGE_CONSTANTS from '../../utils/constants';
 import style from './style.css';
 import MultiRangeSliderWrapper from '../../components/multi_range_slider';
 import ConfigDropDown from "../config_drop_down";
+import { Tooltip } from 'react-tooltip';
 
 /**
  * @brief An object meant to hold and display settings for a specific pattern
@@ -103,9 +104,9 @@ const PatternSettings = ({num, patterns}) => {
 				initial={data.config}
 			/>
 			<br/>
-			<label data-tooltip-id="my-tooltip" data-tooltip-content="This slider adjusts how bright the LED strip is.">
-			Brightness
-			</label>
+			<label>Brightness</label>
+			<label data-tooltip-id="brightness" data-tooltip-offset={10}> (?)</label>
+			<Tooltip id="brightness" content="This slider adjusts how bright the LED strip is."/>
 			<NumericSlider
 				className={style.settings_control}
 				//label="Brightness"
@@ -116,9 +117,9 @@ const PatternSettings = ({num, patterns}) => {
 				update={update}
 			/>
 			<br/>
-			<label data-tooltip-id="my-tooltip" data-tooltip-content="Adjusts the smoothing of the LED strip.">
-			Smoothing
-			</label>
+			<label>Smoothing</label>
+			<label data-tooltip-id="smoothing" data-tooltip-offset={10}> (?)</label>
+			<Tooltip id="smoothing" content="Adjusts the smoothing of the LED strip."/>
 			<NumericSlider
 				className={style.settings_control}
 				//label="Smoothing"
@@ -182,9 +183,10 @@ const PatternSettings = ({num, patterns}) => {
 					}}
 				/>
             </div>
-			<label data-tooltip-id="my-tooltip" data-tooltip-content="Adjusts the range of colors that are displayed on the LED strip.">
-			Color Range
+			<label>Color Range
 			</label>
+			<label data-tooltip-id="color" data-tooltip-offset={10}> (?)</label>
+			<Tooltip id="color" content="Adjusts the range of colors that are displayed on the LED strip."/>
 			<MultiRangeSliderWrapper
 				min={0}
 				max={255}

@@ -11,9 +11,12 @@ import SimpleChooser from '../single_chooser';
 import style from './style.css';
 import PatternSettings from '../pattern_settings';
 import { Tooltip } from 'react-tooltip';
+import PatternModal from "../../components/pattern_modal";
 
 const StripSettings = ({patterns}) => {
 
+	const [isModalOpen, setIsModalOpen] = useState(false);
+	
 	// Checks if the web app is connected to the device.
 	const { isConnected } = useConnectivity();
 
@@ -99,6 +102,14 @@ const StripSettings = ({patterns}) => {
 		}
 	}
 
+	const openModal = () => {
+		setIsModalOpen(true);
+	}
+
+	const closeModal = () => {
+		setIsModalOpen(false);
+	}
+
 	/**
 	 * @brief Generates a list from 0 to end. Analagous to Python's
 	 * range() function.
@@ -162,6 +173,9 @@ const StripSettings = ({patterns}) => {
 				<br/>
 				<button type="button" onClick={incrementPatterns}>+</button>
 				<button type="button" onClick={decrementPatterns}>-</button>
+				<br/>
+				<button type="button" onClick={openModal}>Help</button>
+				<br/>
 				<hr></hr>
 
 				{inRange(data.pattern_count).map((data) => {
@@ -181,6 +195,10 @@ const StripSettings = ({patterns}) => {
 					num={selectedPattern}
 					patterns={patterns}
 					key={selectedPattern}
+				/>
+				<PatternModal
+					isOpen={isModalOpen}
+					onClose={closeModal}
 				/>	
 			</div> 
 		: <LabelSpinner></LabelSpinner>)
