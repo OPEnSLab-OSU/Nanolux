@@ -130,8 +130,8 @@ const StripSettings = ({patterns, advanced = false}) => {
 				{advanced && (
 					<>
 					<br/>
-					<label>Mode</label>
-					<label data-tooltip-id="mode" data-tooltip-offset={10}> (?)</label>
+					<label style={{ fontSize: "1.2rem" }}>Mode</label>
+					<label style={{ fontSize: "1.2rem" }} data-tooltip-id="mode" data-tooltip-offset={10}> (?)</label>
 					<Tooltip id="mode" content="The mode the patterns will be displayed in.
 					Strip Splitting splits multiple patterns separately, while Z-Layering layers patterns onto each other."/>
 					<SimpleChooser
@@ -146,8 +146,8 @@ const StripSettings = ({patterns, advanced = false}) => {
 						update={update}
 					/>
 					<br/>
-					<label>Noise Threshold</label>
-					<label data-tooltip-id="threshold" data-tooltip-offset={10}> (?)</label>
+					<label style={{ fontSize: "1.2rem" }}>Noise Threshold</label>
+					<label style={{ fontSize: "1.2rem" }} data-tooltip-id="threshold" data-tooltip-offset={10}> (?)</label>
 					<Tooltip id="threshold" content="This slider adjusts how much noise it takes to display the pattern."/>
 					<NumericSlider
 						className={style.settings_control}
@@ -161,8 +161,8 @@ const StripSettings = ({patterns, advanced = false}) => {
 					<br/>
 					</>
 				)}
-				<label>Noise Threshold</label>
-				<label data-tooltip-id="threshold" data-tooltip-offset={10}> (?)</label>
+				<label style={{ fontSize: "1.2rem" }}>Noise Threshold</label>
+				<label style={{ fontSize: "1.2rem" }} data-tooltip-id="threshold" data-tooltip-offset={10}> (?)</label>
 				<Tooltip id="threshold" content="This slider adjusts how much noise it takes to display the pattern."/>
 				<NumericSlider
 					className={style.settings_control}
@@ -173,11 +173,12 @@ const StripSettings = ({patterns, advanced = false}) => {
 					structure_ref="noise"
 					update={update}
 				/>
-				<br/>
 				{advanced && (
 					<>
+					<br/>
 					<button className={style.incBtn} onClick={incrementPatterns}>+</button>
 					<button className={style.incBtn} onClick={decrementPatterns}>-</button>
+					<br/>
 					{inRange(data.pattern_count).map((data) => {
 						if(data.idx == selectedPattern){
 							return <button className={style.patternBtn} onClick={function() {setPattern(data.idx);}} key={data.idx} style="border-style:inset;">
@@ -191,7 +192,8 @@ const StripSettings = ({patterns, advanced = false}) => {
 					})}
 					</>
 				)}
-				<button type="button" onClick={openModal}>Help</button>
+				<br/>
+				<button style={{ fontSize: "1.2rem", marginTop: ".4rem" }} type="button" onClick={openModal}>Help</button>
 				<br/>
 				<hr></hr>
 

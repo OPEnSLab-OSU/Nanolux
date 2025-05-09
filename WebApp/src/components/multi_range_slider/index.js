@@ -34,8 +34,6 @@ const MultiRangeSliderWrapper = ({
         setThumbMaxColor(getHueColor(e.maxValue));
     }
 
-    // SOURCE: https://github.com/developergovindgupta/multi-range-slider-react
-
     const handleInput = (e) => {
         update(minRef, e.minValue);
         update(maxRef, e.maxValue);

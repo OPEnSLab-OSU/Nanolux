@@ -125,8 +125,8 @@ const PatternSettings = ({num, patterns, advanced = false}) => {
 				<br/>
 				</>
 			)}
-			<label>Brightness</label>
-			<label data-tooltip-id="brightness" data-tooltip-offset={10}> (?)</label>
+			<label style={{ fontSize: "1.2rem" }}>Brightness</label>
+			<label style={{ fontSize: "1.2rem" }} data-tooltip-id="brightness" data-tooltip-offset={10}> (?)</label>
 			<Tooltip id="brightness" content="This slider adjusts how bright the LED strip is."/>
 			<NumericSlider
 				className={style.settings_control}
@@ -138,8 +138,8 @@ const PatternSettings = ({num, patterns, advanced = false}) => {
 				update={update}
 			/>
 			<br/>
-			<label>Smoothing</label>
-			<label data-tooltip-id="smoothing" data-tooltip-offset={10}> (?)</label>
+			<label style={{ fontSize: "1.2rem" }}>Smoothing</label>
+			<label style={{ fontSize: "1.2rem" }} data-tooltip-id="smoothing" data-tooltip-offset={10}> (?)</label>
 			<Tooltip id="smoothing" content="Adjusts the smoothing of the LED strip."/>
 			<NumericSlider
 				className={style.settings_control}
@@ -213,7 +213,7 @@ const PatternSettings = ({num, patterns, advanced = false}) => {
 			{advanced && (
 				<>
 				<label style={{fontSize:'1.2rem'}}>Color Range</label>
-				<label data-tooltip-id="color" data-tooltip-offset={10}> (?)</label>
+				<label style={{ fontSize: "1.2rem" }} data-tooltip-id="color" data-tooltip-offset={10}> (?)</label>
 				<Tooltip id="color" content="Adjusts the range of colors that are displayed on the LED strip."/>
 				<MultiRangeSliderWrapper
 						min={0}

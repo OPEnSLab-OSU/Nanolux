@@ -75,8 +75,8 @@ const Patterns = ({
                 >
                     {patternOptions}
                 </select>
-                <button onClick={decrement}>Prev</button>
-                <button onClick={increment}>Next</button>
+                <button style={{ fontSize: "1.2rem", marginLeft: ".4rem" }} onClick={decrement}>Prev</button>
+                <button style={{ fontSize: "1.2rem", marginLeft: ".4rem" }} onClick={increment}>Next</button>
             </div>
         </div>
     );

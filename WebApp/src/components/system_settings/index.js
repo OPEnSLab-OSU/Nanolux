@@ -80,8 +80,8 @@ const SystemControls = () => {
 	return (
 		(!loading ? 
 			<div>
-				<label>LED Strip Length</label>
-				<label data-tooltip-id="length" data-tooltip-offset={10}> (?)</label>
+				<label style={{ fontSize: "1.2rem" }}>LED Strip Length</label>
+				<label  style={{ fontSize: "1.2rem" }} data-tooltip-id="length" data-tooltip-offset={10}> (?)</label>
 				<Tooltip id="length" content="This slider adjusts how much of the LED strip is used by the pattern."/>
 				<NumericSlider
 					className={style.settings_control}
@@ -93,8 +93,8 @@ const SystemControls = () => {
 					update={update}
 				/>
 				<br/>
-				<label>LED Update Time (ms)</label>
-				<label data-tooltip-id="update" data-tooltip-offset={10}> (?)</label>
+				<label style={{ fontSize: "1.2rem" }}>LED Update Time (ms)</label>
+				<label style={{ fontSize: "1.2rem" }} data-tooltip-id="update" data-tooltip-offset={10}> (?)</label>
 				<Tooltip id="update" content="This slider adjusts how fast the LED strip updates (lower number is faster)."/>
 				<NumericSlider
 					className={style.settings_control}
@@ -106,8 +106,8 @@ const SystemControls = () => {
 					update={update}
 				/>
 				<br/>
-				<label>Debug Mode</label>
-				<label data-tooltip-id="debug" data-tooltip-offset={10}> (?)</label>
+				<label style={{ fontSize: "1.2rem" }}>Debug Mode</label>
+				<label style={{ fontSize: "1.2rem" }} data-tooltip-id="debug" data-tooltip-offset={10}> (?)</label>
 				<Tooltip id="debug" content="Selection for debugging modes. 
 				Debug is standard mode, Simulation sends data to the device and receives it."/>
 				<SimpleChooser

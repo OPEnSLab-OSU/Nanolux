@@ -65,7 +65,7 @@ const SimpleChooser = ({
      */
     return (
         <div>
-            <label style={{fontSize: '1.2rem'}}>{label}:</label>
+            <label style={{fontSize: '1.2rem'}}>{label}</label>
             <br></br>
             {options_list}
         </div>

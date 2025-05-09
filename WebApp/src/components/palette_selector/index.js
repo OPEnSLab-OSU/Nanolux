@@ -2,12 +2,22 @@ import { useState, useEffect } from 'preact/hooks';
 import style from './style.css';
 
 export default function PaletteSelector() {
-    const [theme, setTheme] = useState(
-        localStorage.getItem('theme') || 'light'
-    );
+    const [theme, setTheme] = useState('light');
+
     useEffect(() => {
-        document.documentElement.dataset.theme = theme;
-        localStorage.setItem('theme', theme);
+        if (typeof window !== 'undefined') {
+            const saved = window.localStorage.getItem('theme') || 'light';
+            setTheme(saved);
+        }
+    }, []);
+
+    useEffect(() => {
+        if (typeof document !== 'undefined') {
+            document.documentElement.dataset.theme = theme;
+        }
+        if (typeof window !== 'undefined') {
+            window.localStorage.setItem('theme', theme);
+        }
     }, [theme]);
 
     return (
