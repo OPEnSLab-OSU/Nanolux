@@ -11,7 +11,6 @@ import RANGE_CONSTANTS from '../../utils/constants';
 import style from './style.css';
 import MultiRangeSliderWrapper from '../../components/multi_range_slider';
 import ConfigDropDown from "../config_drop_down";
-import { Tooltip } from 'react-tooltip';
 
 /**
  * @brief An object meant to hold and display settings for a specific pattern
@@ -125,12 +124,13 @@ const PatternSettings = ({num, patterns, advanced = false}) => {
 				<br/>
 				</>
 			)}
-			<label style={{ fontSize: "1.2rem" }}>Brightness</label>
-			<label style={{ fontSize: "1.2rem" }} data-tooltip-id="brightness" data-tooltip-offset={10}> (?)</label>
-			<Tooltip id="brightness" content="This slider adjusts how bright the LED strip is."/>
 			<NumericSlider
 				className={style.settings_control}
-				//label="Brightness"
+				label="Brightness"
+				tooltip={{
+					id: 'brightness',
+					content: 'This slider adjusts how bright the LED strip is.',
+				}}
 				min={RANGE_CONSTANTS.BRIGHTNESS_MIN}
 				max={RANGE_CONSTANTS.BRIGHTNESS_MAX}
 				initial={data.brightness}
@@ -138,12 +138,13 @@ const PatternSettings = ({num, patterns, advanced = false}) => {
 				update={update}
 			/>
 			<br/>
-			<label style={{ fontSize: "1.2rem" }}>Smoothing</label>
-			<label style={{ fontSize: "1.2rem" }} data-tooltip-id="smoothing" data-tooltip-offset={10}> (?)</label>
-			<Tooltip id="smoothing" content="Adjusts the smoothing of the LED strip."/>
 			<NumericSlider
 				className={style.settings_control}
-				//label="Smoothing"
+				label="Smoothing"
+				tooltip={{
+					id: 'brightness',
+					content: 'This slider adjusts the smoothing of the LED strip.',
+				}}
 				min={RANGE_CONSTANTS.SMOOTHING_MIN}
 				max={RANGE_CONSTANTS.SMOOTHING_MAX}
 				initial={data.smoothing}
@@ -212,17 +213,18 @@ const PatternSettings = ({num, patterns, advanced = false}) => {
 			<br></br>
 			{advanced && (
 				<>
-				<label style={{fontSize:'1.2rem'}}>Color Range</label>
-				<label style={{ fontSize: "1.2rem" }} data-tooltip-id="color" data-tooltip-offset={10}> (?)</label>
-				<Tooltip id="color" content="Adjusts the range of colors that are displayed on the LED strip."/>
 				<MultiRangeSliderWrapper
-						min={0}
-						max={255}
-						selectedLow={data.hue_min}
-						selectedHigh={data.hue_max}
-						minRef={"hue_min"}
-						maxRef={"hue_max"}
-						update={update}
+					tooltip={{
+						id: 'color',
+						content: 'Adjusts the range of colors that are displayed on the LED strip.'
+					}}
+					min={0}
+					max={255}
+					selectedLow={data.hue_min}
+					selectedHigh={data.hue_max}
+					minRef={"hue_min"}
+					maxRef={"hue_max"}
+					update={update}
 				/>
 				</>
 			)}

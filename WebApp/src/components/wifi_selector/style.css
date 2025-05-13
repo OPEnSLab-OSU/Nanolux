@@ -82,5 +82,9 @@
     margin-left: 8px;
     padding: 3px;
     font-size: var(--font-size);
+    color: #FFFFFF;
+    background: var(--brand);
     border-radius: .4rem;
+    padding: 0.4rem 0.6rem;
+    cursor: pointer;
 }

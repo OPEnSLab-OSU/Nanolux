@@ -1,6 +1,7 @@
 import {useSignal} from "@preact/signals";
 import style from './style.css';
 import { useEffect } from "preact/hooks";
+import TooltipWrapper from "../tooltip/tooltip_wrapper";
 
 /**
  * @brief A UI element that creates a draggable slider and an readout
@@ -17,6 +18,7 @@ import { useEffect } from "preact/hooks";
  */
 const NumericSlider = ({
     label,
+    tooltip,
     min,
     max,
     initial,
@@ -54,6 +56,15 @@ const NumericSlider = ({
         <div>
             <div>
                 <span style={{fontSize: '1.2rem'}}>{label}</span>
+                {tooltip && (
+                    <TooltipWrapper
+                      id={tooltip.id}
+                      content={tooltip.content}
+                      offset={tooltip.offset}
+                      style={tooltip.style}
+                      label={tooltip.label}
+                    />
+                )}
             </div>
             <div>
                 <input

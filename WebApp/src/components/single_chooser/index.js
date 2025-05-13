@@ -1,3 +1,4 @@
+import TooltipWrapper from '../tooltip/tooltip_wrapper';
 import style from './style.css';
 
 /**
@@ -12,6 +13,7 @@ import style from './style.css';
  */
 const SimpleChooser = ({
     label,
+    tooltip,
     options,
     noSelection,
     initial,
@@ -65,8 +67,18 @@ const SimpleChooser = ({
      */
     return (
         <div>
-            <label style={{fontSize: '1.2rem'}}>{label}</label>
-            <br></br>
+            <div>
+                <label style={{fontSize: '1.2rem'}}>{label}</label>
+                {tooltip && (
+                    <TooltipWrapper
+                      id={tooltip.id}
+                      content={tooltip.content}
+                      offset={tooltip.offset}
+                      style={tooltip.style}
+                      label={tooltip.label}
+                    />
+                )}
+            </div>
             {options_list}
         </div>
                 

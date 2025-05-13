@@ -16,3 +16,14 @@
     border:2px solid var(--brand);
     cursor:pointer;
 }
+
+.cycleBtn{
+    height: var(--btn-h);
+    font-size: var(--font-size);
+    border-radius: .5rem;
+    background: var(--brand);
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    margin: .4rem 0 0 var(--btn-gap);
+}

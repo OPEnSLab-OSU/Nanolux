@@ -80,12 +80,13 @@ const SystemControls = () => {
 	return (
 		(!loading ? 
 			<div>
-				<label style={{ fontSize: "1.2rem" }}>LED Strip Length</label>
-				<label  style={{ fontSize: "1.2rem" }} data-tooltip-id="length" data-tooltip-offset={10}> (?)</label>
-				<Tooltip id="length" content="This slider adjusts how much of the LED strip is used by the pattern."/>
 				<NumericSlider
 					className={style.settings_control}
-					//label="LED Strip Length"
+					label="LED Strip Length"
+					tooltip={{
+						id: 'length',
+						content: 'This slider adjusts how much of the LED strip is used by the pattern.',
+					}}
 					min={RANGE_CONSTANTS.LENGTH_MIN}
 					max={RANGE_CONSTANTS.LENGTH_MAX}
 					initial={data.length}
@@ -93,12 +94,13 @@ const SystemControls = () => {
 					update={update}
 				/>
 				<br/>
-				<label style={{ fontSize: "1.2rem" }}>LED Update Time (ms)</label>
-				<label style={{ fontSize: "1.2rem" }} data-tooltip-id="update" data-tooltip-offset={10}> (?)</label>
-				<Tooltip id="update" content="This slider adjusts how fast the LED strip updates (lower number is faster)."/>
 				<NumericSlider
 					className={style.settings_control}
-					//label="LED Update Time (ms)"
+					label="LED Update Time (ms)"
+					tooltip={{
+						id: 'update',
+						content: 'This slider adjusts how fast the LED strip updates (lower number is faster).',
+					}}
 					min={RANGE_CONSTANTS.LOOP_MIN}
 					max={RANGE_CONSTANTS.LOOP_MAX}
 					initial={data.loop}
@@ -106,13 +108,13 @@ const SystemControls = () => {
 					update={update}
 				/>
 				<br/>
-				<label style={{ fontSize: "1.2rem" }}>Debug Mode</label>
-				<label style={{ fontSize: "1.2rem" }} data-tooltip-id="debug" data-tooltip-offset={10}> (?)</label>
-				<Tooltip id="debug" content="Selection for debugging modes. 
-				Debug is standard mode, Simulation sends data to the device and receives it."/>
 				<SimpleChooser
 					className={style.settings_control}
-					//label="Debug Mode"
+					label="Debug Mode"
+					tooltip={{
+						id: 'debug',
+						content: 'Selection for debugging modes. Debug is standard mode, Simulation sends data to the device and receives it.',
+					}}
 					options={[
 						{option : "Debug Out", idx : 1},
 						{option : "Simulator Out", idx : 2},

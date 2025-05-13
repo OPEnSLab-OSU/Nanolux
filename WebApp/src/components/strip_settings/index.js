@@ -8,7 +8,6 @@ import { LabelSpinner } from '../spinner';
 import SimpleChooser from '../single_chooser';
 import style from './style.css';
 import PatternSettings from '../pattern_settings';
-import { Tooltip } from 'react-tooltip';
 import PatternModal from "../../components/pattern_modal";
 
 const StripSettings = ({patterns, advanced = false}) => {
@@ -130,12 +129,12 @@ const StripSettings = ({patterns, advanced = false}) => {
 				{advanced && (
 					<>
 					<br/>
-					<label style={{ fontSize: "1.2rem" }}>Mode</label>
-					<label style={{ fontSize: "1.2rem" }} data-tooltip-id="mode" data-tooltip-offset={10}> (?)</label>
-					<Tooltip id="mode" content="The mode the patterns will be displayed in.
-					Strip Splitting splits multiple patterns separately, while Z-Layering layers patterns onto each other."/>
 					<SimpleChooser
-						//label="Mode"
+						label="Mode"
+						tooltip={{
+							id: 'mode',
+							content: 'The mode the patterns will be displayed in. Strip Splitting splits multiple patterns separately, while Z-Layering layers patterns onto each other.',
+						}}
 						options={[
 							{option : "Strip Splitting", idx : RANGE_CONSTANTS.STRIP_SPLITTING_ID},
 							{option : "Z-Layering", idx : RANGE_CONSTANTS.Z_LAYERING_ID},
@@ -146,12 +145,13 @@ const StripSettings = ({patterns, advanced = false}) => {
 						update={update}
 					/>
 					<br/>
-					<label style={{ fontSize: "1.2rem" }}>Noise Threshold</label>
-					<label style={{ fontSize: "1.2rem" }} data-tooltip-id="threshold" data-tooltip-offset={10}> (?)</label>
-					<Tooltip id="threshold" content="This slider adjusts how much noise it takes to display the pattern."/>
 					<NumericSlider
 						className={style.settings_control}
-						//label="Transparency"
+						label="Transparency"
+						tooltip={{
+							id: 'transparency',
+							content: 'This slider adjusts the transparency of the LED strip.',
+						}}
 						min={RANGE_CONSTANTS.ALPHA_MIN}
 						max={RANGE_CONSTANTS.ALPHA_MAX}
 						initial={data.alpha}
@@ -161,12 +161,13 @@ const StripSettings = ({patterns, advanced = false}) => {
 					<br/>
 					</>
 				)}
-				<label style={{ fontSize: "1.2rem" }}>Noise Threshold</label>
-				<label style={{ fontSize: "1.2rem" }} data-tooltip-id="threshold" data-tooltip-offset={10}> (?)</label>
-				<Tooltip id="threshold" content="This slider adjusts how much noise it takes to display the pattern."/>
 				<NumericSlider
 					className={style.settings_control}
-					//label="Noise Threshold"
+					label="Noise Threshold"
+					tooltip={{
+						id: 'threshold',
+						content: 'This slider adjusts how much noise it takes to display the pattern.',
+					}}
 					min={RANGE_CONSTANTS.NOISE_MIN}
 					max={RANGE_CONSTANTS.NOISE_MAX}
 					initial={data.noise}
@@ -179,21 +180,22 @@ const StripSettings = ({patterns, advanced = false}) => {
 					<button className={style.incBtn} onClick={incrementPatterns}>+</button>
 					<button className={style.incBtn} onClick={decrementPatterns}>-</button>
 					<br/>
-					{inRange(data.pattern_count).map((data) => {
-						if(data.idx == selectedPattern){
-							return <button className={style.patternBtn} onClick={function() {setPattern(data.idx);}} key={data.idx} style="border-style:inset;">
-								Pattern {data.idx}
-							</button>
-						}else{
-							return <button className={style.patternBtn} onClick={function() {setPattern(data.idx);}} key={data.idx}>
-								Pattern {data.idx}
-							</button>
-						}
-					})}
+					<div className={style.patternRow}>
+						{inRange(data.pattern_count).map((data) => {
+							if(data.idx == selectedPattern){
+								return <button className={style.patternBtn} onClick={function() {setPattern(data.idx);}} key={data.idx} style="border-style:inset;">
+									Pattern {data.idx}
+								</button>
+							}else{
+								return <button className={style.patternBtn} onClick={function() {setPattern(data.idx);}} key={data.idx}>
+									Pattern {data.idx}
+								</button>
+							}
+						})}
+					</div>
 					</>
 				)}
-				<br/>
-				<button style={{ fontSize: "1.2rem", marginTop: ".4rem" }} type="button" onClick={openModal}>Help</button>
+				<button className={style.modalBtn} type="button" onClick={openModal}>Help</button>
 				<br/>
 				<hr></hr>
 
