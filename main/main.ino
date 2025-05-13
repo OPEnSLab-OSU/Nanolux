@@ -68,8 +68,7 @@ extern Pattern mainPatterns[];
 /// MANUAL CONTROL VARIABLES
 volatile bool manual_control_enabled = false;
 int encoderDelta;
-Strip_Buffer manual_strip_buffer;
-Pattern_Data manual_pattern;
+Pattern_Data manual_pattern;    //Only used with VERSION_2_HARDWARE
 
 /// Stores the last state of the rotary encoder button.
 bool lastEncoderBtnPressed = false;
@@ -358,7 +357,7 @@ void update_hardware(){
   #ifdef VERSION_2_HARDWARE
 
     if (isEncoderButtonPressed() != lastEncoderBtnPressed)
-      loaded_patterns.pattern[0].postprocessing_mode = (uint8_t) (loaded_patterns.pattern[0].postprocessing_mode + 1) % 4;
+      loaded_patterns.pattern[0].postprocessing_mode = (uint8_t) ((loaded_patterns.pattern[0].postprocessing_mode + 1) % 4);
     
     //Serial.println(loaded_patterns.pattern[0].postprocessing_mode);
 
@@ -371,13 +370,12 @@ void update_hardware(){
     if (encoderDelta != 0) {
       //Serial.print("Encoder changed by: "); Serial.println(encoderDelta);
 
-      loaded_patterns.pattern[0].idx = (uint8_t) (loaded_patterns.pattern[0].idx + encoderDelta + NUM_PATTERNS) % NUM_PATTERNS;
+      loaded_patterns.pattern[0].idx = (uint8_t) ((loaded_patterns.pattern[0].idx + encoderDelta + NUM_PATTERNS) % NUM_PATTERNS);
       pattern_changed = true;
       manual_control_enabled = true;
 
       //Serial.print("New pattern index: "); Serial.println(loaded_patterns.pattern[0].idx);
     }
-      
 
   #else
 
