@@ -1,7 +1,9 @@
 # Nanolux
 Cymaspace [Audiolux](https://www.cymaspace.org/audiolux/) Opensource code
 
-The Audiolux is a product developed by Portland-based company CymaSpace that visualizes music or other performing arts on LED strips, enabling the deaf and hard of hearing to participate in these events. The Audiolux 1 is a pre-existing product, so the goal of this project is to make improvements such as adding user configurable modes, increasing the number of visualization patterns on the LEDs, making configuration wireless, and improving accuracy of pitch detection. Please check out our [Wiki](https://github.com/OPEnSLab-OSU/Nanolux/wiki) for more user info .
+The Audiolux is a product developed by Portland-based company CymaSpace that visualizes music or other performing arts on LED strips, enabling the deaf and hard of hearing to participate in these events. The Audiolux 1 is a pre-existing product, so the goal of this project is to make improvements such as adding user configurable modes, increasing the number of visualization patterns on the LEDs, making configuration wireless, and improving accuracy of pitch detection.
+
+#### Please check out our [Wiki](https://github.com/OPEnSLab-OSU/Nanolux/wiki) for more user info and documetation.
 
 # Install the Arduino Desktop IDE
 Dev environment:
@@ -22,14 +24,14 @@ You will also need several libraries. See the [IDE Setup Guide](https://github.c
 - ArduinoFFT (2.0.2)
 - ESP32 Board Library (2.0.17)
 
-
-All dependencies are above installable through the Library Manager of the Arduino IDE, or with the 
+All dependencies above are installable through the Library Manager of the Arduino IDE, or with the 
 [Arduino CLI](https://arduino.github.io/arduino-cli/0.28/) tool.
 
 The following dependencies must be installed manually. Refer to Wiki for more info.
 
 * ESPAsynWebServer (1.2.3): https://github.com/me-no-dev/ESPAsyncWebServer
 * AsyncTCP (1.1.4): https://github.com/me-no-dev/AsyncTCP
+* AudioPrism: https://github.com/udellc/AudioPrism
 
 
 # Install Board
@@ -46,6 +48,7 @@ go to Tools->Partition Scheme and make sure "No OTA (Large APP)" is selected.
 
 # Contributors
 2021-2022 Team:
+
 John Zontos (zontosj@oregonstate.edu)
 
 Evan Cochran (cochraev@oregonstate.edu)
@@ -80,9 +83,20 @@ Can Yang (yangca@oregonstate.edu)
 
 Scout Hawkey (hawkeys@oregonstate.edu)
 
+2024-2025 Team:
+
+Andrew Craeton (craetona@oregonstate.edu)
+
+Theodore Ngo (ngoth@oregonstate.edu)
+
+Matthew Manuguid (manuguim@oregonstate.edu)
+
+Nicholas Wooldridge (wooldrni@oregonstate.edu)
+
+
 # Some Important Things To Note
 
-1. The most current up to date code is located in the [Main](https://github.com/OPEnSLab-OSU/Nanolux/tree/main/main) directory. 
+1. The most up to date atble release is located in the [Main](https://github.com/OPEnSLab-OSU/Nanolux/tree/main/main) directory. 
 This is the code that should be uploaded to the device. Make sure to follow the webapp wiki first however to upload the code
 needed to run the webapp.
 
