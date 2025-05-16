@@ -80,6 +80,17 @@ Can Yang (yangca@oregonstate.edu)
 
 Scout Hawkey (hawkeys@oregonstate.edu)
 
+2024-2025 Team:
+
+Andrew Craeton (craetona@oregonstate.edu)
+
+Theodore Ngo (ngoth@oregonstate.edu)
+
+Matthew Manuguid (manuguim@oregonstate.edu)
+
+Nicholas Wooldridge (wooldrni@oregonstate.edu)
+
+
 # Some Important Things To Note
 
 1. The most current up to date code is located in the [Main](https://github.com/OPEnSLab-OSU/Nanolux/tree/main/main) directory. 
