@@ -24,14 +24,14 @@ You will also need several libraries. See the [IDE Setup Guide](https://github.c
 - ArduinoFFT (2.0.2)
 - ESP32 Board Library (2.0.17)
 
-
-All dependencies are above installable through the Library Manager of the Arduino IDE, or with the 
+All dependencies above are installable through the Library Manager of the Arduino IDE, or with the 
 [Arduino CLI](https://arduino.github.io/arduino-cli/0.28/) tool.
 
 The following dependencies must be installed manually. Refer to Wiki for more info.
 
 * ESPAsynWebServer (1.2.3): https://github.com/me-no-dev/ESPAsyncWebServer
 * AsyncTCP (1.1.4): https://github.com/me-no-dev/AsyncTCP
+* AudioPrism: https://github.com/udellc/AudioPrism
 
 
 # Install Board
@@ -96,7 +96,7 @@ Nicholas Wooldridge (wooldrni@oregonstate.edu)
 
 # Some Important Things To Note
 
-1. The most current up to date code is located in the [Main](https://github.com/OPEnSLab-OSU/Nanolux/tree/main/main) directory. 
+1. The most up to date atble release is located in the [Main](https://github.com/OPEnSLab-OSU/Nanolux/tree/main/main) directory. 
 This is the code that should be uploaded to the device. Make sure to follow the webapp wiki first however to upload the code
 needed to run the webapp.
 
