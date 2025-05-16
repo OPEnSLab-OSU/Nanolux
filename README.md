@@ -48,6 +48,7 @@ go to Tools->Partition Scheme and make sure "No OTA (Large APP)" is selected.
 
 # Contributors
 2021-2022 Team:
+
 John Zontos (zontosj@oregonstate.edu)
 
 Evan Cochran (cochraev@oregonstate.edu)
