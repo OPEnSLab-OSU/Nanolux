@@ -432,9 +432,9 @@ int remap( double x,double oMin,double oMax,double nMin,double nMax ){
     return (int)result;
 }
 
-int largest(double arr[], int n)
+int largest(float arr[], int n)
 {
-    double max = arr[0];
+    float max = arr[0];
 
     // Traverse array elements from second and
     // compare every element with current max

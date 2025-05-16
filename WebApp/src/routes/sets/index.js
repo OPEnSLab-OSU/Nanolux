@@ -17,6 +17,9 @@ const Settings = () => {
 	// Stores the list of patterns obtained from the device.
 	const [patterns, setPatterns] = useState([{index: 0, name: "None"}])
 
+	// Toggle state for showing the advanced settings
+	const [showAdvanced, setShowAdvanced] = useState(false);
+
 	/**
 	 * @brief Obtains the list of patterns from the NanoLux device.
 	 */
@@ -29,45 +32,50 @@ const Settings = () => {
     }, [isConnected])
 
 	return (
-		<div>
-			<table>
-				<tr>
-					<th>Pattern Settings</th>
-					<th>System Settings</th>	
-				</tr>
-				<tr>
-					<td>
-						<StripSettings
-							patterns={patterns}
-						/>
-					</td>
-					<td>
-						<SystemControls/>
-						<hr></hr>
+		<div className={style.settingsPage}>
+			{/* BASIC SETTINGS */}
+			{!showAdvanced && (
+				<div className={style.basicSection}>
+					<label style={{ fontSize: '1.6rem', fontWeight: 'bold' }}>Pattern Settings</label>
+					<br/><br/>
+					<StripSettings patterns={patterns} advanced={false} />
+				</div>
+		  	)}
+
+			{/* FULL SETTINGS */}
+		  	{showAdvanced && (
+				<div className={style.advancedSection}>
+			  		<div className={style.advancedLeft}>
+						<label style={{ fontSize: '1.6rem', fontWeight: 'bold' }}>Pattern Settings</label>
+						<br/><br/>
+						<StripSettings patterns={patterns} advanced={true} />
+			  		</div>
+			  		<div className={style.advancedRight}>
+			  			<label style={{ fontSize: '1.6rem', fontWeight: 'bold' }}>System Settings</label>
+			  			<br/><br/><br/>
+						<SystemControls />
+						<hr/>
 						<br/>
 						<div className={style.background0}>
-							<Save_Entry 
-								name="Default Pattern"
-								idx='0'
-							/>
+				  			<Save_Entry name="Default Pattern" idx="0" />
 						</div>
-						<br></br>
 						<div className={style.background1}>
-							<Save_Entry
-								name="Saved Pattern 1"
-								idx='1'
-							/>
+				  			<Save_Entry name="Saved Pattern 1" idx="1" />
 						</div>
 						<div className={style.background2}>
-							<Save_Entry
-								name="Saved Pattern 2"
-								idx='2'
-							/>
+				  			<Save_Entry name="Saved Pattern 2" idx="2" />
 						</div>
-					</td>
-					
-				</tr>
-			</table>
+			  		</div>
+				</div>
+		  	)}
+	
+		  	{/* ADVANCED TOGGLE BUTTON */}
+		  	<button
+				className={style.advancedToggle}
+				onClick={() => setShowAdvanced(!showAdvanced)}
+		  	>
+				{showAdvanced ? 'Hide Advanced' : 'Show Advanced'}
+		  	</button>
 		</div>
 	);
 };

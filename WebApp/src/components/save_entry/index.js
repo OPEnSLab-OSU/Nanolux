@@ -1,4 +1,5 @@
 import {loadSaveSlot, saveToSlot} from "../../utils/api";
+import style from './style.css';
 
 /**
  * @brief A UI element that allows a user to save or load a pattern 
@@ -35,17 +36,20 @@ const Save_Entry = ({
 	}
 
     return (
-        <div >
-            <tr>
-                <th width='150'>{name}</th>
-                <th>
-                    <button onClick={load}>Load Pattern</button>
-                </th>
-                <th>
-                    <button onClick={save}>Save Pattern</button>
-                </th>
-                
-            </tr>
+        <div className={style.row}>
+            <span className={style.slot}>{name}</span>
+
+            <button
+                className={`${style.btn} ${style.btnPrimary}`}
+                onClick={load}>
+                Load Pattern
+            </button>
+
+            <button
+                className={style.btn}
+                onClick={save}>
+                Save Pattern
+            </button>
         </div>
     );
 }

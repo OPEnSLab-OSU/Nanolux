@@ -17,7 +17,7 @@ import ConfigDropDown from "../config_drop_down";
  * @param num 	The ID of the pattern to display
  * @param patterns	A list of patterns and their IDs
  */
-const PatternSettings = ({num, patterns}) => {
+const PatternSettings = ({num, patterns, advanced = false}) => {
 
 	// Checks if the web app is connected to the device.
 	const { isConnected } = useConnectivity();
@@ -65,6 +65,23 @@ const PatternSettings = ({num, patterns}) => {
     }, 100);
 
 	/**
+	 * @brief Continuously poll the Nanolux device for changes to the
+	 * hardware pattern index, updates the web app UI to reflect the change.
+	 */
+	useInterval(() => {
+		if (isConnected && !updated) {
+			getPattern(num).then(newData => {
+				//console.log("Fetched pattern from ESP32:", newData.idx);
+
+				if (newData.idx !== data.idx) {
+					//console.log("Updating UI with new pattern:", newData.idx)
+					setData(newData);
+				}
+			});
+		}
+	}, 200);
+
+	/**
 	 * @brief Updates a parameter in the pattern data structure with a new value.
 	 * @param ref The string reference to update in the data structure
 	 * @param value The new value to update the data structure with
@@ -96,16 +113,24 @@ const PatternSettings = ({num, patterns}) => {
 				patterns={patterns}
 			/>
 			<br/>
-			<ConfigDropDown
-				patternIdx={data.idx}
-				structureRef={"config"}
-				update={update}
-				initial={data.config}
-			/>
-			<br/>
+			{advanced && (
+				<>
+				<ConfigDropDown
+					patternIdx={data.idx}
+					structureRef={"config"}
+					update={update}
+					initial={data.config}
+				/>
+				<br/>
+				</>
+			)}
 			<NumericSlider
 				className={style.settings_control}
 				label="Brightness"
+				tooltip={{
+					id: 'brightness',
+					content: 'This slider adjusts how bright the LED strip is.',
+				}}
 				min={RANGE_CONSTANTS.BRIGHTNESS_MIN}
 				max={RANGE_CONSTANTS.BRIGHTNESS_MAX}
 				initial={data.brightness}
@@ -116,75 +141,94 @@ const PatternSettings = ({num, patterns}) => {
 			<NumericSlider
 				className={style.settings_control}
 				label="Smoothing"
+				tooltip={{
+					id: 'brightness',
+					content: 'This slider adjusts the smoothing of the LED strip.',
+				}}
 				min={RANGE_CONSTANTS.SMOOTHING_MIN}
 				max={RANGE_CONSTANTS.SMOOTHING_MAX}
 				initial={data.smoothing}
 				structure_ref="smoothing"
 				update={update}
 			/>
+			<br/>
 			<div className={style.settings_control}>
-                <label for="reverse">Reverse</label>
-				<input 
-					type="checkbox" 
-					id="reverse" 
-					name="reverse" 
-					checked={(data.postprocess == 1) || (data.postprocess == 3)}
-					onChange={() => {
-						switch (data.postprocess) {
-							case 0:
-								update("postprocess", 1);
-								break;
+                <label className={style.checkboxOption}>
+					<input 
+						type="checkbox" 
+						id="reverse" 
+						name="reverse" 
+						checked={(data.postprocess == 1) || (data.postprocess == 3)}
+						onChange={() => {
+							switch (data.postprocess) {
+								case 0:
+									update("postprocess", 1);
+									break;
+								
+								case 1:
+									update("postprocess", 0);
+									break;
+								
+								case 2:
+									update("postprocess", 3);
+									break;
 							
-							case 1:
-								update("postprocess", 0);
-								break;
+								default:
+									update("postprocess", 2);
+									break;
+							}
+						}}
+					/>
+					Reverse
+				</label>
+				<label className={style.checkboxOption}>
+					<input 
+						type="checkbox" 
+						id="mirror" 
+						name="mirror" 
+						checked={(data.postprocess == 2) || (data.postprocess == 3)}
+						onChange={() => {
+							switch (data.postprocess) {
+								case 0:
+									update("postprocess", 2);
+									break;
+								
+								case 1:
+									update("postprocess", 3);
+									break;
+								
+								case 2:
+									update("postprocess", 0);
+									break;
 							
-							case 2:
-								update("postprocess", 3);
-								break;
-						
-							default:
-								update("postprocess", 2);
-								break;
-						}
-					}}
-				/>
-				<label for="mirror">Mirror</label>
-				<input 
-					type="checkbox" 
-					id="mirror" 
-					name="mirror" 
-					checked={(data.postprocess == 2) || (data.postprocess == 3)}
-					onChange={() => {
-						switch (data.postprocess) {
-							case 0:
-								update("postprocess", 2);
-								break;
-							
-							case 1:
-								update("postprocess", 3);
-								break;
-							
-							case 2:
-								update("postprocess", 0);
-								break;
-						
-							default:
-								update("postprocess", 1);
-								break;
-						}
-					}}
-				/>
+								default:
+									update("postprocess", 1);
+									break;
+							}
+						}}
+					/>
+					Mirror
+				</label>
             </div>
-			<MultiRangeSliderWrapper
-				min={0}
-				max={255}
-				selectedLow={data.hue_min}
-				selectedHigh={data.hue_max}
-				minRef={"hue_min"}
-				maxRef={"hue_max"}
-				update={update}
-			/>
+			<br></br>
+			{advanced && (
+				<>
+				<MultiRangeSliderWrapper
+					tooltip={{
+						id: 'color',
+						content: 'Adjusts the range of colors that are displayed on the LED strip.'
+					}}
+					min={0}
+					max={255}
+					selectedLow={data.hue_min}
+					selectedHigh={data.hue_max}
+					minRef={"hue_min"}
+					maxRef={"hue_max"}
+					update={update}
+				/>
+				</>
+			)}
+			<br/> 
 		</div> : <LabelSpinner></LabelSpinner>
 		)
 	);

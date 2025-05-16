@@ -19,6 +19,7 @@
 
 .settingsControl {
 	padding: 2rem;
+	font-size: var(--font-size);
 }
 
 .centeredContainer {
@@ -39,6 +40,12 @@
 
 .formButton {
 	margin: .7rem;
+	font-size: var(--font-size);
+	color: #FFFFFF;
+	background: var(--brand);
+	border-radius: 0.5rem;
+	padding: 0.4rem 0.6rem;
+	cursor: pointer;
 }
 
 

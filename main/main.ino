@@ -11,8 +11,7 @@
 #include "patterns.h"
 #include "nanolux_types.h"
 #include "nanolux_util.h"
-#include "core_analysis.h"
-#include "ext_analysis.h"
+#include "audio_analysis.h"
 #include "storage.h"
 #include "globals.h"
 
@@ -68,8 +67,8 @@ extern Pattern mainPatterns[];
 
 /// MANUAL CONTROL VARIABLES
 volatile bool manual_control_enabled = false;
-Strip_Buffer manual_strip_buffer;
-Pattern_Data manual_pattern;
+int encoderDelta;
+Pattern_Data manual_pattern;    //Only used with VERSION_2_HARDWARE
 
 /// Stores the last state of the rotary encoder button.
 bool lastEncoderBtnPressed = false;
@@ -116,8 +115,6 @@ void setup() {
   load_from_nvs();
   verify_saves();
   load_slot(0);
-
-
 
 #ifdef ENABLE_WEB_SERVER
   initialize_web_server(apiGetHooks, API_GET_HOOK_COUNT, apiPutHooks, API_PUT_HOOK_COUNT, config.pass);
@@ -360,22 +357,25 @@ void update_hardware(){
   #ifdef VERSION_2_HARDWARE
 
     if (isEncoderButtonPressed() != lastEncoderBtnPressed)
-      manual_pattern.postprocessing_mode = (manual_pattern.postprocessing_mode + 1) % 4;
+      loaded_patterns.pattern[0].postprocessing_mode = (uint8_t) ((loaded_patterns.pattern[0].postprocessing_mode + 1) % 4);
     
-    //Serial.println(manual_pattern.postprocessing_mode);
+    //Serial.println(loaded_patterns.pattern[0].postprocessing_mode);
 
     lastEncoderBtnPressed = isEncoderButtonPressed();
 
     process_reset_button(isEncoderButtonPressed());
 
-    uint8_t old_idx = manual_pattern.idx;
-    manual_pattern.idx = calculate_pattern_index();
-    
-    if (old_idx != manual_pattern.idx){
+    encoderDelta = encoder_delta();
+
+    if (encoderDelta != 0) {
+      //Serial.print("Encoder changed by: "); Serial.println(encoderDelta);
+
+      loaded_patterns.pattern[0].idx = (uint8_t) ((loaded_patterns.pattern[0].idx + encoderDelta + NUM_PATTERNS) % NUM_PATTERNS);
       pattern_changed = true;
       manual_control_enabled = true;
+
+      //Serial.print("New pattern index: "); Serial.println(loaded_patterns.pattern[0].idx);
     }
-      
 
   #else
 
@@ -399,7 +399,12 @@ void update_hardware(){
 void loop() {
   begin_loop_timer(config.loop_ms);  // Begin timing this loop
 
+  audioAnalysis.runSampleAudio();
+
+  audioAnalysis.runComputeFFT();
+
   audio_analysis();  // Run the audio analysis pipeline
+
   update_hardware(); // Pull updates from hardware (buttons, encoder)
 
   // Reset buffers if pattern settings were changed since
@@ -412,46 +417,19 @@ void loop() {
     histories[1] = Strip_Buffer();
     histories[2] = Strip_Buffer();
     histories[3] = Strip_Buffer();
-    manual_strip_buffer = Strip_Buffer();
   } 
 
-  if(manual_control_enabled){
+  switch (loaded_patterns.mode) {
 
-    process_pattern(
-      &manual_pattern,
-      &manual_strip_buffer,
-      config.length
-    );
+    case STRIP_SPLITTING:
+    default:
+      run_strip_splitting();
+      break;
 
-    // Copy the processed segment to the temp buffer
-    memcpy(
-      output_buffer,
-      manual_strip_buffer.leds,
-      sizeof(CRGB) * config.length
-    );
+    case Z_LAYERING:
+      run_pattern_layering();
+      break;
 
-    // Smooth the brightness-adjusted output and put it
-    // into the main output buffer.
-    calculate_layering(
-      smoothed_output,
-      output_buffer,
-      smoothed_output,
-      config.length,
-      255 - 125);
-
-  }else{
-    switch (loaded_patterns.mode) {
-
-      case STRIP_SPLITTING:
-      default:
-        run_strip_splitting();
-        break;
-
-      case Z_LAYERING:
-        run_pattern_layering();
-        break;
-
-    }
   }
 
   FastLED.show();  // Push changes from the smoothed buffer to the LED strip
@@ -467,6 +445,8 @@ void loop() {
   } while (timer_overrun() == 0);
 
   update_web_server();
+
+  audioAnalysis.resetCache();
 }
 
 /// @brief Performs audio analysis by running audio_analysis.cpp's
@@ -475,21 +455,9 @@ void loop() {
 /// If the macro SHOW_TIMINGS is defined, it will print out the amount
 /// of time audio processing takes via serial.
 void audio_analysis() {
-#ifdef SHOW_TIMINGS
-  const int start = micros();
-#endif
-
-  sample_audio();
-
-  update_peak();
-
-  update_volume();
-
-  update_max_delta();
-
-  update_formants();
-
-  noise_gate(loaded_patterns.noise_thresh);
+  #ifdef SHOW_TIMINGS
+    const int start = micros();
+  #endif
 
   #ifdef SHOW_TIMINGS
     const int end = micros();

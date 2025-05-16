@@ -1,0 +1,19 @@
+:root {
+    --box-gap: 0.75rem
+}
+
+.option_group {
+    display: inline-flex;
+    align-items: center;
+    margin-block: var(--box-gap);
+    font-size: var(--font-size);
+}
+
+.option_group > input[type="checkbox"] {
+    width: 1.5rem;
+    height: 1.5rem;
+    accent-color: var(--brand);
+    margin-left: .8rem;
+    margin-right: .4rem;
+    cursor: pointer;
+}

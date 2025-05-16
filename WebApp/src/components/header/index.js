@@ -1,6 +1,7 @@
 import { h } from 'preact';
 import { Link } from 'preact-router/match';
 import style from './style.css';
+import PaletteSelector from '../palette_selector';
 
 
 /**
@@ -16,6 +17,9 @@ const Header = () => (
 			<img src="../../assets/cymalog1.png" alt="CymaSpace Logo" height="32" />
 			<h1>AudioLux</h1>
 		</a>
+		<div className={style.palette}>
+			<PaletteSelector />
+		</div>
 		<nav>
 			<Link activeClassName={style.active} href="/">
 				Settings
@@ -23,7 +27,6 @@ const Header = () => (
 			<Link activeClassName={style.active} href="/wifi">
 				Wifi
 			</Link>
-			
 		</nav>
 	</header>
 );
