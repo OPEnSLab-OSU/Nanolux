@@ -43,14 +43,13 @@ const MultiRangeSliderWrapper = ({
 
     return (
         <div>
-            <span style={{fontSize: '1.2rem'}}>Color Range</span>
             {tooltip && (
                 <TooltipWrapper
                   id={tooltip.id}
                   content={tooltip.content}
                   offset={tooltip.offset}
                   style={tooltip.style}
-                  label={tooltip.label}
+                  label={'Color Range'}
                 />
             )}
             <br/>

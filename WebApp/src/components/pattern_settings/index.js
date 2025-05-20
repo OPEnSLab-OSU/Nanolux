@@ -11,6 +11,7 @@ import RANGE_CONSTANTS from '../../utils/constants';
 import style from './style.css';
 import MultiRangeSliderWrapper from '../../components/multi_range_slider';
 import ConfigDropDown from "../config_drop_down";
+import TooltipWrapper from "../tooltip/tooltip_wrapper";
 
 /**
  * @brief An object meant to hold and display settings for a specific pattern
@@ -129,7 +130,7 @@ const PatternSettings = ({num, patterns, advanced = false}) => {
 				label="Brightness"
 				tooltip={{
 					id: 'brightness',
-					content: 'This slider adjusts how bright the LED strip is.',
+					content: 'Adjusts how bright patterns are displayed on the LED strip.',
 				}}
 				min={RANGE_CONSTANTS.BRIGHTNESS_MIN}
 				max={RANGE_CONSTANTS.BRIGHTNESS_MAX}
@@ -142,8 +143,8 @@ const PatternSettings = ({num, patterns, advanced = false}) => {
 				className={style.settings_control}
 				label="Smoothing"
 				tooltip={{
-					id: 'brightness',
-					content: 'This slider adjusts the smoothing of the LED strip.',
+					id: 'smoothing',
+					content: 'Adjusts how much noise is rendered in a pattern. More smoothing reduces how erratic a pattern is.',
 				}}
 				min={RANGE_CONSTANTS.SMOOTHING_MIN}
 				max={RANGE_CONSTANTS.SMOOTHING_MAX}
@@ -179,7 +180,11 @@ const PatternSettings = ({num, patterns, advanced = false}) => {
 							}
 						}}
 					/>
-					Reverse
+					<TooltipWrapper
+					  id='reverse'
+					  content='Switches which end patterns will render from on the LED strip.'
+					  label='Reverse'
+					/>
 				</label>
 				<label className={style.checkboxOption}>
 					<input 
@@ -207,7 +212,11 @@ const PatternSettings = ({num, patterns, advanced = false}) => {
 							}
 						}}
 					/>
-					Mirror
+					<TooltipWrapper
+					  id='mirror'
+					  content='Patterns will start in the middle of the LED strip and render towards both ends.'
+					  label='Mirror'
+					/>
 				</label>
             </div>
 			<br></br>

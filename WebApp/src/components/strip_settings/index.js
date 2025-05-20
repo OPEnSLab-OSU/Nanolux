@@ -133,11 +133,11 @@ const StripSettings = ({patterns, advanced = false}) => {
 						label="Mode"
 						tooltip={{
 							id: 'mode',
-							content: 'The mode the patterns will be displayed in. Strip Splitting splits multiple patterns separately, while Z-Layering layers patterns onto each other.',
+							content: 'The mode that patterns will be displayed in.',
 						}}
 						options={[
-							{option : "Strip Splitting", idx : RANGE_CONSTANTS.STRIP_SPLITTING_ID},
-							{option : "Z-Layering", idx : RANGE_CONSTANTS.Z_LAYERING_ID},
+							{option : "Strip Splitting", idx : RANGE_CONSTANTS.STRIP_SPLITTING_ID, tooltip : 'Splits the LED strip into sections up to 4 times based on how many patterns are added to the device.'},
+							{option : "Z-Layering", idx : RANGE_CONSTANTS.Z_LAYERING_ID, tooltip : "Renders up to 2 patterns that are layered on top of each other over the entire LED strip."},
 						]}
 						noSelection={false}
 						initial={data.mode}
@@ -150,7 +150,7 @@ const StripSettings = ({patterns, advanced = false}) => {
 						label="Transparency"
 						tooltip={{
 							id: 'transparency',
-							content: 'This slider adjusts the transparency of the LED strip.',
+							content: 'Adjusts how opaque or transparent a pattern is.',
 						}}
 						min={RANGE_CONSTANTS.ALPHA_MIN}
 						max={RANGE_CONSTANTS.ALPHA_MAX}
@@ -166,7 +166,7 @@ const StripSettings = ({patterns, advanced = false}) => {
 					label="Noise Threshold"
 					tooltip={{
 						id: 'threshold',
-						content: 'This slider adjusts how much noise it takes to display the pattern.',
+						content: 'Adjusts how much noise it takes to display a pattern.',
 					}}
 					min={RANGE_CONSTANTS.NOISE_MIN}
 					max={RANGE_CONSTANTS.NOISE_MAX}
@@ -184,11 +184,11 @@ const StripSettings = ({patterns, advanced = false}) => {
 						{inRange(data.pattern_count).map((data) => {
 							if(data.idx == selectedPattern){
 								return <button className={style.patternBtn} onClick={function() {setPattern(data.idx);}} key={data.idx} style="border-style:inset;">
-									Pattern {data.idx}
+									Pattern {data.idx + 1}
 								</button>
 							}else{
 								return <button className={style.patternBtn} onClick={function() {setPattern(data.idx);}} key={data.idx}>
-									Pattern {data.idx}
+									Pattern {data.idx + 1}
 								</button>
 							}
 						})}

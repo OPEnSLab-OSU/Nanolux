@@ -6,7 +6,7 @@ import 'react-tooltip/dist/react-tooltip.css';
  * id: string
  * content: ReactNode
  * offset?: integer (default 10)
- * style?: React.CSSProperties (default { fontSize: '1.2rem' })
+ * style?: React.CSSProperties (default { fontSize: '1.2rem', cursor: 'pointer' })
  * label?: React.ReactNode (default '(?)')
  * ...props on the trigger span
  */
@@ -14,8 +14,8 @@ const TooltipWrapper = ({
     id,
     content,
     offset = 10,
-    style = { fontSize: '1.2rem', cursor: 'pointer'},
-    label = ' (?)',
+    style = { fontSize: '1.2rem', cursor: 'pointer' },
+    label = '(?)',
     ...props
 }) => (
     <>
@@ -27,7 +27,11 @@ const TooltipWrapper = ({
         >
             {label}
         </span>
-        <Tooltip id={id} content={content} />
+        <Tooltip
+          id={id}
+          content={content}
+          style={style}
+        />
     </>
 );
 

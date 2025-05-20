@@ -85,7 +85,7 @@ const SystemControls = () => {
 					label="LED Strip Length"
 					tooltip={{
 						id: 'length',
-						content: 'This slider adjusts how much of the LED strip is used by the pattern.',
+						content: 'Adjusts how much of the LED strip is used by the device to display patterns',
 					}}
 					min={RANGE_CONSTANTS.LENGTH_MIN}
 					max={RANGE_CONSTANTS.LENGTH_MAX}
@@ -99,7 +99,7 @@ const SystemControls = () => {
 					label="LED Update Time (ms)"
 					tooltip={{
 						id: 'update',
-						content: 'This slider adjusts how fast the LED strip updates (lower number is faster).',
+						content: 'Adjusts how fast patterns are updated on the LED strip. Lower values mean patterns are updated faster.',
 					}}
 					min={RANGE_CONSTANTS.LOOP_MIN}
 					max={RANGE_CONSTANTS.LOOP_MAX}
@@ -113,11 +113,11 @@ const SystemControls = () => {
 					label="Debug Mode"
 					tooltip={{
 						id: 'debug',
-						content: 'Selection for debugging modes. Debug is standard mode, Simulation sends data to the device and receives it.',
+						content: 'Optional debugging modes for development.',
 					}}
 					options={[
-						{option : "Debug Out", idx : 1},
-						{option : "Simulator Out", idx : 2},
+						{option : "Debug Out", idx : 1, tooltip : "Prints pattern and strip data to the serial console for debugging."},
+						{option : "Simulator Out", idx : 2, tooltip : "Prints full LED frames as comma-separated (R,G,B) values to the serial console for simulating patterns externally."},
 					]}
 					noSelection={true}
 					initial={data.debug}

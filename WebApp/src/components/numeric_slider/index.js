@@ -55,14 +55,13 @@ const NumericSlider = ({
     return (
         <div>
             <div>
-                <span style={{fontSize: '1.2rem'}}>{label}</span>
                 {tooltip && (
                     <TooltipWrapper
                       id={tooltip.id}
                       content={tooltip.content}
                       offset={tooltip.offset}
                       style={tooltip.style}
-                      label={tooltip.label}
+                      label={label}
                     />
                 )}
             </div>

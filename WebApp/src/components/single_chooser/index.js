@@ -57,7 +57,11 @@ const SimpleChooser = ({
                     onChange={changeSelection}
                     checked={initial===option.idx}
                 />
-                {option.option}
+                <TooltipWrapper
+                  id={option.option}
+                  content={option.tooltip}
+                  label={option.option}
+                />
             </label>
         </span>
     });
@@ -68,14 +72,13 @@ const SimpleChooser = ({
     return (
         <div>
             <div>
-                <label style={{fontSize: '1.2rem'}}>{label}</label>
                 {tooltip && (
                     <TooltipWrapper
                       id={tooltip.id}
                       content={tooltip.content}
                       offset={tooltip.offset}
                       style={tooltip.style}
-                      label={tooltip.label}
+                      label={label}
                     />
                 )}
             </div>
