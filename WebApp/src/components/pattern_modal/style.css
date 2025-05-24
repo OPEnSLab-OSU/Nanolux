@@ -65,6 +65,7 @@
   margin: 0 0 0.5rem;
   color: var(--color-text);
   font-size: 1.3rem;
+  text-decoration: underline;
 }
 
 .patternItem p {

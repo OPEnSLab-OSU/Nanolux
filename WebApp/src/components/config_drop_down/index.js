@@ -48,26 +48,6 @@ const ConfigDropDown = ({
 
     return (
         <div>
-            {/* <Select
-                
-                selectedIndex={current.value}
-                onChange={(e)=>{
-                    current.value = e.target.selectedIndex;
-                    update(structureRef, current.value);
-            }}>
-                {(patternIdx <= configs.length && patternIdx >= 0) ?
-                    
-                    configs[patternIdx].map((optionName) => {
-                        return <Select.Item>{optionName}</Select.Item>;
-                    })
-                    
-                    :
-                    configs[0].map((optionName) => {
-                        return <Select.Item>{optionName}</Select.Item>;
-                    })
-
-                }
-            </Select> */}
             <label className={style.label} htmlFor="config-options">Config</label>
             <select
                 id="config-options"
