@@ -38,17 +38,17 @@ extern bool manual_control_enabled;
 /// Global formant array, used for accessing.
 extern double formants[3];
 
-const uint8_t MAX_HUE = 255;
-const uint8_t MIN_HUE = 0;
+uint8_t max_hue = 255;
+uint8_t min_hue = 0;
 
 
 // get frequency hue
-void getFhue(uint8_t min_hue, uint8_t max_hue){
+void getFhue(uint8_t tmin_hue, uint8_t tmax_hue){
   fHue = remap(
   log(audioAnalysis.getPeak()) / log(2),
   log(MIN_FREQUENCY) / log(2),
   log(MAX_FREQUENCY) / log(2),
-  MIN_HUE, MAX_HUE);
+  tmin_hue, tmax_hue);
   // disable min hue and max hue
   // 10, 240);
 }
@@ -63,6 +63,10 @@ void getVbrightness(){
     MAX_BRIGHTNESS);
 }
 
+void setHues(uint8_t tmin_hue, uint8_t tmax_hue){
+  min_hue = tmin_hue;
+  max_hue = tmax_hue;
+}
 
 void nextPattern() {
   // add one to the current pattern number, and wrap around at the end
@@ -809,12 +813,12 @@ void bar_fill(Strip_Buffer * buf, int len, Pattern_Data* params){
     }
   }
 
-  uint8_t hue_step = (MAX_HUE - MIN_HUE) / (len - 1);
+  uint8_t hue_step = (max_hue - min_hue) / (len - 1);
 
   // Apply the color to the strip.
   for(uint8_t i = 0; i < max_height; i++){
     buf->leds[i] = CHSV(
-      (MIN_HUE + hue_step * (i - 1)) % 255,
+      (min_hue + hue_step * (i - 1)) % 255,
       255,
       255
     );
@@ -827,63 +831,99 @@ void bar_fill(Strip_Buffer * buf, int len, Pattern_Data* params){
   
 }
 
+int getColor(int noteNumber) {
+  int baseNote = noteNumber % 12; 
+  
+  switch (baseNote) {
+    case 0:  return 0;      // C - Red
+    case 1:  return 21;     // C# - Reddish-Orange
+    case 2:  return 43;     // D - Yellow
+    case 3:  return 64;     // D# - Yellow-Green
+    case 4:  return 85;     // E - Green
+    case 5:  return 106;    // F - Cyan-Green
+    case 6:  return 127;    // F# - Cyan
+    case 7:  return 148;    // G - Blue
+    case 8:  return 170;    // G# - Indigo/Purple
+    case 9:  return 191;    // A - Magenta
+    case 10: return 212;    // A# - Pinkish
+    case 11: return 234;    // B - Violet
+    default: return 0;        // Debugging case (shouldn't occur)
+  }
+}
+
 void blendIn(Strip_Buffer * buf, int len, Pattern_Data* params){
-  // double* vReal = audioAnalysis.getVReal();
-  // CHSV backColor;
-  // CHSV corrColor;
-  // switch(params->config){
-  //         case 0:
-  //         default:
-  //             backColor = CHSV(0, 0, 0);
-  //             corrColor = CHSV(0, 0, 255);
-  // }
-  // for(int i = 0; i < len; i++){
-  //     int blending = remap(vReal[i], MIN_FREQUENCY, MAX_FREQUENCY, 0, 256);
-  //     buf->leds[i] = blend(backColor, corrColor, blending);
-  // }
+  CHSV backColor;
+   CHSV corrColor;
+   double* vReal = audioAnalysis.getVReal();
+   switch(params->config){
+           case 0:
+           default:
+               backColor = CHSV(194, 255, 255);
+               corrColor = CHSV(83, 38, 255);
+   }
+   for(int i = 0; i < len; i++){
+      if(vReal[i] > 200){
+        int blending = map(vReal[i], MIN_FREQUENCY, MAX_FREQUENCY, 0, 255);
+       buf->leds[i] = blend(backColor, corrColor, blending, SHORTEST_HUES);
+      }
+   }
 }
 
 
 void bleedThrough(Strip_Buffer * buf, int len, Pattern_Data* params){
-  // CHSV backColor;
-  // CHSV corrColor;
-  // fadeToBlackBy(buf->leds, len, 20);
-  // switch(params->config){
-  //     case 0:
-  //     default:
-  //         backColor = CHSV(0, 0, 0);
-  //         corrColor = CHSV(0, 0, 255);
-  // }
-  // int blending = remap(audioAnalysis.getPeak(), MIN_FREQUENCY, MAX_FREQUENCY, 0, 256);
-  // buf->vol_pos += blending;
-  // if (buf->vol_pos > 256){
-  //     buf->vol_pos = 256;
-  // }
-  // fill_solid(buf->leds, len, blend(backColor, corrColor, buf->vol_pos));
-  // if (buf->vol_pos == 256){
-  //     CHSV tempColor = backColor;
-  //     backColor = corrColor;
-  //     corrColor = tempColor;
-  //     buf->vol_pos = 0;
-  // }
+  double volume = audioAnalysis.getVolume();
+  static int prog = 0;
+  //fadeToBlackBy(buf->leds, len, 12);
+  int blending = remap(volume, MIN_VOLUME, MAX_VOLUME, 0, 60);
+  Serial.println(blending);
+  //int blending = remap(log(peak) / log(2), log(MIN_FREQUENCY) / log(2), log(MAX_FREQUENCY) / log(2), 0, 30);
+  if(volume > 20){
+    buf->vol_pos += blending;
+  }
+  if (buf->vol_pos > 255){
+   buf->vol_pos = 255;
+ }
+ CHSV backColor = CHSV(getColor(prog), 255, remap(volume, MIN_VOLUME, MAX_VOLUME, 30, 255));
+ CHSV corrColor = CHSV(getColor(prog + 1), 255, remap(volume, MIN_VOLUME, MAX_VOLUME, 30, 255));
+ for(int i = len - 1; i > 0; i--){
+   buf->leds[i] = buf->leds[i - 1];
+ }
+ buf->leds[0] = blend(backColor, corrColor, buf->vol_pos, SHORTEST_HUES);
+ //fill_solid(buf->leds, len, blend(backColor, corrColor, buf->vol_pos, SHORTEST_HUES));
+ if (buf->vol_pos == 255){
+     prog++;
+     prog = prog % 12;
+     buf->vol_pos = 0;
+ }
 }
-
 
 void showcasePercussion(Strip_Buffer * buf, int len, Pattern_Data* params){
   bool percussionPresent = audioAnalysis.getPercussionPresence();
   static bool perc = false;
-
-
+  Serial.println(percussionPresent);
+  //fadeToBlackBy(buf->leds, len, 150);
   //percussionPresent is a hypothetical external bool that detects if percussion is present
   if (percussionPresent != perc){
     if (percussionPresent){
-      buf->leds[len] = CHSV(fHue, 255, vbrightness);
+      buf->leds[0] = CHSV(150, 255, 200);
+      buf->leds[len] = CHSV(150, 255, 200);
+      //setColorHSV(buf->leds, 150, 255, 255, len);
+      Serial.print("AHHH");
+    }
+    else{
+      buf->leds[0] = CHSV(0, 0, 0);
+      buf->leds[len] = CHSV(0, 0, 0);
     }
     perc = percussionPresent;
   }
-  for (int i = 0; i < len - 1; i++){
-    buf->leds[i] = buf->leds[i + 1];
+  else{
+    buf->leds[0] = CHSV(0, 0, 0);
+    buf->leds[len] = CHSV(0, 0, 0);
   }
+  for(int i = len-1; i > 0; i--) {
+    buf->leds[i] = buf->leds[i-1];
+  }
+  blur1d(buf->leds, len, 20);
 }
 
 
@@ -1108,3 +1148,163 @@ void noteEQ(Strip_Buffer *buf, int len, Pattern_Data* params) {
     }
   }
 }
+
+CHSV getStringColor(int noteNumber, double volum) {
+  int brit = remap(volum, MIN_VOLUME, MAX_VOLUME, 0, 255);
+  switch (noteNumber) {
+    case 0:  return CHSV(0, 255, 255);      // C - Red
+    //case 1:  return CHSV(21, 255, 255);     // C# - Reddish-Orange
+    case 1:  return CHSV(43, 255, 255);     // D - Yellow
+    //case 3:  return CHSV(64, 255, 255);     // D# - Yellow-Green
+    case 2:  return CHSV(85, 255, 255);     // E - Green
+    case 3:  return CHSV(127, 255, 255);    // F# - Cyan
+    default: return CHSV(0, 0, 255);        // Debugging case (shouldn't occur)
+  }
+}
+
+double findString(double frequency){
+  const int stringStartArray[] = {82, 110, 147, 196, 247, 330};
+  if(frequency > 659){
+    return -1;
+  }
+  for(int i = 0; i < 6; i++){
+    if(frequency > stringStartArray[i]){
+      return i;
+    }
+  }
+  return -1;
+}
+
+void stringTheory(Strip_Buffer *buf, int len, Pattern_Data* params) {
+  double peak = audioAnalysis.getPeak();
+  double volume = audioAnalysis.getVolume();
+  //Based on the instrument, have a moving light based on peak frequency corresponding to the string of a guitar
+  //Each string of a guitar has a min-max range, distinguish between these strings through color
+  //Use centroid compared to logarithmically adjusted frequency values to determine which string it's closest to
+  //Use peak adjusted to the min/max to show where on the strip the light should be placed
+  fadeToBlackBy(buf->leds, len, 10);
+  const int stringStartArray[] = {196, 294, 440, 659};
+  const int stringEndArray[] = {293, 439, 658, 1008};
+  int numStrings = 4;
+  //double newPeak = maxRange(stringStartArray[0], stringEndArray[3]);
+  Serial.println(peak);
+  for(int i = 0; i < numStrings; i++){
+    if(peak >= stringStartArray[i] && peak <= stringEndArray[i]){
+      if(volume > 150){
+        int value = remap(log(peak) / log(2), log(stringStartArray[i]) / log(2), log(stringEndArray[i]) / log(2), len * 2/3, len);
+        CHSV noteColor = getStringColor(i, volume);
+        buf->leds[value] = noteColor;
+        break;
+      }
+    }
+  }
+  //For hypothetical noisiness variable, use it as a replacement to showcase vibrato by changing its presentation
+  blur1d(buf->leds, len, 20);
+}
+
+void splashTheory(Strip_Buffer *buf, int len, Pattern_Data* params){
+  //find the peak, determine a size of area around that peak as the 'splashzone' and create splash effects around that zone 
+  double peak = audioAnalysis.getPeak();
+  double volume = audioAnalysis.getVolume();
+  CHSV backColor = CHSV(127, 255, 255);
+  CHSV corrColor = CHSV(40, 255, 255);
+  int splashVolume = remap(volume, MIN_VOLUME, MAX_VOLUME, 0, len);
+  //int goes from 1-4 and is a measure of brightness. dims slowly
+  CRGB nextWave[len] = {0};
+  for(int i = 1; i < len - 1; i++){
+    float beforebright = rgb2hsv_approximate(buf->leds[i-1]).v;
+    float afterbright = rgb2hsv_approximate(buf->leds[i+1]).v;
+    if(beforebright > 0 || afterbright > 0){
+      int locate;
+      if(beforebright > afterbright){
+        locate = i - 1;
+      }
+      else{
+        locate = i + 1;
+      }
+      nextWave[i] = buf->leds[locate];
+    }
+    else{
+      nextWave[i] = CHSV(0, 0, 0);
+    }
+  }
+  for(int i = 0; i < len; i++){
+    buf->leds[i] = nextWave[i];
+  }
+  fadeToBlackBy(buf->leds, len, 70);
+  int variance = random16(-10, 10);
+  splashVolume += variance;
+  if(splashVolume > len){
+    splashVolume = len;
+  }
+  if(splashVolume < 0){
+    splashVolume = 0;
+  }
+  int blending = remap(peak, MIN_FREQUENCY, MAX_FREQUENCY, 0, 255);
+  buf->leds[splashVolume] = blend(backColor, corrColor, blending, LONGEST_HUES);
+  if(splashVolume != len && splashVolume != 0){
+    buf->leds[splashVolume + 1] = blend(backColor, corrColor, blending, LONGEST_HUES);
+    buf->leds[splashVolume - 1] = blend(backColor, corrColor, blending, LONGEST_HUES);
+  }
+  //blur1d(buf->leds, len, 20);
+}
+
+void deltaHeat(Strip_Buffer *buf, int len, Pattern_Data* params) {
+  float* delta = audioAnalysis.getDeltas();
+  static int heat[MAX_LEDS];
+  for(int i = 0; i < len; i++){
+    if (heat[i] < 0){
+      heat[i] += 20;
+    }
+    if (heat[i] > 0){
+      heat[i] -= 20;
+    }
+  }
+  int highDelta = delta[0];
+  int lowDelta = delta[0];
+  for(int i = 0; i < len; i++){
+    if(delta[i] > highDelta){
+      highDelta = delta[i];
+    }
+    if(delta[i] < lowDelta){
+      lowDelta = delta[i];
+    }
+  }
+  for(int i = 0; i < len; i++){
+    //heat[i] -= 30;
+    heat[i] += remap(delta[i], lowDelta, highDelta, 0, 30);
+  }
+  for(int i = 0; i < len; i++){
+    int hue;
+    if (heat[i] > 0){
+      hue = 0;
+    }
+    else{
+      hue = 148;
+    }
+    buf->leds[i] = CHSV(hue, 255, heat[i]);
+  }
+  blur1d(buf->leds, len, 20);
+}
+
+void gradient(Strip_Buffer *buf, int len, Pattern_Data* params){
+  double* vReal = audioAnalysis.getVReal();
+  /*
+  for (int i = 0; i < len; i++) {
+    //int brit = map(vReal[i], MIN_FREQUENCY, MAX_FREQUENCY, 0, 255); // The brightness is based on HOW MUCH of the frequency exists
+    int hue = map(vReal[i], MIN_FREQUENCY, 2000, 0, 43); // The fue is based on position on the light strip, ergo, what frequency it is at
+    if (vReal[i] > 200) { // An extra gate because the frequency array is really messy without it
+      buf->leds[i] = CHSV(hue, 255, 200);
+    }
+  }
+  blur1d(buf->leds, len, 20);
+  */
+   for (int i = 0; i < len; i++) {
+    int brit = map(log(vReal[i]) / log(2), log(MIN_FREQUENCY) / log(2), log(MAX_FREQUENCY) / log(2), 0, 255); // The brightness is based on HOW MUCH of the frequency exists
+    int hue = map(i, 0, len, 0, 255); // The fue is based on position on the light strip, ergo, what frequency it is at
+    if (vReal[i] > 200) { // An extra gate because the frequency array is really messy without it
+      buf->leds[i] = CHSV(hue, 255, brit);
+    }
+  }
+} 
+

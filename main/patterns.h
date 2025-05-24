@@ -114,4 +114,11 @@ void synesthesiaRolling(Strip_Buffer *buf, int len, Pattern_Data* params);
 
 void noteEQ(Strip_Buffer *buf, int len, Pattern_Data* params);
 
+void stringTheory(Strip_Buffer *buf, int len, Pattern_Data* params);
+
+void splashTheory(Strip_Buffer *buf, int len, Pattern_Data* params);
+
+void deltaHeat(Strip_Buffer *buf, int len, Pattern_Data* params);
+
+void gradient(Strip_Buffer *buf, int len, Pattern_Data* params);
 #endif
