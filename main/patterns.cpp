@@ -417,7 +417,7 @@ void glitch(Strip_Buffer * buf, int len, Pattern_Data * params ) {
 /// @param len The length of LEDs to process
 /// @param params Pointer to Pattern_Data structure containing configuration options.
 void bands(Strip_Buffer* buf, int len, Pattern_Data* params) {
-    double *fbs = audioAnalysis.getFiveBandSplit(len);
+    float *fbs = audioAnalysis.getFiveBandSplit(len);
         
     double avg1 = 0;
     double avg2 = 0;
@@ -624,7 +624,7 @@ void bands(Strip_Buffer* buf, int len, Pattern_Data* params) {
 /// @param len The length of LEDs to process
 /// @param params Pointer to Pattern_Data structure containing configuration options.
 void eq(Strip_Buffer * buf, int len, Pattern_Data* params) {
-  double* vReal = audioAnalysis.getVReal();
+  float* vReal = audioAnalysis.getVReal();
 
   for (int i = 0; i < len; i++) {
     int brit = map(vReal[i], MIN_FREQUENCY, MAX_FREQUENCY, 0, 255); // The brightness is based on HOW MUCH of the frequency exists
@@ -702,8 +702,8 @@ void tug_of_war(Strip_Buffer * buf, int len, Pattern_Data* params) {
 /// @param len The length of LEDs to process
 /// @param params Pointer to Pattern_Data structure containing configuration options.
 void Fire2012(Strip_Buffer * buf, int len, Pattern_Data* params){
-  double volume = audioAnalysis.getVolume();
-  double* vReal = audioAnalysis.getVReal();
+  float volume = audioAnalysis.getVolume();
+  float* vReal = audioAnalysis.getVReal();
 
   int sparkVolume = remap(volume, MIN_VOLUME, MAX_VOLUME, 10,200);
   //int coolingVolume = remap(volume, MIN_VOLUME, MAX_VOLUME, 60, 40);
@@ -797,7 +797,7 @@ void vowels_raindrop(Strip_Buffer * buf, int len, Pattern_Data* params){
 /// @param len The length of LEDs to process
 /// @param params Pointer to Pattern_Data structure containing configuration options.
 void bar_fill(Strip_Buffer * buf, int len, Pattern_Data* params){
-  double volume = audioAnalysis.getVolume();
+  float volume = audioAnalysis.getVolume();
   uint8_t max_height = 0;
 
   switch(params->config) {
@@ -854,7 +854,7 @@ int getColor(int noteNumber) {
 void blendIn(Strip_Buffer * buf, int len, Pattern_Data* params){
   CHSV backColor;
    CHSV corrColor;
-   double* vReal = audioAnalysis.getVReal();
+   float* vReal = audioAnalysis.getVReal();
    switch(params->config){
            case 0:
            default:
@@ -871,7 +871,7 @@ void blendIn(Strip_Buffer * buf, int len, Pattern_Data* params){
 
 
 void bleedThrough(Strip_Buffer * buf, int len, Pattern_Data* params){
-  double volume = audioAnalysis.getVolume();
+  float volume = audioAnalysis.getVolume();
   static int prog = 0;
   //fadeToBlackBy(buf->leds, len, 12);
   int blending = remap(volume, MIN_VOLUME, MAX_VOLUME, 0, 60);
@@ -1056,8 +1056,8 @@ CHSV getColorForNote(int noteNumber) {
 
 // Maps the current note to a color.
 void synesthesiaRolling(Strip_Buffer *buf, int len, Pattern_Data* params) {
-  double volume = audioAnalysis.getVolume();
-  double peak   = audioAnalysis.getPeak();
+  float volume = audioAnalysis.getVolume();
+  float peak   = audioAnalysis.getPeak();
 
   // Convert peak to a midi note
   float currentNote = 12 * log(peak / 440) / log(2.0) + 69;
@@ -1102,8 +1102,8 @@ void synesthesiaRolling(Strip_Buffer *buf, int len, Pattern_Data* params) {
 
 // Maps the current note to a section on the led strip
 void noteEQ(Strip_Buffer *buf, int len, Pattern_Data* params) {
-  double volume = audioAnalysis.getVolume();
-  double peak   = audioAnalysis.getPeak();
+  float volume = audioAnalysis.getVolume();
+  float peak   = audioAnalysis.getPeak();
 
   // Static variables for smoothing and tracking previous states
   static float maxVolume = volume;
@@ -1176,8 +1176,8 @@ double findString(double frequency){
 }
 
 void stringTheory(Strip_Buffer *buf, int len, Pattern_Data* params) {
-  double peak = audioAnalysis.getPeak();
-  double volume = audioAnalysis.getVolume();
+  float peak = audioAnalysis.getPeak();
+  float volume = audioAnalysis.getVolume();
   //Based on the instrument, have a moving light based on peak frequency corresponding to the string of a guitar
   //Each string of a guitar has a min-max range, distinguish between these strings through color
   //Use centroid compared to logarithmically adjusted frequency values to determine which string it's closest to
@@ -1204,8 +1204,8 @@ void stringTheory(Strip_Buffer *buf, int len, Pattern_Data* params) {
 
 void splashTheory(Strip_Buffer *buf, int len, Pattern_Data* params){
   //find the peak, determine a size of area around that peak as the 'splashzone' and create splash effects around that zone 
-  double peak = audioAnalysis.getPeak();
-  double volume = audioAnalysis.getVolume();
+  float peak = audioAnalysis.getPeak();
+  float volume = audioAnalysis.getVolume();
   CHSV backColor = CHSV(127, 255, 255);
   CHSV corrColor = CHSV(40, 255, 255);
   int splashVolume = remap(volume, MIN_VOLUME, MAX_VOLUME, 0, len);
@@ -1288,7 +1288,7 @@ void deltaHeat(Strip_Buffer *buf, int len, Pattern_Data* params) {
 }
 
 void gradient(Strip_Buffer *buf, int len, Pattern_Data* params){
-  double* vReal = audioAnalysis.getVReal();
+  float* vReal = audioAnalysis.getVReal();
   /*
   for (int i = 0; i < len; i++) {
     //int brit = map(vReal[i], MIN_FREQUENCY, MAX_FREQUENCY, 0, 255); // The brightness is based on HOW MUCH of the frequency exists
