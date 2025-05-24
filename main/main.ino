@@ -68,7 +68,6 @@ extern Pattern mainPatterns[];
 /// MANUAL CONTROL VARIABLES
 volatile bool manual_control_enabled = false;
 int encoderDelta;
-Pattern_Data manual_pattern;    //Only used with VERSION_2_HARDWARE
 
 /// Stores the last state of the rotary encoder button.
 bool lastEncoderBtnPressed = false;
@@ -346,50 +345,28 @@ void print_buffer(CRGB *buf, uint8_t len) {
 
 /// @brief Processes all calls to hardware and manages the results
 /// of those calls.
-///
-/// This function includes an ifdef else directive which checks for
-/// a macro called VERSION_2_HARDWARE. This macro is defined or
-/// commented out at the start of nanolux_util.h. If your hardware has
-/// a rotary encoder and button combo, ensure this macro is not
-/// commented.
 void update_hardware(){
 
-  #ifdef VERSION_2_HARDWARE
+  if (isEncoderButtonPressed() != lastEncoderBtnPressed)
+    loaded_patterns.pattern[0].postprocessing_mode = (uint8_t) ((loaded_patterns.pattern[0].postprocessing_mode + 1) % 4);
+  
+  //Serial.println(loaded_patterns.pattern[0].postprocessing_mode);
 
-    if (isEncoderButtonPressed() != lastEncoderBtnPressed)
-      loaded_patterns.pattern[0].postprocessing_mode = (uint8_t) ((loaded_patterns.pattern[0].postprocessing_mode + 1) % 4);
-    
-    //Serial.println(loaded_patterns.pattern[0].postprocessing_mode);
+  lastEncoderBtnPressed = isEncoderButtonPressed();
 
-    lastEncoderBtnPressed = isEncoderButtonPressed();
+  process_reset_button(isEncoderButtonPressed());
 
-    process_reset_button(isEncoderButtonPressed());
+  encoderDelta = encoder_delta();
 
-    encoderDelta = encoder_delta();
+  if (encoderDelta != 0) {
+    //Serial.print("Encoder changed by: "); Serial.println(encoderDelta);
 
-    if (encoderDelta != 0) {
-      //Serial.print("Encoder changed by: "); Serial.println(encoderDelta);
+    loaded_patterns.pattern[0].idx = (uint8_t) ((loaded_patterns.pattern[0].idx + encoderDelta + NUM_PATTERNS) % NUM_PATTERNS);
+    pattern_changed = true;
+    manual_control_enabled = true;
 
-      loaded_patterns.pattern[0].idx = (uint8_t) ((loaded_patterns.pattern[0].idx + encoderDelta + NUM_PATTERNS) % NUM_PATTERNS);
-      pattern_changed = true;
-      manual_control_enabled = true;
-
-      //Serial.print("New pattern index: "); Serial.println(loaded_patterns.pattern[0].idx);
-    }
-
-  #else
-
-    process_reset_button(!digitalRead(BUTTON_PIN));  // Manage resetting saves if button held
-    
-    if(button_pressed){
-      manual_pattern.idx = (manual_control_enabled + manual_pattern.idx) % NUM_PATTERNS;
-      manual_control_enabled = true;
-    }
-
-    reset_button_state();  // Check for user button input
-
-  #endif
-
+    //Serial.print("New pattern index: "); Serial.println(loaded_patterns.pattern[0].idx);
+  }
 }
 
 /// @brief Runs the main program loop.
