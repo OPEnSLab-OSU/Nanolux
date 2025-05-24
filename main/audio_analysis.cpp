@@ -6,8 +6,7 @@
 extern unsigned int sampling_period_us;
 
 AudioAnalysis::AudioAnalysis()
-: FFT(vReal, vImag, SAMPLES, SAMPLING_FREQUENCY)
-, fftHistory(2)
+: fftHistory(2)
 , volumeModule()
 , peaksModule()
 , deltaModule()
@@ -53,7 +52,6 @@ AudioAnalysis::AudioAnalysis()
   noisinessModule.setSpectrogram(&fftHistory);
 }
 
-
 void AudioAnalysis::resetCache() {
   sampled = fftComputed = peakUpdated = false;
   deltasUpdated = volumeUpdated = false;
@@ -62,9 +60,7 @@ void AudioAnalysis::resetCache() {
   maxDeltaUpdated = fbsUpdated = false;
 }
 
-
 // Step‑wise runners (to be changed)
-
 
 void AudioAnalysis::runSampleAudio() {
   if (!sampled) {
@@ -73,7 +69,6 @@ void AudioAnalysis::runSampleAudio() {
   }
 }
 
-
 void AudioAnalysis::runComputeFFT() {
   if (!fftComputed) {
     compute_FFT();
@@ -81,14 +76,13 @@ void AudioAnalysis::runComputeFFT() {
   }
 }
 
-
 // Getters (with caching)
 
-double* AudioAnalysis::getVReal() {
+float* AudioAnalysis::getVReal() {
   return vReal;
 }
 
-double AudioAnalysis::getPeak() {
+float AudioAnalysis::getPeak() {
   if (!peakUpdated) {
     update_peak();
     peakUpdated = true;
@@ -96,15 +90,13 @@ double AudioAnalysis::getPeak() {
   return peak;
 }
 
-
-double AudioAnalysis::getVolume() {
+float AudioAnalysis::getVolume() {
   if (!volumeUpdated) {
     update_volume();
     volumeUpdated = true;
   }
   return volume;
 }
-
 
 int AudioAnalysis::getMaxDelta() {
   if (!maxDeltaUpdated) {
@@ -114,7 +106,6 @@ int AudioAnalysis::getMaxDelta() {
   return maxDelt;
 }
 
-
 float* AudioAnalysis::getDeltas() {
   if (!deltasUpdated) {
     update_deltas();
@@ -122,7 +113,6 @@ float* AudioAnalysis::getDeltas() {
   }
   return delt;
 }
-
 
 int* AudioAnalysis::getSalientFreqs() {
   if (!salientsUpdated) {
@@ -132,7 +122,6 @@ int* AudioAnalysis::getSalientFreqs() {
   return salFreqs;
 }
 
-
 float AudioAnalysis::getCentroid() {
   if (!centroidUpdated) {
     update_centroid();
@@ -140,7 +129,6 @@ float AudioAnalysis::getCentroid() {
   }
   return centroid;
 }
-
 
 bool AudioAnalysis::getPercussionPresence() {
   if (!percussionUpdated) {
@@ -150,7 +138,6 @@ bool AudioAnalysis::getPercussionPresence() {
   return percussionPresent;
 }
 
-
 float AudioAnalysis::getNoisiness() {
   if (!noisinessUpdated) {
     update_noisiness();
@@ -159,8 +146,7 @@ float AudioAnalysis::getNoisiness() {
   return noisiness;
 }
 
-
-double* AudioAnalysis::getFiveBandSplit(int len) {
+float* AudioAnalysis::getFiveBandSplit(int len) {
   if (!fbsUpdated) {
     update_five_band_split(len);
     fbsUpdated = true;
@@ -168,54 +154,99 @@ double* AudioAnalysis::getFiveBandSplit(int len) {
   return fbs;
 }
 
-
 // Internal Implementations
-
 
 void AudioAnalysis::sample_audio() {
   for (int i = 0; i < SAMPLES; i++) {
     unsigned long t0 = micros();
-    vReal[i] = analogRead(ANALOG_PIN);
-    vImag[i] = 0;
+    float sample = analogRead(ANALOG_PIN);
+    // operator=(float) will set .re = sample, .im = 0
+    fftBuffer[i] = sample;
     while (micros() - t0 < sampling_period_us) { }
   }
 }
 
-
 void AudioAnalysis::compute_FFT() {
-  FFT.dcRemoval(vReal, SAMPLES);
-  FFT.windowing(vReal, SAMPLES, FFT_WIN_TYP_HAMMING, FFT_FORWARD);
-  FFT.compute(vReal, vImag, SAMPLES, FFT_FORWARD);
-  FFT.complexToMagnitude(vReal, vImag, SAMPLES);
-
-
-  // copy into float array for AudioPrism
+  // 1) DC removal
+  float mean = 0;
   for (int i = 0; i < SAMPLES; i++) {
-    audioPrismInput[i] = static_cast<float>(vReal[i]);
+    mean += fftBuffer[i].re();        
   }
-  fftHistory.pushWindow(audioPrismInput);
-}
 
+  mean /= SAMPLES;
+
+  for (int i = 0; i < SAMPLES; i++) {
+    fftBuffer[i] -= mean;      
+  }       
+
+  // Hamming window
+  for (int i = 0; i < SAMPLES; i++) {
+    float w = 0.54f - 0.46f * cosf(2.0f * M_PI * i / (SAMPLES - 1));
+    fftBuffer[i] *= w;                
+  }
+
+  // 3) In-place FFT
+  Fast4::FFT(fftBuffer, SAMPLES);
+
+  // Magnitude conversion 
+  for (int i = 0; i < SAMPLES; i++) {
+    float re = fftBuffer[i].re();    
+    float im = fftBuffer[i].im();   
+    vReal[i] = sqrtf(re*re + im*im);
+  }
+
+  fftHistory.pushWindow(vReal);
+}
 
 void AudioAnalysis::update_peak() {
-  peak = FFT.majorPeak(vReal, SAMPLES, SAMPLING_FREQUENCY);
-}
+  const int half = SAMPLES/2;
 
+  // 1) find the bin with maximum magnitude (skip DC bin 0)
+  int maxBin = 1;
+  for (int i = 2; i < (SAMPLES / 2); ++i) {
+    if (vReal[i] > vReal[maxBin]) {
+      maxBin = i;
+    }
+  }
+
+  // 2) if we're at the very edges, fall back to the bin center
+  if (maxBin <= 0 || maxBin >= (SAMPLES / 2) - 1) {
+    peak = maxBin * (float(SAMPLING_FREQUENCY) / SAMPLES);
+    return;
+  }
+
+  // 3) grab the three magnitudes around the peak
+  float y0 = vReal[maxBin - 1];
+  float y1 = vReal[maxBin];
+  float y2 = vReal[maxBin + 1];
+
+  // 4) compute the bin offset via parabolic (quadratic) interpolation
+  //    δ =  ½ * (y0 - y2) / (y0 - 2*y1 + y2)
+  float denom = (y0 - 2.0f * y1 + y2);
+  float delta = 0.0f;
+  if (denom != 0.0f) {
+    delta = 0.5f * (y0 - y2) / denom;
+  }
+
+  // 5) compute the “true” peak bin
+  float peakBin = maxBin + delta;
+
+  // 6) convert to Hz
+  peak = peakBin * (float(SAMPLING_FREQUENCY) / SAMPLES);
+}
 
 void AudioAnalysis::update_volume() {
   volumeModule.doAnalysis();
   volume = volumeModule.getOutput();
 }
 
-
 void AudioAnalysis::update_deltas() {
   deltaModule.doAnalysis();
   float* d = deltaModule.getOutput();
-  for (int i = 0; i < (SAMPLES / 2); i++) {
+  for (int i = 0; i < (SAMPLES); i++) {
     delt[i] = d[i];
   }
 }
-
 
 void AudioAnalysis::update_max_delta() {
   if (!deltasUpdated) {
@@ -224,25 +255,21 @@ void AudioAnalysis::update_max_delta() {
   maxDelt = (largest(delt, SAMPLES / 2));
 }
 
-
 void AudioAnalysis::update_salient_freqs() {
   salientModule.doAnalysis();
   int* out = salientModule.getOutput();
   memcpy(salFreqs, out, sizeof(salFreqs));
 }
 
-
 void AudioAnalysis::update_centroid() {
   centroidModule.doAnalysis();
   centroid = centroidModule.getOutput();
 }
 
-
 void AudioAnalysis::update_percussion_detection() {
   percussionModule.doAnalysis();
   percussionPresent = percussionModule.getOutput();
 }
-
 
 void AudioAnalysis::update_noisiness() {
   noisinessModule.doAnalysis();
@@ -251,11 +278,11 @@ void AudioAnalysis::update_noisiness() {
 
 void AudioAnalysis::update_five_band_split(int len) {
   // Define the volumes to be calculated
-  double vol1 = 0;
-  double vol2 = 0;
-  double vol3 = 0;
-  double vol4 = 0;
-  double vol5 = 0;
+  float vol1 = 0;
+  float vol2 = 0;
+  float vol3 = 0;
+  float vol4 = 0;
+  float vol5 = 0;
   // Sum the frequencies
   for (int i = 5; i < SAMPLES-3; i++) {
     if (0 <= i && i < len/6) {

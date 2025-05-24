@@ -1,64 +1,56 @@
 // AudioAnalysis.h
 
-
 #ifndef AUDIO_ANALYSIS_H
 #define AUDIO_ANALYSIS_H
 
-
 #include <Arduino.h>
-#include "arduinoFFT.h"
+#include <complex.h>
+#include <Fast4ier.h>
+#include <math.h>
 #include "AudioPrism.h"
 #include "nanolux_types.h"
 #include "nanolux_util.h"
-
 
 class AudioAnalysis {
 public:
   AudioAnalysis();
 
-
+  // Runners for sampleing and FFT
   void runSampleAudio();
   void runComputeFFT();
 
-
   // Accessors (cache their analysis on first call each loop)
-  double* getVReal();
-  double  getPeak();
-  double  getVolume();
+  float*  getVReal();
+  float   getPeak();
+  float   getVolume();
   int     getMaxDelta();
   float*  getDeltas();
   int*    getSalientFreqs();
   float   getCentroid();
   bool    getPercussionPresence();
   float   getNoisiness();
-  double* getFiveBandSplit(int len);
+  float*  getFiveBandSplit(int len);
 
-
-  // Call at the end of your loop to clear the flags
+  // Call at the end of the loop to clear the flags
   void resetCache();
-
 
 private:
   // result cache
-  double volume            = 0;
-  double peak              = 0;
-  int    maxDelt           = 0;
-  int    salFreqs[3]       = {0,0,0};
-  float  centroid          = 0;
-  bool   percussionPresent = false;
-  float  noisiness         = 0;
-  double fbs[5]            = {0,0,0,0,0};
-
+  float volume            = 0;
+  float peak              = 0;
+  int   maxDelt           = 0;
+  int   salFreqs[3]       = {0,0,0};
+  float centroid          = 0;
+  bool  percussionPresent = false;
+  float noisiness         = 0;
+  float fbs[5]            = {0,0,0,0,0};
 
   // Internal buffers
-  double vReal[SAMPLES];
-  double vImag[SAMPLES];
-  float  audioPrismInput[SAMPLES];
-  float  delt[SAMPLES];
- 
+  complex fftBuffer[SAMPLES];
+  float   vReal[SAMPLES];
+  float   delt[SAMPLES];
 
-
-  ArduinoFFT<double>       FFT;
+  // AudioPrism modules
   Spectrogram              fftHistory;
   MeanAmplitude            volumeModule;
   MajorPeaks               peaksModule;
@@ -67,7 +59,6 @@ private:
   Centroid                 centroidModule;
   PercussionDetection      percussionModule;
   Noisiness                noisinessModule;
-
 
   // Flags
   bool sampled           = false;
@@ -81,7 +72,6 @@ private:
   bool percussionUpdated = false;
   bool noisinessUpdated  = false;
   bool fbsUpdated        = false;
-
 
   // Helper funcs
   void sample_audio();

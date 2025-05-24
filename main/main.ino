@@ -396,7 +396,7 @@ void update_hardware(){
 /// Carries out functions related to timing and updating the
 /// LED strip.
 void loop() {
-  begin_loop_timer(config.loop_ms);  // Begin timing this loop
+  begin_loop_timer(20);  // Begin timing this loop
 
   audioAnalysis.runSampleAudio();
 
@@ -464,6 +464,8 @@ void loop() {
   if (config.debug_mode == 2)
     print_buffer(smoothed_output, config.length);
 
+  audioAnalysis.resetCache();
+
   // Update the web server while waiting for the current
   // frame to complete.
   do {
@@ -471,8 +473,6 @@ void loop() {
   } while (timer_overrun() == 0);
 
   update_web_server();
-
-  audioAnalysis.resetCache();
 }
 
 /// @brief Performs audio analysis by running audio_analysis.cpp's
@@ -485,6 +485,16 @@ void audio_analysis() {
     const int start = micros();
   #endif
 
+  // Arduino FFT   16 / 128
+  // Fast4ier      13 / 128
+  //               27 / 256
+  // with centroid (and everything)
+  //               27 / 256
+
+  // whole loop    39 / 256
+  // whole loop    
+
+  
   #ifdef SHOW_TIMINGS
     const int end = micros();
     Serial.printf("Audio analysis: %d ms\n", (end - start) / 1000);
