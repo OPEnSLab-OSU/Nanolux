@@ -28,19 +28,20 @@
         <article>
             <pre class="prettyprint source linenums"><code>import RANGE_CONSTANTS from '../../utils/constants';
 import NumericSlider from "../numeric_slider";
-import {useState, useEffect} from "preact/hooks";
-import {
-	getStripSettings,
-	updateStripSettings} from "../../utils/api";
-import {useConnectivity} from "../../context/online_context";
+import { useState, useEffect } from "preact/hooks";
+import { getStripSettings, updateStripSettings } from "../../utils/api";
+import { useConnectivity } from "../../context/online_context";
 import useInterval from "../../utils/use_interval";
 import { LabelSpinner } from '../spinner';
 import SimpleChooser from '../single_chooser';
 import style from './style.css';
 import PatternSettings from '../pattern_settings';
+import PatternModal from "../../components/pattern_modal";
 
-const StripSettings = ({patterns}) => {
+const StripSettings = ({patterns, advanced = false}) => {
 
+	const [isModalOpen, setIsModalOpen] = useState(false);
+	
 	// Checks if the web app is connected to the device.
 	const { isConnected } = useConnectivity();
 
@@ -126,6 +127,14 @@ const StripSettings = ({patterns}) => {
 		}
 	}
 
+	const openModal = () => {
+		setIsModalOpen(true);
+	}
+
+	const closeModal = () => {
+		setIsModalOpen(false);
+	}
+
 	/**
 	 * @brief Generates a list from 0 to end. Analagous to Python's
 	 * range() function.
@@ -143,65 +152,93 @@ const StripSettings = ({patterns}) => {
 	 * @brief Generates the Pattern UI element and it's selected subpattern.
 	 */
 	return (
-		(!loading ? 
+		(!loading ?
 			&lt;div>
-				&lt;SimpleChooser
-					label="Mode"
-					options={[
-						{option : "Strip Splitting", idx : RANGE_CONSTANTS.STRIP_SPLITTING_ID},
-						{option : "Z-Layering", idx : RANGE_CONSTANTS.Z_LAYERING_ID},
-					]}
-					noSelection={false}
-					initial={data.mode}
-					structure_ref="mode"
-					update={update}
-				/>
-				&lt;br/>
-				&lt;NumericSlider
-					className={style.settings_control}
-					label="Transparency"
-					min={RANGE_CONSTANTS.ALPHA_MIN}
-					max={RANGE_CONSTANTS.ALPHA_MAX}
-					initial={data.alpha}
-					structure_ref="alpha"
-					update={update}
-				/>
-				&lt;br/>
+				{advanced &amp;&amp; (
+					&lt;>
+					&lt;br/>
+					&lt;SimpleChooser
+						label="Mode"
+						tooltip={{
+							id: 'mode',
+							content: 'The mode that patterns will be displayed in.',
+						}}
+						options={[
+							{option : "Strip Splitting", idx : RANGE_CONSTANTS.STRIP_SPLITTING_ID, tooltip : 'Splits the LED strip into sections up to 4 times based on how many patterns are added to the device.'},
+							{option : "Z-Layering", idx : RANGE_CONSTANTS.Z_LAYERING_ID, tooltip : "Renders up to 2 patterns that are layered on top of each other over the entire LED strip."},
+						]}
+						noSelection={false}
+						initial={data.mode}
+						structure_ref="mode"
+						update={update}
+					/>
+					&lt;br/>
+					&lt;NumericSlider
+						className={style.settings_control}
+						label="Transparency"
+						tooltip={{
+							id: 'transparency',
+							content: 'Adjusts how opaque or transparent a pattern is.',
+						}}
+						min={RANGE_CONSTANTS.ALPHA_MIN}
+						max={RANGE_CONSTANTS.ALPHA_MAX}
+						initial={data.alpha}
+						structure_ref="alpha"
+						update={update}
+					/>
+					&lt;br/>
+					&lt;/>
+				)}
 				&lt;NumericSlider
 					className={style.settings_control}
 					label="Noise Threshold"
+					tooltip={{
+						id: 'threshold',
+						content: 'Adjusts how much noise it takes to display a pattern.',
+					}}
 					min={RANGE_CONSTANTS.NOISE_MIN}
 					max={RANGE_CONSTANTS.NOISE_MAX}
 					initial={data.noise}
 					structure_ref="noise"
 					update={update}
 				/>
+				{advanced &amp;&amp; (
+					&lt;>
+					&lt;br/>
+					&lt;button className={style.incBtn} onClick={incrementPatterns}>+&lt;/button>
+					&lt;button className={style.incBtn} onClick={decrementPatterns}>-&lt;/button>
+					&lt;br/>
+					&lt;div className={style.patternRow}>
+						{inRange(data.pattern_count).map((data) => {
+							if(data.idx == selectedPattern){
+								return &lt;button className={style.patternBtn} onClick={function() {setPattern(data.idx);}} key={data.idx} style="border-style:inset;">
+									Pattern {data.idx + 1}
+								&lt;/button>
+							}else{
+								return &lt;button className={style.patternBtn} onClick={function() {setPattern(data.idx);}} key={data.idx}>
+									Pattern {data.idx + 1}
+								&lt;/button>
+							}
+						})}
+					&lt;/div>
+					&lt;/>
+				)}
+				&lt;button className={style.modalBtn} type="button" onClick={openModal}>Help&lt;/button>
 				&lt;br/>
-				&lt;button type="button" onClick={incrementPatterns}>+&lt;/button>
-				&lt;button type="button" onClick={decrementPatterns}>-&lt;/button>
 				&lt;hr>&lt;/hr>
 
-				{inRange(data.pattern_count).map((data) => {
-					if(data.idx == selectedPattern){
-						return &lt;button type="button" onClick={function() {setPattern(data.idx);}} key={data.idx} style="border-style:inset;">
-							Pattern {data.idx}
-						&lt;/button>
-					}else{
-						return &lt;button type="button" onClick={function() {setPattern(data.idx);}} key={data.idx}>
-							Pattern {data.idx}
-						&lt;/button>
-					}
-					
-				})}
-
 				&lt;PatternSettings
-					num={selectedPattern}
-					patterns={patterns}
-					key={selectedPattern}
-				/>	
-			&lt;/div> 
+				  num={selectedPattern}
+				  patterns={patterns}
+				  advanced={advanced}
+				  key={selectedPattern}
+				/>
+				&lt;PatternModal
+					isOpen={isModalOpen}
+					onClose={closeModal}
+				/>
+			&lt;/div>
 		: &lt;LabelSpinner>&lt;/LabelSpinner>)
-		
 	);
 }
 
@@ -215,13 +252,13 @@ export default StripSettings;</code></pre>
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#Header">Header</a></li><li><a href="global.html#Modal">Modal</a></li><li><a href="global.html#MultiRangeSliderWrapper">MultiRangeSliderWrapper</a></li><li><a href="global.html#NumericSlider">NumericSlider</a></li><li><a href="global.html#Password">Password</a></li><li><a href="global.html#Patterns">Patterns</a></li><li><a href="global.html#PatternSettings">PatternSettings</a></li><li><a href="global.html#Save_Entry">Save_Entry</a></li><li><a href="global.html#Settings">Settings</a></li><li><a href="global.html#SimpleChooser">SimpleChooser</a></li><li><a href="global.html#SystemControls">SystemControls</a></li><li><a href="global.html#useInterval">useInterval</a></li><li><a href="global.html#Wifi">Wifi</a></li><li><a href="global.html#WiFiModal">WiFiModal</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#Header">Header</a></li><li><a href="global.html#Modal">Modal</a></li><li><a href="global.html#MultiRangeSliderWrapper">MultiRangeSliderWrapper</a></li><li><a href="global.html#NumericSlider">NumericSlider</a></li><li><a href="global.html#Password">Password</a></li><li><a href="global.html#PatternModal">PatternModal</a></li><li><a href="global.html#Patterns">Patterns</a></li><li><a href="global.html#PatternSettings">PatternSettings</a></li><li><a href="global.html#Save_Entry">Save_Entry</a></li><li><a href="global.html#Settings">Settings</a></li><li><a href="global.html#SimpleChooser">SimpleChooser</a></li><li><a href="global.html#SystemControls">SystemControls</a></li><li><a href="global.html#TooltipWrapper">TooltipWrapper</a></li><li><a href="global.html#useInterval">useInterval</a></li><li><a href="global.html#Wifi">Wifi</a></li><li><a href="global.html#WiFiModal">WiFiModal</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.7</a> on Sat May 24 2025 21:31:13 GMT+0000 (Coordinated Universal Time)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.7</a> on Sat May 24 2025 21:38:46 GMT+0000 (Coordinated Universal Time)
 </footer>
 
 <script> prettyPrint(); </script>

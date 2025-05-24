@@ -153,12 +153,12 @@ void IRAM_ATTR&#160;</td><td class="memItemRight" valign="bottom"><b>readEncoder
 void&#160;</td><td class="memItemRight" valign="bottom"><b>setup_rotary_encoder</b> ()</td></tr>
 <tr class="memdesc:ae2dec6cad4e1b326ac39a3e75de0a582"><td class="mdescLeft">&#160;</td><td class="mdescRight">Performs initial setup for the rotary encoder. <br /></td></tr>
 <tr class="separator:ae2dec6cad4e1b326ac39a3e75de0a582"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4074e6d034321489078b74a8c6f6eb70" id="r_a4074e6d034321489078b74a8c6f6eb70"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a4074e6d034321489078b74a8c6f6eb70">calculate_pattern_index</a> ()</td></tr>
-<tr class="memdesc:a4074e6d034321489078b74a8c6f6eb70"><td class="mdescLeft">&#160;</td><td class="mdescRight">Calculates the pattern index the rotary encoder currently corresponds to.  <br /></td></tr>
-<tr class="separator:a4074e6d034321489078b74a8c6f6eb70"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa08f168e49940d21fddfadb4bb00a10f" id="r_aa08f168e49940d21fddfadb4bb00a10f"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa08f168e49940d21fddfadb4bb00a10f">isEncoderButtonPressed</a> ()</td></tr>
 <tr class="memdesc:aa08f168e49940d21fddfadb4bb00a10f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the current state of the rotary encoder button.  <br /></td></tr>
 <tr class="separator:aa08f168e49940d21fddfadb4bb00a10f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abfcb15e500deb026cad749853e017360" id="r_abfcb15e500deb026cad749853e017360"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#abfcb15e500deb026cad749853e017360">encoder_delta</a> ()</td></tr>
+<tr class="memdesc:abfcb15e500deb026cad749853e017360"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the difference between the encoder's previous and new position.  <br /></td></tr>
+<tr class="separator:abfcb15e500deb026cad749853e017360"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="var-members" name="var-members"></a>
 Variables</h2></td></tr>
@@ -270,14 +270,14 @@ long&#160;</td><td class="memItemRight" valign="bottom"><b>loop_end_time</b> = 0
 
 </div>
 </div>
-<a id="a4074e6d034321489078b74a8c6f6eb70" name="a4074e6d034321489078b74a8c6f6eb70"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a4074e6d034321489078b74a8c6f6eb70">&#9670;&#160;</a></span>calculate_pattern_index()</h2>
+<a id="abfcb15e500deb026cad749853e017360" name="abfcb15e500deb026cad749853e017360"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abfcb15e500deb026cad749853e017360">&#9670;&#160;</a></span>encoder_delta()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int calculate_pattern_index </td>
+          <td class="memname">int encoder_delta </td>
           <td>(</td>
           <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
           <td></td>
@@ -285,8 +285,8 @@ long&#160;</td><td class="memItemRight" valign="bottom"><b>loop_end_time</b> = 0
       </table>
 </div><div class="memdoc">
 
-<p>Calculates the pattern index the rotary encoder currently corresponds to. </p>
-<dl class="section return"><dt>Returns</dt><dd>The pattern index the encoder is set to. </dd></dl>
+<p>Returns the difference between the encoder's previous and new position. </p>
+<dl class="section return"><dt>Returns</dt><dd>An integer representing the change in the encoder's position. </dd></dl>
 
 </div>
 </div>

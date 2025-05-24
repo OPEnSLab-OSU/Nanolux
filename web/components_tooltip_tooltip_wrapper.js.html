@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Home</title>
+    <title>JSDoc: Source: components/tooltip/tooltip_wrapper.js</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,32 +17,55 @@
 
 <div id="main">
 
-    <h1 class="page-title">Home</h1>
+    <h1 class="page-title">Source: components/tooltip/tooltip_wrapper.js</h1>
 
     
 
 
 
     
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import { Tooltip } from 'react-tooltip';
+import 'react-tooltip/dist/react-tooltip.css';
 
+/**
+ * Props:
+ * id: string
+ * content: ReactNode
+ * offset?: integer (default 10)
+ * style?: React.CSSProperties (default { fontSize: '1.2rem', cursor: 'pointer' })
+ * label?: React.ReactNode (default '(?)')
+ * ...props on the trigger span
+ */
+const TooltipWrapper = ({
+    id,
+    content,
+    offset = 10,
+    style = { fontSize: '1.2rem', cursor: 'pointer' },
+    label = '(?)',
+    ...props
+}) => (
+    &lt;>
+        &lt;span
+          style={style}
+          data-tooltip-id={id}
+          data-tooltip-offset={offset}
+          {...props}
+        >
+            {label}
+        &lt;/span>
+        &lt;Tooltip
+          id={id}
+          content={content}
+          style={style}
+        />
+    &lt;/>
+);
 
-    <h3> </h3>
-
-
-
-
-
-
-
-
-
-
-    
-
-
-
-
-
+export default TooltipWrapper;</code></pre>
+        </article>
+    </section>
 
 
 
