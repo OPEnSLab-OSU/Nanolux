@@ -98,7 +98,6 @@ $(function(){initNavTree('main_8ino.html',''); initResizable(true); });
 
 <div class="header">
   <div class="summary">
-<a href="#define-members">Macros</a> &#124;
 <a href="#func-members">Functions</a> &#124;
 <a href="#var-members">Variables</a>  </div>
   <div class="headertitle"><div class="title">main.ino File Reference</div></div>
@@ -111,13 +110,10 @@ $(function(){initNavTree('main_8ino.html',''); initResizable(true); });
 <code>#include &quot;<a class="el" href="patterns_8h_source.html">patterns.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="nanolux__types_8h_source.html">nanolux_types.h</a>&quot;</code><br />
 <code>#include &quot;nanolux_util.h&quot;</code><br />
-<code>#include &quot;core_analysis.h&quot;</code><br />
-<code>#include &quot;ext_analysis.h&quot;</code><br />
+<code>#include &quot;audio_analysis.h&quot;</code><br />
 <code>#include &quot;<a class="el" href="storage_8h_source.html">storage.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="globals_8h_source.html">globals.h</a>&quot;</code><br />
 <code>#include &lt;AiEsp32RotaryEncoder.h&gt;</code><br />
-<code>#include &quot;WebServer.h&quot;</code><br />
-<code>#include &quot;<a class="el" href="api_8h_source.html">api.h</a>&quot;</code><br />
 </div><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
@@ -127,8 +123,8 @@ Functions</h2></td></tr>
 <tr class="memitem:afe461d27b9c48d5921c00d521181f12f" id="r_afe461d27b9c48d5921c00d521181f12f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#afe461d27b9c48d5921c00d521181f12f">loop</a> ()</td></tr>
 <tr class="memdesc:afe461d27b9c48d5921c00d521181f12f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Runs the main program loop.  <br /></td></tr>
 <tr class="separator:afe461d27b9c48d5921c00d521181f12f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7aaa38fcef194cd34c41ce7508d189d8" id="r_a7aaa38fcef194cd34c41ce7508d189d8"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a7aaa38fcef194cd34c41ce7508d189d8">audio_analysis</a> ()</td></tr>
-<tr class="memdesc:a7aaa38fcef194cd34c41ce7508d189d8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Performs audio analysis by running audio_analysis.cpp's audio processing functions.  <br /></td></tr>
+<tr class="memitem:a7aaa38fcef194cd34c41ce7508d189d8" id="r_a7aaa38fcef194cd34c41ce7508d189d8"><td class="memItemLeft" align="right" valign="top"><a id="a7aaa38fcef194cd34c41ce7508d189d8" name="a7aaa38fcef194cd34c41ce7508d189d8"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>audio_analysis</b> ()</td></tr>
 <tr class="separator:a7aaa38fcef194cd34c41ce7508d189d8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a234e2499140ac8455a062fc3b54de105" id="r_a234e2499140ac8455a062fc3b54de105"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a234e2499140ac8455a062fc3b54de105">calculate_layering</a> (CRGB *a, CRGB *b, CRGB *out, int length, uint8_t blur)</td></tr>
 <tr class="memdesc:a234e2499140ac8455a062fc3b54de105"><td class="mdescLeft">&#160;</td><td class="mdescRight">Layers two CRGB arrays together and places the result in another array.  <br /></td></tr>
@@ -163,10 +159,10 @@ Functions</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="var-members" name="var-members"></a>
 Variables</h2></td></tr>
-<tr class="memitem:a920e9759f6ba35f80e11e3b7c6ed7451" id="r_a920e9759f6ba35f80e11e3b7c6ed7451"><td class="memItemLeft" align="right" valign="top"><a id="a920e9759f6ba35f80e11e3b7c6ed7451" name="a920e9759f6ba35f80e11e3b7c6ed7451"></a>
-CRGB&#160;</td><td class="memItemRight" valign="bottom"><b>output_buffer</b> [MAX_LEDS]</td></tr>
-<tr class="memdesc:a920e9759f6ba35f80e11e3b7c6ed7451"><td class="mdescLeft">&#160;</td><td class="mdescRight">Unprocessed output buffer. <br /></td></tr>
-<tr class="separator:a920e9759f6ba35f80e11e3b7c6ed7451"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa5c24d1a77215b85b467e4409c6b5aa8" id="r_aa5c24d1a77215b85b467e4409c6b5aa8"><td class="memItemLeft" align="right" valign="top"><a id="aa5c24d1a77215b85b467e4409c6b5aa8" name="aa5c24d1a77215b85b467e4409c6b5aa8"></a>
+FASTLED_USING_NAMESPACE CRGB&#160;</td><td class="memItemRight" valign="bottom"><b>output_buffer</b> [MAX_LEDS]</td></tr>
+<tr class="memdesc:aa5c24d1a77215b85b467e4409c6b5aa8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Unprocessed output buffer. <br /></td></tr>
+<tr class="separator:aa5c24d1a77215b85b467e4409c6b5aa8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a54d0986e11a540072df62d5d7a6a3d92" id="r_a54d0986e11a540072df62d5d7a6a3d92"><td class="memItemLeft" align="right" valign="top"><a id="a54d0986e11a540072df62d5d7a6a3d92" name="a54d0986e11a540072df62d5d7a6a3d92"></a>
 CRGB&#160;</td><td class="memItemRight" valign="bottom"><b>smoothed_output</b> [MAX_LEDS]</td></tr>
 <tr class="memdesc:a54d0986e11a540072df62d5d7a6a3d92"><td class="mdescLeft">&#160;</td><td class="mdescRight">Postprocessed output buffer. <br /></td></tr>
@@ -174,15 +170,17 @@ CRGB&#160;</td><td class="memItemRight" valign="bottom"><b>smoothed_output</b> [
 <tr class="memitem:af23a0eb11ff9589330539e6b763badc8" id="r_af23a0eb11ff9589330539e6b763badc8"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af23a0eb11ff9589330539e6b763badc8">button_pressed</a> = false</td></tr>
 <tr class="memdesc:af23a0eb11ff9589330539e6b763badc8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Contains the current state of the button (true is pressed).  <br /></td></tr>
 <tr class="separator:af23a0eb11ff9589330539e6b763badc8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa7fd5e56ed5028cc63702f999df5cbfd" id="r_aa7fd5e56ed5028cc63702f999df5cbfd"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa7fd5e56ed5028cc63702f999df5cbfd">peak</a> = 0.</td></tr>
-<tr class="memdesc:aa7fd5e56ed5028cc63702f999df5cbfd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Contains the peak frequency detected by the FFT.  <br /></td></tr>
+<tr class="memitem:aa7fd5e56ed5028cc63702f999df5cbfd" id="r_aa7fd5e56ed5028cc63702f999df5cbfd"><td class="memItemLeft" align="right" valign="top"><a id="aa7fd5e56ed5028cc63702f999df5cbfd" name="aa7fd5e56ed5028cc63702f999df5cbfd"></a>
+double&#160;</td><td class="memItemRight" valign="bottom"><b>peak</b> = 0.</td></tr>
+<tr class="memdesc:aa7fd5e56ed5028cc63702f999df5cbfd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Contains the peak frequency detected by the FFT. <br /></td></tr>
 <tr class="separator:aa7fd5e56ed5028cc63702f999df5cbfd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7c08d24e884c11de984d2043cd9e0243" id="r_a7c08d24e884c11de984d2043cd9e0243"><td class="memItemLeft" align="right" valign="top"><a id="a7c08d24e884c11de984d2043cd9e0243" name="a7c08d24e884c11de984d2043cd9e0243"></a>
 uint8_t&#160;</td><td class="memItemRight" valign="bottom"><b>fHue</b> = 0</td></tr>
 <tr class="memdesc:a7c08d24e884c11de984d2043cd9e0243"><td class="mdescLeft">&#160;</td><td class="mdescRight">Contains the "base" hue, calculated from the peak frequency. <br /></td></tr>
 <tr class="separator:a7c08d24e884c11de984d2043cd9e0243"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8eb3ef4958b442309868039dbab6f0bf" id="r_a8eb3ef4958b442309868039dbab6f0bf"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a8eb3ef4958b442309868039dbab6f0bf">volume</a> = 0.</td></tr>
-<tr class="memdesc:a8eb3ef4958b442309868039dbab6f0bf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Contains the current volume detected by the FFT.  <br /></td></tr>
+<tr class="memitem:a8eb3ef4958b442309868039dbab6f0bf" id="r_a8eb3ef4958b442309868039dbab6f0bf"><td class="memItemLeft" align="right" valign="top"><a id="a8eb3ef4958b442309868039dbab6f0bf" name="a8eb3ef4958b442309868039dbab6f0bf"></a>
+double&#160;</td><td class="memItemRight" valign="bottom"><b>volume</b> = 0.</td></tr>
+<tr class="memdesc:a8eb3ef4958b442309868039dbab6f0bf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Contains the current volume detected by the FFT. <br /></td></tr>
 <tr class="separator:a8eb3ef4958b442309868039dbab6f0bf"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7f0661869175f6745d4a7d291c627709" id="r_a7f0661869175f6745d4a7d291c627709"><td class="memItemLeft" align="right" valign="top"><a id="a7f0661869175f6745d4a7d291c627709" name="a7f0661869175f6745d4a7d291c627709"></a>
 uint8_t&#160;</td><td class="memItemRight" valign="bottom"><b>vbrightness</b> = 0</td></tr>
@@ -227,26 +225,6 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><b>lastEncoderBtnPressed
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>This file is the main driver of the NanoLux codebase. </p>
 </div><h2 class="groupheader">Function Documentation</h2>
-<a id="a7aaa38fcef194cd34c41ce7508d189d8" name="a7aaa38fcef194cd34c41ce7508d189d8"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a7aaa38fcef194cd34c41ce7508d189d8">&#9670;&#160;</a></span>audio_analysis()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void audio_analysis </td>
-          <td>(</td>
-          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Performs audio analysis by running audio_analysis.cpp's audio processing functions. </p>
-<p>If the macro SHOW_TIMINGS is defined, it will print out the amount of time audio processing takes via serial. </p>
-
-</div>
-</div>
 <a id="a234e2499140ac8455a062fc3b54de105" name="a234e2499140ac8455a062fc3b54de105"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a234e2499140ac8455a062fc3b54de105">&#9670;&#160;</a></span>calculate_layering()</h2>
 
@@ -638,23 +616,6 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><b>lastEncoderBtnPressed
 
 </div>
 </div>
-<a id="aa7fd5e56ed5028cc63702f999df5cbfd" name="aa7fd5e56ed5028cc63702f999df5cbfd"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa7fd5e56ed5028cc63702f999df5cbfd">&#9670;&#160;</a></span>peak</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">double peak = 0.</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Contains the peak frequency detected by the FFT. </p>
-<p>Global variable used to store preak audio frequency. </p>
-
-</div>
-</div>
 <a id="a4b265bf0c74f71f08b775c03e663e505" name="a4b265bf0c74f71f08b775c03e663e505"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a4b265bf0c74f71f08b775c03e663e505">&#9670;&#160;</a></span>saved_patterns</h2>
 
@@ -669,23 +630,6 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><b>lastEncoderBtnPressed
 
 <p>All patterns and strip configuration currently loaded from storage. </p>
 <p>The array for storing saved strip configurations, externed from <a class="el" href="main_8ino.html">main.ino</a>. </p>
-
-</div>
-</div>
-<a id="a8eb3ef4958b442309868039dbab6f0bf" name="a8eb3ef4958b442309868039dbab6f0bf"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a8eb3ef4958b442309868039dbab6f0bf">&#9670;&#160;</a></span>volume</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">double volume = 0.</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Contains the current volume detected by the FFT. </p>
-<p>Global variable used to access the current volume. </p>
 
 </div>
 </div>

@@ -1,10 +1,7 @@
 var dir_5c982d53a68cdbcd421152b4020263a9 =
 [
     [ "api.h", "api_8h.html", "api_8h" ],
-    [ "core_analysis.cpp", "core__analysis_8cpp.html", "core__analysis_8cpp" ],
-    [ "core_analysis.h", "core__analysis_8h_source.html", null ],
-    [ "ext_analysis.cpp", "ext__analysis_8cpp.html", "ext__analysis_8cpp" ],
-    [ "ext_analysis.h", "ext__analysis_8h_source.html", null ],
+    [ "audio_analysis.h", "audio__analysis_8h_source.html", null ],
     [ "globals.h", "globals_8h.html", "globals_8h" ],
     [ "main.ino", "main_8ino.html", "main_8ino" ],
     [ "nanolux_types.h", "nanolux__types_8h.html", null ],

@@ -1,6 +1,5 @@
 var main_8ino =
 [
-    [ "audio_analysis", "main_8ino.html#a7aaa38fcef194cd34c41ce7508d189d8", null ],
     [ "calculate_layering", "main_8ino.html#a234e2499140ac8455a062fc3b54de105", null ],
     [ "loop", "main_8ino.html#afe461d27b9c48d5921c00d521181f12f", null ],
     [ "print_buffer", "main_8ino.html#a279952fdc56782b0a1b589b60ce51241", null ],
@@ -21,7 +20,7 @@ var main_8ino =
     [ "loaded_patterns", "main_8ino.html#ab366196355defee7e0962544599dc407", null ],
     [ "mainPatterns", "main_8ino.html#a7e3d635edcf09480b85dff9c73c76ca3", null ],
     [ "manual_control_enabled", "main_8ino.html#ab2f12c6a03e526949d9492da9c0287bb", null ],
-    [ "output_buffer", "main_8ino.html#a920e9759f6ba35f80e11e3b7c6ed7451", null ],
+    [ "output_buffer", "main_8ino.html#aa5c24d1a77215b85b467e4409c6b5aa8", null ],
     [ "pattern_changed", "main_8ino.html#ab543150ff7d4457a985c2e09bcf636b5", null ],
     [ "peak", "main_8ino.html#aa7fd5e56ed5028cc63702f999df5cbfd", null ],
     [ "saved_patterns", "main_8ino.html#a4b265bf0c74f71f08b775c03e663e505", null ],

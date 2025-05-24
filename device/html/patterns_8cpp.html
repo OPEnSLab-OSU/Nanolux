@@ -110,8 +110,7 @@ $(function(){initNavTree('patterns_8cpp.html',''); initResizable(true); });
 <code>#include &quot;<a class="el" href="nanolux__types_8h_source.html">nanolux_types.h</a>&quot;</code><br />
 <code>#include &quot;nanolux_util.h&quot;</code><br />
 <code>#include &quot;<a class="el" href="storage_8h_source.html">storage.h</a>&quot;</code><br />
-<code>#include &quot;core_analysis.h&quot;</code><br />
-<code>#include &quot;ext_analysis.h&quot;</code><br />
+<code>#include &quot;audio_analysis.h&quot;</code><br />
 <code>#include &quot;palettes.h&quot;</code><br />
 </div><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="define-members" name="define-members"></a>
@@ -125,13 +124,16 @@ Macros</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:a66096b1afe8a40664355945c97d00115" id="r_a66096b1afe8a40664355945c97d00115"><td class="memItemLeft" align="right" valign="top"><a id="a66096b1afe8a40664355945c97d00115" name="a66096b1afe8a40664355945c97d00115"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>getFhue</b> (uint8_t min_hue, uint8_t max_hue)</td></tr>
-<tr class="separator:a66096b1afe8a40664355945c97d00115"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae742d14205e7fdea25f29a071385e390" id="r_ae742d14205e7fdea25f29a071385e390"><td class="memItemLeft" align="right" valign="top"><a id="ae742d14205e7fdea25f29a071385e390" name="ae742d14205e7fdea25f29a071385e390"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>getFhue</b> (uint8_t tmin_hue, uint8_t tmax_hue)</td></tr>
+<tr class="separator:ae742d14205e7fdea25f29a071385e390"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a80eb5b9bbf03b79a4da9a4562e96c290" id="r_a80eb5b9bbf03b79a4da9a4562e96c290"><td class="memItemLeft" align="right" valign="top"><a id="a80eb5b9bbf03b79a4da9a4562e96c290" name="a80eb5b9bbf03b79a4da9a4562e96c290"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>getVbrightness</b> ()</td></tr>
 <tr class="memdesc:a80eb5b9bbf03b79a4da9a4562e96c290"><td class="mdescLeft">&#160;</td><td class="mdescRight">get vol brightness <br /></td></tr>
 <tr class="separator:a80eb5b9bbf03b79a4da9a4562e96c290"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a10e179b4903ee9b973d2ba88cd716972" id="r_a10e179b4903ee9b973d2ba88cd716972"><td class="memItemLeft" align="right" valign="top"><a id="a10e179b4903ee9b973d2ba88cd716972" name="a10e179b4903ee9b973d2ba88cd716972"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>setHues</b> (uint8_t tmin_hue, uint8_t tmax_hue)</td></tr>
+<tr class="separator:a10e179b4903ee9b973d2ba88cd716972"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0fffc251888efdd9732daaf60689bfa8" id="r_a0fffc251888efdd9732daaf60689bfa8"><td class="memItemLeft" align="right" valign="top"><a id="a0fffc251888efdd9732daaf60689bfa8" name="a0fffc251888efdd9732daaf60689bfa8"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>nextPattern</b> ()</td></tr>
 <tr class="separator:a0fffc251888efdd9732daaf60689bfa8"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -166,7 +168,7 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>setColorHSV</b> (CRGB
 <tr class="memdesc:abff51f2ded6047423b1bac2100b20ec7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates two light clusters that move according to sine wave motion, but their speed is affected by the volume. One pulls its color from fHue, and the other pulls its color from the formant values. Talk configuration combines glitch with talking_moving(). Sections configuration creates 4 seperate sine wave clusters.  <br /></td></tr>
 <tr class="separator:abff51f2ded6047423b1bac2100b20ec7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3c0b2916e18f5a9a01c32c8214927752" id="r_a3c0b2916e18f5a9a01c32c8214927752"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a3c0b2916e18f5a9a01c32c8214927752">bands</a> (<a class="el" href="struct_strip___buffer.html">Strip_Buffer</a> *buf, int len, <a class="el" href="struct_pattern___data.html">Pattern_Data</a> *params)</td></tr>
-<tr class="memdesc:a3c0b2916e18f5a9a01c32c8214927752"><td class="mdescLeft">&#160;</td><td class="mdescRight">Basic band config : Uses the <a class="el" href="ext__analysis_8cpp.html#a5fc0a70d11594cbb70b3d21e3a36d5b1" title="Outputs the average volume of 5 buckets given a sample length.">band_split_bounce()</a> function to generate a five band split, and maps that split to the light strip. The strip is broken into five chunks of different colors, where the volume of each band determines how much of each section of the LED strip is lit. Advanced bands config : he strip is broken into five chunks of different colors, where the volume of each band determines how much of each section is lit, and that portion will diminish over time if a certain volume threshold is not met Fomant bands config: emonstrates the formant feature of the audio analysis code. Each of the three formant values correspond to a third of the entire LED strip, where the individual formant values determine the hue of each third.  <br /></td></tr>
+<tr class="memdesc:a3c0b2916e18f5a9a01c32c8214927752"><td class="mdescLeft">&#160;</td><td class="mdescRight">Basic band config : Uses the band_split_bounce() function to generate a five band split, and maps that split to the light strip. The strip is broken into five chunks of different colors, where the volume of each band determines how much of each section of the LED strip is lit. Advanced bands config : he strip is broken into five chunks of different colors, where the volume of each band determines how much of each section is lit, and that portion will diminish over time if a certain volume threshold is not met Fomant bands config: emonstrates the formant feature of the audio analysis code. Each of the three formant values correspond to a third of the entire LED strip, where the individual formant values determine the hue of each third.  <br /></td></tr>
 <tr class="separator:a3c0b2916e18f5a9a01c32c8214927752"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af93356e3e70c1ff942871c1fc532e6db" id="r_af93356e3e70c1ff942871c1fc532e6db"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af93356e3e70c1ff942871c1fc532e6db">eq</a> (<a class="el" href="struct_strip___buffer.html">Strip_Buffer</a> *buf, int len, <a class="el" href="struct_pattern___data.html">Pattern_Data</a> *params)</td></tr>
 <tr class="memdesc:af93356e3e70c1ff942871c1fc532e6db"><td class="mdescLeft">&#160;</td><td class="mdescRight">Short and sweet function. Each pixel corresponds to a value from vReal, where the volume at each pitch determines the brightness of each pixel. Hue is locked in to a rainbow.  <br /></td></tr>
@@ -186,24 +188,63 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>vowels_raindrop</b> (
 <tr class="memitem:a1c538ad659e0874ad33fe3b2f961f9db" id="r_a1c538ad659e0874ad33fe3b2f961f9db"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a1c538ad659e0874ad33fe3b2f961f9db">bar_fill</a> (<a class="el" href="struct_strip___buffer.html">Strip_Buffer</a> *buf, int len, <a class="el" href="struct_pattern___data.html">Pattern_Data</a> *params)</td></tr>
 <tr class="memdesc:a1c538ad659e0874ad33fe3b2f961f9db"><td class="mdescLeft">&#160;</td><td class="mdescRight">Displays a pattern that occupies "lower" pixels at lower values, and "higher" pixels at higher values.  <br /></td></tr>
 <tr class="separator:a1c538ad659e0874ad33fe3b2f961f9db"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad6edf942835d31883a60172c6c9a4179" id="r_ad6edf942835d31883a60172c6c9a4179"><td class="memItemLeft" align="right" valign="top"><a id="ad6edf942835d31883a60172c6c9a4179" name="ad6edf942835d31883a60172c6c9a4179"></a>
+int&#160;</td><td class="memItemRight" valign="bottom"><b>getColor</b> (int noteNumber)</td></tr>
+<tr class="separator:ad6edf942835d31883a60172c6c9a4179"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2a31e3a563bf867fdde71166d689a51d" id="r_a2a31e3a563bf867fdde71166d689a51d"><td class="memItemLeft" align="right" valign="top"><a id="a2a31e3a563bf867fdde71166d689a51d" name="a2a31e3a563bf867fdde71166d689a51d"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>blendIn</b> (<a class="el" href="struct_strip___buffer.html">Strip_Buffer</a> *buf, int len, <a class="el" href="struct_pattern___data.html">Pattern_Data</a> *params)</td></tr>
+<tr class="separator:a2a31e3a563bf867fdde71166d689a51d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5c9b78d36d822377226eff6c7951e7f6" id="r_a5c9b78d36d822377226eff6c7951e7f6"><td class="memItemLeft" align="right" valign="top"><a id="a5c9b78d36d822377226eff6c7951e7f6" name="a5c9b78d36d822377226eff6c7951e7f6"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>bleedThrough</b> (<a class="el" href="struct_strip___buffer.html">Strip_Buffer</a> *buf, int len, <a class="el" href="struct_pattern___data.html">Pattern_Data</a> *params)</td></tr>
+<tr class="separator:a5c9b78d36d822377226eff6c7951e7f6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab74a7c89cf74cae9468bd5e68047550d" id="r_ab74a7c89cf74cae9468bd5e68047550d"><td class="memItemLeft" align="right" valign="top"><a id="ab74a7c89cf74cae9468bd5e68047550d" name="ab74a7c89cf74cae9468bd5e68047550d"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>showcasePercussion</b> (<a class="el" href="struct_strip___buffer.html">Strip_Buffer</a> *buf, int len, <a class="el" href="struct_pattern___data.html">Pattern_Data</a> *params)</td></tr>
+<tr class="separator:ab74a7c89cf74cae9468bd5e68047550d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac3b1ca17acfe3e7024ca2d070d5da54d" id="r_ac3b1ca17acfe3e7024ca2d070d5da54d"><td class="memItemLeft" align="right" valign="top"><a id="ac3b1ca17acfe3e7024ca2d070d5da54d" name="ac3b1ca17acfe3e7024ca2d070d5da54d"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>showcaseCentroid</b> (<a class="el" href="struct_strip___buffer.html">Strip_Buffer</a> *buf, int len, <a class="el" href="struct_pattern___data.html">Pattern_Data</a> *params)</td></tr>
+<tr class="separator:ac3b1ca17acfe3e7024ca2d070d5da54d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3eb7ef5c0387414024bff20005c54019" id="r_a3eb7ef5c0387414024bff20005c54019"><td class="memItemLeft" align="right" valign="top"><a id="a3eb7ef5c0387414024bff20005c54019" name="a3eb7ef5c0387414024bff20005c54019"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>showcaseBread</b> (<a class="el" href="struct_strip___buffer.html">Strip_Buffer</a> *buf, int len, <a class="el" href="struct_pattern___data.html">Pattern_Data</a> *params)</td></tr>
+<tr class="separator:a3eb7ef5c0387414024bff20005c54019"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad85e983e4cd4efb4c5eef6209c99fd9f" id="r_ad85e983e4cd4efb4c5eef6209c99fd9f"><td class="memItemLeft" align="right" valign="top"><a id="ad85e983e4cd4efb4c5eef6209c99fd9f" name="ad85e983e4cd4efb4c5eef6209c99fd9f"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>showcaseSalientFreqs</b> (<a class="el" href="struct_strip___buffer.html">Strip_Buffer</a> *buf, int len, <a class="el" href="struct_pattern___data.html">Pattern_Data</a> *params)</td></tr>
+<tr class="separator:ad85e983e4cd4efb4c5eef6209c99fd9f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a422e60d9bb55c2a8fe08ce360c4135c3" id="r_a422e60d9bb55c2a8fe08ce360c4135c3"><td class="memItemLeft" align="right" valign="top"><a id="a422e60d9bb55c2a8fe08ce360c4135c3" name="a422e60d9bb55c2a8fe08ce360c4135c3"></a>
+CHSV&#160;</td><td class="memItemRight" valign="bottom"><b>getColorForNote</b> (int noteNumber)</td></tr>
+<tr class="separator:a422e60d9bb55c2a8fe08ce360c4135c3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a36081dbbec5a9f4444222783e3216074" id="r_a36081dbbec5a9f4444222783e3216074"><td class="memItemLeft" align="right" valign="top"><a id="a36081dbbec5a9f4444222783e3216074" name="a36081dbbec5a9f4444222783e3216074"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>synesthesiaRolling</b> (<a class="el" href="struct_strip___buffer.html">Strip_Buffer</a> *buf, int len, <a class="el" href="struct_pattern___data.html">Pattern_Data</a> *params)</td></tr>
+<tr class="separator:a36081dbbec5a9f4444222783e3216074"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a27013c4505dfec1821f48adfe8b61a6e" id="r_a27013c4505dfec1821f48adfe8b61a6e"><td class="memItemLeft" align="right" valign="top"><a id="a27013c4505dfec1821f48adfe8b61a6e" name="a27013c4505dfec1821f48adfe8b61a6e"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>noteEQ</b> (<a class="el" href="struct_strip___buffer.html">Strip_Buffer</a> *buf, int len, <a class="el" href="struct_pattern___data.html">Pattern_Data</a> *params)</td></tr>
+<tr class="separator:a27013c4505dfec1821f48adfe8b61a6e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8f6459461deb350dbd4d1f5438651a0d" id="r_a8f6459461deb350dbd4d1f5438651a0d"><td class="memItemLeft" align="right" valign="top"><a id="a8f6459461deb350dbd4d1f5438651a0d" name="a8f6459461deb350dbd4d1f5438651a0d"></a>
+CHSV&#160;</td><td class="memItemRight" valign="bottom"><b>getStringColor</b> (int noteNumber, double volum)</td></tr>
+<tr class="separator:a8f6459461deb350dbd4d1f5438651a0d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4d6a0f28740c0ceae59dbb3c4ebff4a4" id="r_a4d6a0f28740c0ceae59dbb3c4ebff4a4"><td class="memItemLeft" align="right" valign="top"><a id="a4d6a0f28740c0ceae59dbb3c4ebff4a4" name="a4d6a0f28740c0ceae59dbb3c4ebff4a4"></a>
+double&#160;</td><td class="memItemRight" valign="bottom"><b>findString</b> (double frequency)</td></tr>
+<tr class="separator:a4d6a0f28740c0ceae59dbb3c4ebff4a4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab156477867b8ded7d45fe65c3342cc0d" id="r_ab156477867b8ded7d45fe65c3342cc0d"><td class="memItemLeft" align="right" valign="top"><a id="ab156477867b8ded7d45fe65c3342cc0d" name="ab156477867b8ded7d45fe65c3342cc0d"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>stringTheory</b> (<a class="el" href="struct_strip___buffer.html">Strip_Buffer</a> *buf, int len, <a class="el" href="struct_pattern___data.html">Pattern_Data</a> *params)</td></tr>
+<tr class="separator:ab156477867b8ded7d45fe65c3342cc0d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0291697cf11d97f64fb440b4e803d14d" id="r_a0291697cf11d97f64fb440b4e803d14d"><td class="memItemLeft" align="right" valign="top"><a id="a0291697cf11d97f64fb440b4e803d14d" name="a0291697cf11d97f64fb440b4e803d14d"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>splashTheory</b> (<a class="el" href="struct_strip___buffer.html">Strip_Buffer</a> *buf, int len, <a class="el" href="struct_pattern___data.html">Pattern_Data</a> *params)</td></tr>
+<tr class="separator:a0291697cf11d97f64fb440b4e803d14d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4fc00b2ce4c18d0f6fe882ccbf41cb7e" id="r_a4fc00b2ce4c18d0f6fe882ccbf41cb7e"><td class="memItemLeft" align="right" valign="top"><a id="a4fc00b2ce4c18d0f6fe882ccbf41cb7e" name="a4fc00b2ce4c18d0f6fe882ccbf41cb7e"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>deltaHeat</b> (<a class="el" href="struct_strip___buffer.html">Strip_Buffer</a> *buf, int len, <a class="el" href="struct_pattern___data.html">Pattern_Data</a> *params)</td></tr>
+<tr class="separator:a4fc00b2ce4c18d0f6fe882ccbf41cb7e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac2e448c30c8e4366a229ab8ea24f2a1c" id="r_ac2e448c30c8e4366a229ab8ea24f2a1c"><td class="memItemLeft" align="right" valign="top"><a id="ac2e448c30c8e4366a229ab8ea24f2a1c" name="ac2e448c30c8e4366a229ab8ea24f2a1c"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>gradient</b> (<a class="el" href="struct_strip___buffer.html">Strip_Buffer</a> *buf, int len, <a class="el" href="struct_pattern___data.html">Pattern_Data</a> *params)</td></tr>
+<tr class="separator:ac2e448c30c8e4366a229ab8ea24f2a1c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="var-members" name="var-members"></a>
 Variables</h2></td></tr>
 <tr class="memitem:a343a11c8b0bcfdaf488082ce172eb119" id="r_a343a11c8b0bcfdaf488082ce172eb119"><td class="memItemLeft" align="right" valign="top"><a id="a343a11c8b0bcfdaf488082ce172eb119" name="a343a11c8b0bcfdaf488082ce172eb119"></a>
 unsigned long&#160;</td><td class="memItemRight" valign="bottom"><b>microseconds</b></td></tr>
 <tr class="separator:a343a11c8b0bcfdaf488082ce172eb119"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a57f2c8816172cdced570b65197701a22" id="r_a57f2c8816172cdced570b65197701a22"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a57f2c8816172cdced570b65197701a22">vReal</a> [SAMPLES]</td></tr>
-<tr class="separator:a57f2c8816172cdced570b65197701a22"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac034086d3825bcc85e52bb87eafaffa3" id="r_ac034086d3825bcc85e52bb87eafaffa3"><td class="memItemLeft" align="right" valign="top"><a id="ac034086d3825bcc85e52bb87eafaffa3" name="ac034086d3825bcc85e52bb87eafaffa3"></a>
-double&#160;</td><td class="memItemRight" valign="bottom"><b>vImag</b> [SAMPLES]</td></tr>
-<tr class="memdesc:ac034086d3825bcc85e52bb87eafaffa3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Imaginary component of vReal. Unused. <br /></td></tr>
-<tr class="separator:ac034086d3825bcc85e52bb87eafaffa3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac8b0b4754c9725c69948f347ec5d7edf" id="r_ac8b0b4754c9725c69948f347ec5d7edf"><td class="memItemLeft" align="right" valign="top"><a id="ac8b0b4754c9725c69948f347ec5d7edf" name="ac8b0b4754c9725c69948f347ec5d7edf"></a>
-double&#160;</td><td class="memItemRight" valign="bottom"><b>vRealHist</b> [SAMPLES]</td></tr>
-<tr class="memdesc:ac8b0b4754c9725c69948f347ec5d7edf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Last state of the vReal array. <br /></td></tr>
-<tr class="separator:ac8b0b4754c9725c69948f347ec5d7edf"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:abde44bf7f909ccc0536377ee12ad046f" id="r_abde44bf7f909ccc0536377ee12ad046f"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#abde44bf7f909ccc0536377ee12ad046f">delt</a> [SAMPLES]</td></tr>
-<tr class="separator:abde44bf7f909ccc0536377ee12ad046f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9efd89c6440263b62484b039c07ed7a6" id="r_a9efd89c6440263b62484b039c07ed7a6"><td class="memItemLeft" align="right" valign="top"><a id="a9efd89c6440263b62484b039c07ed7a6" name="a9efd89c6440263b62484b039c07ed7a6"></a>
+<a class="el" href="class_audio_analysis.html">AudioAnalysis</a>&#160;</td><td class="memItemRight" valign="bottom"><b>audioAnalysis</b></td></tr>
+<tr class="separator:a9efd89c6440263b62484b039c07ed7a6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af23a0eb11ff9589330539e6b763badc8" id="r_af23a0eb11ff9589330539e6b763badc8"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af23a0eb11ff9589330539e6b763badc8">button_pressed</a></td></tr>
 <tr class="memdesc:af23a0eb11ff9589330539e6b763badc8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Contains the current state of the button (true is pressed).  <br /></td></tr>
 <tr class="separator:af23a0eb11ff9589330539e6b763badc8"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -216,22 +257,17 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>NUM_PATTERNS</b></td><
 <tr class="memitem:a9338cbf90dff58d1c77b9a5df84fa60a" id="r_a9338cbf90dff58d1c77b9a5df84fa60a"><td class="memItemLeft" align="right" valign="top"><a id="a9338cbf90dff58d1c77b9a5df84fa60a" name="a9338cbf90dff58d1c77b9a5df84fa60a"></a>
 SimplePatternList&#160;</td><td class="memItemRight" valign="bottom"><b>gPatterns_layer</b></td></tr>
 <tr class="separator:a9338cbf90dff58d1c77b9a5df84fa60a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa7fd5e56ed5028cc63702f999df5cbfd" id="r_aa7fd5e56ed5028cc63702f999df5cbfd"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa7fd5e56ed5028cc63702f999df5cbfd">peak</a></td></tr>
-<tr class="memdesc:aa7fd5e56ed5028cc63702f999df5cbfd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Contains the peak frequency detected by the FFT.  <br /></td></tr>
-<tr class="separator:aa7fd5e56ed5028cc63702f999df5cbfd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1031d0e0a97a340abfe0a6ab9e831045" id="r_a1031d0e0a97a340abfe0a6ab9e831045"><td class="memItemLeft" align="right" valign="top"><a id="a1031d0e0a97a340abfe0a6ab9e831045" name="a1031d0e0a97a340abfe0a6ab9e831045"></a>
+double&#160;</td><td class="memItemRight" valign="bottom"><b>a</b></td></tr>
+<tr class="separator:a1031d0e0a97a340abfe0a6ab9e831045"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7c08d24e884c11de984d2043cd9e0243" id="r_a7c08d24e884c11de984d2043cd9e0243"><td class="memItemLeft" align="right" valign="top"><a id="a7c08d24e884c11de984d2043cd9e0243" name="a7c08d24e884c11de984d2043cd9e0243"></a>
 uint8_t&#160;</td><td class="memItemRight" valign="bottom"><b>fHue</b></td></tr>
 <tr class="memdesc:a7c08d24e884c11de984d2043cd9e0243"><td class="mdescLeft">&#160;</td><td class="mdescRight">Contains the "base" hue, calculated from the peak frequency. <br /></td></tr>
 <tr class="separator:a7c08d24e884c11de984d2043cd9e0243"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8eb3ef4958b442309868039dbab6f0bf" id="r_a8eb3ef4958b442309868039dbab6f0bf"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a8eb3ef4958b442309868039dbab6f0bf">volume</a></td></tr>
-<tr class="memdesc:a8eb3ef4958b442309868039dbab6f0bf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Contains the current volume detected by the FFT.  <br /></td></tr>
-<tr class="separator:a8eb3ef4958b442309868039dbab6f0bf"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7f0661869175f6745d4a7d291c627709" id="r_a7f0661869175f6745d4a7d291c627709"><td class="memItemLeft" align="right" valign="top"><a id="a7f0661869175f6745d4a7d291c627709" name="a7f0661869175f6745d4a7d291c627709"></a>
 uint8_t&#160;</td><td class="memItemRight" valign="bottom"><b>vbrightness</b></td></tr>
 <tr class="memdesc:a7f0661869175f6745d4a7d291c627709"><td class="mdescLeft">&#160;</td><td class="mdescRight">Contains the "base" brightness value, calculated from the current volume. <br /></td></tr>
 <tr class="separator:a7f0661869175f6745d4a7d291c627709"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a66b3a012e977e080be29a2715d01047f" id="r_a66b3a012e977e080be29a2715d01047f"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a66b3a012e977e080be29a2715d01047f">maxDelt</a></td></tr>
-<tr class="separator:a66b3a012e977e080be29a2715d01047f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:adbd595667248734ce34eac8e6cf4bad4" id="r_adbd595667248734ce34eac8e6cf4bad4"><td class="memItemLeft" align="right" valign="top"><a id="adbd595667248734ce34eac8e6cf4bad4" name="adbd595667248734ce34eac8e6cf4bad4"></a>
 int&#160;</td><td class="memItemRight" valign="bottom"><b>advanced_size</b></td></tr>
 <tr class="separator:adbd595667248734ce34eac8e6cf4bad4"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -254,12 +290,16 @@ uint8_t&#160;</td><td class="memItemRight" valign="bottom"><b>manual_pattern_idx
 bool&#160;</td><td class="memItemRight" valign="bottom"><b>manual_control_enabled</b></td></tr>
 <tr class="memdesc:a2cc0e9634c531780594a5d10445e6458"><td class="mdescLeft">&#160;</td><td class="mdescRight">MANUAL CONTROL VARIABLES. <br /></td></tr>
 <tr class="separator:a2cc0e9634c531780594a5d10445e6458"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5fe94530331e28002a3025747468de0a" id="r_a5fe94530331e28002a3025747468de0a"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a5fe94530331e28002a3025747468de0a">fbs</a> [5]</td></tr>
-<tr class="separator:a5fe94530331e28002a3025747468de0a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afb4968a692d198acc4488d90bd1ecde0" id="r_afb4968a692d198acc4488d90bd1ecde0"><td class="memItemLeft" align="right" valign="top"><a id="afb4968a692d198acc4488d90bd1ecde0" name="afb4968a692d198acc4488d90bd1ecde0"></a>
 double&#160;</td><td class="memItemRight" valign="bottom"><b>formants</b> [3]</td></tr>
 <tr class="memdesc:afb4968a692d198acc4488d90bd1ecde0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Global formant array, used for accessing. <br /></td></tr>
 <tr class="separator:afb4968a692d198acc4488d90bd1ecde0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a48a198ef8ce45a697f26a67b266ce8e4" id="r_a48a198ef8ce45a697f26a67b266ce8e4"><td class="memItemLeft" align="right" valign="top"><a id="a48a198ef8ce45a697f26a67b266ce8e4" name="a48a198ef8ce45a697f26a67b266ce8e4"></a>
+uint8_t&#160;</td><td class="memItemRight" valign="bottom"><b>max_hue</b> = 255</td></tr>
+<tr class="separator:a48a198ef8ce45a697f26a67b266ce8e4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6522c51233a6d3a65ddb140d94832c3a" id="r_a6522c51233a6d3a65ddb140d94832c3a"><td class="memItemLeft" align="right" valign="top"><a id="a6522c51233a6d3a65ddb140d94832c3a" name="a6522c51233a6d3a65ddb140d94832c3a"></a>
+uint8_t&#160;</td><td class="memItemRight" valign="bottom"><b>min_hue</b> = 0</td></tr>
+<tr class="separator:a6522c51233a6d3a65ddb140d94832c3a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>This file contains all defined pattern handlers.</p>
@@ -289,7 +329,7 @@ double&#160;</td><td class="memItemRight" valign="bottom"><b>formants</b> [3]</t
       </table>
 </div><div class="memdoc">
 
-<p>Basic band config : Uses the <a class="el" href="ext__analysis_8cpp.html#a5fc0a70d11594cbb70b3d21e3a36d5b1" title="Outputs the average volume of 5 buckets given a sample length.">band_split_bounce()</a> function to generate a five band split, and maps that split to the light strip. The strip is broken into five chunks of different colors, where the volume of each band determines how much of each section of the LED strip is lit. Advanced bands config : he strip is broken into five chunks of different colors, where the volume of each band determines how much of each section is lit, and that portion will diminish over time if a certain volume threshold is not met Fomant bands config: emonstrates the formant feature of the audio analysis code. Each of the three formant values correspond to a third of the entire LED strip, where the individual formant values determine the hue of each third. </p>
+<p>Basic band config : Uses the band_split_bounce() function to generate a five band split, and maps that split to the light strip. The strip is broken into five chunks of different colors, where the volume of each band determines how much of each section of the LED strip is lit. Advanced bands config : he strip is broken into five chunks of different colors, where the volume of each band determines how much of each section is lit, and that portion will diminish over time if a certain volume threshold is not met Fomant bands config: emonstrates the formant feature of the audio analysis code. Each of the three formant values correspond to a third of the entire LED strip, where the individual formant values determine the hue of each third. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">buf</td><td>Pointer to the <a class="el" href="struct_strip___buffer.html" title="Holds persistent data for currently-running patterns.">Strip_Buffer</a> structure, holds LED buffer and history variables. </td></tr>
@@ -781,148 +821,6 @@ double&#160;</td><td class="memItemRight" valign="bottom"><b>formants</b> [3]</t
 
 <p>The currently-loaded device config. </p>
 <p>The current config of the device, defined in <a class="el" href="main_8ino.html">main.ino</a>. Used to check if serial printing is allowed. </p>
-
-</div>
-</div>
-<a id="abde44bf7f909ccc0536377ee12ad046f" name="abde44bf7f909ccc0536377ee12ad046f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#abde44bf7f909ccc0536377ee12ad046f">&#9670;&#160;</a></span>delt</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">double delt[SAMPLES]</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel extern">extern</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-<p>Variable used to store the frequency delta between vReal and vRealHist. </p>
-
-</div>
-</div>
-<a id="a5fe94530331e28002a3025747468de0a" name="a5fe94530331e28002a3025747468de0a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a5fe94530331e28002a3025747468de0a">&#9670;&#160;</a></span>fbs</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">double fbs[5]</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel extern">extern</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-<p>Global FIVE BAND SPLIT which stores changing bands based on raw frequencies </p>
-
-</div>
-</div>
-<a id="a66b3a012e977e080be29a2715d01047f" name="a66b3a012e977e080be29a2715d01047f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a66b3a012e977e080be29a2715d01047f">&#9670;&#160;</a></span>maxDelt</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">double maxDelt</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel extern">extern</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-<p>Global variable used to access the frequency band with the largest delta between iterations. </p>
-
-</div>
-</div>
-<a id="aa7fd5e56ed5028cc63702f999df5cbfd" name="aa7fd5e56ed5028cc63702f999df5cbfd"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa7fd5e56ed5028cc63702f999df5cbfd">&#9670;&#160;</a></span>peak</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">double peak</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel extern">extern</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Contains the peak frequency detected by the FFT. </p>
-<p>Global variable used to store preak audio frequency. </p>
-
-</div>
-</div>
-<a id="a8eb3ef4958b442309868039dbab6f0bf" name="a8eb3ef4958b442309868039dbab6f0bf"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a8eb3ef4958b442309868039dbab6f0bf">&#9670;&#160;</a></span>volume</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">double volume</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel extern">extern</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Contains the current volume detected by the FFT. </p>
-<p>Global variable used to access the current volume. </p>
-
-</div>
-</div>
-<a id="a57f2c8816172cdced570b65197701a22" name="a57f2c8816172cdced570b65197701a22"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a57f2c8816172cdced570b65197701a22">&#9670;&#160;</a></span>vReal</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">double vReal[SAMPLES]</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel extern">extern</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-<p>Array to store both sampled and FFT'ed audio. Processing is done in place. </p>
 
 </div>
 </div>

@@ -5,7 +5,7 @@ var nanolux__util_8cpp =
     [ "buttonISR", "nanolux__util_8cpp.html#a1fcc599f808a2703497dd7bab1fd952e", null ],
     [ "calculate_pattern_index", "nanolux__util_8cpp.html#a4074e6d034321489078b74a8c6f6eb70", null ],
     [ "isEncoderButtonPressed", "nanolux__util_8cpp.html#aa08f168e49940d21fddfadb4bb00a10f", null ],
-    [ "largest", "nanolux__util_8cpp.html#aa1a294335bcab38c61496cae29566cf9", null ],
+    [ "largest", "nanolux__util_8cpp.html#a300232b18a6024df011052f57fb74d4e", null ],
     [ "led_on_forever", "nanolux__util_8cpp.html#a368badc6185939de1fc68a0bcddc3584", null ],
     [ "nanolux_serial_print", "nanolux__util_8cpp.html#a7b52eb86c6d43619f3511dc2e04a12d7", null ],
     [ "process_reset_button", "nanolux__util_8cpp.html#afb5b77f6d989ae006ea4a5d2d19599e9", null ],

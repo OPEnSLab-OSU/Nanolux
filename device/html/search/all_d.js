@@ -9,7 +9,7 @@ var searchData=
   ['pattern_5flimit_6',['PATTERN_LIMIT',['../storage_8h.html#ab38ce3af4eb0fb3da19fcabd8b796a4c',1,'storage.h']]],
   ['patterns_2ecpp_7',['patterns.cpp',['../patterns_8cpp.html',1,'']]],
   ['patterns_2eh_8',['patterns.h',['../patterns_8h.html',1,'']]],
-  ['peak_9',['peak',['../core__analysis_8cpp.html#aa7fd5e56ed5028cc63702f999df5cbfd',1,'peak:&#160;main.ino'],['../ext__analysis_8cpp.html#aa7fd5e56ed5028cc63702f999df5cbfd',1,'peak:&#160;main.ino'],['../main_8ino.html#aa7fd5e56ed5028cc63702f999df5cbfd',1,'peak:&#160;main.ino'],['../patterns_8cpp.html#aa7fd5e56ed5028cc63702f999df5cbfd',1,'peak:&#160;main.ino']]],
+  ['peak_9',['peak',['../main_8ino.html#aa7fd5e56ed5028cc63702f999df5cbfd',1,'main.ino']]],
   ['pix_5ffreq_10',['pix_freq',['../patterns_8cpp.html#a0a2007b15137c803a2b6544f31825f15',1,'pix_freq(Strip_Buffer *buf, int len, Pattern_Data *params):&#160;patterns.cpp'],['../patterns_8h.html#a0a2007b15137c803a2b6544f31825f15',1,'pix_freq(Strip_Buffer *buf, int len, Pattern_Data *params):&#160;patterns.cpp']]],
   ['print_5fbuffer_11',['print_buffer',['../main_8ino.html#a279952fdc56782b0a1b589b60ce51241',1,'main.ino']]],
   ['process_5fpattern_12',['process_pattern',['../main_8ino.html#afc1c656b4feaf53b3719b6f0c72154ef',1,'main.ino']]],
