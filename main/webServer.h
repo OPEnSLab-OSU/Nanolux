@@ -9,6 +9,9 @@
 #include <WebHandlerImpl.h>
 #include <WebResponseImpl.h>
 #include "esp_wifi.h"
+#include "FS.h"
+#include "SD.h"
+#include "SPI.h"
 
 
 //#define DEBUG_PRINTF(...) Serial.printf(__VA_ARGS__)
@@ -16,20 +19,11 @@
 
 #define ALWAYS_PRINTF(...) Serial.printf(__VA_ARGS__)
 
-// Uncomment to use the old LittleFS web app loader.
-//#define SD_LOADER
-
-#ifdef SD_LOADER
-  #include "FS.h"
-  #include "SD.h"
-  #include "SPI.h"
-  #define SCK 5
-  #define MISO 19
-  #define MOSI 18
-  #define CS 21
-#else
-  #include <LittleFS.h>
-#endif
+// SD card pinouts
+#define SCK 5
+#define MISO 19
+#define MOSI 18
+#define CS 21
 
 /*
  * WIFI management data.
@@ -141,20 +135,11 @@ AsyncWebServer webServer(80);
  */
 inline void initialize_file_system() {
 
-  #ifdef SD_LOADER
-    DEBUG_PRINTF("Initializing SD FS...");
-    SPI.begin(SCK, MISO, MOSI, CS);
-    if (!SD.begin(CS))
-      DEBUG_PRINTF("Card Mount Failed");
-    DEBUG_PRINTF("Card mount successful.");
-  #else
-    DEBUG_PRINTF("Initializing FS...");
-    if (LittleFS.begin()) {
-      DEBUG_PRINTF("done.\n");
-    } else {
-      DEBUG_PRINTF("fail.\n");
-    }
-  #endif 
+  DEBUG_PRINTF("Initializing SD FS...");
+  SPI.begin(SCK, MISO, MOSI, CS);
+  if (!SD.begin(CS))
+    DEBUG_PRINTF("Card Mount Failed");
+  DEBUG_PRINTF("Card mount successful.");
 }
 
 /*
@@ -168,11 +153,7 @@ inline void save_settings() {
   settings["wifi"]["ssid"] = current_wifi.SSID;
   settings["wifi"]["key"] = current_wifi.Key;
 
-  #ifdef SD_LOADER
-    File saved_settings = SD.open(SETTINGS_FILE, "w");
-  #else
-    File saved_settings = LittleFS.open(SETTINGS_FILE, "w");
-  #endif
+  File saved_settings = SD.open(SETTINGS_FILE, "w");
   
   if (saved_settings) {
     serializeJson(settings, saved_settings);
@@ -188,11 +169,7 @@ inline void save_settings() {
 inline void load_settings() {
   DEBUG_PRINTF("Checking if settings are available.\n");
 
-  #ifdef SD_LOADER
-    File saved_settings = SD.open(SETTINGS_FILE, "r");
-  #else
-    File saved_settings = LittleFS.open(SETTINGS_FILE, "r");
-  #endif
+  File saved_settings = SD.open(SETTINGS_FILE, "r");
   
   if (saved_settings) {
     const DeserializationError error = deserializeJson(settings, saved_settings);
@@ -611,11 +588,8 @@ inline void save_url(const String& url) {
   // When it starts, it will check this file to know which URL to use to talk
   // back to the server. The reason we need this is that we don't know which
   // route is available (AP or STA) until runtime.
-  #ifdef SD_LOADER
-    File saved_url = SD.open(URL_FILE, "w");
-  #else
-    File saved_url = LittleFS.open(URL_FILE, "w");
-  #endif
+
+  File saved_url = SD.open(URL_FILE, "w");
   
   if (saved_url) {
     StaticJsonDocument<192> data;
@@ -735,12 +709,7 @@ inline void initialize_web_server(const APIGetHook api_get_hooks[], const int ge
   // Register the Web App
   DEBUG_PRINTF("Registering Web App files.\n");
 
-  #ifdef SD_LOADER
-    webServer.serveStatic("/", SD, "/").setDefaultFile("index.html");
-  #else
-    webServer.serveStatic("/", LittleFS, "/").setDefaultFile("index.html");
-  #endif
-
+  webServer.serveStatic("/", SD, "/").setDefaultFile("index.html");
   
   webServer.onNotFound(handle_unknown_url);
 

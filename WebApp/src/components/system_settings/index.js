@@ -9,6 +9,7 @@ import SimpleChooser from '../../components/single_chooser';
 import { LabelSpinner } from '../../components/spinner';
 import RANGE_CONSTANTS from '../../utils/constants';
 import style from './style.css';
+import { Tooltip } from 'react-tooltip';
 
 /**
  * @brief Generates a UI element for changing NanoLux device system settings.
@@ -82,6 +83,10 @@ const SystemControls = () => {
 				<NumericSlider
 					className={style.settings_control}
 					label="LED Strip Length"
+					tooltip={{
+						id: 'length',
+						content: 'Adjusts how much of the LED strip is used by the device to display patterns',
+					}}
 					min={RANGE_CONSTANTS.LENGTH_MIN}
 					max={RANGE_CONSTANTS.LENGTH_MAX}
 					initial={data.length}
@@ -92,6 +97,10 @@ const SystemControls = () => {
 				<NumericSlider
 					className={style.settings_control}
 					label="LED Update Time (ms)"
+					tooltip={{
+						id: 'update',
+						content: 'Adjusts how fast patterns are updated on the LED strip. Lower values mean patterns are updated faster.',
+					}}
 					min={RANGE_CONSTANTS.LOOP_MIN}
 					max={RANGE_CONSTANTS.LOOP_MAX}
 					initial={data.loop}
@@ -102,9 +111,13 @@ const SystemControls = () => {
 				<SimpleChooser
 					className={style.settings_control}
 					label="Debug Mode"
+					tooltip={{
+						id: 'debug',
+						content: 'Optional debugging modes for development.',
+					}}
 					options={[
-						{option : "Debug Out", idx : 1},
-						{option : "Simulator Out", idx : 2},
+						{option : "Debug Out", idx : 1, tooltip : "Prints pattern and strip data to the serial console for debugging."},
+						{option : "Simulator Out", idx : 2, tooltip : "Prints full LED frames as comma-separated (R,G,B) values to the serial console for simulating patterns externally."},
 					]}
 					noSelection={true}
 					initial={data.debug}

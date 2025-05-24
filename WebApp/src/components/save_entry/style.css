@@ -1,0 +1,34 @@
+:root {
+    --se-h:    3rem;
+    --se-pad:  0 1rem;
+    --se-gap:  0.5rem;
+}
+
+.row {
+    display: inline-flex;
+    align-items: center;
+    margin-bottom: .75rem;
+}
+
+.slot {
+    width: 8rem;
+    font-size: var(--font-size);
+    font-weight: bold;
+    margin: 0.8rem 0.5rem 0 0.5rem;
+}
+
+.btn {
+    height: var(--se-h);
+    padding: var(--se-pad);
+    font-size: var(--font-size);
+    border-radius: .5rem;
+    background: #ffffff;
+    cursor: pointer;
+    margin: var(--se-gap);
+    margin-bottom: 0rem;
+}
+
+.btnPrimary {
+    background: var(--brand);
+    color: #fff;
+}

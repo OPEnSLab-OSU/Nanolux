@@ -67,8 +67,7 @@ extern Pattern mainPatterns[];
 
 /// MANUAL CONTROL VARIABLES
 volatile bool manual_control_enabled = false;
-Strip_Buffer manual_strip_buffer;
-Pattern_Data manual_pattern;
+int encoderDelta;
 
 /// Stores the last state of the rotary encoder button.
 bool lastEncoderBtnPressed = false;
@@ -346,49 +345,28 @@ void print_buffer(CRGB *buf, uint8_t len) {
 
 /// @brief Processes all calls to hardware and manages the results
 /// of those calls.
-///
-/// This function includes an ifdef else directive which checks for
-/// a macro called VERSION_2_HARDWARE. This macro is defined or
-/// commented out at the start of nanolux_util.h. If your hardware has
-/// a rotary encoder and button combo, ensure this macro is not
-/// commented.
 void update_hardware(){
 
-  #ifdef VERSION_2_HARDWARE
+  if (isEncoderButtonPressed() != lastEncoderBtnPressed)
+    loaded_patterns.pattern[0].postprocessing_mode = (uint8_t) ((loaded_patterns.pattern[0].postprocessing_mode + 1) % 4);
+  
+  //Serial.println(loaded_patterns.pattern[0].postprocessing_mode);
 
-    if (isEncoderButtonPressed() != lastEncoderBtnPressed)
-      manual_pattern.postprocessing_mode = (manual_pattern.postprocessing_mode + 1) % 4;
-    
-    //Serial.println(manual_pattern.postprocessing_mode);
+  lastEncoderBtnPressed = isEncoderButtonPressed();
 
-    lastEncoderBtnPressed = isEncoderButtonPressed();
+  process_reset_button(isEncoderButtonPressed());
 
-    process_reset_button(isEncoderButtonPressed());
+  encoderDelta = encoder_delta();
 
-    uint8_t old_idx = manual_pattern.idx;
-    manual_pattern.idx = calculate_pattern_index();
-    
-    if (old_idx != manual_pattern.idx){
-      Serial.print("Pattern changed to: ");
-      Serial.println(manual_pattern.idx);
-      pattern_changed = true;
-      manual_control_enabled = true;
-    }
-      
+  if (encoderDelta != 0) {
+    //Serial.print("Encoder changed by: "); Serial.println(encoderDelta);
 
-  #else
+    loaded_patterns.pattern[0].idx = (uint8_t) ((loaded_patterns.pattern[0].idx + encoderDelta + NUM_PATTERNS) % NUM_PATTERNS);
+    pattern_changed = true;
+    manual_control_enabled = true;
 
-    process_reset_button(!digitalRead(BUTTON_PIN));  // Manage resetting saves if button held
-    
-    if(button_pressed){
-      manual_pattern.idx = (manual_control_enabled + manual_pattern.idx) % NUM_PATTERNS;
-      manual_control_enabled = true;
-    }
-
-    reset_button_state();  // Check for user button input
-
-  #endif
-
+    //Serial.print("New pattern index: "); Serial.println(loaded_patterns.pattern[0].idx);
+  }
 }
 
 /// @brief Runs the main program loop.
@@ -412,46 +390,19 @@ void loop() {
     histories[1] = Strip_Buffer();
     histories[2] = Strip_Buffer();
     histories[3] = Strip_Buffer();
-    manual_strip_buffer = Strip_Buffer();
   } 
 
-  if(manual_control_enabled){
+  switch (loaded_patterns.mode) {
 
-    process_pattern(
-      &manual_pattern,
-      &manual_strip_buffer,
-      config.length
-    );
+    case STRIP_SPLITTING:
+    default:
+      run_strip_splitting();
+      break;
 
-    // Copy the processed segment to the temp buffer
-    memcpy(
-      output_buffer,
-      manual_strip_buffer.leds,
-      sizeof(CRGB) * config.length
-    );
+    case Z_LAYERING:
+      run_pattern_layering();
+      break;
 
-    // Smooth the brightness-adjusted output and put it
-    // into the main output buffer.
-    calculate_layering(
-      smoothed_output,
-      output_buffer,
-      smoothed_output,
-      config.length,
-      255 - 125);
-
-  }else{
-    switch (loaded_patterns.mode) {
-
-      case STRIP_SPLITTING:
-      default:
-        run_strip_splitting();
-        break;
-
-      case Z_LAYERING:
-        run_pattern_layering();
-        break;
-
-    }
   }
 
   FastLED.show();  // Push changes from the smoothed buffer to the LED strip

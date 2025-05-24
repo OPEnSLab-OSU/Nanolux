@@ -288,19 +288,18 @@ void IRAM_ATTR readEncoderISR(){
 void setup_rotary_encoder(){
     rotaryEncoder.begin();
     rotaryEncoder.setup(readEncoderISR);
-    rotaryEncoder.setBoundaries(0, NUM_PATTERNS, true); //minValue, maxValue, circleValues true|false (when max go to min and vice versa)
-    rotaryEncoder.setAcceleration(0);
-}
-
-/// @brief Calculates the pattern index the rotary encoder currently
-/// corresponds to.
-/// @returns The pattern index the encoder is set to.
-int calculate_pattern_index(){
-    return static_cast<int>(floor(rotaryEncoder.readEncoder())) % NUM_PATTERNS;
+    rotaryEncoder.setBoundaries(0, NUM_PATTERNS - 1, true); //minValue, maxValue, circleValues true|false (when max go to min and vice versa)
+    rotaryEncoder.disableAcceleration();
 }
 
 /// @brief Returns the current state of the rotary encoder button.
 /// @returns True if pressed, false if not.
 bool isEncoderButtonPressed(){
     return rotaryEncoder.isEncoderButtonClicked();
+}
+
+/// @brief Returns the difference between the encoder's previous and new position.
+/// @return An integer representing the change in the encoder's position.
+int encoder_delta(){
+  return static_cast<int>(floor(rotaryEncoder.encoderChanged())) % NUM_PATTERNS;
 }

@@ -1,4 +1,6 @@
-import MultiRangeSlider from "multi-range-slider-react";
+import MultiRangeSlider from "audiolux-multi-range-slider";
+import TooltipWrapper from "../tooltip/tooltip_wrapper";
+import { useState } from "preact/hooks";
 
 /**
  * @brief A NanoLux wrapper for the Multi Range Slider object.A
@@ -14,6 +16,7 @@ import MultiRangeSlider from "multi-range-slider-react";
  * @returns The UI element itself.
  */
 const MultiRangeSliderWrapper = ({
+    tooltip,
     min,
     max,
     selectedLow,
@@ -22,29 +25,61 @@ const MultiRangeSliderWrapper = ({
     maxRef,
     update
 }) => {
+    
+    const getHueColor = (value) => `hsl(${(value / 255) * 360}, 100%, 50%)`;
 
-    // SOURCE: https://github.com/developergovindgupta/multi-range-slider-react
+    const [thumbMinColor, setThumbMinColor] = useState(getHueColor(selectedLow));
+    const [thumbMaxColor, setThumbMaxColor] = useState(getHueColor(selectedHigh));
+
+    const handleThumbs = (e) => {
+        setThumbMinColor(getHueColor(e.minValue));
+        setThumbMaxColor(getHueColor(e.maxValue));
+    }
 
     const handleInput = (e) => {
         update(minRef, e.minValue);
         update(maxRef, e.maxValue);
     };
 
-    return (<div>
-
-        <MultiRangeSlider
-            min={min}
-            max={max}
-            step={50}
-            minValue={selectedLow}
-            maxValue={selectedHigh}
-            onChange={(e) => {
-                handleInput(e);
-            }}
-        />
-
-    </div>)
-
+    return (
+        <div>
+            {tooltip && (
+                <TooltipWrapper
+                  id={tooltip.id}
+                  content={tooltip.content}
+                  offset={tooltip.offset}
+                  style={tooltip.style}
+                  label={'Color Range'}
+                />
+            )}
+            <br/>
+            <MultiRangeSlider
+                min={min}
+                max={max}
+                step={50}
+                ruler={false}
+                minValue={selectedLow}
+                maxValue={selectedHigh}
+                onChange={(e) => {
+                    handleInput(e);
+                }}
+                onInput={(e) => {
+                    handleThumbs(e);
+                }}
+                barLeftColor="transparent"
+                barInnerColor="transparent"
+                barRightColor="transparent"
+                thumbLeftColor={thumbMinColor}
+                thumbRightColor={thumbMaxColor}
+                style={{
+                    border: "none",
+                    boxShadow: "none",
+                    background: '#FFFFFF',
+                    color: '#000000'
+                }}
+            />
+        </div>
+    )
 }
 
 export default MultiRangeSliderWrapper;

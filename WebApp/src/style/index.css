@@ -4,22 +4,40 @@
 	-webkit-font-smoothing: antialiased;
 	-moz-osx-font-smoothing: grayscale;
 
-	color-scheme: light dark;
-	color: #444;
-	background: #fafafa;
+	--font-size:    1.2rem;
+	--color-bg:   #F9FAF4;
+	--color-text: #000000;
+	--brand:      #0067c5;
 }
 
-@media (prefers-color-scheme: dark) {
-	:root {
-		color: #fff;
-		background: #1c1c1c;
-	}
+/* Light (default) */
+[data-theme='light'] {
+	--color-bg:    #F9FAF4;
+	--color-text:  #000000;
+	--brand:       #0067C5;
+}
+
+/* Cymaspace palette */
+[data-theme='cyma'] {
+	--color-bg:    #2D2D2D;
+	--color-text:  #FFFFFF;
+	--brand:       #C30443;
+}
+
+/* OSU palette */
+[data-theme='osu'] {
+	--color-bg:    #141414;
+	--color-text:  #FFFFFF;
+	--brand:       #D73F09;
 }
 
 body {
 	margin: 0;
 	padding: 0;
 	min-height: 100vh;
+
+	color:      var(--color-text);
+	background: var(--color-bg);
 }
 
 #app > main {

@@ -1,18 +1,19 @@
 import RANGE_CONSTANTS from '../../utils/constants';
 import NumericSlider from "../numeric_slider";
-import {useState, useEffect} from "preact/hooks";
-import {
-	getStripSettings,
-	updateStripSettings} from "../../utils/api";
-import {useConnectivity} from "../../context/online_context";
+import { useState, useEffect } from "preact/hooks";
+import { getStripSettings, updateStripSettings } from "../../utils/api";
+import { useConnectivity } from "../../context/online_context";
 import useInterval from "../../utils/use_interval";
 import { LabelSpinner } from '../spinner';
 import SimpleChooser from '../single_chooser';
 import style from './style.css';
 import PatternSettings from '../pattern_settings';
+import PatternModal from "../../components/pattern_modal";
 
-const StripSettings = ({patterns}) => {
+const StripSettings = ({patterns, advanced = false}) => {
 
+	const [isModalOpen, setIsModalOpen] = useState(false);
+	
 	// Checks if the web app is connected to the device.
 	const { isConnected } = useConnectivity();
 
@@ -98,6 +99,14 @@ const StripSettings = ({patterns}) => {
 		}
 	}
 
+	const openModal = () => {
+		setIsModalOpen(true);
+	}
+
+	const closeModal = () => {
+		setIsModalOpen(false);
+	}
+
 	/**
 	 * @brief Generates a list from 0 to end. Analagous to Python's
 	 * range() function.
@@ -115,65 +124,93 @@ const StripSettings = ({patterns}) => {
 	 * @brief Generates the Pattern UI element and it's selected subpattern.
 	 */
 	return (
-		(!loading ? 
+		(!loading ?
 			<div>
-				<SimpleChooser
-					label="Mode"
-					options={[
-						{option : "Strip Splitting", idx : RANGE_CONSTANTS.STRIP_SPLITTING_ID},
-						{option : "Z-Layering", idx : RANGE_CONSTANTS.Z_LAYERING_ID},
-					]}
-					noSelection={false}
-					initial={data.mode}
-					structure_ref="mode"
-					update={update}
-				/>
-				<br/>
-				<NumericSlider
-					className={style.settings_control}
-					label="Transparency"
-					min={RANGE_CONSTANTS.ALPHA_MIN}
-					max={RANGE_CONSTANTS.ALPHA_MAX}
-					initial={data.alpha}
-					structure_ref="alpha"
-					update={update}
-				/>
-				<br/>
+				{advanced && (
+					<>
+					<br/>
+					<SimpleChooser
+						label="Mode"
+						tooltip={{
+							id: 'mode',
+							content: 'The mode that patterns will be displayed in.',
+						}}
+						options={[
+							{option : "Strip Splitting", idx : RANGE_CONSTANTS.STRIP_SPLITTING_ID, tooltip : 'Splits the LED strip into sections up to 4 times based on how many patterns are added to the device.'},
+							{option : "Z-Layering", idx : RANGE_CONSTANTS.Z_LAYERING_ID, tooltip : "Renders up to 2 patterns that are layered on top of each other over the entire LED strip."},
+						]}
+						noSelection={false}
+						initial={data.mode}
+						structure_ref="mode"
+						update={update}
+					/>
+					<br/>
+					<NumericSlider
+						className={style.settings_control}
+						label="Transparency"
+						tooltip={{
+							id: 'transparency',
+							content: 'Adjusts how opaque or transparent a pattern is.',
+						}}
+						min={RANGE_CONSTANTS.ALPHA_MIN}
+						max={RANGE_CONSTANTS.ALPHA_MAX}
+						initial={data.alpha}
+						structure_ref="alpha"
+						update={update}
+					/>
+					<br/>
+					</>
+				)}
 				<NumericSlider
 					className={style.settings_control}
 					label="Noise Threshold"
+					tooltip={{
+						id: 'threshold',
+						content: 'Adjusts how much noise it takes to display a pattern.',
+					}}
 					min={RANGE_CONSTANTS.NOISE_MIN}
 					max={RANGE_CONSTANTS.NOISE_MAX}
 					initial={data.noise}
 					structure_ref="noise"
 					update={update}
 				/>
+				{advanced && (
+					<>
+					<br/>
+					<button className={style.incBtn} onClick={incrementPatterns}>+</button>
+					<button className={style.incBtn} onClick={decrementPatterns}>-</button>
+					<br/>
+					<div className={style.patternRow}>
+						{inRange(data.pattern_count).map((data) => {
+							if(data.idx == selectedPattern){
+								return <button className={style.patternBtn} onClick={function() {setPattern(data.idx);}} key={data.idx} style="border-style:inset;">
+									Pattern {data.idx + 1}
+								</button>
+							}else{
+								return <button className={style.patternBtn} onClick={function() {setPattern(data.idx);}} key={data.idx}>
+									Pattern {data.idx + 1}
+								</button>
+							}
+						})}
+					</div>
+					</>
+				)}
+				<button className={style.modalBtn} type="button" onClick={openModal}>Help</button>
 				<br/>
-				<button type="button" onClick={incrementPatterns}>+</button>
-				<button type="button" onClick={decrementPatterns}>-</button>
 				<hr></hr>
 
-				{inRange(data.pattern_count).map((data) => {
-					if(data.idx == selectedPattern){
-						return <button type="button" onClick={function() {setPattern(data.idx);}} key={data.idx} style="border-style:inset;">
-							Pattern {data.idx}
-						</button>
-					}else{
-						return <button type="button" onClick={function() {setPattern(data.idx);}} key={data.idx}>
-							Pattern {data.idx}
-						</button>
-					}
-					
-				})}
-
 				<PatternSettings
-					num={selectedPattern}
-					patterns={patterns}
-					key={selectedPattern}
-				/>	
-			</div> 
+				  num={selectedPattern}
+				  patterns={patterns}
+				  advanced={advanced}
+				  key={selectedPattern}
+				/>
+				<PatternModal
+					isOpen={isModalOpen}
+					onClose={closeModal}
+				/>
+			</div>
 		: <LabelSpinner></LabelSpinner>)
-		
 	);
 }
 

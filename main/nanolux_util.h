@@ -3,10 +3,6 @@
 
 #include <AiEsp32RotaryEncoder.h>
 
-// Uncomment this macro if using the new hardware
-// with the rotary encoder.
-
-#define VERSION_2_HARDWARE
 
 void IRAM_ATTR buttonISR();
 void reset_button_state();
@@ -21,7 +17,7 @@ void process_reset_button(int button_value);
 void nanolux_serial_print(char * msg);
 void IRAM_ATTR readEncoderISR();
 void setup_rotary_encoder();
-int calculate_pattern_index();
 bool isEncoderButtonPressed();
+int encoder_delta();
 
 #endif
