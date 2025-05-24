@@ -15,9 +15,8 @@ class AudioAnalysis {
 public:
   AudioAnalysis();
 
-  // Runners for sampleing and FFT
-  void runSampleAudio();
-  void runComputeFFT();
+  // Sampleing and FFT public interface
+  void processAudioFrame();
 
   // Accessors (cache their analysis on first call each loop)
   float*  getVReal();
@@ -61,8 +60,6 @@ private:
   Noisiness                noisinessModule;
 
   // Flags
-  bool sampled           = false;
-  bool fftComputed       = false;
   bool peakUpdated       = false;
   bool volumeUpdated     = false;
   bool maxDeltaUpdated   = false;

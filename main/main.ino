@@ -398,11 +398,7 @@ void update_hardware(){
 void loop() {
   begin_loop_timer(20);  // Begin timing this loop
 
-  audioAnalysis.runSampleAudio();
-
-  audioAnalysis.runComputeFFT();
-
-  audio_analysis();  // Run the audio analysis pipeline
+  audioAnalysis.processAudioFrame();  // Sample audio and compute FFT
 
   update_hardware(); // Pull updates from hardware (buttons, encoder)
 
@@ -473,30 +469,4 @@ void loop() {
   } while (timer_overrun() == 0);
 
   update_web_server();
-}
-
-/// @brief Performs audio analysis by running audio_analysis.cpp's
-/// audio processing functions.
-///
-/// If the macro SHOW_TIMINGS is defined, it will print out the amount
-/// of time audio processing takes via serial.
-void audio_analysis() {
-  #ifdef SHOW_TIMINGS
-    const int start = micros();
-  #endif
-
-  // Arduino FFT   16 / 128
-  // Fast4ier      13 / 128
-  //               27 / 256
-  // with centroid (and everything)
-  //               27 / 256
-
-  // whole loop    39 / 256
-  // whole loop    
-
-  
-  #ifdef SHOW_TIMINGS
-    const int end = micros();
-    Serial.printf("Audio analysis: %d ms\n", (end - start) / 1000);
-  #endif
 }

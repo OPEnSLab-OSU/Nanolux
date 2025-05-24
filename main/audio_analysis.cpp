@@ -20,32 +20,26 @@ AudioAnalysis::AudioAnalysis()
   deltaModule.setSampleRate(SAMPLING_FREQUENCY);
   deltaModule.setSpectrogram(&fftHistory);
 
-
   volumeModule.setWindowSize(SAMPLES);
   volumeModule.setSampleRate(SAMPLING_FREQUENCY);
   volumeModule.setSpectrogram(&fftHistory);
-
 
   peaksModule.setWindowSize(SAMPLES);
   peaksModule.setSampleRate(SAMPLING_FREQUENCY);
   peaksModule.setSpectrogram(&fftHistory);
   peaksModule.setNumPeaks(1);
 
-
   salientModule.setWindowSize(SAMPLES);
   salientModule.setSampleRate(SAMPLING_FREQUENCY);
   salientModule.setSpectrogram(&fftHistory);
-
 
   centroidModule.setWindowSize(SAMPLES);
   centroidModule.setSampleRate(SAMPLING_FREQUENCY);
   centroidModule.setSpectrogram(&fftHistory);
 
-
   percussionModule.setWindowSize(SAMPLES);
   percussionModule.setSampleRate(SAMPLING_FREQUENCY);
   percussionModule.setSpectrogram(&fftHistory);
-
 
   noisinessModule.setWindowSize(SAMPLES);
   noisinessModule.setSampleRate(SAMPLING_FREQUENCY);
@@ -53,27 +47,18 @@ AudioAnalysis::AudioAnalysis()
 }
 
 void AudioAnalysis::resetCache() {
-  sampled = fftComputed = peakUpdated = false;
+  peakUpdated = false;
   deltasUpdated = volumeUpdated = false;
   salientsUpdated = centroidUpdated = false;
   percussionUpdated = noisinessUpdated = false;
   maxDeltaUpdated = fbsUpdated = false;
 }
 
-// Step‑wise runners (to be changed)
+// Public sampling and fft interface
 
-void AudioAnalysis::runSampleAudio() {
-  if (!sampled) {
-    sample_audio();
-    sampled = true;
-  }
-}
-
-void AudioAnalysis::runComputeFFT() {
-  if (!fftComputed) {
-    compute_FFT();
-    fftComputed = true;
-  }
+void AudioAnalysis::processAudioFrame() {
+  sample_audio();
+  compute_FFT();
 }
 
 // Getters (with caching)
@@ -160,14 +145,13 @@ void AudioAnalysis::sample_audio() {
   for (int i = 0; i < SAMPLES; i++) {
     unsigned long t0 = micros();
     float sample = analogRead(ANALOG_PIN);
-    // operator=(float) will set .re = sample, .im = 0
     fftBuffer[i] = sample;
     while (micros() - t0 < sampling_period_us) { }
   }
 }
 
 void AudioAnalysis::compute_FFT() {
-  // 1) DC removal
+  // DC removal
   float mean = 0;
   for (int i = 0; i < SAMPLES; i++) {
     mean += fftBuffer[i].re();        
@@ -185,7 +169,6 @@ void AudioAnalysis::compute_FFT() {
     fftBuffer[i] *= w;                
   }
 
-  // 3) In-place FFT
   Fast4::FFT(fftBuffer, SAMPLES);
 
   // Magnitude conversion 
@@ -201,7 +184,7 @@ void AudioAnalysis::compute_FFT() {
 void AudioAnalysis::update_peak() {
   const int half = SAMPLES/2;
 
-  // 1) find the bin with maximum magnitude (skip DC bin 0)
+  // find the bin with maximum magnitude (skip DC bin 0)
   int maxBin = 1;
   for (int i = 2; i < (SAMPLES / 2); ++i) {
     if (vReal[i] > vReal[maxBin]) {
@@ -209,29 +192,24 @@ void AudioAnalysis::update_peak() {
     }
   }
 
-  // 2) if we're at the very edges, fall back to the bin center
   if (maxBin <= 0 || maxBin >= (SAMPLES / 2) - 1) {
     peak = maxBin * (float(SAMPLING_FREQUENCY) / SAMPLES);
     return;
   }
 
-  // 3) grab the three magnitudes around the peak
   float y0 = vReal[maxBin - 1];
   float y1 = vReal[maxBin];
   float y2 = vReal[maxBin + 1];
 
-  // 4) compute the bin offset via parabolic (quadratic) interpolation
-  //    δ =  ½ * (y0 - y2) / (y0 - 2*y1 + y2)
+  // compute the bin offset by quadratic interpolation
   float denom = (y0 - 2.0f * y1 + y2);
   float delta = 0.0f;
+
   if (denom != 0.0f) {
     delta = 0.5f * (y0 - y2) / denom;
   }
 
-  // 5) compute the “true” peak bin
   float peakBin = maxBin + delta;
-
-  // 6) convert to Hz
   peak = peakBin * (float(SAMPLING_FREQUENCY) / SAMPLES);
 }
 
