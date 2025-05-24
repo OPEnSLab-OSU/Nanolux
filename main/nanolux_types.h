@@ -21,7 +21,9 @@ typedef void (*SimplePatternList[])();
 //
 // When using a board with a version below 1.2, or an unmodified
 // v1.2 board, set this pin to A0.
-#define ANALOG_PIN          A3
+//#define ANALOG_PIN          A3
+#define ANALOG_PIN          A2
+// change to A2
 
 // Vowel recognition
 enum VowelSounds {
@@ -34,9 +36,15 @@ enum VowelSounds {
 };
 
 // Rotary Encoder Constants
-#define ROTARY_ENCODER_A_PIN 23
-#define ROTARY_ENCODER_B_PIN 22
-#define ROTARY_ENCODER_BUTTON_PIN 33
+//#define ROTARY_ENCODER_A_PIN 23
+#define ROTARY_ENCODER_A_PIN 27
+// change to 27
+//#define ROTARY_ENCODER_B_PIN 22
+#define ROTARY_ENCODER_B_PIN 33
+// change to 33
+#define ROTARY_ENCODER_BUTTON_PIN 32
+//#define ROTARY_ENCODER_BUTTON_PIN 33
+// change to 32
 #define ROTARY_ENCODER_VCC_PIN -1
 #define ROTARY_ENCODER_STEPS 4
 
@@ -51,7 +59,7 @@ enum VowelSounds {
 
 // arduinoFFT
 #define SAMPLES             128     // Must be a power of 2  // 128 - 1024
-#define SAMPLING_FREQUENCY  10000   // Hz, must be less than 10000 due to ADC
+#define SAMPLING_FREQUENCY  8000   // Hz, must be less than 10000 due to ADC
 #define NOISE_GATE_THRESH   20
 #define MAX_NOISE_GATE_THRESH   100
 
@@ -60,7 +68,7 @@ enum VowelSounds {
 #define Z_LAYERING      1
 
 // Button Input
-#define BUTTON_PIN 33
+#define BUTTON_PIN 32
 
 // MAX - MIN | Freq Volume
 #define MAX_FREQUENCY       4000.0
@@ -93,3 +101,4 @@ enum VowelSounds {
 #define VOL_SHOW true
 
 #endif
+
