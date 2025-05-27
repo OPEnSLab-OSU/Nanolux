@@ -17,3 +17,4 @@ act.exe
 docs/manual/mdpdf.log
 docs/manual/wkhtmltopdf.exe
 main/.DS_Store
+.DS_Store
