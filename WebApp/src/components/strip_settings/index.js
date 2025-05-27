@@ -177,17 +177,17 @@ const StripSettings = ({patterns, advanced = false}) => {
 				{advanced && (
 					<>
 					<br/>
-					<button className={style.incBtn} onClick={incrementPatterns}>+</button>
-					<button className={style.incBtn} onClick={decrementPatterns}>-</button>
+					<button className={style.incBtn} onClick={incrementPatterns} aria-label='Increase pattern count'>+</button>
+					<button className={style.incBtn} onClick={decrementPatterns} aria-label='Decrease pattern count'>-</button>
 					<br/>
 					<div className={style.patternRow}>
 						{inRange(data.pattern_count).map((data) => {
 							if(data.idx == selectedPattern){
-								return <button className={style.patternBtn} onClick={function() {setPattern(data.idx);}} key={data.idx} style="border-style:inset;">
+								return <button className={style.patternBtn} onClick={function() {setPattern(data.idx);}} key={data.idx} style="border-style:inset;" aria-pressed='true'>
 									Pattern {data.idx + 1}
 								</button>
 							}else{
-								return <button className={style.patternBtn} onClick={function() {setPattern(data.idx);}} key={data.idx}>
+								return <button className={style.patternBtn} onClick={function() {setPattern(data.idx);}} key={data.idx} aria-pressed='false'>
 									Pattern {data.idx + 1}
 								</button>
 							}
@@ -195,7 +195,14 @@ const StripSettings = ({patterns, advanced = false}) => {
 					</div>
 					</>
 				)}
-				<button className={style.modalBtn} type="button" onClick={openModal}>Help</button>
+				<button
+				  className={style.modalBtn}
+				  type="button"
+				  onClick={openModal}
+				  aria-haspopup='dialog'
+				  aria-label='Open help dialog for pattern descriptions'>
+				  Help
+				</button>
 				<br/>
 				<hr></hr>
 

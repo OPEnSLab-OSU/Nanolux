@@ -32,11 +32,11 @@ const Settings = () => {
     }, [isConnected])
 
 	return (
-		<div className={style.settingsPage}>
+		<div className={style.settingsPage} role='main' id='settings-page'>
 			{/* BASIC SETTINGS */}
 			{!showAdvanced && (
-				<div className={style.basicSection}>
-					<label style={{ fontSize: '1.6rem', fontWeight: 'bold' }}>Pattern Settings</label>
+				<div className={style.basicSection} id='basic-settings' role='region' aria-label='Basic device settings'>
+					<label id='basic-settings-label' role='heading' aria-level={2} aria-label='Basic pattern Settings' style={{ fontSize: '1.6rem', fontWeight: 'bold' }}>Pattern Settings</label>
 					<br/><br/>
 					<StripSettings patterns={patterns} advanced={false} />
 				</div>
@@ -44,14 +44,14 @@ const Settings = () => {
 
 			{/* FULL SETTINGS */}
 		  	{showAdvanced && (
-				<div className={style.advancedSection}>
-			  		<div className={style.advancedLeft}>
-						<label style={{ fontSize: '1.6rem', fontWeight: 'bold' }}>Pattern Settings</label>
+				<div className={style.advancedSection} id='advanced-settings' role='region' aria-label='Advanced device settings'>
+			  		<div className={style.advancedLeft} role='region' aria-labelledby='advanced-patterns-label'>
+						<label id='advanced-patterns-label' role='heading' aria-level={2} style={{ fontSize: '1.6rem', fontWeight: 'bold' }}>Pattern Settings</label>
 						<br/><br/>
 						<StripSettings patterns={patterns} advanced={true} />
 			  		</div>
-			  		<div className={style.advancedRight}>
-			  			<label style={{ fontSize: '1.6rem', fontWeight: 'bold' }}>System Settings</label>
+			  		<div className={style.advancedRight} role='region' aria-labelledby='advanced-system-label'>
+			  			<label id='advanced-system-label' role='heading' aria-level={2} style={{ fontSize: '1.6rem', fontWeight: 'bold' }}>System Settings</label>
 			  			<br/><br/><br/>
 						<SystemControls />
 						<hr/>
@@ -73,6 +73,8 @@ const Settings = () => {
 		  	<button
 				className={style.advancedToggle}
 				onClick={() => setShowAdvanced(!showAdvanced)}
+				aria-expanded={showAdvanced}
+				aria-controls='basic-settings advanced-settings'
 		  	>
 				{showAdvanced ? 'Hide Advanced' : 'Show Advanced'}
 		  	</button>

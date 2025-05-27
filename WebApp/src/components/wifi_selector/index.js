@@ -154,25 +154,41 @@ const WifiSelector = ({
             ) : (
                 <div className={style.selector}>
                 <div className={`${style.dropdownContainer} ${style.leftComponent}`}>
-                    <div className={style.dropdownInput}
-                         onClick={handleInputClick}>
+                    <div
+                      className={style.dropdownInput}
+                      id='wifi-combobox'
+                      role='combobox'
+                      aria-expanded={showMenu}
+                      aria-haspopup='listbox'
+                      aria-controls='wifi-list'
+                      tabIndex={0}
+                      aria-label='Select WiFi network'
+                      onKeyDown={e => {
+                        if (e.key === 'Enter' || e.key === ' ') handleInputClick();
+                      }}
+                      onClick={handleInputClick}
+                    >
                         <div className={style.dropDownSelectedValue}>{getDisplay()}</div>
                         <div className={style.dropDownTools}>
                             <div className={style.dropDownTool}>
                                 {isScanning ? (
                                     <Spinner />
                                 ) : (
-                                    <FaArrowDown />
+                                    <FaArrowDown aria-hidden='true'/>
                                 ) }
                             </div>
                         </div>
                     </div>
                     {showMenu &&
-                        <div className={style.dropdownMenu}>
+                        <div className={style.dropdownMenu} id='wifi-list' role='listbox' aria-labelledby='wifi-combobox'>
                             {wifiList.map(wifi => (
-                                <div key={key++}
-                                     className={style.dropdownItem}
-                                     onClick={() => handleItemClick(wifi)}
+                                <div
+                                  key={key++}
+                                  className={style.dropdownItem}
+                                  role='option'
+                                  aria-selected={selectedWifi ? wifi.ssid === selectedWifi.ssid : false}
+                                  tabIndex={-1}
+                                  onClick={() => handleItemClick(wifi)}
                                 >
                                     <div className={style.dropdownItemSSID}>{wifi.ssid}</div>
                                     <div className={style.dropdownItemRSSI}>{rssi_icon(wifi.rssi)}</div>
@@ -183,7 +199,7 @@ const WifiSelector = ({
                         </div>
                     }
                 </div>
-                    <button className={`${style.scanButton} ${style.rightComponent}`} onClick={getWifiList}>Scan</button>
+                    <button className={`${style.scanButton} ${style.rightComponent}`} onClick={getWifiList} aria-label='Scan for WiFi networks'>Scan</button>
                 </div>
             )}
         </div>

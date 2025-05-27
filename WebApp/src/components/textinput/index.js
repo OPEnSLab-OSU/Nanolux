@@ -26,8 +26,8 @@ const TextInput = ({
     }
 
     return (
-        <div>
-            <label className={style.label} htmlFor="text-input">{inputPrompt}</label>
+        <div role='group' aria-labelledby='text-input-label'>
+            <label id='text-input-label' className={style.label} htmlFor="text-input">{inputPrompt}</label>
             <input className={style.label}
                    id="text-input"
                    type="text"
@@ -35,9 +35,11 @@ const TextInput = ({
                    onChange={handleInputChange}
             />
             <div>
-                <button className={style.formButton}
-                        id="show-password"
-                        onClick={commitText}
+                <button
+                  type='button'
+                  className={style.formButton}
+                  id="show-password"
+                  onClick={commitText}
                 >
                     {commmitPrompt}
                 </button>

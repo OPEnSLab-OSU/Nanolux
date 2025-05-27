@@ -18,9 +18,9 @@ const Header = () => (
 			<h1>AudioLux</h1>
 		</a>
 		<div className={style.palette}>
-			<PaletteSelector />
+			<PaletteSelector aria-label="Choose a color palette" />
 		</div>
-		<nav>
+		<nav aria-label='Main Navigation' >
 			<Link activeClassName={style.active} href="/">
 				Settings
 			</Link>

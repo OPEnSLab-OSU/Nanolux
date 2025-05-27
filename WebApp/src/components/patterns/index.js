@@ -65,18 +65,19 @@ const Patterns = ({
     }
 
     return (
-        <div>
+        <div role='group' aria-labelledby='pattern-options-label'>
             <div>
-                <label className={style.label} htmlFor="pattern-options">Current Pattern</label>
+                <label id='pattern-options-label' className={style.label} htmlFor="pattern-options">Current Pattern</label>
                 <select className={style.select}
                         id="pattern-options"
                         value={initialID}
                         onChange={handleSelection}
+                        aria-describedby='pattern-options-label'
                 >
                     {patternOptions}
                 </select>
-                <button className={style.cycleBtn} onClick={decrement}>Prev</button>
-                <button className={style.cycleBtn} onClick={increment}>Next</button>
+                <button className={style.cycleBtn} onClick={decrement} aria-label='Previous pattern'>Prev</button>
+                <button className={style.cycleBtn} onClick={increment} aria-label='Next pattern'>Next</button>
             </div>
         </div>
     );

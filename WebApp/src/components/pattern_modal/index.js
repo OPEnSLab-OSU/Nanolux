@@ -36,26 +36,33 @@ const PatternModal = ({ isOpen, onClose }) => {
   if (!isOpen) return null;
 
   return (
-    <div className={style.modalOverlay}>
-      <div className={style.modal}>
-        <h2 className={style.modalTitle}>Patterns</h2>
-        <p className={style.modalSubtitle}>
+    <div role='presentation' className={style.modalOverlay}>
+      <div
+        className={style.modal}
+        role='dialog'
+        aria-modal='true'
+        aria-labelledby='patterns-modal-title'
+        aria-describedby='patterns-modal-desc'
+        tabIndex={-1}
+      >
+        <h2 id='patterns-modal-title' className={style.modalTitle}>Patterns</h2>
+        <p id='patterns-modal-desc' className={style.modalSubtitle}>
             <a
               href='https://github.com/OPEnSLab-OSU/Nanolux/wiki/Pattern-Library'
               target='_blank'
-              rel='noopener noreferror'
+              rel='noopener noreferrer'
               >View more information about the full pattern library on our GitHub wiki
             </a>
         </p>
-        <div className={style.patternsGrid}>
+        <div role='region' aria-label='Available patterns' className={style.patternsGrid}>
           {PATTERN_INFOS.map(({ title, desc }) => (
-            <div key={title} className={style.patternItem}>
-              <h3>{title}</h3>
+            <div key={title} className={style.patternItem} role='group' aria-labelledby={`pattern-${title}-title`}>
+              <h3 id={`pattern-${title}-title`}>{title}</h3>
               <p>{desc}</p>
             </div>
           ))}
         </div>
-        <button className={style.modalButton} onClick={onClose}>
+        <button className={style.modalButton} onClick={onClose} aria-label='Dismiss patterns dialog'>
           Dismiss
         </button>
       </div>

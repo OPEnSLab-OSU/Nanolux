@@ -42,7 +42,7 @@ const MultiRangeSliderWrapper = ({
     };
 
     return (
-        <div>
+        <div role="group" aria-label="Color range slider" aria-describedby={tooltip ? tooltip.id : undefined} >
             {tooltip && (
                 <TooltipWrapper
                   id={tooltip.id}
@@ -71,6 +71,9 @@ const MultiRangeSliderWrapper = ({
                 barRightColor="transparent"
                 thumbLeftColor={thumbMinColor}
                 thumbRightColor={thumbMaxColor}
+                aria-label='Color range slider'
+                aria-valuetext={`Selected range is from ${selectedLow} to ${selectedHigh}`}
+                aria-describedby={tooltip ? tooltip.id : undefined}
                 style={{
                     border: "none",
                     boxShadow: "none",

@@ -23,19 +23,23 @@ const Password = ({ prompt, password, onPasswordChange }) => {
     };
 
     return (
-        <div>
-            <label className={style.label} htmlFor="password-input">{prompt}</label>
-            <input className={style.label}
-                    id="password-input"
-                    type={showPassword ? "text" : "password"}
-                   value={password}
-                    onChange={handlePasswordChange}
+        <div role='group' aria-labelledby='password-label'>
+            <label id='password-label' className={style.label} htmlFor="password-input">{prompt}</label>
+            <input
+              className={style.label}
+              id="password-input"
+              type={showPassword ? "text" : "password"}
+              value={password}
+              onChange={handlePasswordChange}
             />
             <div>
-                <input id="show-password"
-                       type="checkbox"
-                       value={showPassword}
-                       onChange={handleCheckboxChange}
+                <input
+                  id="show-password"
+                  type="checkbox"
+                  checked={showPassword}
+                  onChange={handleCheckboxChange}
+                  aria-checked={showPassword}
+                  aria-controls='password-input'
                 />
                 <label className={style.label} htmlFor="show-password">Show password</label>
             </div>

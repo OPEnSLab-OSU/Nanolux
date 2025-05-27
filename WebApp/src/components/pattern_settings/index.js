@@ -153,13 +153,15 @@ const PatternSettings = ({num, patterns, advanced = false}) => {
 				update={update}
 			/>
 			<br/>
-			<div className={style.settings_control}>
+			<div className={style.settings_control} role="group" aria-label="Post-processing options">
                 <label className={style.checkboxOption}>
 					<input 
 						type="checkbox" 
 						id="reverse" 
 						name="reverse" 
 						checked={(data.postprocess == 1) || (data.postprocess == 3)}
+						aria-checked={(data.postprocess == 1) || (data.postprocess == 3)}
+						aria-describedby="reverse-tooltip"
 						onChange={() => {
 							switch (data.postprocess) {
 								case 0:
@@ -181,7 +183,7 @@ const PatternSettings = ({num, patterns, advanced = false}) => {
 						}}
 					/>
 					<TooltipWrapper
-					  id='reverse'
+					  id='reverse-tooltip'
 					  content='Switches which end patterns will render from on the LED strip.'
 					  label='Reverse'
 					/>
@@ -192,6 +194,8 @@ const PatternSettings = ({num, patterns, advanced = false}) => {
 						id="mirror" 
 						name="mirror" 
 						checked={(data.postprocess == 2) || (data.postprocess == 3)}
+						aria-checked={(data.postprocess == 2) || (data.postprocess == 3)}
+						aria-describedby="mirror-tooltip"
 						onChange={() => {
 							switch (data.postprocess) {
 								case 0:
@@ -213,7 +217,7 @@ const PatternSettings = ({num, patterns, advanced = false}) => {
 						}}
 					/>
 					<TooltipWrapper
-					  id='mirror'
+					  id='mirror-tooltip'
 					  content='Patterns will start in the middle of the LED strip and render towards both ends.'
 					  label='Mirror'
 					/>
