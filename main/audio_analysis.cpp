@@ -174,7 +174,7 @@ void AudioAnalysis::compute_FFT() {
 
   // Magnitude conversion 
   for (int i = 0; i < SAMPLES; i++) {  
-    vReal[i] = sqrt(pow(vReal[i].re(), 2) + pow(vReal[i].im(), 2));
+    vReal[i] = sqrt(pow(fftBuffer[i].re(), 2) + pow(fftBuffer[i].im(), 2));
   }
 
   fftHistory.pushWindow(vReal);
