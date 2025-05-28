@@ -626,11 +626,39 @@ void bands(Strip_Buffer* buf, int len, Pattern_Data* params) {
 void eq(Strip_Buffer * buf, int len, Pattern_Data* params) {
   float* vReal = audioAnalysis.getVReal();
 
-  for (int i = 0; i < len; i++) {
-    int brit = map(vReal[i], MIN_FREQUENCY, MAX_FREQUENCY, 0, 255); // The brightness is based on HOW MUCH of the frequency exists
-    int hue = map(i, 0, len, 0, 255); // The fue is based on position on the light strip, ergo, what frequency it is at
-    if (vReal[i] > 200) { // An extra gate because the frequency array is really messy without it
-      buf->leds[i] = CHSV(hue, 255, brit);
+  const float MAG_MIN  = 10.0f;            // noise floor
+  const float MAG_MAX  = 2000.0f;          // max magnitude
+  const float THRESH   = 200.0f;           // gating threshold
+
+  for (int led = 0; led < len; ++led) {
+    // bin range for this LED
+    float f0 = led * float(BINS) / len;
+    float f1 = (led + 1) * float(BINS) / len;
+
+    int b0 = floor(f0);
+    int b1 = ceil(f1);
+    if (b1 <= b0) b1 = b0 + 1;
+    if (b1 > BINS) b1 = BINS;
+
+    // average all bins in [b0, b1)
+    float sum = 0;
+    for (int b = b0; b < b1; ++b) {
+      sum += vReal[b];
+    } 
+    float mag = sum / float(b1 - b0);
+
+    // map magnitude to brightness
+    int bri = map(mag, MAG_MIN, MAG_MAX, 0, 255);
+    bri = constrain(bri, 0, 255);
+
+    // pick a hue based on the center bin
+    int centerBin = (b0 + b1) / 2;
+    uint8_t hue = map(centerBin, 0, BINS - 1, 0, 255);
+
+    if (mag > THRESH) {
+      buf->leds[led] = CHSV(hue, 255, bri);
+    } else {
+      buf->leds[led] = CHSV(0, 0, 0);  // off
     }
   }
 }
