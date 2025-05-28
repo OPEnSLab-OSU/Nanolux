@@ -16,34 +16,13 @@ AudioAnalysis::AudioAnalysis()
 , noisinessModule()
 {
   // Configure AudioPrism modules
-  deltaModule.setWindowSize(SAMPLES);
-  deltaModule.setSampleRate(SAMPLING_FREQUENCY);
-  deltaModule.setSpectrogram(&fftHistory);
-
-  volumeModule.setWindowSize(SAMPLES);
-  volumeModule.setSampleRate(SAMPLING_FREQUENCY);
-  volumeModule.setSpectrogram(&fftHistory);
-
-  peaksModule.setWindowSize(SAMPLES);
-  peaksModule.setSampleRate(SAMPLING_FREQUENCY);
-  peaksModule.setSpectrogram(&fftHistory);
-  peaksModule.setNumPeaks(1);
-
-  salientModule.setWindowSize(SAMPLES);
-  salientModule.setSampleRate(SAMPLING_FREQUENCY);
-  salientModule.setSpectrogram(&fftHistory);
-
-  centroidModule.setWindowSize(SAMPLES);
-  centroidModule.setSampleRate(SAMPLING_FREQUENCY);
-  centroidModule.setSpectrogram(&fftHistory);
-
-  percussionModule.setWindowSize(SAMPLES);
-  percussionModule.setSampleRate(SAMPLING_FREQUENCY);
-  percussionModule.setSpectrogram(&fftHistory);
-
-  noisinessModule.setWindowSize(SAMPLES);
-  noisinessModule.setSampleRate(SAMPLING_FREQUENCY);
-  noisinessModule.setSpectrogram(&fftHistory);
+  INIT_AUDIOPRISM(deltaModule)
+  INIT_AUDIOPRISM(volumeModule)
+  INIT_AUDIOPRISM(peaksModule)
+  INIT_AUDIOPRISM(salientModule)
+  INIT_AUDIOPRISM(centroidModule)
+  INIT_AUDIOPRISM(percussionModule)
+  INIT_AUDIOPRISM(noisinessModule)
 }
 
 void AudioAnalysis::resetCache() {
@@ -190,7 +169,7 @@ void AudioAnalysis::update_peak() {
     }
   }
 
-  if (maxBin <= 0 || maxBin >= (BINS) - 1) {
+  if (maxBin >= (BINS) - 1) {
     peak = maxBin * (float(SAMPLING_FREQUENCY) / SAMPLES);
     return;
   }
@@ -253,52 +232,20 @@ void AudioAnalysis::update_noisiness() {
 }
 
 void AudioAnalysis::update_five_band_split(int len) {
-  // Define the volumes to be calculated
-  float vol1 = 0;
-  float vol2 = 0;
-  float vol3 = 0;
-  float vol4 = 0;
-  float vol5 = 0;
-  // Sum the frequencies
-  for (int i = 5; i < SAMPLES-3; i++) {
-    if (0 <= i && i < len/6) {
-      vol1 += vReal[i];
-    }
-    if (len/6 <= i && i < 2*len/6) {
-      vol2 += vReal[i];
-    }
-    if (2*len/6 <= i && i < 3*len/6) {
-      vol3 += vReal[i];
-    }
-    if (3*len/6 <= i && i < 4*len/6) {
-      vol4 += vReal[i];
-    }
-    if (4*len/6 <= i && i < 5*len/6) {
-      vol5 += vReal[i];
-    }
+  const int BANDS   = 5;
+  const int section = len / 6;      
+  float sums[BANDS] = {0};
+
+  // accumulate magnitudes into 5 buckets
+  for (int i = 5; i < SAMPLES - 3; ++i) {
+    int b = i / section;            
+    if (b >= BANDS) b = BANDS - 1;  
+    sums[b] += vReal[i];
   }
-  
-  // Average the frequencies
-  vol1 /= (len/6);
-  vol2 /= (len/6);
-  vol3 /= (len/6);
-  vol4 /= (len/6);
-  vol5 /= (len/6);
 
-  // Map to frequency based values
-  vol1 = map(vol1, MIN_VOLUME, MAX_VOLUME, 0, len/6);
-  vol2 = map(vol2, MIN_VOLUME, MAX_VOLUME, 0, len/6);
-  vol3 = map(vol3, MIN_VOLUME, MAX_VOLUME, 0, len/6);
-  vol4 = map(vol4, MIN_VOLUME, MAX_VOLUME, 0, len/6);
-  vol5 = map(vol5, MIN_VOLUME, MAX_VOLUME, 0, len/6);
-
-  // Store the results
-  fbs[0] = vol1;
-  fbs[1] = vol2;
-  fbs[2] = vol3;
-  fbs[3] = vol4;
-  fbs[4] = vol5;
-
-  // Return the five-band-split
-  return;
+  // average & map each bucket, store into fbs[]
+  for (int b = 0; b < BANDS; ++b) {
+    float avg = sums[b] / float(section);
+    fbs[b] = map(avg, MIN_VOLUME, MAX_VOLUME, 0, section);
+  }
 }

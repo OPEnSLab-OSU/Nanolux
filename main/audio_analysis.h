@@ -1,7 +1,11 @@
 // AudioAnalysis.h
-
 #ifndef AUDIO_ANALYSIS_H
 #define AUDIO_ANALYSIS_H
+
+#define INIT_AUDIOPRISM(module)              \
+  module.setWindowSize(SAMPLES);             \
+  module.setSampleRate(SAMPLING_FREQUENCY);  \
+  module.setSpectrogram(&fftHistory);
 
 #include <math.h>
 #include <Arduino.h>
