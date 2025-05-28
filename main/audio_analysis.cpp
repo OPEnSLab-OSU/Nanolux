@@ -145,7 +145,9 @@ void AudioAnalysis::sample_audio() {
   for (int i = 0; i < SAMPLES; i++) {
     unsigned long t0 = micros();
     float sample = analogRead(ANALOG_PIN);
-    fftBuffer[i] = sample;
+    // this sets real=sample, imag=0
+    fftBuffer[i] = sample; 
+
     while (micros() - t0 < sampling_period_us) { }
   }
 }
@@ -165,24 +167,20 @@ void AudioAnalysis::compute_FFT() {
 
   // Hamming window
   for (int i = 0; i < SAMPLES; i++) {
-    float w = 0.54f - 0.46f * cosf(2.0f * M_PI * i / (SAMPLES - 1));
-    fftBuffer[i] *= w;                
+    fftBuffer[i] *= 0.54f - 0.46f * cosf(2.0f * M_PI * i / (SAMPLES - 1));               
   }
 
   Fast4::FFT(fftBuffer, SAMPLES);
 
   // Magnitude conversion 
-  for (int i = 0; i < SAMPLES; i++) {
-    float re = fftBuffer[i].re();    
-    float im = fftBuffer[i].im();   
-    vReal[i] = sqrtf(re*re + im*im);
+  for (int i = 0; i < SAMPLES; i++) {  
+    vReal[i] = sqrt(pow(vReal[i].re(), 2) + pow(vReal[i].im(), 2));
   }
 
   fftHistory.pushWindow(vReal);
 }
 
 void AudioAnalysis::update_peak() {
-  const int half = SAMPLES/2;
 
   // find the bin with maximum magnitude (skip DC bin 0)
   int maxBin = 1;

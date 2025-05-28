@@ -3,10 +3,10 @@
 #ifndef AUDIO_ANALYSIS_H
 #define AUDIO_ANALYSIS_H
 
-#include <Arduino.h>
-#include <complex.h>
-#include <Fast4ier.h>
 #include <math.h>
+#include <Arduino.h>
+#include <Fast4ier.h>
+#include <complex>
 #include "AudioPrism.h"
 #include "nanolux_types.h"
 #include "nanolux_util.h"
