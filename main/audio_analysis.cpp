@@ -184,13 +184,13 @@ void AudioAnalysis::update_peak() {
 
   // find the bin with maximum magnitude (skip DC bin 0)
   int maxBin = 1;
-  for (int i = 2; i < (SAMPLES / 2); ++i) {
+  for (int i = 2; i < (BINS); ++i) {
     if (vReal[i] > vReal[maxBin]) {
       maxBin = i;
     }
   }
 
-  if (maxBin <= 0 || maxBin >= (SAMPLES / 2) - 1) {
+  if (maxBin <= 0 || maxBin >= (BINS) - 1) {
     peak = maxBin * (float(SAMPLING_FREQUENCY) / SAMPLES);
     return;
   }
@@ -228,7 +228,7 @@ void AudioAnalysis::update_max_delta() {
   if (!deltasUpdated) {
     update_deltas();
   }
-  maxDelt = (largest(delt, SAMPLES / 2));
+  maxDelt = (largest(delt, BINS));
 }
 
 void AudioAnalysis::update_salient_freqs() {

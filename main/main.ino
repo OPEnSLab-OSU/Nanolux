@@ -378,8 +378,6 @@ void loop() {
 
   audioAnalysis.processAudioFrame();  // Sample audio and compute FFT
 
-  Serial.println(audioAnalysis.getPeak());
-
   update_hardware(); // Pull updates from hardware (buttons, encoder)
 
   // Reset buffers if pattern settings were changed since
