@@ -49,9 +49,10 @@ enum VowelSounds {
 #define MAX_BRIGHTNESS     255
 #define FRAMES_PER_SECOND  120
 
-// arduinoFFT
+// FFT
 #define SAMPLES             128     // Must be a power of 2  // 128 - 1024
 #define SAMPLING_FREQUENCY  8000   // Hz, must be less than 10000 due to ADC
+#define BINS                SAMPLES / 2
 #define NOISE_GATE_THRESH   20
 #define MAX_NOISE_GATE_THRESH   100
 
