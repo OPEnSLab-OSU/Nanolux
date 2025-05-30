@@ -2,8 +2,15 @@ name: ESLint + a11y
 
 on:
   push:
+    paths:
+      - 'WebApp/**'
+      - '.github/workflows/*.yml'
     branches: [ main ]
   pull_request:
+    paths:
+      - 'WebApp/**'
+      - '.github/workflows/*.yml'
+    branches: [ main ]
 
 jobs:
   eslint:
