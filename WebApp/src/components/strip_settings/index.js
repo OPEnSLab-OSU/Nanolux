@@ -128,7 +128,7 @@ const StripSettings = ({patterns, advanced = false}) => {
 			<div>
 				{advanced && (
 					<>
-					<br/>
+					<br />
 					<SimpleChooser
 						label="Mode"
 						tooltip={{
@@ -144,7 +144,7 @@ const StripSettings = ({patterns, advanced = false}) => {
 						structure_ref="mode"
 						update={update}
 					/>
-					<br/>
+					<br />
 					<NumericSlider
 						className={style.settings_control}
 						label="Transparency"
@@ -158,7 +158,7 @@ const StripSettings = ({patterns, advanced = false}) => {
 						structure_ref="alpha"
 						update={update}
 					/>
-					<br/>
+					<br />
 					</>
 				)}
 				<NumericSlider
@@ -176,10 +176,10 @@ const StripSettings = ({patterns, advanced = false}) => {
 				/>
 				{advanced && (
 					<>
-					<br/>
+					<br />
 					<button className={style.incBtn} onClick={incrementPatterns} aria-label='Increase pattern count'>+</button>
 					<button className={style.incBtn} onClick={decrementPatterns} aria-label='Decrease pattern count'>-</button>
-					<br/>
+					<br />
 					<div className={style.patternRow}>
 						{inRange(data.pattern_count).map((data) => {
 							if(data.idx == selectedPattern){
@@ -203,8 +203,8 @@ const StripSettings = ({patterns, advanced = false}) => {
 				  aria-label='Open help dialog for pattern descriptions'>
 				  Help
 				</button>
-				<br/>
-				<hr></hr>
+				<br />
+				<hr />
 
 				<PatternSettings
 				  num={selectedPattern}
@@ -217,7 +217,7 @@ const StripSettings = ({patterns, advanced = false}) => {
 					onClose={closeModal}
 				/>
 			</div>
-		: <LabelSpinner></LabelSpinner>)
+		: <LabelSpinner />)
 	);
 }
 

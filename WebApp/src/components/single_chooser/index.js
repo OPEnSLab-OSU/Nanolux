@@ -29,18 +29,15 @@ const SimpleChooser = ({
 
         const selection = Number(event.target.value);
 
-        if(initial != selection){
+        if (initial != selection) {
             update(structure_ref, selection);
             event.target.checked = true;
-        }else{
-            if(noSelection){
-                update(structure_ref, 0);
-                event.target.checked = false;
-            }else{
-                event.target.checked = true;
-            }
+        } else if (noSelection) {
+            update(structure_ref, 0);
+            event.target.checked = false;
+        } else {
+            event.target.checked = true;
         }
-
     }
 
     /**
@@ -48,8 +45,8 @@ const SimpleChooser = ({
      */
     const options_list = options.map((option) => {
         return (
-            <span>
-                <label key={option.idx} className={style.option_group}>
+            <span key={option.idx}>
+                <label className={style.option_group}>
                     <input
                         type="checkbox"
                         id={option.option}

@@ -1,5 +1,4 @@
 import style from './style.css';
-import React, { useState } from "react";
 import { useSignal } from '@preact/signals';
 
 /**

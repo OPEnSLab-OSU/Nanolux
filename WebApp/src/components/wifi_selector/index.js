@@ -174,7 +174,7 @@ const WifiSelector = ({
                                 {isScanning ? (
                                     <Spinner />
                                 ) : (
-                                    <FaArrowDown aria-hidden='true'/>
+                                    <FaArrowDown aria-hidden='true' />
                                 ) }
                             </div>
                         </div>
@@ -187,8 +187,14 @@ const WifiSelector = ({
                                   className={style.dropdownItem}
                                   role='option'
                                   aria-selected={selectedWifi ? wifi.ssid === selectedWifi.ssid : false}
-                                  tabIndex={-1}
+                                  tabIndex={0}
                                   onClick={() => handleItemClick(wifi)}
+                                  onKeyDown={e => {
+                                    if (e.key === 'Enter' || e.key === ' ') {
+                                        e.preventDefault();
+                                        handleItemClick(wifi);
+                                    }
+                                  }}
                                 >
                                     <div className={style.dropdownItemSSID}>{wifi.ssid}</div>
                                     <div className={style.dropdownItemRSSI}>{rssi_icon(wifi.rssi)}</div>

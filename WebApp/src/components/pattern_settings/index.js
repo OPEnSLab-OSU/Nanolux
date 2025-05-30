@@ -106,14 +106,14 @@ const PatternSettings = ({num, patterns, advanced = false}) => {
 	return (
 		(!loading ? 
 		<div>
-			<br/>
+			<br />
 			<Patterns
 				initialID={data.idx}
 				structure_ref={"idx"}
 				update={update}
 				patterns={patterns}
 			/>
-			<br/>
+			<br />
 			{advanced && (
 				<>
 				<ConfigDropDown
@@ -122,7 +122,7 @@ const PatternSettings = ({num, patterns, advanced = false}) => {
 					update={update}
 					initial={data.config}
 				/>
-				<br/>
+				<br />
 				</>
 			)}
 			<NumericSlider
@@ -138,7 +138,7 @@ const PatternSettings = ({num, patterns, advanced = false}) => {
 				structure_ref="brightness"
 				update={update}
 			/>
-			<br/>
+			<br />
 			<NumericSlider
 				className={style.settings_control}
 				label="Smoothing"
@@ -152,7 +152,7 @@ const PatternSettings = ({num, patterns, advanced = false}) => {
 				structure_ref="smoothing"
 				update={update}
 			/>
-			<br/>
+			<br />
 			<div className={style.settings_control} role="group" aria-label="Post-processing options">
                 <label className={style.checkboxOption}>
 					<input 
@@ -223,7 +223,7 @@ const PatternSettings = ({num, patterns, advanced = false}) => {
 					/>
 				</label>
             </div>
-			<br></br>
+			<br />
 			{advanced && (
 				<>
 				<MultiRangeSliderWrapper
@@ -241,8 +241,8 @@ const PatternSettings = ({num, patterns, advanced = false}) => {
 				/>
 				</>
 			)}
-			<br/> 
-		</div> : <LabelSpinner></LabelSpinner>
+			<br /> 
+		</div> : <LabelSpinner />
 		)
 	);
 }

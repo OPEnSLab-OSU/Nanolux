@@ -52,7 +52,7 @@ const MultiRangeSliderWrapper = ({
                   label={'Color Range'}
                 />
             )}
-            <br/>
+            <br />
             <MultiRangeSlider
                 min={min}
                 max={max}
