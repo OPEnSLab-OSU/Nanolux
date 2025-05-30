@@ -1,0 +1,16 @@
+{
+  "presets": [
+    [
+      "@babel/preset-react",
+      {
+        "runtime": "automatic",
+        "importSource": "preact"
+      }
+    ]
+  ],
+  "plugins": [
+    "@babel/plugin-syntax-class-properties",
+    "@babel/plugin-proposal-optional-chaining",
+    "@babel/plugin-proposal-nullish-coalescing-operator"
+  ]
+}
