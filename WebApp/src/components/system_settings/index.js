@@ -9,7 +9,6 @@ import SimpleChooser from '../../components/single_chooser';
 import { LabelSpinner } from '../../components/spinner';
 import RANGE_CONSTANTS from '../../utils/constants';
 import style from './style.css';
-import { Tooltip } from 'react-tooltip';
 
 /**
  * @brief Generates a UI element for changing NanoLux device system settings.
@@ -93,7 +92,7 @@ const SystemControls = () => {
 					structure_ref="length"
 					update={update}
 				/>
-				<br/>
+				<br />
 				<NumericSlider
 					className={style.settings_control}
 					label="LED Update Time (ms)"
@@ -107,7 +106,7 @@ const SystemControls = () => {
 					structure_ref="loop"
 					update={update}
 				/>
-				<br/>
+				<br />
 				<SimpleChooser
 					className={style.settings_control}
 					label="Debug Mode"
@@ -124,9 +123,9 @@ const SystemControls = () => {
 					structure_ref="debug"
 					update={update}	
 				/>
-				<br/>
+				<br />
 			</div> 
-		: <LabelSpinner></LabelSpinner>)		
+		: <LabelSpinner />)		
 	);
 }
 

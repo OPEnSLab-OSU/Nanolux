@@ -23,6 +23,9 @@ const TooltipWrapper = ({
           style={style}
           data-tooltip-id={id}
           data-tooltip-offset={offset}
+          role='button'
+          tabIndex={0}
+          aria-describedby={id}
           {...props}
         >
             {label}
@@ -31,6 +34,7 @@ const TooltipWrapper = ({
           id={id}
           content={content}
           style={style}
+          aria-hidden='true'
         />
     </>
 );

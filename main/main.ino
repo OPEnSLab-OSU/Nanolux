@@ -19,7 +19,7 @@
 
 FASTLED_USING_NAMESPACE
 
-//#define ENABLE_WEB_SERVER
+#define ENABLE_WEB_SERVER
 #ifdef ENABLE_WEB_SERVER
 #include "WebServer.h"
 #endif

@@ -8,7 +8,6 @@ import {ModalProvider, useModal} from "../context/global_modal_context";
 import {OnlineConnectivityProvider, useConnectivity} from "../context/online_context";
 import {useEffect, useState} from "preact/hooks";
 import Toast from "./toast/toast";
-import { updateURL } from '../utils/api';
 
 
 const AppContent = () => {

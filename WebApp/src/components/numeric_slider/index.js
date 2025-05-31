@@ -53,7 +53,11 @@ const NumericSlider = ({
     }
 
     return (
-        <div>
+        <div
+          role="group"
+          aria-label={label}
+          aria-describedby={tooltip ? tooltip.id : undefined}
+        >
             <div>
                 {tooltip && (
                     <TooltipWrapper
@@ -75,6 +79,11 @@ const NumericSlider = ({
                     max={max}
                     value={initial}
                     onChange={valueChanged}
+                    aria-label={label}
+                    aria-valuemin={min}
+                    aria-valuemax={max}
+                    aria-valuenow={current.value}
+                    aria-describedby={tooltip ? tooltip.id : undefined}
                 />
                 <input
                     className={style.spin_button}
@@ -85,6 +94,8 @@ const NumericSlider = ({
                     max={max}
                     value={initial}
                     onChange={valueChanged}
+                    aria-label={`${label} input`}
+                    aria-describedby={tooltip ? tooltip.id : undefined}
                 />
             </div>
         </div>

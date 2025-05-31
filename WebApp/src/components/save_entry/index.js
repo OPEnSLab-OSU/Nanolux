@@ -36,18 +36,20 @@ const Save_Entry = ({
 	}
 
     return (
-        <div className={style.row}>
+        <div className={style.row} role='group' aria-label={`Pattern entry: ${name}`}>
             <span className={style.slot}>{name}</span>
 
             <button
                 className={`${style.btn} ${style.btnPrimary}`}
-                onClick={load}>
+                onClick={load}
+                aria-label={`Load pattern ${name}`}>
                 Load Pattern
             </button>
 
             <button
                 className={style.btn}
-                onClick={save}>
+                onClick={save}
+                aria-label={`Save pattern ${name}`}>
                 Save Pattern
             </button>
         </div>

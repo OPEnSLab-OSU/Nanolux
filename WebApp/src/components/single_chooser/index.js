@@ -29,48 +29,49 @@ const SimpleChooser = ({
 
         const selection = Number(event.target.value);
 
-        if(initial != selection){
+        if (initial != selection) {
             update(structure_ref, selection);
             event.target.checked = true;
-        }else{
-            if(noSelection){
-                update(structure_ref, 0);
-                event.target.checked = false;
-            }else{
-                event.target.checked = true;
-            }
+        } else if (noSelection) {
+            update(structure_ref, 0);
+            event.target.checked = false;
+        } else {
+            event.target.checked = true;
         }
-
     }
 
     /**
      * @brief An object that holds a list of HTML option inputs and labels.
      */
     const options_list = options.map((option) => {
-        return <span>
-            <label key={option.idx} className={style.option_group}>
-                <input
-                    type="checkbox"
+        return (
+            <span key={option.idx}>
+                <label className={style.option_group}>
+                    <input
+                        type="checkbox"
+                        id={option.option}
+                        name={option.option}
+                        value={option.idx}
+                        onChange={changeSelection}
+                        checked={initial===option.idx}
+                        aria-checked={initial===option.idx}
+                        aria-describedby={option.option}
+                    />
+                    <TooltipWrapper
                     id={option.option}
-                    name={option.option}
-                    value={option.idx}
-                    onChange={changeSelection}
-                    checked={initial===option.idx}
-                />
-                <TooltipWrapper
-                  id={option.option}
-                  content={option.tooltip}
-                  label={option.option}
-                />
-            </label>
-        </span>
+                    content={option.tooltip}
+                    label={option.option}
+                    />
+                </label>
+            </span>
+        )
     });
 
     /**
      * @brief Creates the chooser UI element.
      */
     return (
-        <div>
+        <div role='group' aria-label={label} aria-describedby={tooltip ? tooltip.id : undefined}>
             <div>
                 {tooltip && (
                     <TooltipWrapper

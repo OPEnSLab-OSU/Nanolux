@@ -1,5 +1,4 @@
 import { useSignal } from '@preact/signals';
-import Select from 'preact-material-components/Select';
 import { useEffect } from 'preact/hooks';
 // import useInterval from '../../utils/use_interval';
 import style from '../patterns/style.css';

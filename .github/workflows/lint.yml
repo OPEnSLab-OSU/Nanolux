@@ -1,0 +1,27 @@
+name: ESLint + a11y
+
+on:
+  push:
+    paths:
+      - 'WebApp/**'
+      - '.github/workflows/*.yml'
+    branches: [ main ]
+  pull_request:
+    paths:
+      - 'WebApp/**'
+      - '.github/workflows/*.yml'
+    branches: [ main ]
+
+jobs:
+  eslint:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: WebApp
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+      - run: npm ci
+      - run: npm run lint

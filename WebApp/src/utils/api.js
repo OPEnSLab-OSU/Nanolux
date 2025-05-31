@@ -23,7 +23,7 @@ async function get_base_url() {
 
     base_url = await load_url()
 }
-get_base_url().then(_ => console.log(`base_url: ${base_url}`));
+get_base_url().then(() => console.log(`base_url: ${base_url}`));
 
 
 const getSettings = () =>
@@ -85,11 +85,11 @@ const getStripSettings = () =>
 
 // handle_load_save_slot_put_request
 const loadSaveSlot = async (slot) =>
-    await axios.put(`${base_url}/api/load`, {slot:slot, timeout: 1000})
+    await axios.put(`${base_url}/api/load`, {slot, timeout: 1000})
 
 // handle_save_to_slot_put_request
 const saveToSlot = (slot) =>
-    axios.put(`${base_url}/api/save`, {slot:slot}) ;
+    axios.put(`${base_url}/api/save`, {slot}) ;
 
 // handle_system_settings_put_request
 const updateDeviceSettings = (data) => 

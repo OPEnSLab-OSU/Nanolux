@@ -14,13 +14,13 @@ import PaletteSelector from '../palette_selector';
 const Header = () => (
 	<header className={style.header}>
 		<a href="/" className={style.logo}>
-			<img src="../../assets/cymalog1.png" alt="CymaSpace Logo" height="32" />
+			<img src="../../assets/cymalog1.png" alt="CymaSpace Logo" width="92" height="32" />
 			<h1>AudioLux</h1>
 		</a>
 		<div className={style.palette}>
-			<PaletteSelector />
+			<PaletteSelector aria-label="Choose a color palette" />
 		</div>
-		<nav>
+		<nav aria-label='Main Navigation' >
 			<Link activeClassName={style.active} href="/">
 				Settings
 			</Link>

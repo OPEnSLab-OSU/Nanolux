@@ -188,8 +188,8 @@ const Wifi = () => {
     }
 
     return (
-        <div className={style.home}>
-            <div className={style.settingsControl}>
+        <div className={style.home} role='main' id='wifi-page'>
+            <div className={style.settingsControl} role='region' aria-label='Local WiFi Password'>
                 <div className={style.centeredContainer}>
                     <TextInput
                         inputPrompt="New Local WiFi Password: "
@@ -199,7 +199,7 @@ const Wifi = () => {
                     />
                 </div>
             </div>
-            <div className={style.settingsControl}>
+            <div className={style.settingsControl} role='region' aria-label='Unit Name'>
                 <div className={style.centeredContainer}>
                     <TextInput
                         inputPrompt="Unit Name: "
@@ -208,15 +208,15 @@ const Wifi = () => {
                         onTextCommit={handleHostnameCommit}
                     />
                 </div>
-                <div className={style.centeredContainer}>
+                <div className={style.centeredContainer} role='status' aria-live='polite'>
                     <div className={style.fqdn}>
                         Once it joins a WiFi, AudioLux can be found in the network with this name: {fqdn}
                     </div>
                 </div>
             </div>
-            <div className={style.settingsControl}>
+            <div className={style.settingsControl} role='region' aria-label='Available networks'>
                 <div className={style.centeredContainer}>
-                    <div>Available Networks</div>
+                    <div role='heading' aria-level={2}>Available Networks</div>
                 </div>
                 <div className={style.centeredContainer}>
                     <WifiSelector placeholder="Select a network..."
@@ -229,7 +229,7 @@ const Wifi = () => {
                 </div>
             </div>
             {locked && !joining && !joinCompleted &&
-                <div>
+                <div role='region' aria-label='WiFi entry'>
                     <Password prompt="Enter WiFi key/password: "
                               password={password}
                               onPasswordChange={handlePasswordChange}
@@ -237,28 +237,31 @@ const Wifi = () => {
                 </div>
             }
             {joining ? (
-                <div>Attempting to join {selectedWifi.ssid}</div>
+                <div role='status' aria-live='polite'>Attempting to join {selectedWifi.ssid}</div>
             ):(
-                <button className={style.formButton}
-                        onClick={handleJoinClick}
-                        disabled={!joining && selectedWifi?.ssid == null}
-                >Join</button>
+                <button
+                  className={style.formButton}
+                  onClick={handleJoinClick}
+                  disabled={!joining && selectedWifi?.ssid == null}
+                  aria-label={selectedWifi ? `Join network ${selectedWifi.ssid}` : 'Join network'}>
+                Join</button>
                 )
             }
             {joinCompleted && !joining &&
-                <div>
+                <div role='status' aria-live={joinResult?.toLowerCase().includes('unable') ? 'assertive' : 'polite'}>
                     {joinResult}
                 </div>
             }
-            <div className={style.settingsControl}>
-                <div className={style.wifiBanner}>
+            <div className={style.settingsControl} role='region' aria-label='Current WiFi'>
+                <div className={style.wifiBanner} role='status' aria-live='polite'>
                     {forgetting ? "Fogetting WiFi" : "Current Wifi" }: {currentWifi?.ssid ?? "None"}
                 </div>
-                <button className={style.formButton}
-                        disabled={forgetting || !(currentWifi?.ssid)}
-                        onClick={handleForgetClick}
-                >Forget
-                </button>
+                <button
+                  className={style.formButton}
+                  disabled={forgetting || !(currentWifi?.ssid)}
+                  onClick={handleForgetClick}
+                  aria-label={currentWifi ? `Forget network ${currentWifi.ssid}` : 'Forget network'}>
+                Forget</button>
             </div>
             <WiFiModal
                 isOpen={isModalOpen}

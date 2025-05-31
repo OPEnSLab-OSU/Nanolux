@@ -1,4 +1,3 @@
-import {h} from 'preact';
 import {useEffect, useRef} from "preact/hooks";
 
 // DQM: This code copied, with permission, from

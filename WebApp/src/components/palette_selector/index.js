@@ -21,8 +21,8 @@ export default function PaletteSelector() {
     }, [theme]);
 
     return (
-        <div>
-            <label className={style.label} htmlFor='palette-select'>
+        <div role='group' aria-labelledby='palette-select-label'>
+            <label id='palette-select-label' className={style.label} htmlFor='palette-select'>
                 Theme:
             </label>
             <select
