@@ -14,9 +14,13 @@ import ConfigDropDown from "../config_drop_down";
 import TooltipWrapper from "../tooltip/tooltip_wrapper";
 
 /**
- * @brief An object meant to hold and display settings for a specific pattern
- * @param num 	The ID of the pattern to display
- * @param patterns	A list of patterns and their IDs
+ * @brief An object meant to hold and display settings for a specific pattern.
+ * 
+ * @param num 	The ID of the pattern to display.
+ * @param patterns	A list of patterns and their IDs.
+ * @param advanced  A boolean to determine whether basic or advanced pattern setting controls are displayed.
+ * 
+ * @returns  A group of individual components that control the devices pattern settings.
  */
 const PatternSettings = ({num, patterns, advanced = false}) => {
 
@@ -67,7 +71,7 @@ const PatternSettings = ({num, patterns, advanced = false}) => {
 
 	/**
 	 * @brief Continuously poll the Nanolux device for changes to the
-	 * hardware pattern index, updates the web app UI to reflect the change.
+	 * hardware pattern index and post-processing mode, updates the web app UI to reflect the change.
 	 */
 	useInterval(() => {
 		if (isConnected && !updated) {

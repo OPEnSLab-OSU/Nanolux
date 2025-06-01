@@ -9,15 +9,29 @@ import {useState} from "preact/hooks";
  * @param password The currently entered password.
  * @param onPasswordChange A function that updates the parent object with
  * the new user-entered password.
+ * 
+ * @returns The Password UI element.
  */
 const Password = ({ prompt, password, onPasswordChange }) => {
+    // Local state to track whether the password is visible (plain text) or masked.
     const [showPassword, setShowPassword] = useState(false);
 
+    /**
+     * @brief Called whenever the user types in the password input.
+     *        Extracts the new password value and notifies the parent.
+     *
+     * @param event   The change event from the <input> element, containing the new password in `event.target.value`.
+     */
     const handlePasswordChange = async (event) => {
         const newPassword = event.target.value;
         onPasswordChange(newPassword);
     }
 
+    /**
+     * @brief Toggles the visibility of the password between masked ("password") and plain text ("text").
+     *
+     * @param event   The change event from the "Show password" checkbox, containing the new checked state in `event.target.checked`.
+     */
     const handleCheckboxChange = (event) => {
         setShowPassword(event.target.checked)
     };

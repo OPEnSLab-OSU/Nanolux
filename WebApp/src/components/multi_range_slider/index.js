@@ -3,8 +3,9 @@ import TooltipWrapper from "../tooltip/tooltip_wrapper";
 import { useState } from "preact/hooks";
 
 /**
- * @brief A NanoLux wrapper for the Multi Range Slider object.A
+ * @brief A NanoLux wrapper for the Multi Range Slider object.
  * 
+ * @param tooltip The optional tooltip to be displayed when hovering the element's label.
  * @param min The minimum value selectable by the slider.
  * @param max The maximum value selectable by the slider.
  * @param selectedLow The currently selected low value.
@@ -31,11 +32,21 @@ const MultiRangeSliderWrapper = ({
     const [thumbMinColor, setThumbMinColor] = useState(getHueColor(selectedLow));
     const [thumbMaxColor, setThumbMaxColor] = useState(getHueColor(selectedHigh));
 
+    /**
+     * @brief Updates the thumb colors dynamically based on current slider handles.
+     *
+     * @param e  Event object containing `minValue` and `maxValue` from the MultiRangeSlider.
+     */
     const handleThumbs = (e) => {
         setThumbMinColor(getHueColor(e.minValue));
         setThumbMaxColor(getHueColor(e.maxValue));
     }
 
+    /**
+     * @brief Updates external data structure when slider values change.
+     *
+     * @param e  Event object containing `minValue` and `maxValue` from the MultiRangeSlider.
+     */
     const handleInput = (e) => {
         update(minRef, e.minValue);
         update(maxRef, e.maxValue);

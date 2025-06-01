@@ -48,6 +48,10 @@ I would highly advise taking a look at this function directly, as its under 10 l
 
 This function simply prints out the values stored within the supplied CRGB buffer to serial. Used for displaying LED output on the simulator.
 
+#### update\_hardware() ####
+
+This function calls utility for the rotary encoder defined in nanolux\_util.cpp to get any updates from the hardware and process them into the main Strip_Data that's being ran by the device. Pushing the rotary encoder cycles the post-processing mode of the first loaded pattern forward once, and each detent of the rotary encoder cycles the pattern index of the first loaded pattern forwards or backwards depending on direction.
+
 ---
 
 ### Post-Processing ###
@@ -104,10 +108,10 @@ loop() is a bit different. It is automatically run repeatedly by the microcontro
 - Loop timing
 	- This ensures all program loops take approximately the same amount of time to complete.
 	- At the end of the loop, if not enough time has elapsed, the program will wait until it has.
+- Pull hardware updates
+	- This ensures that any calls to the hardware that result in strip data changes are processed before updating strip and output buffers.
 - Pattern resetting
 	- If the web/mobile app has requested a change that requires a reset, all patterns, their strip buffers, and the output buffers will be reset to their initial state.
-- Reset button control
-	- If the physical button on the Audiolux board is held down for 10 seconds (configurable) the device will reset all saved patterns and configurations.
 - Controlling which driver function to run based off user selection
 - Displaying to the LED strip
 - Outputting to the simulator

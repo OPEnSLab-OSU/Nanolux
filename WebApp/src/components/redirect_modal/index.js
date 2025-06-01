@@ -9,6 +9,8 @@ import style from './style.css';
  * @param onClose The function to be executed when the modal is clicked.
  * @param ssid The ssid of the bridged network.
  * @param audioLuxUrl The URL of the AudioLux on the bridged network.
+ * 
+ * @returns  The WiFiModal UI element.
  */
 const WiFiModal = ({ isOpen, onClose, ssid, audioLuxUrl }) => {
     if (!isOpen) {

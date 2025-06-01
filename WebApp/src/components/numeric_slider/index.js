@@ -8,6 +8,7 @@ import TooltipWrapper from "../tooltip/tooltip_wrapper";
  * showing the value set by the slider.
  * 
  * @param label The label that is displayed alongside the slider.
+ * @param tooltip The optional tooltip to be displayed when hovering the element's label.
  * @param min The minimum value selectable by the slider.
  * @param max The maximum value selectable by the slider.
  * @param initial The initial value shown by the slider.
