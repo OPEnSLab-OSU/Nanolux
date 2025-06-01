@@ -378,7 +378,7 @@ void loop() {
 
   audioAnalysis.processAudioFrame();  // Sample audio and compute FFT
 
-  update_hardware(); // Pull updates from hardware (buttons, encoder)
+  update_hardware(); // Pull updates from hardware (rotary encoder)
 
   // Reset buffers if pattern settings were changed since
   // last program loop.
