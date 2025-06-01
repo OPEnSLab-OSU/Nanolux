@@ -9,8 +9,8 @@ import 'react-tooltip/dist/react-tooltip.css';
  * @param id        The unique identifier for this tooltip; links the span and React Tooltip component.
  * @param content   The ReactNode content to render inside the tooltip popup.
  * @param offset    (Optional) The pixel offset between the trigger and the tooltip (default: 10).
- * @param style     (Optional) CSS styles applied to the trigger span. Defaults to `{ fontSize: '1.2rem', cursor: 'pointer' }`.
- * @param label     (Optional) The ReactNode to render inside the trigger span. Defaults to `'(?)'`.
+ * @param style     (Optional) CSS styles applied to the trigger span (default: fontSize: '1.2rem', cursor: 'pointer').
+ * @param label     (Optional) The ReactNode to render inside the trigger span (default: '(?)').
  * @param ...props  Any additional props to spread onto the trigger span (e.g., event handlers, aria attributes).
  *
  * @returns The TooltipWrapper UI element.
