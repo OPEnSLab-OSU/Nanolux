@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Source: components/tooltip/tooltip_wrapper.js</title>
+    <title>JSDoc: Source: components/spinner/index.js</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
 
-    <h1 class="page-title">Source: components/tooltip/tooltip_wrapper.js</h1>
+    <h1 class="page-title">Source: components/spinner/index.js</h1>
 
     
 
@@ -26,53 +26,40 @@
     
     <section>
         <article>
-            <pre class="prettyprint source linenums"><code>import { Tooltip } from 'react-tooltip';
-import 'react-tooltip/dist/react-tooltip.css';
+            <pre class="prettyprint source linenums"><code>import style from './style.css'
 
 /**
- * @brief A span that, when hovered or focused, displays a tooltip with the provided content.
+ * @brief A loading overlay "Loading data..." text.
  *
- * Renders a clickable/focusable span that, when hovered or focused, displays a tooltip with the provided content.
+ * This component covers the existing content with a semi-transparent overlay.
  *
- * @param id        The unique identifier for this tooltip; links the span and React Tooltip component.
- * @param content   The ReactNode content to render inside the tooltip popup.
- * @param offset    (Optional) The pixel offset between the trigger and the tooltip (default: 10).
- * @param style     (Optional) CSS styles applied to the trigger span (default: fontSize: '1.2rem', cursor: 'pointer').
- * @param label     (Optional) The ReactNode to render inside the trigger span (default: '(?)').
- * @param ...props  Any additional props to spread onto the trigger span (e.g., event handlers, aria attributes).
- *
- * @returns The TooltipWrapper UI element.
+ * @returns The LabelSpinner UI element.
  */
-const TooltipWrapper = ({
-    id,
-    content,
-    offset = 10,
-    style = { fontSize: '1.2rem', cursor: 'pointer' },
-    label = '(?)',
-    ...props
-}) => (
-    &lt;>
-        &lt;span
-          style={style}
-          data-tooltip-id={id}
-          data-tooltip-offset={offset}
-          role='button'
-          tabIndex={0}
-          aria-describedby={id}
-          {...props}
-        >
-            {label}
-        &lt;/span>
-        &lt;Tooltip
-          id={id}
-          content={content}
-          style={style}
-          aria-hidden='true'
-        />
-    &lt;/>
+const LabelSpinner = () => (
+    &lt;div className={style.spinnerOverlay} role='status' aria-live='polite' aria-busy='true'>
+        &lt;div className={style.spinner} />
+        &lt;div className={style.loadingText}>Loading data...&lt;/div>
+    &lt;/div>
 );
 
-export default TooltipWrapper;</code></pre>
+/**
+ * @brief A standalone spinner indicator.
+ *
+ * This component can be placed inline or centered in a container to indicate
+ * that some process or content is loading.
+ *
+ * @returns The Spinner UI element.
+ */
+const Spinner = () => (
+    &lt;div className={style.spinnerStandalone} role='status' aria-live='polite' aria-busy='true' aria-label='Loading' />
+);
+
+
+export {
+    LabelSpinner,
+    Spinner
+};
+</code></pre>
         </article>
     </section>
 

@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Source: components/tooltip/tooltip_wrapper.js</title>
+    <title>JSDoc: Source: components/toast/toast.js</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
 
-    <h1 class="page-title">Source: components/tooltip/tooltip_wrapper.js</h1>
+    <h1 class="page-title">Source: components/toast/toast.js</h1>
 
     
 
@@ -26,53 +26,34 @@
     
     <section>
         <article>
-            <pre class="prettyprint source linenums"><code>import { Tooltip } from 'react-tooltip';
-import 'react-tooltip/dist/react-tooltip.css';
+            <pre class="prettyprint source linenums"><code>import style from'./style.css';
 
 /**
- * @brief A span that, when hovered or focused, displays a tooltip with the provided content.
+ * @brief A notification that displays a message to the user.
  *
- * Renders a clickable/focusable span that, when hovered or focused, displays a tooltip with the provided content.
+ * @param message  The text content of the toast to display.
+ * @param type     The category of the toast; if 'error', styled with a red background
+ *                 Otherwise, styled with a green background.
  *
- * @param id        The unique identifier for this tooltip; links the span and React Tooltip component.
- * @param content   The ReactNode content to render inside the tooltip popup.
- * @param offset    (Optional) The pixel offset between the trigger and the tooltip (default: 10).
- * @param style     (Optional) CSS styles applied to the trigger span (default: fontSize: '1.2rem', cursor: 'pointer').
- * @param label     (Optional) The ReactNode to render inside the trigger span (default: '(?)').
- * @param ...props  Any additional props to spread onto the trigger span (e.g., event handlers, aria attributes).
- *
- * @returns The TooltipWrapper UI element.
+ * @returns The Toast UI element.
  */
-const TooltipWrapper = ({
-    id,
-    content,
-    offset = 10,
-    style = { fontSize: '1.2rem', cursor: 'pointer' },
-    label = '(?)',
-    ...props
-}) => (
-    &lt;>
-        &lt;span
-          style={style}
-          data-tooltip-id={id}
-          data-tooltip-offset={offset}
-          role='button'
-          tabIndex={0}
-          aria-describedby={id}
-          {...props}
-        >
-            {label}
-        &lt;/span>
-        &lt;Tooltip
-          id={id}
-          content={content}
-          style={style}
-          aria-hidden='true'
-        />
-    &lt;/>
-);
+const Toast = ({ message, type }) => {
+    const backgroundColor = type === 'error' ? '#ff959e' : '#639b76';
 
-export default TooltipWrapper;</code></pre>
+    return (
+        &lt;div
+          className={style.toast}
+          style={{ backgroundColor }}
+          role={type === 'error' ? 'alert' : 'status'}
+          aria-live={type === 'error' ? 'assertive' : 'polite'}
+          aria-atomic='true'>
+            &lt;span>{message}&lt;/span>
+        &lt;/div>
+    );
+};
+
+export default Toast;
+</code></pre>
         </article>
     </section>
 

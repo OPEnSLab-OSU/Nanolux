@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Source: components/password/index.js</title>
+    <title>JSDoc: Source: components/textinput/index.js</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
 
-    <h1 class="page-title">Source: components/password/index.js</h1>
+    <h1 class="page-title">Source: components/textinput/index.js</h1>
 
     
 
@@ -28,68 +28,84 @@
         <article>
             <pre class="prettyprint source linenums"><code>import {h} from 'preact';
 import style from './style.css';
-import {useState} from "preact/hooks";
+import {useEffect, useState} from "preact/hooks";
 
 /**
- * @brief Object that handles new Wifi password entry and API calls.
- * 
- * @param prompt The prompt that explains utilization to the user.
- * @param password The currently entered password.
- * @param onPasswordChange A function that updates the parent object with
- * the new user-entered password.
- * 
- * @returns The Password UI element.
+ * @brief A UI element for single-line text input with a commit button.
+ *
+ * This component maintains local state for the text field, synchronizes it
+ * with an external `textValue`, calls `onTextChange` on every keystroke, and
+ * calls `onTextCommit` when the user clicks the commit button.
+ *
+ * @param inputPrompt    The label text displayed above the text input.
+ * @param commmitPrompt  The label for the commit button.
+ * @param textValue      The externally controlled text value to display.
+ * @param onTextChange   Callback invoked on each change to the text (receives new text).
+ * @param onTextCommit   Callback invoked when the commit button is clicked (receives current text).
+ *
+ * @returns The TextInput UI element.
  */
-const Password = ({ prompt, password, onPasswordChange }) => {
-    // Local state to track whether the password is visible (plain text) or masked.
-    const [showPassword, setShowPassword] = useState(false);
+const TextInput = ({
+                       inputPrompt,
+                       commmitPrompt,
+                       textValue,
+                       onTextChange,
+                       onTextCommit
+                   }) => {
+    // Local state to hold the current text in the input field.
+    const [text, setText] = useState("")
 
     /**
-     * @brief Called whenever the user types in the password input.
-     *        Extracts the new password value and notifies the parent.
-     *
-     * @param event   The change event from the &lt;input> element, containing the new password in `event.target.value`.
+     * @brief Synchronize local `text` state whenever `textValue` prop changes.
      */
-    const handlePasswordChange = async (event) => {
-        const newPassword = event.target.value;
-        onPasswordChange(newPassword);
+    useEffect(() => {
+        setText(textValue)
+    }, [textValue]);
+
+    /**
+     * @brief Handles user typing in the input field.
+     *        Updates local state and notifies the parent via `onTextChange`.
+     *
+     * @param event The input change event, with `event.target.value` as the new text.
+     */
+    const handleInputChange = async (event) => {
+        const newText = event.target.value;
+        setText(newText);
+        onTextChange(newText);
     }
 
     /**
-     * @brief Toggles the visibility of the password between masked ("password") and plain text ("text").
-     *
-     * @param event   The change event from the "Show password" checkbox, containing the new checked state in `event.target.checked`.
+     * @brief Called when the commit button is clicked.
+     *        Calls `onTextCommit` with the current local text.
      */
-    const handleCheckboxChange = (event) => {
-        setShowPassword(event.target.checked)
-    };
+    const commitText = async () => {
+        onTextCommit(text);
+    }
 
     return (
-        &lt;div role='group' aria-labelledby='password-label'>
-            &lt;label id='password-label' className={style.label} htmlFor="password-input">{prompt}&lt;/label>
-            &lt;input
-              className={style.label}
-              id="password-input"
-              type={showPassword ? "text" : "password"}
-              value={password}
-              onChange={handlePasswordChange}
+        &lt;div role='group' aria-labelledby='text-input-label'>
+            &lt;label id='text-input-label' className={style.label} htmlFor="text-input">{inputPrompt}&lt;/label>
+            &lt;input className={style.label}
+                   id="text-input"
+                   type="text"
+                   value={text}
+                   onChange={handleInputChange}
             />
             &lt;div>
-                &lt;input
+                &lt;button
+                  type='button'
+                  className={style.formButton}
                   id="show-password"
-                  type="checkbox"
-                  checked={showPassword}
-                  onChange={handleCheckboxChange}
-                  aria-checked={showPassword}
-                  aria-controls='password-input'
-                />
-                &lt;label className={style.label} htmlFor="show-password">Show password&lt;/label>
+                  onClick={commitText}
+                >
+                    {commmitPrompt}
+                &lt;/button>
             &lt;/div>
         &lt;/div>
     );
 }
 
-export default Password;
+export default TextInput;
 </code></pre>
         </article>
     </section>
