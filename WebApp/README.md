@@ -71,7 +71,7 @@ npm run lhci:assert
 
 For detailed explanation on how things work, checkout the [CLI Readme](https://github.com/developit/preact-cli/blob/master/README.md).
 
-For more details on testing the web app check [Testing the web app](https://github.com/OPEnSLab-OSU/Nanolux/wiki/testing-the-web-app)
+For more details on testing the web app check [Testing the web app](https://github.com/OPEnSLab-OSU/Nanolux/wiki/The-Web-App#testing-the-web-app)
 
 ## Uploading the Web App to the SD card
 
@@ -86,6 +86,6 @@ The web app is built for deployment using the `npm run build` command, as mentio
 Do _not_ copy the map files. Do _not_ copy the ssr-build folder. These can be removed from the `build` directory with the `npm run clean` command, as mentioned above.
 
 Check the wiki for 
-[instructions on how to upload the web app to the SD card](https://github.com/OPEnSLab-OSU/Nanolux/wiki/setting-up-the-SD-card).
+[instructions on how to upload the web app to the SD card](https://github.com/OPEnSLab-OSU/Nanolux/wiki/The-Web-App#setting-up-the-sd-card).
 
 >NOTE: Replacing the contents of the SD card will delete any state saved to the card. In other words, all settings will revert to defaults and the device will lose any local network configuration it might have saved.
