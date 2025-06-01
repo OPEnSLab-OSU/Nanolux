@@ -8,7 +8,7 @@ import style from './style.css';
  * @param name The displayed name of the save slot.
  * @param idx The ID of the slot to save/load to/from.
  * 
- * @returns The UI element itself.
+ * @returns The Save_Entry UI element.
  */
 const Save_Entry = ({
     name,

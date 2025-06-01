@@ -89,7 +89,7 @@ The ESP32 code is ready to run the pattern, but the web app needs a minor change
 
 ### Web App Implementation ###
 ---
-The change is pretty simple: we need to add the pattern configurations (volume, frequency) into the web app. Navigate to the file at the relative path WebApp/src/components/config\_drop\_down/index.js and find the following object:
+The change is pretty simple: we need to add the pattern configurations (volume, frequency), pattern name (Bar Fill), and a brief pattern description (LEDs climb with increasing volume or frequency while hue is set to the minimum hue at the lowest pixel and the maximum hue at the highest one) into the web app. First, navigate to the file at the relative path WebApp/src/components/config\_drop\_down/index.js and find the following object:
 
     const configs = [
         ["None"],
@@ -107,6 +107,25 @@ You'll need to add the new pattern's configurations at the end of this list, whi
         ["Default"],
 		["Volume", "Frequency"]
     ]
+
+Then, navigate to the file at the relative path WebApp/src/components/pattern\_modal/index.js and find the following object:
+
+	const PATTERN_INFOS = [
+		{ title: 'Pixel Frequency',      desc: 'A Pixel will change position based on volume.' },
+		...
+		...
+		{ title: 'Delta Heat',           desc: 'A heat map of the frequency bins based on amplitude change.' },
+	];
+
+Again, you'll need to add to the end of this list, which is the list of pattern names and descriptions for all patterns. Add the new pattern's name and description.
+
+	const PATTERN_INFOS = [
+		{ title: 'Pixel Frequency',      desc: 'A Pixel will change position based on volume.' },
+		...
+		...
+		{ title: 'Delta Heat',           desc: 'A heat map of the frequency bins based on amplitude change.' },
+		{ title: 'Bar Fill',             desc: 'LEDs climb with increasing volume or frequency while hue is set to the minimum hue at the lowest pixel and the maximum hue at the highest one.' },
+	];
 
 ---
 

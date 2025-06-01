@@ -48,20 +48,42 @@ Encapsulated components are components that
 1. Perform a singular function
 2. "Encapsulate" functionality of a simpler element (say, a drop down list) so it can be reused without issue
 
-There are far too many to go over here in depth, so here is a list of all encapsulated components:
+There are far too many to go over here in depth, so here is a list of all encapsulated components with brief descriptions for each:
 
 - Config Drop Down
 	- Allows the user to select a configuration for a running pattern (such as volume controlled vs frequency controlled)
+- Header
+	- Allows the user to navigate between the settings and WiFi pages
 - Multi Range Slider
 	- Allows the user to specify two values that compose a range
+- Network Modal
+	- Presents a description of the current connectivity status between the web app and device
 - Numeric Slider
 	- Allows the user to enter a value via a slider
+- Palette Selector
+	- Allows the user to style the web app's coloring
+- Password
+	- Allows the user to input a WiFi password to connect to a local network
+- Pattern Modal
+	- Presents a comprehensive list of pattern names with a brief description for each
 - Patterns
-	- Presents a drop down list of pattern names supplied elsewhere in the program
+	- Presents a drop down list of pattern names supplied from the device
+- Redirect Modal
+	- Allows the user to redirect to a configured device's URL
 - Save Entry
 	- Allows the user to save and load a pattern from NVS
 - Single Chooser
 	- Allows the user to select one or none of of an option list.
+- Spinner
+	- Presents a simple visual to convey that the web app is processing a user's request
+- Text Input
+	- Allows the user to input and submit text for configuring WiFi settings
+- Toast
+	- Presents an error or status message to the user
+- Tooltip
+	- Presents popup descriptions when specific UI components are hovered
+- WiFi Selector
+	- Allows the user to scan for and select a WiFi network to connect to
 
 Let's use Numeric Slider as an example for the structure of an encapsulated component. It has the following parameters input to the element itself. Here is a snippet of the JSDocs header from the element:
 
@@ -143,4 +165,4 @@ The web page for controlling device settings controls strip, pattern, and system
 
 ##### WiFi Settings Route #####
 
-This route needs particular attention for a refactor, and has a lot of repeated code. It is also difficult to understand, so if I were in charge of making changes, I would spend a few hours just unpacking it.
+This route could benefit from a refactor, and has a lot of repeated code. However, it is also incredibly difficult to understand and probably requires a great deal of time before it can be modified.

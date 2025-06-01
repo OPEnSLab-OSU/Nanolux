@@ -25,25 +25,31 @@ async function get_base_url() {
 }
 get_base_url().then(() => console.log(`base_url: ${base_url}`));
 
-
+// ??
 const getSettings = () =>
     getData('settings');
 
+// handle_patterns_list_request
 const getPatternList = () =>
     getData('patterns');
 
+// serve_wifi_list
 const getWiFiList = () =>
     getData('wifis');
 
+// handle_wifi_get_request
 const getWiFi = () =>
     getData('wifi')
 
+// handle_wifi_status_request
 const getWiFiJoinStatus = () =>
     getData('wifi_status')
 
+// handle_hostname_get_request
 const getHostname = () =>
     getData('hostname');
 
+// ??
 const getHistory = () =>
     getData('history')
 
@@ -51,15 +57,19 @@ const getData = (path) =>
     axios.get(`${base_url}/api/${path}`, {headers: {'Access-Control-Allow-Origin': '*'}})
         .then(response => response.data);
 
+// ??
 const saveSettings = (settings) =>
     axios.put(`${base_url}/api/settings`, {...settings}, );
 
+// handle_wifi_put_request
 const joinWiFi = (wifi) =>
     axios.put(`${base_url}/api/wifi`,{...wifi});
 
+// handle_hostname_put_request
 const saveHostname = (hostname) =>
     axios.put(`${base_url}/api/hostname`,{hostname});
 
+// handle_new_password_put_request
 const updateLocalPassword = (pass) =>
     axios.put(`${base_url}/api/updatePassword`,{new_password: pass});
 

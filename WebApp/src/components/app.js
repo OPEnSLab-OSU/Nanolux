@@ -9,13 +9,29 @@ import {OnlineConnectivityProvider, useConnectivity} from "../context/online_con
 import {useEffect, useState} from "preact/hooks";
 import Toast from "./toast/toast";
 
-
+/**
+ * @brief The main content component for the AudioLux web application.
+ *
+ * This component listens to device connectivity status and displays appropriate
+ * toasts when the AudioLux device goes offline or comes online. It also renders
+ * the application's header, routes (Settings and Wifi pages), and modals.
+ *
+ * @returns The AppContent UI element.
+ */
 const AppContent = () => {
+    // Hook to detect whether the AudioLux device is reachable.
     const {isConnected} = useConnectivity();
+
+    // Hook to manage global modals.
     const {isModalOpen, closeModal} = useModal();
 
+    // Local state for toast configuration.
     const [toastConfig, setToastConfig] = useState(null);
 
+    /**
+     * @brief Whenever `isConnected` changes, show a toast indicating
+     *        whether the device is online or offline.
+     */
     useEffect(() => {
         if (!isConnected) {
             setToastConfig({
@@ -52,6 +68,11 @@ const AppContent = () => {
     );
 }
 
+/**
+ * @brief The root component for the AudioLux application.
+ *
+ * @returns The App UI element.
+ */
 const App = () =>
     <OnlineConnectivityProvider>
         <ModalProvider>

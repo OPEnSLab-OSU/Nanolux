@@ -14,7 +14,17 @@ providing some decoupling and modularization.
 
 This is a high level view of the current implementation:
 
-![Web App Architecture](doc/AudioLux Web App.png)
+![webapp breakdown](https://github.com/user-attachments/assets/0d963b15-a872-48d3-adab-40014a351759)
+
+>Coloring Legend:
+>
+>BLUE: An end-user interactable component of the project.
+>
+>PURPLE: A web app subdirectory.
+>
+>GREEN: A specific file or related group of files (related .js and .css files).
+>
+>ORANGE: A labeled category showing the breakdown of a specific file.
 
 ## Building the Web App
 
@@ -27,8 +37,7 @@ is highly suggested that you use a node version manager like
 Check the [install guide](https://www.freecodecamp.org/news/node-version-manager-nvm-install-guide/) for
 more information.
 
-Once you have node and npm in your system, clone the repo, go to the WebApp folder and use the CLI
-commands below to install, build, and run the application.
+Once you have node and npm in your system, clone the repo, go to the WebApp folder and use the CLI commands below to install, build, run and test the application.
 
 
 ### CLI Commands
@@ -43,33 +52,40 @@ npm run dev
 # build for production with minification
 npm run build
 
+# WINDOWS ONLY: remove unnecessary files from the production build
+npm run clean
+
 # test the production build locally
 npm run serve
 
 # run tests with jest and enzyme
 npm run test
+
+# run static tests on source code with babel and jsx-a11y
+npm run lint
+
+# run tests on live app with lighthouse
+npm run lhci:collect
+npm run lhci:assert
 ```
 
 For detailed explanation on how things work, checkout the [CLI Readme](https://github.com/developit/preact-cli/blob/master/README.md).
 
-## Uploading the app to the AudioLux device
+For more details on testing the web app check [Testing the web app](https://github.com/OPEnSLab-OSU/Nanolux/wiki/testing-the-web-app)
 
-The Web App is completely separate from the firmware that runs on the AudioLux device. Once the Web App is
-built, it must be transferred to the device where it is saved in a memory partition that is configured
-as persistent storage with a simple file system.
+## Uploading the Web App to the SD card
 
-The web is build for deployment using the `npm run build` command as mentioned above. Once done the
-app files will be located in a `build` directory of the Web App folder. The following files and folders
-must be copied to the device:
+The Web App is separate from the firmware that runs on the AudioLux device. Once the Web App is built, it must be transferred to an SD card that can be connected to the AudioLux device.
+
+The web app is built for deployment using the `npm run build` command, as mentioned above. Once done, the app files will be in a `build` directory of the Web App folder. The following files and folders must be copied to the SD card:
 
  - The `assets` folder and its contents.
- - All the `.js` and `.json` files.
+ - All the `.html`, `.js`, and `.json` files.
  - All the `.css` files.
 
-Do _not_ copy the map files. Do _not_ copy the ssr-build folder.
+Do _not_ copy the map files. Do _not_ copy the ssr-build folder. These can be removed from the `build` directory with the `npm run clean` command, as mentioned above.
 
 Check the wiki for 
-[instructions on how to do send the web app to the device](https://github.com/OPEnSLab-OSU/Nanolux/wiki/Setting-up-the-file-system-for-the-Web-App).
+[instructions on how to upload the web app to the SD card](https://github.com/OPEnSLab-OSU/Nanolux/wiki/setting-up-the-SD-card).
 
->NOTE: deploying the app to the device will delete any state saved to disk. That is, all settings will
-revert to defaults and the device will its current WiFi configuration.
+>NOTE: Replacing the contents of the SD card will delete any state saved to the card. In other words, all settings will revert to defaults and the device will lose any local network configuration it might have saved.

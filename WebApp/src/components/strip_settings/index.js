@@ -10,8 +10,20 @@ import style from './style.css';
 import PatternSettings from '../pattern_settings';
 import PatternModal from "../../components/pattern_modal";
 
+/**
+ * @brief A group of UI components for configuring LED strip settings on the NanoLux device.
+ *
+ * This component fetches initial strip settings from the device, allows users to
+ * modify parameters (noise threshold, pattern count, mode, transparency), and
+ * pushes updates back to the device.
+ *
+ * @param patterns   An array of pattern definitions passed down to PatternSettings.
+ * @param advanced   A boolean indicating whether advanced settings should be displayed (default: false).
+ *
+ * @returns The group of StripSettings UI elements.
+ */
 const StripSettings = ({patterns, advanced = false}) => {
-
+	// Controls whether the Pattern help modal is open.
 	const [isModalOpen, setIsModalOpen] = useState(false);
 	
 	// Checks if the web app is connected to the device.
@@ -99,10 +111,12 @@ const StripSettings = ({patterns, advanced = false}) => {
 		}
 	}
 
+	/** @brief Opens the pattern help modal. */
 	const openModal = () => {
 		setIsModalOpen(true);
 	}
 
+	/** @brief Closes the pattern help modal. */
 	const closeModal = () => {
 		setIsModalOpen(false);
 	}

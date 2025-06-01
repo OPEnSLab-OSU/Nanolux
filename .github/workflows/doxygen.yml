@@ -23,7 +23,7 @@ jobs:
     # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
     - uses: actions/checkout@v2
         
-    - name: Doxygen Action_dev
+    - name: Generate C/C++ docs with Doxygen
       uses: mattnotmitt/doxygen-action@v1.1.0
       with:
         # Path to Doxyfile
@@ -32,14 +32,14 @@ jobs:
         working-directory: "." # default is .
     
         
-    - name: Build_web
+    - name: Generate JS/Preact docs with JSDoc
       uses: andstor/jsdoc-action@v1
       with:
         source_dir: ./WebApp/src
         recurse: true
         output_dir: ./docs/web
     
-    - name: Deploy
+    - name: Deploy to docs
       uses: peaceiris/actions-gh-pages@v3
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
@@ -47,7 +47,7 @@ jobs:
         # Change the directory if changes in Doxyfile
         publish_dir: ./docs
 
-    - name: Deploy
+    - name: Deploy to landing-page
       uses: peaceiris/actions-gh-pages@v3
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
