@@ -2,16 +2,10 @@
 
 name: Doxygen Action
 
-# Grant the workflow write access to the repository
-permissions:
-  contents: write
-
 # Controls when the action will run. Triggers the workflow on push or pull request
 # events but only for the master branch
 on:
   push:
-    branches: [ main ]
-  pull_request:
     branches: [ main ]
 
 
@@ -45,7 +39,7 @@ jobs:
         recurse: true
         output_dir: ./docs/web
     
-    - name: Deploy to GitHub Pages (docs)
+    - name: Deploy to docs
       uses: peaceiris/actions-gh-pages@v3
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
@@ -53,7 +47,7 @@ jobs:
         # Change the directory if changes in Doxyfile
         publish_dir: ./docs
 
-    - name: Deploy landing-page
+    - name: Deploy to landing-page
       uses: peaceiris/actions-gh-pages@v3
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
