@@ -21,7 +21,7 @@ You will also need several libraries. See the [IDE Setup Guide](https://github.c
 - Ai ESP32 Rotary Encoder (1.6)
 - ArduinoJson (7.1.0)
 - FastLED (3.7.0)
-- ArduinoFFT (2.0.2)
+- fast4ier (1.0.0)
 - ESP32 Board Library (2.0.17)
 
 All dependencies above are installable through the Library Manager of the Arduino IDE, or with the 
