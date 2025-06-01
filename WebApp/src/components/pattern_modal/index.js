@@ -1,6 +1,8 @@
 import style from './style.css';
 
-
+/**
+ * @brief List of available pattern titles and their descriptions.
+ */
 const PATTERN_INFOS = [
   { title: 'Pixel Frequency',      desc: 'A Pixel will change position based on volume.' },
   { title: 'Confetti',             desc: 'Colored speckles will blink and fade smoothly across the board.' },
@@ -27,10 +29,12 @@ const PATTERN_INFOS = [
 ];
 
 /**
- * @brief A modal that gives the user information on the patterns featured on the device.
+ * @brief A modal that lists all available LED patterns and their descriptions.
  * 
- * @param isOpen If the modal should be shown to the user
+ * @param isOpen If the modal should be shown to the user.
  * @param onClose The function to be executed when the modal is clicked.
+ * 
+ * @returns The PatternModal UI element if `isOpen` is true; otherwise, `null`.
  */
 const PatternModal = ({ isOpen, onClose }) => {
   if (!isOpen) return null;

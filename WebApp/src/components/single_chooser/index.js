@@ -5,11 +5,14 @@ import style from './style.css';
  * @brief A simple single-choice checkbox selector
  * 
  * @param label The string label to show alongside the selector.
+ * @param tooltip The optional tooltip to be displayed when hovering the element's label.
  * @param options The list of options and their IDs.
  * @param noSelection If unchecking a box is allowed. Produces an ID of 0.
  * @param initial The initial ID to select.
  * @param structure_ref The string reference to store values at.
  * @param update A function to update an external data structure.
+ * 
+ * @returns  The SimpleChooser UI element.
  */
 const SimpleChooser = ({
     label,

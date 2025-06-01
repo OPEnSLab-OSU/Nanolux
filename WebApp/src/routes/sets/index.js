@@ -8,6 +8,8 @@ import { getPatternList } from '../../utils/api';
 
 /**
  * @brief Generates the main settings page for the settings route.
+ * 
+ * @returns The Settings UI element.
  */
 const Settings = () => {
 

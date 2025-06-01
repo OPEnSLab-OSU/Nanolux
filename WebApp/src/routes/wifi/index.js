@@ -11,6 +11,8 @@ import useInterval from "../../utils/use_interval";
 
 /**
  * @brief The object that generates the WiFi options page.
+ * 
+ * @returns The Wifi UI element.
  */
 const Wifi = () => {
 
