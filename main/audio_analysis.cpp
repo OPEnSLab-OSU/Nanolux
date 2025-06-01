@@ -16,130 +16,94 @@ AudioAnalysis::AudioAnalysis()
 , noisinessModule()
 {
   // Configure AudioPrism modules
-  deltaModule.setWindowSize(SAMPLES);
-  deltaModule.setSampleRate(SAMPLING_FREQUENCY);
-  deltaModule.setSpectrogram(&fftHistory);
-
-  volumeModule.setWindowSize(SAMPLES);
-  volumeModule.setSampleRate(SAMPLING_FREQUENCY);
-  volumeModule.setSpectrogram(&fftHistory);
-
-  peaksModule.setWindowSize(SAMPLES);
-  peaksModule.setSampleRate(SAMPLING_FREQUENCY);
-  peaksModule.setSpectrogram(&fftHistory);
-  peaksModule.setNumPeaks(1);
-
-  salientModule.setWindowSize(SAMPLES);
-  salientModule.setSampleRate(SAMPLING_FREQUENCY);
-  salientModule.setSpectrogram(&fftHistory);
-
-  centroidModule.setWindowSize(SAMPLES);
-  centroidModule.setSampleRate(SAMPLING_FREQUENCY);
-  centroidModule.setSpectrogram(&fftHistory);
-
-  percussionModule.setWindowSize(SAMPLES);
-  percussionModule.setSampleRate(SAMPLING_FREQUENCY);
-  percussionModule.setSpectrogram(&fftHistory);
-
-  noisinessModule.setWindowSize(SAMPLES);
-  noisinessModule.setSampleRate(SAMPLING_FREQUENCY);
-  noisinessModule.setSpectrogram(&fftHistory);
+  INIT_PRISM(deltaModule)
+  INIT_PRISM(volumeModule)
+  INIT_PRISM(peaksModule)
+  INIT_PRISM(salientModule)
+  INIT_PRISM(centroidModule)
+  INIT_PRISM(percussionModule)
+  INIT_PRISM(noisinessModule)
 }
 
 void AudioAnalysis::resetCache() {
-  peakUpdated = false;
-  deltasUpdated = volumeUpdated = false;
-  salientsUpdated = centroidUpdated = false;
-  percussionUpdated = noisinessUpdated = false;
-  maxDeltaUpdated = fbsUpdated = false;
+  vRealSmoothed     = false;
+  peakUpdated       = false;
+  volumeUpdated     = false;
+  maxDeltaUpdated   = false;
+  deltasUpdated     = false;
+  salientsUpdated   = false;
+  centroidUpdated   = false;
+  percussionUpdated = false;
+  noisinessUpdated  = false;
+  fbsUpdated        = false;
 }
 
-// Public sampling and fft interface
+/* ============== Public Interface ============== */
 
 void AudioAnalysis::processAudioFrame() {
   sample_audio();
   compute_FFT();
+  noise_gate();
+  fftHistory.pushWindow(vReal);
 }
 
-// Getters (with caching)
-
+// -------- Getters(with cacheing) --------
 float* AudioAnalysis::getVReal() {
   return vReal;
 }
 
+// returns a smoothed copy of vReal, updating smoothVReal[]
+float* AudioAnalysis::getVReal(float alpha) {
+  if (!vRealSmoothed) vReal_smoothing(), vRealSmoothed = true;
+  return smoothVReal; 
+}
+
 float AudioAnalysis::getPeak() {
-  if (!peakUpdated) {
-    update_peak();
-    peakUpdated = true;
-  }
+  if (!peakUpdated) update_peak(), peakUpdated = true;
   return peak;
 }
 
 float AudioAnalysis::getVolume() {
-  if (!volumeUpdated) {
-    update_volume();
-    volumeUpdated = true;
-  }
+  if (!volumeUpdated) update_volume(), volumeUpdated = true;
   return volume;
 }
 
 int AudioAnalysis::getMaxDelta() {
-  if (!maxDeltaUpdated) {
-    update_max_delta();
-    maxDeltaUpdated = true;
-  }
+  if (!maxDeltaUpdated) update_max_delta(), maxDeltaUpdated = true;
   return maxDelt;
 }
 
 float* AudioAnalysis::getDeltas() {
-  if (!deltasUpdated) {
-    update_deltas();
-    deltasUpdated = true;
-  }
+  if (!deltasUpdated) update_deltas(), deltasUpdated = true;
   return delt;
 }
 
 int* AudioAnalysis::getSalientFreqs() {
-  if (!salientsUpdated) {
-    update_salient_freqs();
-    salientsUpdated = true;
-  }
+  if (!salientsUpdated) update_salient_freqs(), salientsUpdated = true;
   return salFreqs;
 }
 
 float AudioAnalysis::getCentroid() {
-  if (!centroidUpdated) {
-    update_centroid();
-    centroidUpdated = true;
-  }
+  if (!centroidUpdated) update_centroid(), centroidUpdated = true;
   return centroid;
 }
 
 bool AudioAnalysis::getPercussionPresence() {
-  if (!percussionUpdated) {
-    update_percussion_detection();
-    percussionUpdated = true;
-  }
+  if (!percussionUpdated) update_percussion_detection(), percussionUpdated = true;
   return percussionPresent;
 }
 
 float AudioAnalysis::getNoisiness() {
-  if (!noisinessUpdated) {
-    update_noisiness();
-    noisinessUpdated = true;
-  }
+  if (!noisinessUpdated) update_noisiness(), noisinessUpdated = true;
   return noisiness;
 }
 
 float* AudioAnalysis::getFiveBandSplit(int len) {
-  if (!fbsUpdated) {
-    update_five_band_split(len);
-    fbsUpdated = true;
-  }
+  if (!fbsUpdated) update_five_band_split(len), fbsUpdated = true;
   return fbs;
 }
 
-// Internal Implementations
+/* ============== Private Implementations ============== */
 
 void AudioAnalysis::sample_audio() {
   for (int i = 0; i < SAMPLES; i++) {
@@ -178,6 +142,27 @@ void AudioAnalysis::compute_FFT() {
   }
 
   fftHistory.pushWindow(vReal);
+}
+
+void AudioAnalysis::noise_gate() {
+  float thresh = loaded_patterns.noise_thresh * 5;
+
+  for (int i = 0; i < SAMPLES; i++) {
+      if (vReal[i] < thresh) {
+          vReal[i] = 0.0f;
+      }
+  }
+}
+
+// -------- Getter Internal implementations --------
+
+void AudioAnalysis::vReal_smoothing(float alpha) {
+  if (alpha < 0.0f) alpha = 0.0f;
+  if (alpha > 1.0f) alpha = 1.0f;
+
+  for (int i = 0; i < half; i++) {
+    smoothVReal[i] = alpha * smoothVReal[i] + (1.0f - alpha) * vReal[i];
+  }
 }
 
 void AudioAnalysis::update_peak() {

@@ -374,6 +374,7 @@ void update_hardware(){
 /// Carries out functions related to timing and updating the
 /// LED strip.
 void loop() {
+  // begin_loop_timer(config.loop_ms);  // Begin timing this loop
   begin_loop_timer(20);  // Begin timing this loop
 
   audioAnalysis.processAudioFrame();  // Sample audio and compute FFT

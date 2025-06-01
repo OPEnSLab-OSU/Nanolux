@@ -3,6 +3,11 @@
 #ifndef AUDIO_ANALYSIS_H
 #define AUDIO_ANALYSIS_H
 
+#define INIT_PRISM(M)                   \
+  M.setWindowSize(SAMPLES);             \
+  M.setSampleRate(SAMPLING_FREQUENCY);  \
+  M.setSpectrogram(&fftHistory);
+
 #include <math.h>
 #include <Arduino.h>
 #include <Fast4ier.h>
@@ -19,7 +24,8 @@ public:
   void processAudioFrame();
 
   // Accessors (cache their analysis on first call each loop)
-  float*  getVReal();
+  float*  getVReal();       // returns noise‑gated magnitudes (no cache needed)
+  float*  getVReal(float);  // returns an exponentially smoothed copy of those magnitudes
   float   getPeak();
   float   getVolume();
   int     getMaxDelta();
@@ -47,6 +53,7 @@ private:
   // Internal buffers
   complex fftBuffer[SAMPLES];
   float   vReal[SAMPLES];
+  float   smoothVReal[SAMPLES];  // persistent buffer for on‑demand smoothing
   float   delt[SAMPLES];
 
   // AudioPrism modules
@@ -60,6 +67,7 @@ private:
   Noisiness                noisinessModule;
 
   // Flags
+  bool vRealSmoothed     = false;
   bool peakUpdated       = false;
   bool volumeUpdated     = false;
   bool maxDeltaUpdated   = false;
@@ -73,6 +81,8 @@ private:
   // Helper funcs
   void sample_audio();
   void compute_FFT();
+  void noise_gate();
+  void vReal_smoothing(float);
   void update_peak();
   void update_volume();
   void update_max_delta();
@@ -81,7 +91,7 @@ private:
   void update_centroid();
   void update_percussion_detection();
   void update_noisiness();
-  void update_five_band_split(int len);
+  void update_five_band_split(int);
 };
 
 extern AudioAnalysis audioAnalysis;

@@ -624,41 +624,100 @@ void bands(Strip_Buffer* buf, int len, Pattern_Data* params) {
 /// @param len The length of LEDs to process
 /// @param params Pointer to Pattern_Data structure containing configuration options.
 void eq(Strip_Buffer * buf, int len, Pattern_Data* params) {
-  float* vReal = audioAnalysis.getVReal();
+    float* vReal = audioAnalysis.getVReal();
 
-  const float MAG_MIN  = 10.0f;            // noise floor
-  const float MAG_MAX  = 2000.0f;          // max magnitude
-  const float THRESH   = 200.0f;           // gating threshold
+    //—— Your existing magnitude thresholds ——
+    const float MAG_MIN = MIN_FREQUENCY;   // noise floor
+    const float MAG_MAX = MAX_FREQUENCY;   // max magnitude for scaling
+    const float THRESH  = 200.0f;          // gating threshold
 
-  for (int led = 0; led < len; ++led) {
-    // bin range for this LED
-    float f0 = led * float(BINS) / len;
-    float f1 = (led + 1) * float(BINS) / len;
+    //—— Determine mode/blend from params->config ——
+    // mode = 0 → purely linear
+    // mode = 1 → partial log  (blend = 0.4)
+    // mode = 2 → full log
+    int   mode  = params->config;
+    float blend = 0.0f;
+    switch (mode) {
+      case 0:
+        blend = 0.0f;    // linear
+        break;
+      case 1:
+        blend = 0.4f;    // partial log
+        break;
+      case 2:
+        blend = 1.0f;    // full  log
+        break;
+      default:
+        blend = 0.0f;    // fallback to linear
+        break;
+    }
 
-    int b0 = floor(f0);
-    int b1 = ceil(f1);
-    if (b1 <= b0) b1 = b0 + 1;
-    if (b1 > BINS) b1 = BINS;
+    // If we need any log component (mode 1 or 2), compute logMax once
+    bool needLog = (mode != 0);
+    float logMax = 0.0f;
+    if (needLog) {
+      logMax = logf(float(BINS + 1));
+    }
 
-    // average all bins in [b0, b1)
-    float sum = 0;
-    for (int b = b0; b < b1; ++b) {
-      sum += vReal[b];
-    } 
-    float mag = sum / float(b1 - b0);
+    for (int led = 0; led < len; ++led) {
+      //—— 1) Compute pure‐linear bin positions [linF0..linF1) ——
+      float linFrac0 = float(led)     / float(len);
+      float linFrac1 = float(led + 1) / float(len);
+      float linF0    = linFrac0 * float(BINS);
+      float linF1    = linFrac1 * float(BINS);
 
-    // map magnitude to brightness
-    int bri = map(mag, MAG_MIN, MAG_MAX, 0, 255);
-    bri = constrain(bri, 0, 255);
+      float f0, f1;
 
-    // pick a hue based on the center bin
-    int centerBin = (b0 + b1) / 2;
-    uint8_t hue = map(centerBin, 0, BINS - 1, 0, 255);
+      if (mode == 0) {
+        // —— purely linear, skip any log math ——
+        f0 = linF0;
+        f1 = linF1;
 
-    if (mag > THRESH) {
-      buf->leds[led] = CHSV(hue, 255, bri);
-    } else {
-      buf->leds[led] = CHSV(0, 0, 0);  // off
+      } else {
+        //—— 2) Compute full‐log bin positions [fullLog0..fullLog1) ——
+        float logFrac0 = float(led)     / float(len);
+        float logFrac1 = float(led + 1) / float(len);
+        float fullLog0 = expf(logFrac0 * logMax) - 1.0f;  // in [0..BINS]
+        float fullLog1 = expf(logFrac1 * logMax) - 1.0f;  // in [0..BINS]
+
+        if (mode == 2) {
+          // —— full log mapping ——
+          f0 = fullLog0;
+          f1 = fullLog1;
+        } else {
+          // —— partial log mapping: blend linear & log ——
+          f0 = linF0 * (1.0f - blend) + fullLog0 * blend;
+          f1 = linF1 * (1.0f - blend) + fullLog1 * blend;
+        }
+      }
+
+      //—— 3) Turn into integer‐bin boundaries [b0..b1) ——
+      int b0 = floorf(f0);
+      int b1 = ceilf (f1);
+      if (b1 <= b0) b1 = b0 + 1;     // ensure at least one bin per LED
+      if (b1 > BINS)  b1 = BINS;     // clamp to valid range
+
+      //—— 4) Average the FFT magnitudes over bins [b0..b1‑1] ——
+      float sum   = 0.0f;
+      int   count = (b1 - b0);
+      for (int b = b0; b < b1; ++b) {
+        sum += vReal[b];
+      }
+      float mag = (count > 0) ? (sum / float(count)) : 0.0f;
+
+      //—— 5) Map the averaged magnitude → brightness [0..255] ——
+      int bri = map(mag, MAG_MIN, MAG_MAX, 0, 255);
+      bri = constrain(bri, 0, 255);
+
+      //—— 6) Pick a hue based on LED index (0..len−1) ——
+      uint8_t hue = map(led, 0, len - 1, 0, 255);
+
+      //—— 7) Gate by threshold ——
+      if (mag > THRESH) {
+        buf->leds[led] = CHSV(hue, 255, bri);
+      } else {
+        buf->leds[led] = CHSV(0, 0, 0);
+      }
     }
   }
 }
