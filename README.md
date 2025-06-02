@@ -15,7 +15,48 @@ Mac OS (http://docs.arduino.cc/software/ide-v1/tutorials/macOS)
 
 Linux (http://docs.arduino.cc/software/ide-v1/tutorials/Linux)
 
-# Dependencies
+
+## Dependencies
+
+### 1. Using the **`dependencies`** branch (Recommended)
+We have bundled all of the manually required libraries into a single `libraries/` folder on the **`dependencies`** branch. That way, you don’t have to install each one by hand. See the next section if you want/need to manually install them.
+
+1. **Clone (or fetch) the repo and switch to `dependencies`:**
+   ```bash
+   git clone https://github.com/OPEnSLab-OSU/Nanolux.git
+   cd Nanolux
+   git fetch origin
+   git checkout dependencies
+   ```
+2. **Locate the `libraries/` folder** at the root of this branch. It contains:
+   - ESPAsyncWebServer (v1.2.3)
+   - AsyncTCP (v1.1.4)
+   - AudioPrism
+   - All other custom or manually‑required libraries as seen in the next section
+3. **Copy (or symlink) that `libraries/` folder into your Arduino sketchbook’s “libraries” directory.**  
+   - On Windows, your sketchbook is usually:  
+     ```
+     C:\Users\<YourUserName>\Documents\Arduino\libraries
+     ```
+   - On macOS/Linux, it’s typically:  
+     ```
+     ~/Arduino/libraries
+     ```
+   For example:
+   ```bash
+   # if your sketchbook is ~/Arduino
+   cp -r libraries ~/Arduino/
+   ```
+
+   Once that’s done, Arduino IDE will automatically pick up those libraries the next time you open it.
+
+4. **Switch back to `main` (if you want to compile/upload the main firmware):**
+   ```bash
+   git checkout main
+   ```
+   Because your `main/` folder references those libraries by name, Arduino can now find them.
+
+### 2. Installing via Arduino IDE / Library Manager (Alternate)
 You will also need several libraries. See the [IDE Setup Guide](https://github.com/OPEnSLab-OSU/Nanolux/wiki/Arduino-IDE-Setting-Guide) Wiki Page for steps on how to install these libraries.
 
 - Ai ESP32 Rotary Encoder (1.6)
@@ -104,6 +145,6 @@ This is the code that should be uploaded to the device. Make sure to follow the 
 needed to run the webapp.
 
 2. If you wish to disable the webapp, you can comment out the flag "ENABLE_WEB_SERVER". Make note to which analog ports are being used,
-disabling the webapp however should not give a boost in performance, given that the webapp is asych and on a seperate core.
+disabling the webapp however should not give a boost in performance, given that the webapp is asynch and on a seperate core.
 
 
