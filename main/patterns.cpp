@@ -626,42 +626,96 @@ void bands(Strip_Buffer* buf, int len, Pattern_Data* params) {
 void eq(Strip_Buffer * buf, int len, Pattern_Data* params) {
   float* vReal = audioAnalysis.getVReal();
 
-  const float MAG_MIN  = 10.0f;            // noise floor
-  const float MAG_MAX  = 2000.0f;          // max magnitude
-  const float THRESH   = 200.0f;           // gating threshold
+  const float MAG_MIN = MIN_FREQUENCY;   // noise floor
+  const float MAG_MAX = MAX_FREQUENCY;   // max magnitude for scaling
+  const float THRESH  = 200.0f;          // gating threshold
+  int mode = params->config;
+
+  float blend = 0.0f;
+  switch (mode) {
+    case 0:
+      blend = 0.0f;    // linear
+      break;
+    case 1:
+      blend = 0.4f;    // partial log
+      break;
+    case 2:
+      blend = 1.0f;    // full  log
+      break;
+    default:
+      blend = 0.0f;    // fallback to linear
+      break;
+  }
+
+  // with any log component (mode 1 or 2), compute logMax once
+  bool needLog = (mode != 0);
+  float logMax = 0.0f;
+  if (needLog) {
+    logMax = logf(float(BINS + 1));
+  }
 
   for (int led = 0; led < len; ++led) {
-    // bin range for this LED
-    float f0 = led * float(BINS) / len;
-    float f1 = (led + 1) * float(BINS) / len;
+    // Compute linear bin positions
+    float linFrac0 = float(led)     / float(len);
+    float linFrac1 = float(led + 1) / float(len);
+    float linF0    = linFrac0 * float(BINS);
+    float linF1    = linFrac1 * float(BINS);
 
-    int b0 = floor(f0);
-    int b1 = ceil(f1);
-    if (b1 <= b0) b1 = b0 + 1;
-    if (b1 > BINS) b1 = BINS;
+    float f0, f1;
 
-    // average all bins in [b0, b1)
-    float sum = 0;
+    // purely linear, skip any log math
+    if (mode == 0) {
+      f0 = linF0;
+      f1 = linF1;
+
+    } 
+    // Compute log bin positions 
+    else {
+      float logFrac0 = float(led)     / float(len);
+      float logFrac1 = float(led + 1) / float(len);
+      float fullLog0 = expf(logFrac0 * logMax) - 1.0f;  
+      float fullLog1 = expf(logFrac1 * logMax) - 1.0f;  
+
+      //  full log mapping 
+      if (mode == 2) {
+        f0 = fullLog0;
+        f1 = fullLog1;
+      } 
+      //  partial log mapping: blend linear & log 
+      else {
+        f0 = linF0 * (1.0f - blend) + fullLog0 * blend;
+        f1 = linF1 * (1.0f - blend) + fullLog1 * blend;
+      }
+    }
+
+    // bin boundaries [b0..b1) 
+    int b0 = floorf(f0);
+    int b1 = ceilf (f1);
+    if (b1 <= b0) b1 = b0 + 1;     // ensure at least one bin per LED
+    if (b1 > BINS)  b1 = BINS;     // clamp to valid range
+
+    // Average the FFT magnitudes over bins [b0..b1‑1] 
+    float sum   = 0.0f;
+    int   count = (b1 - b0);
     for (int b = b0; b < b1; ++b) {
       sum += vReal[b];
-    } 
-    float mag = sum / float(b1 - b0);
+    }
+    float mag = (count > 0) ? (sum / float(count)) : 0.0f;
 
-    // map magnitude to brightness
+    // Map the averaged magnitude to brightness 
     int bri = map(mag, MAG_MIN, MAG_MAX, 0, 255);
-    bri = constrain(bri, 0, 255);
 
-    // pick a hue based on the center bin
-    int centerBin = (b0 + b1) / 2;
-    uint8_t hue = map(centerBin, 0, BINS - 1, 0, 255);
+    // Pick a hue based on LED index 
+    uint8_t hue = map(led, 0, len - 1, 0, 255);
 
     if (mag > THRESH) {
       buf->leds[led] = CHSV(hue, 255, bri);
     } else {
-      buf->leds[led] = CHSV(0, 0, 0);  // off
+      buf->leds[led] = CHSV(0, 0, 0);
     }
   }
 }
+
 
 /// @brief A random spot is chosen along the length and does a ripple based on frequency
 /// @param buf Pointer to the Strip_Buffer structure, holds LED buffer and history variables.

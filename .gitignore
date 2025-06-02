@@ -4,6 +4,7 @@ PCB/Version1.2.b##
 
 __vm/
 .vs/
+.vscode
 data/
 __pycache__/
 

@@ -1,6 +1,6 @@
 ## Terminology Overview ##
 
-During the 2023-2024 project cycle, new features were implemented that required major changes to both project structure and terminology. 
+During the 2023-2024 project cycle, new features were implemented that required major changes to both project structure and terminology. These features persist throughout the 2024-2025 development cycle.
 
 - **Pattern:** An algorithm that controls LED light output for a portion of the LED strip.
 - **Strip:** The entire LED strip.
