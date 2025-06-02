@@ -25,7 +25,10 @@
 	- Stating the Problem
 	- ESP32 Implementation
 	- Web App Implementation
-6. Building the Nanolux Developer's Handbook
+6. Audio Analysis Overview
+	- Accessing Audio Features
+	- Adding a New Analysis Function
+7. Building the Nanolux Developer's Handbook
 	- Dependencies
 	- Adding New Sections
-7. Changelog
+8. Changelog

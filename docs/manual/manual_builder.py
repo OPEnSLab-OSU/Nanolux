@@ -8,13 +8,13 @@ from pypdf import PdfWriter
 
 input_filenames = [
     'title_0',
-    'foreward_1',
     'toc_2',
     'terminology_3',
     'structs_4',
     'project_struct_5',
     'main_loop_6',
     'add_patterns_7',
+    'audio_analysis_10',
     'building_manual_8',
     'changelog_9'
 ]
