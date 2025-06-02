@@ -1,4 +1,9 @@
-// AudioAnalysis.cpp
+/**@file
+ *
+ * This file contains the class used to process audio input
+ * and extract audio features
+ *
+**/
 #include "audio_analysis.h"
 #include "nanolux_types.h"
 #include "nanolux_util.h"
@@ -53,7 +58,6 @@ float* AudioAnalysis::getVReal() {
   return vReal;
 }
 
-// returns a smoothed copy of vReal, updating smoothVReal[]
 float* AudioAnalysis::getVReal(float alpha) {
   if (!vRealSmoothed) vReal_smoothing(alpha), vRealSmoothed = true;
   return smoothVReal; 
@@ -141,8 +145,6 @@ void AudioAnalysis::compute_FFT() {
   for (int i = 0; i < SAMPLES; i++) {  
     vReal[i] = sqrt(pow(fftBuffer[i].re(), 2) + pow(fftBuffer[i].im(), 2));
   }
-
-  fftHistory.pushWindow(vReal);
 }
 
 void AudioAnalysis::noise_gate(int noiseThreshhold) {

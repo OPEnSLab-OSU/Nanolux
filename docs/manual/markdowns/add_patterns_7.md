@@ -53,6 +53,30 @@ Let's start with defining the basic structure of our pattern (in patterns.cpp). 
 	  }
 	}
 
+Patterns in our Pattern Library follow a general basic formula.
+
+Call the Audio Analysis getter functions and assign the result to variables. For example (float volume = audioAnalysis.getVolume()). These functions are dependent on the different aspects of the audio sample that the pattern would like to showcase. The functions that are available to call are listed in the audio_analysis.h file. Further insight into these modules can be found in the
+From these variables, create a method to determine which LED's should display which color. This is generally determined by figuring out what HSV value would would showcase the state of the audio sample. For example, the Equalizer function maps the LED strip to varying hues as it goes down the strip. It then determines the Value value, or brightness, based on the amplitude of the frequency bin associated with that LED.
+Assign the determined HSV values to the LED. This is most commonly done by setting an item from the buf->leds array to the HSV value of your choice. For example, buf->leds[i] = CHSV(0, 255, 255) sets the LED at position i to red.
+HSV Values:
+
+Hue - Color, from Red wrapping back around to Red (0 - 255)
+Saturation - How vibrant the color is. The higher the value, the more vivid the hue. The lower the value, the closer it is to a grey. (0-255)
+Value - Also called brightness. Simply how bright the LED will be. (0 - 255) HSV values are normally saved in code with CHSV(H value, S value, V value)
+Useful Functions:
+
+- blur1d(buf->leds, len, int v). This function blurs the HSV values of the LED strip. The amount that it blurs is dependent on the int v value. The other arguments are generally used as they are.
+- fadeToBlackBy(buf->leds, len, int v). This function takes the V values of each LED along the strip and subtracts int v from each of them.
+map/remap(int value, int oldMin, int oldMax, int newMin, int newMax). This function takes a value, and reproportions it from its old range to a new range. Useful for taking values like frequency and volume and setting them to HSV values or the length of the LED strip.
+- rgb2hsv_approximate(buf->leds[i]). This function takes an RGB value and converts it to an HSV value. This function is useful if you want to check the past HSV value of the buf->leds array. For example, SplashTheory uses this to check what the LED strip looked like last call. This function is necessary because buf->leds saves each cell as an RGB value.
+- blend(CHSV color1, CHSV color2, amountToBlend, BlendDirection). This function outputs a color value that's a blend of color1 into color2 by the amount of amountToBlend. BlendDirection are a set of enums that can be found in FastLED's website.
+
+Notes:
+- getFhue and getVbrightness are helper functions from inside of our code. They simply utilize the remap function to set Frequency to a hue value or Volume to a brightness value. getFhue divides the log of each frequency value by log 2. This is good practice anytime you utilize frequency values, regardless of using getFhue or not.
+- If you need a Static Array to remember previous LED configurations, use MAX_LEDS to initialize.
+- Feedback from Cymaspace indicates that simpler, more obviously connected to the audio is more desirable. Feedback from other sources prefer more complex, visually interesting patterns.
+
+
 This is a good "clean" initial structure that doesn't go overboard with extra code. Cases are clearly labeled using macros, and the Doxygen header is present describing the pattern. You can check out the final pattern in patterns.cpp if you wish to see the final version.
 
 Next, we need to add the pattern to the global patterns array. This is located in globals.h,

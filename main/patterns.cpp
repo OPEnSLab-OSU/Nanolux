@@ -629,9 +629,10 @@ void eq(Strip_Buffer * buf, int len, Pattern_Data* params) {
   const float MAG_MIN = MIN_FREQUENCY;   // noise floor
   const float MAG_MAX = MAX_FREQUENCY;   // max magnitude for scaling
   const float THRESH  = 200.0f;          // gating threshold
+  int mode = params->config;
 
   float blend = 0.0f;
-  switch (params->config) {
+  switch (mode) {
     case 0:
       blend = 0.0f;    // linear
       break;
