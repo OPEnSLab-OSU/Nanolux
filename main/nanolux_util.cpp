@@ -10,7 +10,6 @@
 #include "cmath"
 #include <FastLED.h>
 #include <Arduino.h>
-#include "arduinoFFT.h"
 #include "patterns.h"
 #include "nanolux_types.h"
 #include "nanolux_util.h"
