@@ -25,6 +25,8 @@ AudioAnalysis::AudioAnalysis()
   INIT_PRISM(noisinessModule)
 }
 
+/* ============== Public Interface ============== */
+
 void AudioAnalysis::resetCache() {
   vRealSmoothed     = false;
   peakUpdated       = false;
@@ -38,23 +40,22 @@ void AudioAnalysis::resetCache() {
   fbsUpdated        = false;
 }
 
-/* ============== Public Interface ============== */
-
-void AudioAnalysis::processAudioFrame() {
+void AudioAnalysis::processAudioFrame(int noiseThreshhold) {
   sample_audio();
   compute_FFT();
-  noise_gate();
+  noise_gate(noiseThreshhold);
   fftHistory.pushWindow(vReal);
 }
 
-// -------- Getters(with cacheing) --------
+// ---- Getters (with cacheing) ---- //
+
 float* AudioAnalysis::getVReal() {
   return vReal;
 }
 
 // returns a smoothed copy of vReal, updating smoothVReal[]
 float* AudioAnalysis::getVReal(float alpha) {
-  if (!vRealSmoothed) vReal_smoothing(), vRealSmoothed = true;
+  if (!vRealSmoothed) vReal_smoothing(alpha), vRealSmoothed = true;
   return smoothVReal; 
 }
 
@@ -144,8 +145,8 @@ void AudioAnalysis::compute_FFT() {
   fftHistory.pushWindow(vReal);
 }
 
-void AudioAnalysis::noise_gate() {
-  float thresh = loaded_patterns.noise_thresh * 5;
+void AudioAnalysis::noise_gate(int noiseThreshhold) {
+  int thresh = noiseThreshhold * 5;
 
   for (int i = 0; i < SAMPLES; i++) {
       if (vReal[i] < thresh) {
@@ -154,13 +155,13 @@ void AudioAnalysis::noise_gate() {
   }
 }
 
-// -------- Getter Internal implementations --------
+// ---- Getter Internal implementations ---- //
 
 void AudioAnalysis::vReal_smoothing(float alpha) {
   if (alpha < 0.0f) alpha = 0.0f;
   if (alpha > 1.0f) alpha = 1.0f;
 
-  for (int i = 0; i < half; i++) {
+  for (int i = 0; i < BINS; i++) {
     smoothVReal[i] = alpha * smoothVReal[i] + (1.0f - alpha) * vReal[i];
   }
 }
@@ -184,7 +185,7 @@ void AudioAnalysis::update_peak() {
   float y1 = vReal[maxBin];
   float y2 = vReal[maxBin + 1];
 
-  // compute the bin offset by quadratic interpolation
+  // find the bin offset with quadratic interpolation
   float denom = (y0 - 2.0f * y1 + y2);
   float delta = 0.0f;
 

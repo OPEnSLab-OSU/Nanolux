@@ -377,7 +377,7 @@ void loop() {
   // begin_loop_timer(config.loop_ms);  // Begin timing this loop
   begin_loop_timer(20);  // Begin timing this loop
 
-  audioAnalysis.processAudioFrame();  // Sample audio and compute FFT
+  audioAnalysis.processAudioFrame(loaded_patterns.noise_thresh);  // Sample audio and compute FFT
 
   update_hardware(); // Pull updates from hardware (rotary encoder)
 

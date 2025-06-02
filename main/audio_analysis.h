@@ -21,7 +21,7 @@ public:
   AudioAnalysis();
 
   // Sampleing and FFT public interface
-  void processAudioFrame();
+  void processAudioFrame(int);
 
   // Accessors (cache their analysis on first call each loop)
   float*  getVReal();       // returns noise‑gated magnitudes (no cache needed)
@@ -81,7 +81,7 @@ private:
   // Helper funcs
   void sample_audio();
   void compute_FFT();
-  void noise_gate();
+  void noise_gate(int);
   void vReal_smoothing(float);
   void update_peak();
   void update_volume();
