@@ -76,8 +76,6 @@ void pix_freq(Strip_Buffer * buf, int len, Pattern_Data* params);
 
 void eq(Strip_Buffer * buf, int len, Pattern_Data* params);
 
-void tug_of_war(Strip_Buffer * buf, int len, Pattern_Data* params);
-
 void saturated(Strip_Buffer * buf, int len, Pattern_Data* params);
 
 void random_raindrop(Strip_Buffer * buf, int len, Pattern_Data* params);
@@ -96,19 +94,9 @@ void Fire2012(Strip_Buffer * buf, int len, Pattern_Data* params);
 
 void bar_fill(Strip_Buffer * buf, int len, Pattern_Data* params);
 
-void vowels_raindrop(Strip_Buffer * buf, int len, Pattern_Data* params);
-
 void blendIn(Strip_Buffer * buf, int len, Pattern_Data* params);
 
 void bleedThrough(Strip_Buffer * buf, int len, Pattern_Data* params);
-
-void showcasePercussion(Strip_Buffer * buf, int len, Pattern_Data* params);
-
-void showcaseCentroid(Strip_Buffer * buf, int len, Pattern_Data* params);
-
-void showcaseBread(Strip_Buffer * buf, int len, Pattern_Data* params);
-
-void showcaseSalientFreqs(Strip_Buffer * buf, int len, Pattern_Data* params);
 
 void synesthesiaRolling(Strip_Buffer *buf, int len, Pattern_Data* params);
 
@@ -120,5 +108,4 @@ void splashTheory(Strip_Buffer *buf, int len, Pattern_Data* params);
 
 void deltaHeat(Strip_Buffer *buf, int len, Pattern_Data* params);
 
-void gradient(Strip_Buffer *buf, int len, Pattern_Data* params);
 #endif
