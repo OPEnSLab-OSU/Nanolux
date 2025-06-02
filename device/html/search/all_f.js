@@ -10,10 +10,13 @@ var searchData=
   ['setup_5frotary_5fencoder_7',['setup_rotary_encoder',['../nanolux__util_8cpp.html#ae2dec6cad4e1b326ac39a3e75de0a582',1,'nanolux_util.cpp']]],
   ['smoothed_5foutput_8',['smoothed_output',['../main_8ino.html#a54d0986e11a540072df62d5d7a6a3d92',1,'main.ino']]],
   ['smoothing_9',['smoothing',['../struct_pattern___data.html#a29a6ff37d9417341f884f48683cde4ef',1,'Pattern_Data']]],
-  ['start_5fmillis_10',['start_millis',['../nanolux__util_8cpp.html#adc00a7924e231edeb4ac6b2fdaf6210b',1,'nanolux_util.cpp']]],
-  ['storage_11',['storage',['../storage_8cpp.html#ae9991def554a05846720cda6683533c0',1,'storage.cpp']]],
-  ['storage_2ecpp_12',['storage.cpp',['../storage_8cpp.html',1,'']]],
-  ['storage_2eh_13',['storage.h',['../storage_8h.html',1,'']]],
-  ['strip_5fbuffer_14',['Strip_Buffer',['../struct_strip___buffer.html',1,'']]],
-  ['strip_5fdata_15',['Strip_Data',['../struct_strip___data.html',1,'']]]
+  ['splashtheory_10',['splashTheory',['../patterns_8cpp.html#a0291697cf11d97f64fb440b4e803d14d',1,'splashTheory(Strip_Buffer *buf, int len, Pattern_Data *params):&#160;patterns.cpp'],['../patterns_8h.html#a0291697cf11d97f64fb440b4e803d14d',1,'splashTheory(Strip_Buffer *buf, int len, Pattern_Data *params):&#160;patterns.cpp']]],
+  ['start_5fmillis_11',['start_millis',['../nanolux__util_8cpp.html#adc00a7924e231edeb4ac6b2fdaf6210b',1,'nanolux_util.cpp']]],
+  ['storage_12',['storage',['../storage_8cpp.html#ae9991def554a05846720cda6683533c0',1,'storage.cpp']]],
+  ['storage_2ecpp_13',['storage.cpp',['../storage_8cpp.html',1,'']]],
+  ['storage_2eh_14',['storage.h',['../storage_8h.html',1,'']]],
+  ['stringtheory_15',['stringTheory',['../patterns_8cpp.html#ab156477867b8ded7d45fe65c3342cc0d',1,'stringTheory(Strip_Buffer *buf, int len, Pattern_Data *params):&#160;patterns.cpp'],['../patterns_8h.html#ab156477867b8ded7d45fe65c3342cc0d',1,'stringTheory(Strip_Buffer *buf, int len, Pattern_Data *params):&#160;patterns.cpp']]],
+  ['strip_5fbuffer_16',['Strip_Buffer',['../struct_strip___buffer.html',1,'']]],
+  ['strip_5fdata_17',['Strip_Data',['../struct_strip___data.html',1,'']]],
+  ['synesthesiarolling_18',['synesthesiaRolling',['../patterns_8cpp.html#a36081dbbec5a9f4444222783e3216074',1,'synesthesiaRolling(Strip_Buffer *buf, int len, Pattern_Data *params):&#160;patterns.cpp'],['../patterns_8h.html#a36081dbbec5a9f4444222783e3216074',1,'synesthesiaRolling(Strip_Buffer *buf, int len, Pattern_Data *params):&#160;patterns.cpp']]]
 ];

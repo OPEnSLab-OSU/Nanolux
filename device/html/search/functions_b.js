@@ -1,11 +1,8 @@
 var searchData=
 [
-  ['random_5fraindrop_0',['random_raindrop',['../patterns_8cpp.html#aa9abdfa6d8a8cd220a943baf902e3b11',1,'random_raindrop(Strip_Buffer *buf, int len, Pattern_Data *params):&#160;patterns.cpp'],['../patterns_8h.html#aa9abdfa6d8a8cd220a943baf902e3b11',1,'random_raindrop(Strip_Buffer *buf, int len, Pattern_Data *params):&#160;patterns.cpp']]],
-  ['readencoderisr_1',['readEncoderISR',['../nanolux__util_8cpp.html#ad3f3ddd6424eb42b167daf9b2ee0e1e9',1,'nanolux_util.cpp']]],
-  ['remap_2',['remap',['../nanolux__util_8cpp.html#a23c7fa19c745c6b9ed7f5ac61da8a65f',1,'nanolux_util.cpp']]],
-  ['reset_5fbutton_5fstate_3',['reset_button_state',['../nanolux__util_8cpp.html#aeb377c49ee372fa0429384069b6a3ac6',1,'nanolux_util.cpp']]],
-  ['resetcache_4',['resetCache',['../class_audio_analysis.html#a6e7c052e73a1b83b29bdf621aec1ceaa',1,'AudioAnalysis']]],
-  ['reverse_5fbuffer_5',['reverse_buffer',['../main_8ino.html#a0e06798a633ed20e00cfb4ff575a16c8',1,'main.ino']]],
-  ['run_5fpattern_5flayering_6',['run_pattern_layering',['../main_8ino.html#aceda055518a59887a9c2de7f56015929',1,'main.ino']]],
-  ['run_5fstrip_5fsplitting_7',['run_strip_splitting',['../main_8ino.html#a73767c61fbb24c0ace2c4b6ea6310184',1,'main.ino']]]
+  ['pix_5ffreq_0',['pix_freq',['../patterns_8cpp.html#a0a2007b15137c803a2b6544f31825f15',1,'pix_freq(Strip_Buffer *buf, int len, Pattern_Data *params):&#160;patterns.cpp'],['../patterns_8h.html#a0a2007b15137c803a2b6544f31825f15',1,'pix_freq(Strip_Buffer *buf, int len, Pattern_Data *params):&#160;patterns.cpp']]],
+  ['print_5fbuffer_1',['print_buffer',['../main_8ino.html#a279952fdc56782b0a1b589b60ce51241',1,'main.ino']]],
+  ['process_5fpattern_2',['process_pattern',['../main_8ino.html#afc1c656b4feaf53b3719b6f0c72154ef',1,'main.ino']]],
+  ['process_5freset_5fbutton_3',['process_reset_button',['../nanolux__util_8cpp.html#afb5b77f6d989ae006ea4a5d2d19599e9',1,'nanolux_util.cpp']]],
+  ['processaudioframe_4',['processAudioFrame',['../class_audio_analysis.html#a256e84eb7253357a9b7c02ac528d8bfc',1,'AudioAnalysis']]]
 ];

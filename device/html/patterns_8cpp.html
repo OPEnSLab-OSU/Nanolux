@@ -146,6 +146,9 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>blank</b> (<a class="
 <tr class="memitem:a89d672d8af17e1878550d77b358c3c3e" id="r_a89d672d8af17e1878550d77b358c3c3e"><td class="memItemLeft" align="right" valign="top"><a id="a89d672d8af17e1878550d77b358c3c3e" name="a89d672d8af17e1878550d77b358c3c3e"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>setColorHSV</b> (CRGB *leds, byte h, byte s, byte v, int len)</td></tr>
 <tr class="separator:a89d672d8af17e1878550d77b358c3c3e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4b27a4941fdfd5d2468b239bfbfd6dcb" id="r_a4b27a4941fdfd5d2468b239bfbfd6dcb"><td class="memItemLeft" align="right" valign="top"><a id="a4b27a4941fdfd5d2468b239bfbfd6dcb" name="a4b27a4941fdfd5d2468b239bfbfd6dcb"></a>
+float&#160;</td><td class="memItemRight" valign="bottom"><b>samplesToStrip</b> (float *samples, int len, float pos)</td></tr>
+<tr class="separator:a4b27a4941fdfd5d2468b239bfbfd6dcb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0a2007b15137c803a2b6544f31825f15" id="r_a0a2007b15137c803a2b6544f31825f15"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a0a2007b15137c803a2b6544f31825f15">pix_freq</a> (<a class="el" href="struct_strip___buffer.html">Strip_Buffer</a> *buf, int len, <a class="el" href="struct_pattern___data.html">Pattern_Data</a> *params)</td></tr>
 <tr class="memdesc:a0a2007b15137c803a2b6544f31825f15"><td class="mdescLeft">&#160;</td><td class="mdescRight">Based on a sufficient volume, a pixel will float to some position on the light strip and fall down (vol_show adds another threshold)  <br /></td></tr>
 <tr class="separator:a0a2007b15137c803a2b6544f31825f15"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -176,47 +179,29 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>setColorHSV</b> (CRGB
 <tr class="memitem:aa9abdfa6d8a8cd220a943baf902e3b11" id="r_aa9abdfa6d8a8cd220a943baf902e3b11"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa9abdfa6d8a8cd220a943baf902e3b11">random_raindrop</a> (<a class="el" href="struct_strip___buffer.html">Strip_Buffer</a> *buf, int len, <a class="el" href="struct_pattern___data.html">Pattern_Data</a> *params)</td></tr>
 <tr class="memdesc:aa9abdfa6d8a8cd220a943baf902e3b11"><td class="mdescLeft">&#160;</td><td class="mdescRight">A random spot is chosen along the length and does a ripple based on frequency.  <br /></td></tr>
 <tr class="separator:aa9abdfa6d8a8cd220a943baf902e3b11"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a20640e7d60033be2d768196de0dc1853" id="r_a20640e7d60033be2d768196de0dc1853"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a20640e7d60033be2d768196de0dc1853">tug_of_war</a> (<a class="el" href="struct_strip___buffer.html">Strip_Buffer</a> *buf, int len, <a class="el" href="struct_pattern___data.html">Pattern_Data</a> *params)</td></tr>
-<tr class="memdesc:a20640e7d60033be2d768196de0dc1853"><td class="mdescLeft">&#160;</td><td class="mdescRight">Strip is split into two sides, red and blue showing push and pull motion based on either frequency or volume.  <br /></td></tr>
-<tr class="separator:a20640e7d60033be2d768196de0dc1853"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:acff6dfc16e4f97d405bdbf87836c7b12" id="r_acff6dfc16e4f97d405bdbf87836c7b12"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#acff6dfc16e4f97d405bdbf87836c7b12">Fire2012</a> (<a class="el" href="struct_strip___buffer.html">Strip_Buffer</a> *buf, int len, <a class="el" href="struct_pattern___data.html">Pattern_Data</a> *params)</td></tr>
 <tr class="memdesc:acff6dfc16e4f97d405bdbf87836c7b12"><td class="mdescLeft">&#160;</td><td class="mdescRight">Fire2012 pattern utilizing heating and cooling.  <br /></td></tr>
 <tr class="separator:acff6dfc16e4f97d405bdbf87836c7b12"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a56ebf0a8fc6c0da330f68588c98ee268" id="r_a56ebf0a8fc6c0da330f68588c98ee268"><td class="memItemLeft" align="right" valign="top"><a id="a56ebf0a8fc6c0da330f68588c98ee268" name="a56ebf0a8fc6c0da330f68588c98ee268"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>vowels_raindrop</b> (<a class="el" href="struct_strip___buffer.html">Strip_Buffer</a> *buf, int len, <a class="el" href="struct_pattern___data.html">Pattern_Data</a> *params)</td></tr>
-<tr class="separator:a56ebf0a8fc6c0da330f68588c98ee268"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1c538ad659e0874ad33fe3b2f961f9db" id="r_a1c538ad659e0874ad33fe3b2f961f9db"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a1c538ad659e0874ad33fe3b2f961f9db">bar_fill</a> (<a class="el" href="struct_strip___buffer.html">Strip_Buffer</a> *buf, int len, <a class="el" href="struct_pattern___data.html">Pattern_Data</a> *params)</td></tr>
 <tr class="memdesc:a1c538ad659e0874ad33fe3b2f961f9db"><td class="mdescLeft">&#160;</td><td class="mdescRight">Displays a pattern that occupies "lower" pixels at lower values, and "higher" pixels at higher values.  <br /></td></tr>
 <tr class="separator:a1c538ad659e0874ad33fe3b2f961f9db"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad6edf942835d31883a60172c6c9a4179" id="r_ad6edf942835d31883a60172c6c9a4179"><td class="memItemLeft" align="right" valign="top"><a id="ad6edf942835d31883a60172c6c9a4179" name="ad6edf942835d31883a60172c6c9a4179"></a>
 int&#160;</td><td class="memItemRight" valign="bottom"><b>getColor</b> (int noteNumber)</td></tr>
 <tr class="separator:ad6edf942835d31883a60172c6c9a4179"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2a31e3a563bf867fdde71166d689a51d" id="r_a2a31e3a563bf867fdde71166d689a51d"><td class="memItemLeft" align="right" valign="top"><a id="a2a31e3a563bf867fdde71166d689a51d" name="a2a31e3a563bf867fdde71166d689a51d"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>blendIn</b> (<a class="el" href="struct_strip___buffer.html">Strip_Buffer</a> *buf, int len, <a class="el" href="struct_pattern___data.html">Pattern_Data</a> *params)</td></tr>
+<tr class="memitem:a2a31e3a563bf867fdde71166d689a51d" id="r_a2a31e3a563bf867fdde71166d689a51d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a2a31e3a563bf867fdde71166d689a51d">blendIn</a> (<a class="el" href="struct_strip___buffer.html">Strip_Buffer</a> *buf, int len, <a class="el" href="struct_pattern___data.html">Pattern_Data</a> *params)</td></tr>
+<tr class="memdesc:a2a31e3a563bf867fdde71166d689a51d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Maps the LED strip to the different frequencies, and each LED blends between two different colors based on that frequency's amplitude.  <br /></td></tr>
 <tr class="separator:a2a31e3a563bf867fdde71166d689a51d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5c9b78d36d822377226eff6c7951e7f6" id="r_a5c9b78d36d822377226eff6c7951e7f6"><td class="memItemLeft" align="right" valign="top"><a id="a5c9b78d36d822377226eff6c7951e7f6" name="a5c9b78d36d822377226eff6c7951e7f6"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>bleedThrough</b> (<a class="el" href="struct_strip___buffer.html">Strip_Buffer</a> *buf, int len, <a class="el" href="struct_pattern___data.html">Pattern_Data</a> *params)</td></tr>
+<tr class="memitem:a5c9b78d36d822377226eff6c7951e7f6" id="r_a5c9b78d36d822377226eff6c7951e7f6"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a5c9b78d36d822377226eff6c7951e7f6">bleedThrough</a> (<a class="el" href="struct_strip___buffer.html">Strip_Buffer</a> *buf, int len, <a class="el" href="struct_pattern___data.html">Pattern_Data</a> *params)</td></tr>
+<tr class="memdesc:a5c9b78d36d822377226eff6c7951e7f6"><td class="mdescLeft">&#160;</td><td class="mdescRight">A color blended between a base and transitioning color is sent down the LED strip. The blending is based off of the cumulative volume of the audio. When the color is fully blended into the transitioning color, that color becomes the new base color and a new transitioning color is selected.  <br /></td></tr>
 <tr class="separator:a5c9b78d36d822377226eff6c7951e7f6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab74a7c89cf74cae9468bd5e68047550d" id="r_ab74a7c89cf74cae9468bd5e68047550d"><td class="memItemLeft" align="right" valign="top"><a id="ab74a7c89cf74cae9468bd5e68047550d" name="ab74a7c89cf74cae9468bd5e68047550d"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>showcasePercussion</b> (<a class="el" href="struct_strip___buffer.html">Strip_Buffer</a> *buf, int len, <a class="el" href="struct_pattern___data.html">Pattern_Data</a> *params)</td></tr>
-<tr class="separator:ab74a7c89cf74cae9468bd5e68047550d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac3b1ca17acfe3e7024ca2d070d5da54d" id="r_ac3b1ca17acfe3e7024ca2d070d5da54d"><td class="memItemLeft" align="right" valign="top"><a id="ac3b1ca17acfe3e7024ca2d070d5da54d" name="ac3b1ca17acfe3e7024ca2d070d5da54d"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>showcaseCentroid</b> (<a class="el" href="struct_strip___buffer.html">Strip_Buffer</a> *buf, int len, <a class="el" href="struct_pattern___data.html">Pattern_Data</a> *params)</td></tr>
-<tr class="separator:ac3b1ca17acfe3e7024ca2d070d5da54d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3eb7ef5c0387414024bff20005c54019" id="r_a3eb7ef5c0387414024bff20005c54019"><td class="memItemLeft" align="right" valign="top"><a id="a3eb7ef5c0387414024bff20005c54019" name="a3eb7ef5c0387414024bff20005c54019"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>showcaseBread</b> (<a class="el" href="struct_strip___buffer.html">Strip_Buffer</a> *buf, int len, <a class="el" href="struct_pattern___data.html">Pattern_Data</a> *params)</td></tr>
-<tr class="separator:a3eb7ef5c0387414024bff20005c54019"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad85e983e4cd4efb4c5eef6209c99fd9f" id="r_ad85e983e4cd4efb4c5eef6209c99fd9f"><td class="memItemLeft" align="right" valign="top"><a id="ad85e983e4cd4efb4c5eef6209c99fd9f" name="ad85e983e4cd4efb4c5eef6209c99fd9f"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>showcaseSalientFreqs</b> (<a class="el" href="struct_strip___buffer.html">Strip_Buffer</a> *buf, int len, <a class="el" href="struct_pattern___data.html">Pattern_Data</a> *params)</td></tr>
-<tr class="separator:ad85e983e4cd4efb4c5eef6209c99fd9f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a422e60d9bb55c2a8fe08ce360c4135c3" id="r_a422e60d9bb55c2a8fe08ce360c4135c3"><td class="memItemLeft" align="right" valign="top"><a id="a422e60d9bb55c2a8fe08ce360c4135c3" name="a422e60d9bb55c2a8fe08ce360c4135c3"></a>
 CHSV&#160;</td><td class="memItemRight" valign="bottom"><b>getColorForNote</b> (int noteNumber)</td></tr>
 <tr class="separator:a422e60d9bb55c2a8fe08ce360c4135c3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a36081dbbec5a9f4444222783e3216074" id="r_a36081dbbec5a9f4444222783e3216074"><td class="memItemLeft" align="right" valign="top"><a id="a36081dbbec5a9f4444222783e3216074" name="a36081dbbec5a9f4444222783e3216074"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>synesthesiaRolling</b> (<a class="el" href="struct_strip___buffer.html">Strip_Buffer</a> *buf, int len, <a class="el" href="struct_pattern___data.html">Pattern_Data</a> *params)</td></tr>
+<tr class="memitem:a36081dbbec5a9f4444222783e3216074" id="r_a36081dbbec5a9f4444222783e3216074"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a36081dbbec5a9f4444222783e3216074">synesthesiaRolling</a> (<a class="el" href="struct_strip___buffer.html">Strip_Buffer</a> *buf, int len, <a class="el" href="struct_pattern___data.html">Pattern_Data</a> *params)</td></tr>
+<tr class="memdesc:a36081dbbec5a9f4444222783e3216074"><td class="mdescLeft">&#160;</td><td class="mdescRight">Maps the current note to a color.  <br /></td></tr>
 <tr class="separator:a36081dbbec5a9f4444222783e3216074"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a27013c4505dfec1821f48adfe8b61a6e" id="r_a27013c4505dfec1821f48adfe8b61a6e"><td class="memItemLeft" align="right" valign="top"><a id="a27013c4505dfec1821f48adfe8b61a6e" name="a27013c4505dfec1821f48adfe8b61a6e"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>noteEQ</b> (<a class="el" href="struct_strip___buffer.html">Strip_Buffer</a> *buf, int len, <a class="el" href="struct_pattern___data.html">Pattern_Data</a> *params)</td></tr>
+<tr class="memitem:a27013c4505dfec1821f48adfe8b61a6e" id="r_a27013c4505dfec1821f48adfe8b61a6e"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a27013c4505dfec1821f48adfe8b61a6e">noteEQ</a> (<a class="el" href="struct_strip___buffer.html">Strip_Buffer</a> *buf, int len, <a class="el" href="struct_pattern___data.html">Pattern_Data</a> *params)</td></tr>
+<tr class="memdesc:a27013c4505dfec1821f48adfe8b61a6e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Maps the current note to a section on the led strip.  <br /></td></tr>
 <tr class="separator:a27013c4505dfec1821f48adfe8b61a6e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8f6459461deb350dbd4d1f5438651a0d" id="r_a8f6459461deb350dbd4d1f5438651a0d"><td class="memItemLeft" align="right" valign="top"><a id="a8f6459461deb350dbd4d1f5438651a0d" name="a8f6459461deb350dbd4d1f5438651a0d"></a>
 CHSV&#160;</td><td class="memItemRight" valign="bottom"><b>getStringColor</b> (int noteNumber, double volum)</td></tr>
@@ -224,18 +209,15 @@ CHSV&#160;</td><td class="memItemRight" valign="bottom"><b>getStringColor</b> (i
 <tr class="memitem:a4d6a0f28740c0ceae59dbb3c4ebff4a4" id="r_a4d6a0f28740c0ceae59dbb3c4ebff4a4"><td class="memItemLeft" align="right" valign="top"><a id="a4d6a0f28740c0ceae59dbb3c4ebff4a4" name="a4d6a0f28740c0ceae59dbb3c4ebff4a4"></a>
 double&#160;</td><td class="memItemRight" valign="bottom"><b>findString</b> (double frequency)</td></tr>
 <tr class="separator:a4d6a0f28740c0ceae59dbb3c4ebff4a4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab156477867b8ded7d45fe65c3342cc0d" id="r_ab156477867b8ded7d45fe65c3342cc0d"><td class="memItemLeft" align="right" valign="top"><a id="ab156477867b8ded7d45fe65c3342cc0d" name="ab156477867b8ded7d45fe65c3342cc0d"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>stringTheory</b> (<a class="el" href="struct_strip___buffer.html">Strip_Buffer</a> *buf, int len, <a class="el" href="struct_pattern___data.html">Pattern_Data</a> *params)</td></tr>
+<tr class="memitem:ab156477867b8ded7d45fe65c3342cc0d" id="r_ab156477867b8ded7d45fe65c3342cc0d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab156477867b8ded7d45fe65c3342cc0d">stringTheory</a> (<a class="el" href="struct_strip___buffer.html">Strip_Buffer</a> *buf, int len, <a class="el" href="struct_pattern___data.html">Pattern_Data</a> *params)</td></tr>
+<tr class="memdesc:ab156477867b8ded7d45fe65c3342cc0d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Maps the LED strip to a string on a violin. The color changes based on which string of the violin is detected, and position is based on where on the string is pressed to create the detected frequency.  <br /></td></tr>
 <tr class="separator:ab156477867b8ded7d45fe65c3342cc0d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0291697cf11d97f64fb440b4e803d14d" id="r_a0291697cf11d97f64fb440b4e803d14d"><td class="memItemLeft" align="right" valign="top"><a id="a0291697cf11d97f64fb440b4e803d14d" name="a0291697cf11d97f64fb440b4e803d14d"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>splashTheory</b> (<a class="el" href="struct_strip___buffer.html">Strip_Buffer</a> *buf, int len, <a class="el" href="struct_pattern___data.html">Pattern_Data</a> *params)</td></tr>
+<tr class="memitem:a0291697cf11d97f64fb440b4e803d14d" id="r_a0291697cf11d97f64fb440b4e803d14d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a0291697cf11d97f64fb440b4e803d14d">splashTheory</a> (<a class="el" href="struct_strip___buffer.html">Strip_Buffer</a> *buf, int len, <a class="el" href="struct_pattern___data.html">Pattern_Data</a> *params)</td></tr>
+<tr class="memdesc:a0291697cf11d97f64fb440b4e803d14d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Maps the LED strip to volume. The starting position is based on the volume of the sampled audio. It then creates a random variance from that starting point, and creates a splashing effect at that final point. The hue is determined by the frequency of the audio. If two splashing effects overlap, the one with a higher brightness value (aka newer/closer splash) will proliferate as normal.  <br /></td></tr>
 <tr class="separator:a0291697cf11d97f64fb440b4e803d14d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4fc00b2ce4c18d0f6fe882ccbf41cb7e" id="r_a4fc00b2ce4c18d0f6fe882ccbf41cb7e"><td class="memItemLeft" align="right" valign="top"><a id="a4fc00b2ce4c18d0f6fe882ccbf41cb7e" name="a4fc00b2ce4c18d0f6fe882ccbf41cb7e"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>deltaHeat</b> (<a class="el" href="struct_strip___buffer.html">Strip_Buffer</a> *buf, int len, <a class="el" href="struct_pattern___data.html">Pattern_Data</a> *params)</td></tr>
+<tr class="memitem:a4fc00b2ce4c18d0f6fe882ccbf41cb7e" id="r_a4fc00b2ce4c18d0f6fe882ccbf41cb7e"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a4fc00b2ce4c18d0f6fe882ccbf41cb7e">deltaHeat</a> (<a class="el" href="struct_strip___buffer.html">Strip_Buffer</a> *buf, int len, <a class="el" href="struct_pattern___data.html">Pattern_Data</a> *params)</td></tr>
+<tr class="memdesc:a4fc00b2ce4c18d0f6fe882ccbf41cb7e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Maps the LED strip to frequencies. Creates a heatmap, where frequencies that have had drastic/continued changes to their amplitude are reflected as "hot" in the heatmap, while areas with lower activity are "cooler" or "cooling down".  <br /></td></tr>
 <tr class="separator:a4fc00b2ce4c18d0f6fe882ccbf41cb7e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac2e448c30c8e4366a229ab8ea24f2a1c" id="r_ac2e448c30c8e4366a229ab8ea24f2a1c"><td class="memItemLeft" align="right" valign="top"><a id="ac2e448c30c8e4366a229ab8ea24f2a1c" name="ac2e448c30c8e4366a229ab8ea24f2a1c"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>gradient</b> (<a class="el" href="struct_strip___buffer.html">Strip_Buffer</a> *buf, int len, <a class="el" href="struct_pattern___data.html">Pattern_Data</a> *params)</td></tr>
-<tr class="separator:ac2e448c30c8e4366a229ab8ea24f2a1c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="var-members" name="var-members"></a>
 Variables</h2></td></tr>
@@ -378,6 +360,78 @@ uint8_t&#160;</td><td class="memItemRight" valign="bottom"><b>min_hue</b> = 0</t
 
 </div>
 </div>
+<a id="a5c9b78d36d822377226eff6c7951e7f6" name="a5c9b78d36d822377226eff6c7951e7f6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5c9b78d36d822377226eff6c7951e7f6">&#9670;&#160;</a></span>bleedThrough()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void bleedThrough </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="struct_strip___buffer.html">Strip_Buffer</a> *</td>          <td class="paramname"><span class="paramname"><em>buf</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int</td>          <td class="paramname"><span class="paramname"><em>len</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="struct_pattern___data.html">Pattern_Data</a> *</td>          <td class="paramname"><span class="paramname"><em>params</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>A color blended between a base and transitioning color is sent down the LED strip. The blending is based off of the cumulative volume of the audio. When the color is fully blended into the transitioning color, that color becomes the new base color and a new transitioning color is selected. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">buf</td><td>Pointer to the <a class="el" href="struct_strip___buffer.html" title="Holds persistent data for currently-running patterns.">Strip_Buffer</a> structure, holds LED buffer and history variables. </td></tr>
+    <tr><td class="paramname">len</td><td>The length of LEDs to process </td></tr>
+    <tr><td class="paramname">params</td><td>Pointer to <a class="el" href="struct_pattern___data.html">Pattern_Data</a> structure containing configuration options. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a2a31e3a563bf867fdde71166d689a51d" name="a2a31e3a563bf867fdde71166d689a51d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2a31e3a563bf867fdde71166d689a51d">&#9670;&#160;</a></span>blendIn()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void blendIn </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="struct_strip___buffer.html">Strip_Buffer</a> *</td>          <td class="paramname"><span class="paramname"><em>buf</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int</td>          <td class="paramname"><span class="paramname"><em>len</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="struct_pattern___data.html">Pattern_Data</a> *</td>          <td class="paramname"><span class="paramname"><em>params</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Maps the LED strip to the different frequencies, and each LED blends between two different colors based on that frequency's amplitude. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">buf</td><td>Pointer to the <a class="el" href="struct_strip___buffer.html" title="Holds persistent data for currently-running patterns.">Strip_Buffer</a> structure, holds LED buffer and history variables. </td></tr>
+    <tr><td class="paramname">len</td><td>The length of LEDs to process </td></tr>
+    <tr><td class="paramname">params</td><td>Pointer to <a class="el" href="struct_pattern___data.html">Pattern_Data</a> structure containing configuration options. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
 <a id="a3d83bebf605e40265a61d3b70a94a477" name="a3d83bebf605e40265a61d3b70a94a477"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a3d83bebf605e40265a61d3b70a94a477">&#9670;&#160;</a></span>confetti()</h2>
 
@@ -403,6 +457,42 @@ uint8_t&#160;</td><td class="memItemRight" valign="bottom"><b>min_hue</b> = 0</t
 </div><div class="memdoc">
 
 <p>Confetti effect using frequency and brightness. Colored speckles that blink and fade smoothly are scattered across the strip. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">buf</td><td>Pointer to the <a class="el" href="struct_strip___buffer.html" title="Holds persistent data for currently-running patterns.">Strip_Buffer</a> structure, holds LED buffer and history variables. </td></tr>
+    <tr><td class="paramname">len</td><td>The length of LEDs to process </td></tr>
+    <tr><td class="paramname">params</td><td>Pointer to <a class="el" href="struct_pattern___data.html">Pattern_Data</a> structure containing configuration options. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a4fc00b2ce4c18d0f6fe882ccbf41cb7e" name="a4fc00b2ce4c18d0f6fe882ccbf41cb7e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4fc00b2ce4c18d0f6fe882ccbf41cb7e">&#9670;&#160;</a></span>deltaHeat()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void deltaHeat </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="struct_strip___buffer.html">Strip_Buffer</a> *</td>          <td class="paramname"><span class="paramname"><em>buf</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int</td>          <td class="paramname"><span class="paramname"><em>len</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="struct_pattern___data.html">Pattern_Data</a> *</td>          <td class="paramname"><span class="paramname"><em>params</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Maps the LED strip to frequencies. Creates a heatmap, where frequencies that have had drastic/continued changes to their amplitude are reflected as "hot" in the heatmap, while areas with lower activity are "cooler" or "cooling down". </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">buf</td><td>Pointer to the <a class="el" href="struct_strip___buffer.html" title="Holds persistent data for currently-running patterns.">Strip_Buffer</a> structure, holds LED buffer and history variables. </td></tr>
@@ -594,6 +684,42 @@ uint8_t&#160;</td><td class="memItemRight" valign="bottom"><b>min_hue</b> = 0</t
 
 </div>
 </div>
+<a id="a27013c4505dfec1821f48adfe8b61a6e" name="a27013c4505dfec1821f48adfe8b61a6e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a27013c4505dfec1821f48adfe8b61a6e">&#9670;&#160;</a></span>noteEQ()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void noteEQ </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="struct_strip___buffer.html">Strip_Buffer</a> *</td>          <td class="paramname"><span class="paramname"><em>buf</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int</td>          <td class="paramname"><span class="paramname"><em>len</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="struct_pattern___data.html">Pattern_Data</a> *</td>          <td class="paramname"><span class="paramname"><em>params</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Maps the current note to a section on the led strip. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">buf</td><td>Pointer to the <a class="el" href="struct_strip___buffer.html" title="Holds persistent data for currently-running patterns.">Strip_Buffer</a> structure, holds LED buffer and history variables. </td></tr>
+    <tr><td class="paramname">len</td><td>The length of LEDs to process </td></tr>
+    <tr><td class="paramname">params</td><td>Pointer to <a class="el" href="struct_pattern___data.html">Pattern_Data</a> structure containing configuration options. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
 <a id="a0a2007b15137c803a2b6544f31825f15" name="a0a2007b15137c803a2b6544f31825f15"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a0a2007b15137c803a2b6544f31825f15">&#9670;&#160;</a></span>pix_freq()</h2>
 
@@ -702,6 +828,114 @@ uint8_t&#160;</td><td class="memItemRight" valign="bottom"><b>min_hue</b> = 0</t
 
 </div>
 </div>
+<a id="a0291697cf11d97f64fb440b4e803d14d" name="a0291697cf11d97f64fb440b4e803d14d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0291697cf11d97f64fb440b4e803d14d">&#9670;&#160;</a></span>splashTheory()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void splashTheory </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="struct_strip___buffer.html">Strip_Buffer</a> *</td>          <td class="paramname"><span class="paramname"><em>buf</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int</td>          <td class="paramname"><span class="paramname"><em>len</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="struct_pattern___data.html">Pattern_Data</a> *</td>          <td class="paramname"><span class="paramname"><em>params</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Maps the LED strip to volume. The starting position is based on the volume of the sampled audio. It then creates a random variance from that starting point, and creates a splashing effect at that final point. The hue is determined by the frequency of the audio. If two splashing effects overlap, the one with a higher brightness value (aka newer/closer splash) will proliferate as normal. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">buf</td><td>Pointer to the <a class="el" href="struct_strip___buffer.html" title="Holds persistent data for currently-running patterns.">Strip_Buffer</a> structure, holds LED buffer and history variables. </td></tr>
+    <tr><td class="paramname">len</td><td>The length of LEDs to process </td></tr>
+    <tr><td class="paramname">params</td><td>Pointer to <a class="el" href="struct_pattern___data.html">Pattern_Data</a> structure containing configuration options. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="ab156477867b8ded7d45fe65c3342cc0d" name="ab156477867b8ded7d45fe65c3342cc0d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab156477867b8ded7d45fe65c3342cc0d">&#9670;&#160;</a></span>stringTheory()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void stringTheory </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="struct_strip___buffer.html">Strip_Buffer</a> *</td>          <td class="paramname"><span class="paramname"><em>buf</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int</td>          <td class="paramname"><span class="paramname"><em>len</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="struct_pattern___data.html">Pattern_Data</a> *</td>          <td class="paramname"><span class="paramname"><em>params</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Maps the LED strip to a string on a violin. The color changes based on which string of the violin is detected, and position is based on where on the string is pressed to create the detected frequency. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">buf</td><td>Pointer to the <a class="el" href="struct_strip___buffer.html" title="Holds persistent data for currently-running patterns.">Strip_Buffer</a> structure, holds LED buffer and history variables. </td></tr>
+    <tr><td class="paramname">len</td><td>The length of LEDs to process </td></tr>
+    <tr><td class="paramname">params</td><td>Pointer to <a class="el" href="struct_pattern___data.html">Pattern_Data</a> structure containing configuration options. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a36081dbbec5a9f4444222783e3216074" name="a36081dbbec5a9f4444222783e3216074"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a36081dbbec5a9f4444222783e3216074">&#9670;&#160;</a></span>synesthesiaRolling()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void synesthesiaRolling </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="struct_strip___buffer.html">Strip_Buffer</a> *</td>          <td class="paramname"><span class="paramname"><em>buf</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int</td>          <td class="paramname"><span class="paramname"><em>len</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="struct_pattern___data.html">Pattern_Data</a> *</td>          <td class="paramname"><span class="paramname"><em>params</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Maps the current note to a color. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">buf</td><td>Pointer to the <a class="el" href="struct_strip___buffer.html" title="Holds persistent data for currently-running patterns.">Strip_Buffer</a> structure, holds LED buffer and history variables. </td></tr>
+    <tr><td class="paramname">len</td><td>The length of LEDs to process </td></tr>
+    <tr><td class="paramname">params</td><td>Pointer to <a class="el" href="struct_pattern___data.html">Pattern_Data</a> structure containing configuration options. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
 <a id="a46d2a5da00a48c7a25fa66032cc7c930" name="a46d2a5da00a48c7a25fa66032cc7c930"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a46d2a5da00a48c7a25fa66032cc7c930">&#9670;&#160;</a></span>talking()</h2>
 
@@ -727,42 +961,6 @@ uint8_t&#160;</td><td class="memItemRight" valign="bottom"><b>min_hue</b> = 0</t
 </div><div class="memdoc">
 
 <p>Generates three clusters of lights, one in the middle, and two symmetric ones that travel out from the center and return. The distance the two outer LEDS from the center is determined by the detected volume. Formant configuration takes the clusters to be red,green,blue. Moving configuration, the three clusters move up and down according to sine wave motion. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">buf</td><td>Pointer to the <a class="el" href="struct_strip___buffer.html" title="Holds persistent data for currently-running patterns.">Strip_Buffer</a> structure, holds LED buffer and history variables. </td></tr>
-    <tr><td class="paramname">len</td><td>The length of LEDs to process </td></tr>
-    <tr><td class="paramname">params</td><td>Pointer to <a class="el" href="struct_pattern___data.html">Pattern_Data</a> structure containing configuration options. </td></tr>
-  </table>
-  </dd>
-</dl>
-
-</div>
-</div>
-<a id="a20640e7d60033be2d768196de0dc1853" name="a20640e7d60033be2d768196de0dc1853"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a20640e7d60033be2d768196de0dc1853">&#9670;&#160;</a></span>tug_of_war()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void tug_of_war </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="struct_strip___buffer.html">Strip_Buffer</a> *</td>          <td class="paramname"><span class="paramname"><em>buf</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">int</td>          <td class="paramname"><span class="paramname"><em>len</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="struct_pattern___data.html">Pattern_Data</a> *</td>          <td class="paramname"><span class="paramname"><em>params</em></span>&#160;)</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Strip is split into two sides, red and blue showing push and pull motion based on either frequency or volume. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">buf</td><td>Pointer to the <a class="el" href="struct_strip___buffer.html" title="Holds persistent data for currently-running patterns.">Strip_Buffer</a> structure, holds LED buffer and history variables. </td></tr>
