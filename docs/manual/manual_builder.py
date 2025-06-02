@@ -13,8 +13,7 @@ input_filenames = [
     'structs_3',
     'project_struct_4',
     'main_loop_5',
-    'add_patterns_6',
-    'audio_analysis_7',
+    'add_patterns_7',
     'building_manual_8',
     'changelog_9'
 ]
