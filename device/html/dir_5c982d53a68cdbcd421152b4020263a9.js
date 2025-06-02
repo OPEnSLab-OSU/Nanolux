@@ -1,7 +1,8 @@
 var dir_5c982d53a68cdbcd421152b4020263a9 =
 [
     [ "api.h", "api_8h.html", "api_8h" ],
-    [ "audio_analysis.h", "audio__analysis_8h_source.html", null ],
+    [ "audio_analysis.cpp", "audio__analysis_8cpp.html", null ],
+    [ "audio_analysis.h", "audio__analysis_8h.html", "audio__analysis_8h" ],
     [ "globals.h", "globals_8h.html", "globals_8h" ],
     [ "main.ino", "main_8ino.html", "main_8ino" ],
     [ "nanolux_types.h", "nanolux__types_8h.html", null ],

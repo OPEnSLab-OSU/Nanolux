@@ -100,105 +100,152 @@ $(function(){initNavTree('audio__analysis_8h_source.html',''); initResizable(tru
   <div class="headertitle"><div class="title">audio_analysis.h</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="comment">// AudioAnalysis.h</span></div>
-<div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span> </div>
-<div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span><span class="preprocessor">#ifndef AUDIO_ANALYSIS_H</span></div>
-<div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span><span class="preprocessor">#define AUDIO_ANALYSIS_H</span></div>
-<div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span> </div>
-<div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span><span class="preprocessor">#include &lt;math.h&gt;</span></div>
-<div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span><span class="preprocessor">#include &lt;Arduino.h&gt;</span></div>
-<div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span><span class="preprocessor">#include &lt;Fast4ier.h&gt;</span></div>
-<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span><span class="preprocessor">#include &lt;complex&gt;</span></div>
-<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span><span class="preprocessor">#include &quot;AudioPrism.h&quot;</span></div>
-<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span><span class="preprocessor">#include &quot;<a class="code" href="nanolux__types_8h.html">nanolux_types.h</a>&quot;</span></div>
-<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span><span class="preprocessor">#include &quot;nanolux_util.h&quot;</span></div>
-<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span> </div>
-<div class="foldopen" id="foldopen00014" data-start="{" data-end="};">
-<div class="line"><a id="l00014" name="l00014"></a><span class="lineno"><a class="line" href="class_audio_analysis.html">   14</a></span><span class="keyword">class </span>AudioAnalysis {</div>
-<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span><span class="keyword">public</span>:</div>
-<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span>  AudioAnalysis();</div>
-<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span> </div>
-<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span>  <span class="comment">// Sampleing and FFT public interface</span></div>
-<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span>  <span class="keywordtype">void</span> processAudioFrame();</div>
-<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span> </div>
-<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span>  <span class="comment">// Accessors (cache their analysis on first call each loop)</span></div>
-<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span>  <span class="keywordtype">float</span>*  getVReal();</div>
-<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span>  <span class="keywordtype">float</span>   getPeak();</div>
-<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span>  <span class="keywordtype">float</span>   getVolume();</div>
-<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span>  <span class="keywordtype">int</span>     getMaxDelta();</div>
-<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span>  <span class="keywordtype">float</span>*  getDeltas();</div>
-<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span>  <span class="keywordtype">int</span>*    getSalientFreqs();</div>
-<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span>  <span class="keywordtype">float</span>   getCentroid();</div>
-<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span>  <span class="keywordtype">bool</span>    getPercussionPresence();</div>
-<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span>  <span class="keywordtype">float</span>   getNoisiness();</div>
-<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span>  <span class="keywordtype">float</span>*  getFiveBandSplit(<span class="keywordtype">int</span> len);</div>
-<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span> </div>
-<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>  <span class="comment">// Call at the end of the loop to clear the flags</span></div>
-<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>  <span class="keywordtype">void</span> resetCache();</div>
-<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span> </div>
-<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span><span class="keyword">private</span>:</div>
-<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>  <span class="comment">// result cache</span></div>
-<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>  <span class="keywordtype">float</span> volume            = 0;</div>
-<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>  <span class="keywordtype">float</span> peak              = 0;</div>
-<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>  <span class="keywordtype">int</span>   maxDelt           = 0;</div>
-<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>  <span class="keywordtype">int</span>   salFreqs[3]       = {0,0,0};</div>
-<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>  <span class="keywordtype">float</span> centroid          = 0;</div>
-<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>  <span class="keywordtype">bool</span>  percussionPresent = <span class="keyword">false</span>;</div>
-<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>  <span class="keywordtype">float</span> noisiness         = 0;</div>
-<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>  <span class="keywordtype">float</span> fbs[5]            = {0,0,0,0,0};</div>
-<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span> </div>
-<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>  <span class="comment">// Internal buffers</span></div>
-<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>  complex fftBuffer[SAMPLES];</div>
-<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>  <span class="keywordtype">float</span>   vReal[SAMPLES];</div>
-<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>  <span class="keywordtype">float</span>   delt[SAMPLES];</div>
-<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span> </div>
-<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>  <span class="comment">// AudioPrism modules</span></div>
-<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>  Spectrogram              fftHistory;</div>
-<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>  MeanAmplitude            volumeModule;</div>
-<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>  MajorPeaks               peaksModule;</div>
-<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>  DeltaAmplitudes          deltaModule;</div>
-<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>  SalientFreqs             salientModule;</div>
-<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>  Centroid                 centroidModule;</div>
-<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>  PercussionDetection      percussionModule;</div>
-<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>  Noisiness                noisinessModule;</div>
-<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span> </div>
-<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>  <span class="comment">// Flags</span></div>
-<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>  <span class="keywordtype">bool</span> peakUpdated       = <span class="keyword">false</span>;</div>
-<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>  <span class="keywordtype">bool</span> volumeUpdated     = <span class="keyword">false</span>;</div>
-<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>  <span class="keywordtype">bool</span> maxDeltaUpdated   = <span class="keyword">false</span>;</div>
-<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span>  <span class="keywordtype">bool</span> deltasUpdated     = <span class="keyword">false</span>;</div>
-<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>  <span class="keywordtype">bool</span> salientsUpdated   = <span class="keyword">false</span>;</div>
-<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>  <span class="keywordtype">bool</span> centroidUpdated   = <span class="keyword">false</span>;</div>
-<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span>  <span class="keywordtype">bool</span> percussionUpdated = <span class="keyword">false</span>;</div>
-<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span>  <span class="keywordtype">bool</span> noisinessUpdated  = <span class="keyword">false</span>;</div>
-<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span>  <span class="keywordtype">bool</span> fbsUpdated        = <span class="keyword">false</span>;</div>
-<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span> </div>
-<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span>  <span class="comment">// Helper funcs</span></div>
-<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span>  <span class="keywordtype">void</span> sample_audio();</div>
-<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span>  <span class="keywordtype">void</span> compute_FFT();</div>
-<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span>  <span class="keywordtype">void</span> update_peak();</div>
-<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span>  <span class="keywordtype">void</span> update_volume();</div>
-<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span>  <span class="keywordtype">void</span> update_max_delta();</div>
-<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span>  <span class="keywordtype">void</span> update_deltas();</div>
-<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span>  <span class="keywordtype">void</span> update_salient_freqs();</div>
-<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span>  <span class="keywordtype">void</span> update_centroid();</div>
-<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span>  <span class="keywordtype">void</span> update_percussion_detection();</div>
-<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span>  <span class="keywordtype">void</span> update_noisiness();</div>
-<div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span>  <span class="keywordtype">void</span> update_five_band_split(<span class="keywordtype">int</span> len);</div>
-<div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span>};</div>
+<a href="audio__analysis_8h.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span></div>
+<div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span> </div>
+<div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span><span class="preprocessor">#ifndef AUDIO_ANALYSIS_H</span></div>
+<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span><span class="preprocessor">#define AUDIO_ANALYSIS_H</span></div>
+<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span> </div>
+<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span><span class="preprocessor">#define INIT_PRISM(M)                   \</span></div>
+<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span><span class="preprocessor">  M.setWindowSize(SAMPLES);             \</span></div>
+<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span><span class="preprocessor">  M.setSampleRate(SAMPLING_FREQUENCY);  \</span></div>
+<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span><span class="preprocessor">  M.setSpectrogram(&amp;fftHistory);</span></div>
+<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span> </div>
+<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span><span class="preprocessor">#include &lt;math.h&gt;</span></div>
+<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span><span class="preprocessor">#include &lt;Arduino.h&gt;</span></div>
+<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span><span class="preprocessor">#include &lt;Fast4ier.h&gt;</span></div>
+<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span><span class="preprocessor">#include &lt;complex&gt;</span></div>
+<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span><span class="preprocessor">#include &quot;AudioPrism.h&quot;</span></div>
+<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span><span class="preprocessor">#include &quot;<a class="code" href="nanolux__types_8h.html">nanolux_types.h</a>&quot;</span></div>
+<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span><span class="preprocessor">#include &quot;nanolux_util.h&quot;</span></div>
+<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span> </div>
+<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span></div>
+<div class="foldopen" id="foldopen00038" data-start="{" data-end="};">
+<div class="line"><a id="l00038" name="l00038"></a><span class="lineno"><a class="line" href="class_audio_analysis.html">   38</a></span><span class="keyword">class </span><a class="code hl_function" href="class_audio_analysis.html#a9536a8a8871a114f72c5a43a626b948a">AudioAnalysis</a> {</div>
+<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span><span class="keyword">public</span>:</div>
+<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>  <a class="code hl_function" href="class_audio_analysis.html#a9536a8a8871a114f72c5a43a626b948a">AudioAnalysis</a>();</div>
+<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span> </div>
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>  <span class="comment">/* ============== Public Interface ============== */</span></div>
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span></div>
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>  <span class="keywordtype">void</span> <a class="code hl_function" href="class_audio_analysis.html#a256e84eb7253357a9b7c02ac528d8bfc">processAudioFrame</a>(<span class="keywordtype">int</span>);</div>
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span></div>
+<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>  <span class="keywordtype">float</span>* <a class="code hl_function" href="class_audio_analysis.html#a63d1c96eb2637d34bb82acfdcefa1664">getVReal</a>();       </div>
+<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span></div>
+<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span>  <span class="keywordtype">float</span>* <a class="code hl_function" href="class_audio_analysis.html#a63d1c96eb2637d34bb82acfdcefa1664">getVReal</a>(<span class="keywordtype">float</span>);  </div>
+<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span></div>
+<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span>  <span class="keywordtype">float</span> <a class="code hl_function" href="class_audio_analysis.html#a6d0818460f99682c4fb48d3715dae2dc">getPeak</a>();</div>
+<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span></div>
+<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span>  <span class="keywordtype">float</span> <a class="code hl_function" href="class_audio_analysis.html#aa0b5fb512fc69465fad7ac1d32b97e5e">getVolume</a>();</div>
+<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span></div>
+<div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span>  <span class="keywordtype">int</span> <a class="code hl_function" href="class_audio_analysis.html#a62d06db944e5ff3783e4dd8f2d4c117b">getMaxDelta</a>();</div>
+<div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span></div>
+<div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span>  <span class="keywordtype">float</span>* <a class="code hl_function" href="class_audio_analysis.html#a6e25fdc46c271fb8804be872bcf6e9a7">getDeltas</a>();</div>
+<div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span></div>
+<div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span>  <span class="keywordtype">int</span>* <a class="code hl_function" href="class_audio_analysis.html#a9012a2b8607de06477c3454fa7f6c66c">getSalientFreqs</a>();</div>
+<div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span></div>
+<div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span>  <span class="keywordtype">float</span> <a class="code hl_function" href="class_audio_analysis.html#a2cb1a78613b1d3ac831a6c7e98935db8">getCentroid</a>();</div>
+<div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span></div>
+<div class="line"><a id="l00108" name="l00108"></a><span class="lineno">  108</span>  <span class="keywordtype">bool</span> <a class="code hl_function" href="class_audio_analysis.html#afac865dd669f4975d5475d8f618f11f5">getPercussionPresence</a>();</div>
+<div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span></div>
+<div class="line"><a id="l00114" name="l00114"></a><span class="lineno">  114</span>  <span class="keywordtype">float</span> <a class="code hl_function" href="class_audio_analysis.html#ac15f6a3af9d2b7c4b7171471b45be1e6">getNoisiness</a>();</div>
+<div class="line"><a id="l00115" name="l00115"></a><span class="lineno">  115</span></div>
+<div class="line"><a id="l00121" name="l00121"></a><span class="lineno">  121</span>  <span class="keywordtype">float</span>* <a class="code hl_function" href="class_audio_analysis.html#a442a37b1b5491d1b7f2e378bd431a290">getFiveBandSplit</a>(<span class="keywordtype">int</span> len);</div>
+<div class="line"><a id="l00122" name="l00122"></a><span class="lineno">  122</span></div>
+<div class="line"><a id="l00126" name="l00126"></a><span class="lineno">  126</span>  <span class="keywordtype">void</span> <a class="code hl_function" href="class_audio_analysis.html#a6e7c052e73a1b83b29bdf621aec1ceaa">resetCache</a>();</div>
+<div class="line"><a id="l00127" name="l00127"></a><span class="lineno">  127</span> </div>
+<div class="line"><a id="l00128" name="l00128"></a><span class="lineno">  128</span><span class="keyword">private</span>:</div>
+<div class="line"><a id="l00129" name="l00129"></a><span class="lineno">  129</span>  <span class="comment">/* ============== Result Cache ============== */</span></div>
+<div class="line"><a id="l00130" name="l00130"></a><span class="lineno">  130</span>  <span class="keywordtype">float</span> volume            = 0;            <span class="comment">// Volume level</span></div>
+<div class="line"><a id="l00131" name="l00131"></a><span class="lineno">  131</span>  <span class="keywordtype">float</span> peak              = 0;            <span class="comment">// Peak frequency in Hz</span></div>
+<div class="line"><a id="l00132" name="l00132"></a><span class="lineno">  132</span>  <span class="keywordtype">int</span>   maxDelt           = 0;            <span class="comment">// Maximum delta between FFT bins</span></div>
+<div class="line"><a id="l00133" name="l00133"></a><span class="lineno">  133</span>  <span class="keywordtype">int</span>   salFreqs[3]       = {0,0,0};      <span class="comment">// Salient frequencies</span></div>
+<div class="line"><a id="l00134" name="l00134"></a><span class="lineno">  134</span>  <span class="keywordtype">float</span> centroid          = 0;            <span class="comment">// Centroid frequency</span></div>
+<div class="line"><a id="l00135" name="l00135"></a><span class="lineno">  135</span>  <span class="keywordtype">bool</span>  percussionPresent = <span class="keyword">false</span>;        <span class="comment">// Percussion presence flag</span></div>
+<div class="line"><a id="l00136" name="l00136"></a><span class="lineno">  136</span>  <span class="keywordtype">float</span> noisiness         = 0;            <span class="comment">// Noisiness level</span></div>
+<div class="line"><a id="l00137" name="l00137"></a><span class="lineno">  137</span>  <span class="keywordtype">float</span> fbs[5]            = {0,0,0,0,0};  <span class="comment">// Five-band split values</span></div>
+<div class="line"><a id="l00138" name="l00138"></a><span class="lineno">  138</span> </div>
+<div class="line"><a id="l00139" name="l00139"></a><span class="lineno">  139</span>  <span class="comment">/* ============== Internal Buffers ============== */</span></div>
+<div class="line"><a id="l00140" name="l00140"></a><span class="lineno">  140</span>  complex fftBuffer[SAMPLES];   <span class="comment">// Buffer for FFT samples</span></div>
+<div class="line"><a id="l00141" name="l00141"></a><span class="lineno">  141</span>  <span class="keywordtype">float</span>   vReal[SAMPLES];       <span class="comment">// Raw real FFT values</span></div>
+<div class="line"><a id="l00142" name="l00142"></a><span class="lineno">  142</span>  <span class="keywordtype">float</span>   smoothVReal[SAMPLES]; <span class="comment">// Smoothed FFT values</span></div>
+<div class="line"><a id="l00143" name="l00143"></a><span class="lineno">  143</span>  <span class="keywordtype">float</span>   delt[SAMPLES];        <span class="comment">// Delta FFT values</span></div>
+<div class="line"><a id="l00144" name="l00144"></a><span class="lineno">  144</span> </div>
+<div class="line"><a id="l00145" name="l00145"></a><span class="lineno">  145</span>  <span class="comment">/* ============== AudioPrism Modules ============== */</span></div>
+<div class="line"><a id="l00146" name="l00146"></a><span class="lineno">  146</span>  Spectrogram              fftHistory;         <span class="comment">// Spectrogram history</span></div>
+<div class="line"><a id="l00147" name="l00147"></a><span class="lineno">  147</span>  MeanAmplitude            volumeModule;       <span class="comment">// Volume analysis module</span></div>
+<div class="line"><a id="l00148" name="l00148"></a><span class="lineno">  148</span>  MajorPeaks               peaksModule;        <span class="comment">// Peaks detection module</span></div>
+<div class="line"><a id="l00149" name="l00149"></a><span class="lineno">  149</span>  DeltaAmplitudes          deltaModule;        <span class="comment">// Delta amplitudes detection module</span></div>
+<div class="line"><a id="l00150" name="l00150"></a><span class="lineno">  150</span>  SalientFreqs             salientModule;      <span class="comment">// Salient frequencies detection module</span></div>
+<div class="line"><a id="l00151" name="l00151"></a><span class="lineno">  151</span>  Centroid                 centroidModule;     <span class="comment">// Centroid frequency detection module</span></div>
+<div class="line"><a id="l00152" name="l00152"></a><span class="lineno">  152</span>  PercussionDetection      percussionModule;   <span class="comment">// Percussion detection module</span></div>
+<div class="line"><a id="l00153" name="l00153"></a><span class="lineno">  153</span>  Noisiness                noisinessModule;    <span class="comment">// Noisiness detection module</span></div>
+<div class="line"><a id="l00154" name="l00154"></a><span class="lineno">  154</span> </div>
+<div class="line"><a id="l00155" name="l00155"></a><span class="lineno">  155</span>  <span class="comment">/* ============== Flags ============== */</span></div>
+<div class="line"><a id="l00156" name="l00156"></a><span class="lineno">  156</span>  <span class="keywordtype">bool</span> vRealSmoothed     = <span class="keyword">false</span>;   <span class="comment">// Flag for vReal smoothing</span></div>
+<div class="line"><a id="l00157" name="l00157"></a><span class="lineno">  157</span>  <span class="keywordtype">bool</span> peakUpdated       = <span class="keyword">false</span>;   <span class="comment">// Flag for peak value update</span></div>
+<div class="line"><a id="l00158" name="l00158"></a><span class="lineno">  158</span>  <span class="keywordtype">bool</span> volumeUpdated     = <span class="keyword">false</span>;   <span class="comment">// Flag for volume update</span></div>
+<div class="line"><a id="l00159" name="l00159"></a><span class="lineno">  159</span>  <span class="keywordtype">bool</span> maxDeltaUpdated   = <span class="keyword">false</span>;   <span class="comment">// Flag for max delta update</span></div>
+<div class="line"><a id="l00160" name="l00160"></a><span class="lineno">  160</span>  <span class="keywordtype">bool</span> deltasUpdated     = <span class="keyword">false</span>;   <span class="comment">// Flag for delta values update</span></div>
+<div class="line"><a id="l00161" name="l00161"></a><span class="lineno">  161</span>  <span class="keywordtype">bool</span> salientsUpdated   = <span class="keyword">false</span>;   <span class="comment">// Flag for salient frequencies update</span></div>
+<div class="line"><a id="l00162" name="l00162"></a><span class="lineno">  162</span>  <span class="keywordtype">bool</span> centroidUpdated   = <span class="keyword">false</span>;   <span class="comment">// Flag for centroid frequency update</span></div>
+<div class="line"><a id="l00163" name="l00163"></a><span class="lineno">  163</span>  <span class="keywordtype">bool</span> percussionUpdated = <span class="keyword">false</span>;   <span class="comment">// Flag for percussion detection update</span></div>
+<div class="line"><a id="l00164" name="l00164"></a><span class="lineno">  164</span>  <span class="keywordtype">bool</span> noisinessUpdated  = <span class="keyword">false</span>;   <span class="comment">// Flag for noisiness level update</span></div>
+<div class="line"><a id="l00165" name="l00165"></a><span class="lineno">  165</span>  <span class="keywordtype">bool</span> fbsUpdated        = <span class="keyword">false</span>;   <span class="comment">// Flag for five-band split update</span></div>
+<div class="line"><a id="l00166" name="l00166"></a><span class="lineno">  166</span> </div>
+<div class="line"><a id="l00167" name="l00167"></a><span class="lineno">  167</span>  <span class="comment">/* ============== Helper Functions ============== */</span></div>
+<div class="line"><a id="l00168" name="l00168"></a><span class="lineno">  168</span></div>
+<div class="line"><a id="l00172" name="l00172"></a><span class="lineno">  172</span>  <span class="keywordtype">void</span> sample_audio();</div>
+<div class="line"><a id="l00173" name="l00173"></a><span class="lineno">  173</span></div>
+<div class="line"><a id="l00177" name="l00177"></a><span class="lineno">  177</span>  <span class="keywordtype">void</span> compute_FFT();</div>
+<div class="line"><a id="l00178" name="l00178"></a><span class="lineno">  178</span></div>
+<div class="line"><a id="l00183" name="l00183"></a><span class="lineno">  183</span>  <span class="keywordtype">void</span> noise_gate(<span class="keywordtype">int</span>);</div>
+<div class="line"><a id="l00184" name="l00184"></a><span class="lineno">  184</span></div>
+<div class="line"><a id="l00189" name="l00189"></a><span class="lineno">  189</span>  <span class="keywordtype">void</span> vReal_smoothing(<span class="keywordtype">float</span>);</div>
+<div class="line"><a id="l00190" name="l00190"></a><span class="lineno">  190</span></div>
+<div class="line"><a id="l00194" name="l00194"></a><span class="lineno">  194</span>  <span class="keywordtype">void</span> update_peak();</div>
+<div class="line"><a id="l00195" name="l00195"></a><span class="lineno">  195</span></div>
+<div class="line"><a id="l00199" name="l00199"></a><span class="lineno">  199</span>  <span class="keywordtype">void</span> update_volume();</div>
+<div class="line"><a id="l00200" name="l00200"></a><span class="lineno">  200</span></div>
+<div class="line"><a id="l00204" name="l00204"></a><span class="lineno">  204</span>  <span class="keywordtype">void</span> update_max_delta();</div>
+<div class="line"><a id="l00205" name="l00205"></a><span class="lineno">  205</span></div>
+<div class="line"><a id="l00209" name="l00209"></a><span class="lineno">  209</span>  <span class="keywordtype">void</span> update_deltas();</div>
+<div class="line"><a id="l00210" name="l00210"></a><span class="lineno">  210</span></div>
+<div class="line"><a id="l00214" name="l00214"></a><span class="lineno">  214</span>  <span class="keywordtype">void</span> update_salient_freqs();</div>
+<div class="line"><a id="l00215" name="l00215"></a><span class="lineno">  215</span></div>
+<div class="line"><a id="l00219" name="l00219"></a><span class="lineno">  219</span>  <span class="keywordtype">void</span> update_centroid();</div>
+<div class="line"><a id="l00220" name="l00220"></a><span class="lineno">  220</span></div>
+<div class="line"><a id="l00224" name="l00224"></a><span class="lineno">  224</span>  <span class="keywordtype">void</span> update_percussion_detection();</div>
+<div class="line"><a id="l00225" name="l00225"></a><span class="lineno">  225</span></div>
+<div class="line"><a id="l00229" name="l00229"></a><span class="lineno">  229</span>  <span class="keywordtype">void</span> update_noisiness();</div>
+<div class="line"><a id="l00230" name="l00230"></a><span class="lineno">  230</span></div>
+<div class="line"><a id="l00235" name="l00235"></a><span class="lineno">  235</span>  <span class="keywordtype">void</span> update_five_band_split(<span class="keywordtype">int</span>);</div>
+<div class="line"><a id="l00236" name="l00236"></a><span class="lineno">  236</span>};</div>
 </div>
-<div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span> </div>
-<div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span><span class="keyword">extern</span> <a class="code hl_class" href="class_audio_analysis.html">AudioAnalysis</a> audioAnalysis;</div>
-<div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span> </div>
-<div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span><span class="preprocessor">#endif</span></div>
-<div class="ttc" id="aclass_audio_analysis_html"><div class="ttname"><a href="class_audio_analysis.html">AudioAnalysis</a></div><div class="ttdef"><b>Definition</b> audio_analysis.h:14</div></div>
+<div class="line"><a id="l00237" name="l00237"></a><span class="lineno">  237</span></div>
+<div class="line"><a id="l00241" name="l00241"></a><span class="lineno">  241</span><span class="keyword">extern</span> <a class="code hl_class" href="class_audio_analysis.html">AudioAnalysis</a> <a class="code hl_variable" href="audio__analysis_8h.html#a9efd89c6440263b62484b039c07ed7a6">audioAnalysis</a>;</div>
+<div class="line"><a id="l00242" name="l00242"></a><span class="lineno">  242</span> </div>
+<div class="line"><a id="l00243" name="l00243"></a><span class="lineno">  243</span><span class="preprocessor">#endif</span></div>
+<div class="ttc" id="aaudio__analysis_8h_html_a9efd89c6440263b62484b039c07ed7a6"><div class="ttname"><a href="audio__analysis_8h.html#a9efd89c6440263b62484b039c07ed7a6">audioAnalysis</a></div><div class="ttdeci">AudioAnalysis audioAnalysis</div><div class="ttdoc">External reference to the AudioAnalysis instance.</div><div class="ttdef"><b>Definition</b> globals.h:45</div></div>
+<div class="ttc" id="aclass_audio_analysis_html"><div class="ttname"><a href="class_audio_analysis.html">AudioAnalysis</a></div><div class="ttdoc">Handles audio signal processing and feature extraction.</div><div class="ttdef"><b>Definition</b> audio_analysis.h:38</div></div>
+<div class="ttc" id="aclass_audio_analysis_html_a256e84eb7253357a9b7c02ac528d8bfc"><div class="ttname"><a href="class_audio_analysis.html#a256e84eb7253357a9b7c02ac528d8bfc">AudioAnalysis::processAudioFrame</a></div><div class="ttdeci">void processAudioFrame(int)</div><div class="ttdoc">Processes an audio frame, including sampling, FFT computation, and noise gating.</div><div class="ttdef"><b>Definition</b> audio_analysis.cpp:48</div></div>
+<div class="ttc" id="aclass_audio_analysis_html_a2cb1a78613b1d3ac831a6c7e98935db8"><div class="ttname"><a href="class_audio_analysis.html#a2cb1a78613b1d3ac831a6c7e98935db8">AudioAnalysis::getCentroid</a></div><div class="ttdeci">float getCentroid()</div><div class="ttdoc">Gets the centroid frequency of the audio spectrum.</div><div class="ttdef"><b>Definition</b> audio_analysis.cpp:91</div></div>
+<div class="ttc" id="aclass_audio_analysis_html_a442a37b1b5491d1b7f2e378bd431a290"><div class="ttname"><a href="class_audio_analysis.html#a442a37b1b5491d1b7f2e378bd431a290">AudioAnalysis::getFiveBandSplit</a></div><div class="ttdeci">float * getFiveBandSplit(int len)</div><div class="ttdoc">Calculates and returns a five-band split of the audio spectrum.</div><div class="ttdef"><b>Definition</b> audio_analysis.cpp:106</div></div>
+<div class="ttc" id="aclass_audio_analysis_html_a62d06db944e5ff3783e4dd8f2d4c117b"><div class="ttname"><a href="class_audio_analysis.html#a62d06db944e5ff3783e4dd8f2d4c117b">AudioAnalysis::getMaxDelta</a></div><div class="ttdeci">int getMaxDelta()</div><div class="ttdoc">Gets the maximum delta value between FFT bins.</div><div class="ttdef"><b>Definition</b> audio_analysis.cpp:76</div></div>
+<div class="ttc" id="aclass_audio_analysis_html_a63d1c96eb2637d34bb82acfdcefa1664"><div class="ttname"><a href="class_audio_analysis.html#a63d1c96eb2637d34bb82acfdcefa1664">AudioAnalysis::getVReal</a></div><div class="ttdeci">float * getVReal()</div><div class="ttdoc">Gets the raw real part of the FFT result.</div><div class="ttdef"><b>Definition</b> audio_analysis.cpp:57</div></div>
+<div class="ttc" id="aclass_audio_analysis_html_a6d0818460f99682c4fb48d3715dae2dc"><div class="ttname"><a href="class_audio_analysis.html#a6d0818460f99682c4fb48d3715dae2dc">AudioAnalysis::getPeak</a></div><div class="ttdeci">float getPeak()</div><div class="ttdoc">Gets the peak frequency detected in the audio.</div><div class="ttdef"><b>Definition</b> audio_analysis.cpp:66</div></div>
+<div class="ttc" id="aclass_audio_analysis_html_a6e25fdc46c271fb8804be872bcf6e9a7"><div class="ttname"><a href="class_audio_analysis.html#a6e25fdc46c271fb8804be872bcf6e9a7">AudioAnalysis::getDeltas</a></div><div class="ttdeci">float * getDeltas()</div><div class="ttdoc">Gets the delta values between FFT bins.</div><div class="ttdef"><b>Definition</b> audio_analysis.cpp:81</div></div>
+<div class="ttc" id="aclass_audio_analysis_html_a6e7c052e73a1b83b29bdf621aec1ceaa"><div class="ttname"><a href="class_audio_analysis.html#a6e7c052e73a1b83b29bdf621aec1ceaa">AudioAnalysis::resetCache</a></div><div class="ttdeci">void resetCache()</div><div class="ttdoc">Clears all flags that indicate updated data for getters.</div><div class="ttdef"><b>Definition</b> audio_analysis.cpp:35</div></div>
+<div class="ttc" id="aclass_audio_analysis_html_a9012a2b8607de06477c3454fa7f6c66c"><div class="ttname"><a href="class_audio_analysis.html#a9012a2b8607de06477c3454fa7f6c66c">AudioAnalysis::getSalientFreqs</a></div><div class="ttdeci">int * getSalientFreqs()</div><div class="ttdoc">Gets the salient frequencies detected in the audio.</div><div class="ttdef"><b>Definition</b> audio_analysis.cpp:86</div></div>
+<div class="ttc" id="aclass_audio_analysis_html_a9536a8a8871a114f72c5a43a626b948a"><div class="ttname"><a href="class_audio_analysis.html#a9536a8a8871a114f72c5a43a626b948a">AudioAnalysis::AudioAnalysis</a></div><div class="ttdeci">AudioAnalysis()</div><div class="ttdoc">Constructor for the AudioAnalysis class. Initializes AudioPrism modules and other variables.</div><div class="ttdef"><b>Definition</b> audio_analysis.cpp:13</div></div>
+<div class="ttc" id="aclass_audio_analysis_html_aa0b5fb512fc69465fad7ac1d32b97e5e"><div class="ttname"><a href="class_audio_analysis.html#aa0b5fb512fc69465fad7ac1d32b97e5e">AudioAnalysis::getVolume</a></div><div class="ttdeci">float getVolume()</div><div class="ttdoc">Gets the volume level of the audio.</div><div class="ttdef"><b>Definition</b> audio_analysis.cpp:71</div></div>
+<div class="ttc" id="aclass_audio_analysis_html_ac15f6a3af9d2b7c4b7171471b45be1e6"><div class="ttname"><a href="class_audio_analysis.html#ac15f6a3af9d2b7c4b7171471b45be1e6">AudioAnalysis::getNoisiness</a></div><div class="ttdeci">float getNoisiness()</div><div class="ttdoc">Gets the noisiness level of the audio.</div><div class="ttdef"><b>Definition</b> audio_analysis.cpp:101</div></div>
+<div class="ttc" id="aclass_audio_analysis_html_afac865dd669f4975d5475d8f618f11f5"><div class="ttname"><a href="class_audio_analysis.html#afac865dd669f4975d5475d8f618f11f5">AudioAnalysis::getPercussionPresence</a></div><div class="ttdeci">bool getPercussionPresence()</div><div class="ttdoc">Checks for the presence of percussion in the audio.</div><div class="ttdef"><b>Definition</b> audio_analysis.cpp:96</div></div>
 <div class="ttc" id="ananolux__types_8h_html"><div class="ttname"><a href="nanolux__types_8h.html">nanolux_types.h</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><a class="el" href="dir_5c982d53a68cdbcd421152b4020263a9.html">main</a></li><li class="navelem"><b>audio_analysis.h</b></li>
+    <li class="navelem"><a class="el" href="dir_5c982d53a68cdbcd421152b4020263a9.html">main</a></li><li class="navelem"><a class="el" href="audio__analysis_8h.html">audio_analysis.h</a></li>
     <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2 </li>
   </ul>
 </div>

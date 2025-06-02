@@ -1,13 +1,16 @@
 var searchData=
 [
-  ['handle_5fload_5fsave_5fslot_5fput_5frequest_0',['handle_load_save_slot_put_request',['../api_8h.html#aa74eb4f86346c7af0ed96feae3a62104',1,'api.h']]],
-  ['handle_5fpattern_5fget_5frequest_1',['handle_pattern_get_request',['../api_8h.html#aa825bda5b222537f257337eaf02ae1eb',1,'api.h']]],
-  ['handle_5fpattern_5fput_5frequest_2',['handle_pattern_put_request',['../api_8h.html#a2638c85f4dd50fc6008524e4f0e8da32',1,'api.h']]],
-  ['handle_5fpatterns_5flist_5frequest_3',['handle_patterns_list_request',['../api_8h.html#ad2a42f483d2d9264b8aa39d186a8b95c',1,'api.h']]],
-  ['handle_5fsave_5fto_5fslot_5fput_5frequest_4',['handle_save_to_slot_put_request',['../api_8h.html#acfc947e703128b593a85bf5c47c91e23',1,'api.h']]],
-  ['handle_5fstrip_5fget_5frequest_5',['handle_strip_get_request',['../api_8h.html#ada70de4388e1004faab06dbe5b2f96c7',1,'api.h']]],
-  ['handle_5fstrip_5fput_5frequest_6',['handle_strip_put_request',['../api_8h.html#aaf0c796fcbe457d9aca7a3933f765684',1,'api.h']]],
-  ['handle_5fsystem_5fsettings_5fget_5frequest_7',['handle_system_settings_get_request',['../api_8h.html#aca658a0d59eabd77e9b76ac96cc8a919',1,'api.h']]],
-  ['handle_5fsystem_5fsettings_5fput_5frequest_8',['handle_system_settings_put_request',['../api_8h.html#a10b5e7cfaa7829de45e4dfc86a63e434',1,'api.h']]],
-  ['hue_5ftrail_9',['hue_trail',['../patterns_8cpp.html#a4a0e3d33841cffff42c8908dc7580c47',1,'hue_trail(Strip_Buffer *buf, int len, Pattern_Data *params):&#160;patterns.cpp'],['../patterns_8h.html#a4a0e3d33841cffff42c8908dc7580c47',1,'hue_trail(Strip_Buffer *buf, int len, Pattern_Data *params):&#160;patterns.cpp']]]
+  ['getcentroid_0',['getCentroid',['../class_audio_analysis.html#a2cb1a78613b1d3ac831a6c7e98935db8',1,'AudioAnalysis']]],
+  ['getdeltas_1',['getDeltas',['../class_audio_analysis.html#a6e25fdc46c271fb8804be872bcf6e9a7',1,'AudioAnalysis']]],
+  ['getfivebandsplit_2',['getFiveBandSplit',['../class_audio_analysis.html#a442a37b1b5491d1b7f2e378bd431a290',1,'AudioAnalysis']]],
+  ['getmaxdelta_3',['getMaxDelta',['../class_audio_analysis.html#a62d06db944e5ff3783e4dd8f2d4c117b',1,'AudioAnalysis']]],
+  ['getnoisiness_4',['getNoisiness',['../class_audio_analysis.html#ac15f6a3af9d2b7c4b7171471b45be1e6',1,'AudioAnalysis']]],
+  ['getpeak_5',['getPeak',['../class_audio_analysis.html#a6d0818460f99682c4fb48d3715dae2dc',1,'AudioAnalysis']]],
+  ['getpercussionpresence_6',['getPercussionPresence',['../class_audio_analysis.html#afac865dd669f4975d5475d8f618f11f5',1,'AudioAnalysis']]],
+  ['getsalientfreqs_7',['getSalientFreqs',['../class_audio_analysis.html#a9012a2b8607de06477c3454fa7f6c66c',1,'AudioAnalysis']]],
+  ['getvbrightness_8',['getVbrightness',['../patterns_8cpp.html#a80eb5b9bbf03b79a4da9a4562e96c290',1,'getVbrightness():&#160;patterns.cpp'],['../patterns_8h.html#a80eb5b9bbf03b79a4da9a4562e96c290',1,'getVbrightness():&#160;patterns.cpp']]],
+  ['getvolume_9',['getVolume',['../class_audio_analysis.html#aa0b5fb512fc69465fad7ac1d32b97e5e',1,'AudioAnalysis']]],
+  ['getvreal_10',['getVReal',['../class_audio_analysis.html#a63d1c96eb2637d34bb82acfdcefa1664',1,'AudioAnalysis::getVReal()'],['../class_audio_analysis.html#af61de223011371bcfd46ed165926a6c3',1,'AudioAnalysis::getVReal(float)']]],
+  ['glitch_11',['glitch',['../patterns_8cpp.html#abff51f2ded6047423b1bac2100b20ec7',1,'glitch(Strip_Buffer *buf, int len, Pattern_Data *params):&#160;patterns.cpp'],['../patterns_8h.html#abff51f2ded6047423b1bac2100b20ec7',1,'glitch(Strip_Buffer *buf, int len, Pattern_Data *params):&#160;patterns.cpp']]],
+  ['groovy_12',['groovy',['../patterns_8cpp.html#a69cb95245f151518f6c53259aafac764',1,'groovy(Strip_Buffer *buf, int len, Pattern_Data *params):&#160;patterns.cpp'],['../patterns_8h.html#a69cb95245f151518f6c53259aafac764',1,'groovy(Strip_Buffer *buf, int len, Pattern_Data *params):&#160;patterns.cpp']]]
 ];

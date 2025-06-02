@@ -103,49 +103,324 @@ $(function(){initNavTree('class_audio_analysis.html',''); initResizable(true); }
   <div class="headertitle"><div class="title">AudioAnalysis Class Reference</div></div>
 </div><!--header-->
 <div class="contents">
+
+<p>Handles audio signal processing and feature extraction.  
+ <a href="#details">More...</a></p>
+
+<p><code>#include &lt;<a class="el" href="audio__analysis_8h_source.html">audio_analysis.h</a>&gt;</code></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:ae810e14ae2aeea8457b401d3f3c8da1e" id="r_ae810e14ae2aeea8457b401d3f3c8da1e"><td class="memItemLeft" align="right" valign="top"><a id="ae810e14ae2aeea8457b401d3f3c8da1e" name="ae810e14ae2aeea8457b401d3f3c8da1e"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>processAudioFrame</b> ()</td></tr>
-<tr class="separator:ae810e14ae2aeea8457b401d3f3c8da1e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a63d1c96eb2637d34bb82acfdcefa1664" id="r_a63d1c96eb2637d34bb82acfdcefa1664"><td class="memItemLeft" align="right" valign="top"><a id="a63d1c96eb2637d34bb82acfdcefa1664" name="a63d1c96eb2637d34bb82acfdcefa1664"></a>
-float *&#160;</td><td class="memItemRight" valign="bottom"><b>getVReal</b> ()</td></tr>
+<tr class="memitem:a9536a8a8871a114f72c5a43a626b948a" id="r_a9536a8a8871a114f72c5a43a626b948a"><td class="memItemLeft" align="right" valign="top"><a id="a9536a8a8871a114f72c5a43a626b948a" name="a9536a8a8871a114f72c5a43a626b948a"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>AudioAnalysis</b> ()</td></tr>
+<tr class="memdesc:a9536a8a8871a114f72c5a43a626b948a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor for the <a class="el" href="class_audio_analysis.html" title="Handles audio signal processing and feature extraction.">AudioAnalysis</a> class. Initializes AudioPrism modules and other variables. <br /></td></tr>
+<tr class="separator:a9536a8a8871a114f72c5a43a626b948a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a256e84eb7253357a9b7c02ac528d8bfc" id="r_a256e84eb7253357a9b7c02ac528d8bfc"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a256e84eb7253357a9b7c02ac528d8bfc">processAudioFrame</a> (int)</td></tr>
+<tr class="memdesc:a256e84eb7253357a9b7c02ac528d8bfc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Processes an audio frame, including sampling, FFT computation, and noise gating.  <br /></td></tr>
+<tr class="separator:a256e84eb7253357a9b7c02ac528d8bfc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a63d1c96eb2637d34bb82acfdcefa1664" id="r_a63d1c96eb2637d34bb82acfdcefa1664"><td class="memItemLeft" align="right" valign="top">float *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a63d1c96eb2637d34bb82acfdcefa1664">getVReal</a> ()</td></tr>
+<tr class="memdesc:a63d1c96eb2637d34bb82acfdcefa1664"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the raw real part of the FFT result.  <br /></td></tr>
 <tr class="separator:a63d1c96eb2637d34bb82acfdcefa1664"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6d0818460f99682c4fb48d3715dae2dc" id="r_a6d0818460f99682c4fb48d3715dae2dc"><td class="memItemLeft" align="right" valign="top"><a id="a6d0818460f99682c4fb48d3715dae2dc" name="a6d0818460f99682c4fb48d3715dae2dc"></a>
-float&#160;</td><td class="memItemRight" valign="bottom"><b>getPeak</b> ()</td></tr>
+<tr class="memitem:af61de223011371bcfd46ed165926a6c3" id="r_af61de223011371bcfd46ed165926a6c3"><td class="memItemLeft" align="right" valign="top">float *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af61de223011371bcfd46ed165926a6c3">getVReal</a> (float)</td></tr>
+<tr class="memdesc:af61de223011371bcfd46ed165926a6c3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets a smoothed version of the real part of the FFT result.  <br /></td></tr>
+<tr class="separator:af61de223011371bcfd46ed165926a6c3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6d0818460f99682c4fb48d3715dae2dc" id="r_a6d0818460f99682c4fb48d3715dae2dc"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a6d0818460f99682c4fb48d3715dae2dc">getPeak</a> ()</td></tr>
+<tr class="memdesc:a6d0818460f99682c4fb48d3715dae2dc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the peak frequency detected in the audio.  <br /></td></tr>
 <tr class="separator:a6d0818460f99682c4fb48d3715dae2dc"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa0b5fb512fc69465fad7ac1d32b97e5e" id="r_aa0b5fb512fc69465fad7ac1d32b97e5e"><td class="memItemLeft" align="right" valign="top"><a id="aa0b5fb512fc69465fad7ac1d32b97e5e" name="aa0b5fb512fc69465fad7ac1d32b97e5e"></a>
-float&#160;</td><td class="memItemRight" valign="bottom"><b>getVolume</b> ()</td></tr>
+<tr class="memitem:aa0b5fb512fc69465fad7ac1d32b97e5e" id="r_aa0b5fb512fc69465fad7ac1d32b97e5e"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa0b5fb512fc69465fad7ac1d32b97e5e">getVolume</a> ()</td></tr>
+<tr class="memdesc:aa0b5fb512fc69465fad7ac1d32b97e5e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the volume level of the audio.  <br /></td></tr>
 <tr class="separator:aa0b5fb512fc69465fad7ac1d32b97e5e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a62d06db944e5ff3783e4dd8f2d4c117b" id="r_a62d06db944e5ff3783e4dd8f2d4c117b"><td class="memItemLeft" align="right" valign="top"><a id="a62d06db944e5ff3783e4dd8f2d4c117b" name="a62d06db944e5ff3783e4dd8f2d4c117b"></a>
-int&#160;</td><td class="memItemRight" valign="bottom"><b>getMaxDelta</b> ()</td></tr>
+<tr class="memitem:a62d06db944e5ff3783e4dd8f2d4c117b" id="r_a62d06db944e5ff3783e4dd8f2d4c117b"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a62d06db944e5ff3783e4dd8f2d4c117b">getMaxDelta</a> ()</td></tr>
+<tr class="memdesc:a62d06db944e5ff3783e4dd8f2d4c117b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the maximum delta value between FFT bins.  <br /></td></tr>
 <tr class="separator:a62d06db944e5ff3783e4dd8f2d4c117b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6e25fdc46c271fb8804be872bcf6e9a7" id="r_a6e25fdc46c271fb8804be872bcf6e9a7"><td class="memItemLeft" align="right" valign="top"><a id="a6e25fdc46c271fb8804be872bcf6e9a7" name="a6e25fdc46c271fb8804be872bcf6e9a7"></a>
-float *&#160;</td><td class="memItemRight" valign="bottom"><b>getDeltas</b> ()</td></tr>
+<tr class="memitem:a6e25fdc46c271fb8804be872bcf6e9a7" id="r_a6e25fdc46c271fb8804be872bcf6e9a7"><td class="memItemLeft" align="right" valign="top">float *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a6e25fdc46c271fb8804be872bcf6e9a7">getDeltas</a> ()</td></tr>
+<tr class="memdesc:a6e25fdc46c271fb8804be872bcf6e9a7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the delta values between FFT bins.  <br /></td></tr>
 <tr class="separator:a6e25fdc46c271fb8804be872bcf6e9a7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9012a2b8607de06477c3454fa7f6c66c" id="r_a9012a2b8607de06477c3454fa7f6c66c"><td class="memItemLeft" align="right" valign="top"><a id="a9012a2b8607de06477c3454fa7f6c66c" name="a9012a2b8607de06477c3454fa7f6c66c"></a>
-int *&#160;</td><td class="memItemRight" valign="bottom"><b>getSalientFreqs</b> ()</td></tr>
+<tr class="memitem:a9012a2b8607de06477c3454fa7f6c66c" id="r_a9012a2b8607de06477c3454fa7f6c66c"><td class="memItemLeft" align="right" valign="top">int *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a9012a2b8607de06477c3454fa7f6c66c">getSalientFreqs</a> ()</td></tr>
+<tr class="memdesc:a9012a2b8607de06477c3454fa7f6c66c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the salient frequencies detected in the audio.  <br /></td></tr>
 <tr class="separator:a9012a2b8607de06477c3454fa7f6c66c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2cb1a78613b1d3ac831a6c7e98935db8" id="r_a2cb1a78613b1d3ac831a6c7e98935db8"><td class="memItemLeft" align="right" valign="top"><a id="a2cb1a78613b1d3ac831a6c7e98935db8" name="a2cb1a78613b1d3ac831a6c7e98935db8"></a>
-float&#160;</td><td class="memItemRight" valign="bottom"><b>getCentroid</b> ()</td></tr>
+<tr class="memitem:a2cb1a78613b1d3ac831a6c7e98935db8" id="r_a2cb1a78613b1d3ac831a6c7e98935db8"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a2cb1a78613b1d3ac831a6c7e98935db8">getCentroid</a> ()</td></tr>
+<tr class="memdesc:a2cb1a78613b1d3ac831a6c7e98935db8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the centroid frequency of the audio spectrum.  <br /></td></tr>
 <tr class="separator:a2cb1a78613b1d3ac831a6c7e98935db8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:afac865dd669f4975d5475d8f618f11f5" id="r_afac865dd669f4975d5475d8f618f11f5"><td class="memItemLeft" align="right" valign="top"><a id="afac865dd669f4975d5475d8f618f11f5" name="afac865dd669f4975d5475d8f618f11f5"></a>
-bool&#160;</td><td class="memItemRight" valign="bottom"><b>getPercussionPresence</b> ()</td></tr>
+<tr class="memitem:afac865dd669f4975d5475d8f618f11f5" id="r_afac865dd669f4975d5475d8f618f11f5"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#afac865dd669f4975d5475d8f618f11f5">getPercussionPresence</a> ()</td></tr>
+<tr class="memdesc:afac865dd669f4975d5475d8f618f11f5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks for the presence of percussion in the audio.  <br /></td></tr>
 <tr class="separator:afac865dd669f4975d5475d8f618f11f5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac15f6a3af9d2b7c4b7171471b45be1e6" id="r_ac15f6a3af9d2b7c4b7171471b45be1e6"><td class="memItemLeft" align="right" valign="top"><a id="ac15f6a3af9d2b7c4b7171471b45be1e6" name="ac15f6a3af9d2b7c4b7171471b45be1e6"></a>
-float&#160;</td><td class="memItemRight" valign="bottom"><b>getNoisiness</b> ()</td></tr>
+<tr class="memitem:ac15f6a3af9d2b7c4b7171471b45be1e6" id="r_ac15f6a3af9d2b7c4b7171471b45be1e6"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac15f6a3af9d2b7c4b7171471b45be1e6">getNoisiness</a> ()</td></tr>
+<tr class="memdesc:ac15f6a3af9d2b7c4b7171471b45be1e6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the noisiness level of the audio.  <br /></td></tr>
 <tr class="separator:ac15f6a3af9d2b7c4b7171471b45be1e6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a442a37b1b5491d1b7f2e378bd431a290" id="r_a442a37b1b5491d1b7f2e378bd431a290"><td class="memItemLeft" align="right" valign="top"><a id="a442a37b1b5491d1b7f2e378bd431a290" name="a442a37b1b5491d1b7f2e378bd431a290"></a>
-float *&#160;</td><td class="memItemRight" valign="bottom"><b>getFiveBandSplit</b> (int len)</td></tr>
+<tr class="memitem:a442a37b1b5491d1b7f2e378bd431a290" id="r_a442a37b1b5491d1b7f2e378bd431a290"><td class="memItemLeft" align="right" valign="top">float *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a442a37b1b5491d1b7f2e378bd431a290">getFiveBandSplit</a> (int len)</td></tr>
+<tr class="memdesc:a442a37b1b5491d1b7f2e378bd431a290"><td class="mdescLeft">&#160;</td><td class="mdescRight">Calculates and returns a five-band split of the audio spectrum.  <br /></td></tr>
 <tr class="separator:a442a37b1b5491d1b7f2e378bd431a290"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6e7c052e73a1b83b29bdf621aec1ceaa" id="r_a6e7c052e73a1b83b29bdf621aec1ceaa"><td class="memItemLeft" align="right" valign="top"><a id="a6e7c052e73a1b83b29bdf621aec1ceaa" name="a6e7c052e73a1b83b29bdf621aec1ceaa"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>resetCache</b> ()</td></tr>
+<tr class="memdesc:a6e7c052e73a1b83b29bdf621aec1ceaa"><td class="mdescLeft">&#160;</td><td class="mdescRight">Clears all flags that indicate updated data for getters. <br /></td></tr>
 <tr class="separator:a6e7c052e73a1b83b29bdf621aec1ceaa"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p>Handles audio signal processing and feature extraction. </p>
+<p>The <code><a class="el" href="class_audio_analysis.html" title="Handles audio signal processing and feature extraction.">AudioAnalysis</a></code> class is responsible for processing real-time audio input, performing Fast Fourier Transform (FFT), and extracting various audio features, such as volume, peak frequency, delta amplitudes, salient frequencies, centroid, percussion presence, and noisiness. It also provides functionality for noise gating and real-time analysis, smoothing, and updating the extracted features for visualization or other uses.</p>
+<p>The class interacts with the <code>AudioPrism</code> modules for different types of audio analysis (e.g., volume, peaks, deltas) and stores the results in various buffers. It supports a highly optimized flow for feature extraction while maintaining efficiency for use in embedded systems like the ESP32. </p>
+</div><h2 class="groupheader">Member Function Documentation</h2>
+<a id="a2cb1a78613b1d3ac831a6c7e98935db8" name="a2cb1a78613b1d3ac831a6c7e98935db8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2cb1a78613b1d3ac831a6c7e98935db8">&#9670;&#160;</a></span>getCentroid()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">float AudioAnalysis::getCentroid </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Gets the centroid frequency of the audio spectrum. </p>
+<dl class="section return"><dt>Returns</dt><dd>Centroid frequency value. </dd></dl>
+
+</div>
+</div>
+<a id="a6e25fdc46c271fb8804be872bcf6e9a7" name="a6e25fdc46c271fb8804be872bcf6e9a7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6e25fdc46c271fb8804be872bcf6e9a7">&#9670;&#160;</a></span>getDeltas()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">float * AudioAnalysis::getDeltas </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Gets the delta values between FFT bins. </p>
+<dl class="section return"><dt>Returns</dt><dd>Pointer to the array of delta values. </dd></dl>
+
+</div>
+</div>
+<a id="a442a37b1b5491d1b7f2e378bd431a290" name="a442a37b1b5491d1b7f2e378bd431a290"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a442a37b1b5491d1b7f2e378bd431a290">&#9670;&#160;</a></span>getFiveBandSplit()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">float * AudioAnalysis::getFiveBandSplit </td>
+          <td>(</td>
+          <td class="paramtype">int</td>          <td class="paramname"><span class="paramname"><em>len</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Calculates and returns a five-band split of the audio spectrum. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">len</td><td>Length of the audio data. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Pointer to the array containing five-band split values. </dd></dl>
+
+</div>
+</div>
+<a id="a62d06db944e5ff3783e4dd8f2d4c117b" name="a62d06db944e5ff3783e4dd8f2d4c117b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a62d06db944e5ff3783e4dd8f2d4c117b">&#9670;&#160;</a></span>getMaxDelta()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int AudioAnalysis::getMaxDelta </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Gets the maximum delta value between FFT bins. </p>
+<dl class="section return"><dt>Returns</dt><dd>Maximum delta value. </dd></dl>
+
+</div>
+</div>
+<a id="ac15f6a3af9d2b7c4b7171471b45be1e6" name="ac15f6a3af9d2b7c4b7171471b45be1e6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac15f6a3af9d2b7c4b7171471b45be1e6">&#9670;&#160;</a></span>getNoisiness()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">float AudioAnalysis::getNoisiness </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Gets the noisiness level of the audio. </p>
+<dl class="section return"><dt>Returns</dt><dd>Noisiness level. </dd></dl>
+
+</div>
+</div>
+<a id="a6d0818460f99682c4fb48d3715dae2dc" name="a6d0818460f99682c4fb48d3715dae2dc"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6d0818460f99682c4fb48d3715dae2dc">&#9670;&#160;</a></span>getPeak()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">float AudioAnalysis::getPeak </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Gets the peak frequency detected in the audio. </p>
+<dl class="section return"><dt>Returns</dt><dd>Peak frequency value in Hertz. </dd></dl>
+
+</div>
+</div>
+<a id="afac865dd669f4975d5475d8f618f11f5" name="afac865dd669f4975d5475d8f618f11f5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afac865dd669f4975d5475d8f618f11f5">&#9670;&#160;</a></span>getPercussionPresence()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool AudioAnalysis::getPercussionPresence </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Checks for the presence of percussion in the audio. </p>
+<dl class="section return"><dt>Returns</dt><dd>True if percussion is detected, false otherwise. </dd></dl>
+
+</div>
+</div>
+<a id="a9012a2b8607de06477c3454fa7f6c66c" name="a9012a2b8607de06477c3454fa7f6c66c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9012a2b8607de06477c3454fa7f6c66c">&#9670;&#160;</a></span>getSalientFreqs()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int * AudioAnalysis::getSalientFreqs </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Gets the salient frequencies detected in the audio. </p>
+<dl class="section return"><dt>Returns</dt><dd>Pointer to the array of salient frequencies. </dd></dl>
+
+</div>
+</div>
+<a id="aa0b5fb512fc69465fad7ac1d32b97e5e" name="aa0b5fb512fc69465fad7ac1d32b97e5e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa0b5fb512fc69465fad7ac1d32b97e5e">&#9670;&#160;</a></span>getVolume()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">float AudioAnalysis::getVolume </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Gets the volume level of the audio. </p>
+<dl class="section return"><dt>Returns</dt><dd>Volume level. </dd></dl>
+
+</div>
+</div>
+<a id="a63d1c96eb2637d34bb82acfdcefa1664" name="a63d1c96eb2637d34bb82acfdcefa1664"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a63d1c96eb2637d34bb82acfdcefa1664">&#9670;&#160;</a></span>getVReal() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">float * AudioAnalysis::getVReal </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Gets the raw real part of the FFT result. </p>
+<dl class="section return"><dt>Returns</dt><dd>Pointer to the array of real FFT values. </dd></dl>
+
+</div>
+</div>
+<a id="af61de223011371bcfd46ed165926a6c3" name="af61de223011371bcfd46ed165926a6c3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af61de223011371bcfd46ed165926a6c3">&#9670;&#160;</a></span>getVReal() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">float * AudioAnalysis::getVReal </td>
+          <td>(</td>
+          <td class="paramtype">float</td>          <td class="paramname"><span class="paramname"><em>alpha</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Gets a smoothed version of the real part of the FFT result. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">alpha</td><td>Smoothing coefficient. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Pointer to the array of smoothed real FFT values. </dd></dl>
+
+</div>
+</div>
+<a id="a256e84eb7253357a9b7c02ac528d8bfc" name="a256e84eb7253357a9b7c02ac528d8bfc"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a256e84eb7253357a9b7c02ac528d8bfc">&#9670;&#160;</a></span>processAudioFrame()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void AudioAnalysis::processAudioFrame </td>
+          <td>(</td>
+          <td class="paramtype">int</td>          <td class="paramname"><span class="paramname"><em>noiseThreshhold</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Processes an audio frame, including sampling, FFT computation, and noise gating. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">noiseThreshhold</td><td>Threshold used for noise gating. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
 <hr/>The documentation for this class was generated from the following files:<ul>
 <li>main/<a class="el" href="audio__analysis_8h_source.html">audio_analysis.h</a></li>
-<li>main/<b>audio_analysis.cpp</b></li>
+<li>main/<a class="el" href="audio__analysis_8cpp.html">audio_analysis.cpp</a></li>
 </ul>
 </div><!-- contents -->
 </div><!-- doc-content -->

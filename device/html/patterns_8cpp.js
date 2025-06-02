@@ -14,6 +14,7 @@ var patterns_8cpp =
     [ "saturated", "patterns_8cpp.html#afb270fa2ec672ca4ec41e4757b44c3b7", null ],
     [ "talking", "patterns_8cpp.html#a46d2a5da00a48c7a25fa66032cc7c930", null ],
     [ "tug_of_war", "patterns_8cpp.html#a20640e7d60033be2d768196de0dc1853", null ],
+    [ "audioAnalysis", "patterns_8cpp.html#a9efd89c6440263b62484b039c07ed7a6", null ],
     [ "button_pressed", "patterns_8cpp.html#af23a0eb11ff9589330539e6b763badc8", null ],
     [ "config", "patterns_8cpp.html#a771cac207619504c2bd44a4392428a04", null ],
     [ "fHue", "patterns_8cpp.html#a7c08d24e884c11de984d2043cd9e0243", null ],
