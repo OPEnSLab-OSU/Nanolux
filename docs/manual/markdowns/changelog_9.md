@@ -17,3 +17,4 @@ Updated 6/1/2025
 - Added update\_hardware() under "Helper Functions" in the section "Main Loop Overview"
 - Modified the "Program Loops" section to reflect how calls to hardware are processed in the section "Main Loop Overview"
 - Modified the "Web App Implementation" section to include pattern modal requirements in the section "Adding New Patterns"
+- Added audio analysis section
