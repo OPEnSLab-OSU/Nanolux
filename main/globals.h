@@ -76,24 +76,17 @@ Pattern mainPatterns[]{
     { 7, "Glitch", true, glitch},
     { 8, "Bands", true, bands},
     { 9, "Equalizer", true, eq},
-    { 10, "Tug of War", true, tug_of_war},
-    { 11, "Rain Drop", true, random_raindrop},
-    { 12, "Fire 2012", true, Fire2012},
-    { 13, "Bar Fill", true, bar_fill},
-    { 14, "Vowel Rain Drop", true, vowels_raindrop},
-    { 15, "Blend In", true, blendIn},
-    { 16, "Bleed Through", true, bleedThrough},
-    { 17, "Percussion Case", true, showcasePercussion},
-    { 18, "Centroid Case", true, showcaseCentroid},
-    { 19, "Bread Case", true, showcaseBread},
-    { 20, "Salient Freqs Case", true, showcaseSalientFreqs},
-    { 21, "Synesthesia Rolling", true, synesthesiaRolling},
-    { 22, "Note EQ", true, noteEQ},
-    { 23, "String Theory", true, stringTheory},
-    { 24, "Splash Theory", true, splashTheory},
-    { 25, "deltaHeat", true, deltaHeat},
-    { 26, "gradient", true, gradient}
+    { 10, "Rain Drop", true, random_raindrop},
+    { 11, "Fire 2012", true, Fire2012},
+    { 12, "Bar Fill", true, bar_fill},
+    { 13, "Blend In", true, blendIn},
+    { 14, "Bleed Through", true, bleedThrough},
+    { 15, "Synesthesia Rolling", true, synesthesiaRolling},
+    { 16, "Note EQ", true, noteEQ},
+    { 17, "String Theory", true, stringTheory},
+    { 18, "Splash Theory", true, splashTheory},
+    { 19, "deltaHeat", true, deltaHeat},
 };
-int NUM_PATTERNS = 27;  // MAKE SURE TO UPDATE THIS WITH THE ACTUAL NUMBER OF PATTERNS (+1 last array pos) pos)
+int NUM_PATTERNS = 20;  // MAKE SURE TO UPDATE THIS WITH THE ACTUAL NUMBER OF PATTERNS (+1 last array pos) pos)
 
 #endif
