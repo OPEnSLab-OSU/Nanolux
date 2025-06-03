@@ -26,19 +26,24 @@ const ConfigDropDown = ({
     // Predefined configuration options for each pattern index.
     const configs = [
         ["None"],
+        ["Linear", "Blended", "Logarithmic"],
+        ["Default", "Falling Bars"],
         ["Default"],
         ["Default"],
-        ["Default", "Blur", "Shift"],
+        ["Default"],
+        ["Default"],
+        ["Default"],
+        ["Default", "Blur", "Sine"],
         ["Default", "Octaves", "Shift", "Compression"],
         ["Default", "Shift"],
-        ["Hue", "Formants", "Moving"],
-        ["Default", "Sections", "Talk"],
-        ["Basic", "Advanced", "Formant"],
-        ["Default"],
-        ["Default"],
-        ["Frequency", "Volume"],
+        ["Hue", "Moving"],
+        ["Default", "Talk", "Sections"],
         ["Default"],
         ["Volume", "Frequency"],
+        ["Default"],
+        ["Default"],
+        ["Default"],
+        ["Default"],
         ["Default"]
     ]
 
