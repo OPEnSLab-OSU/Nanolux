@@ -356,6 +356,7 @@ void glitch(Strip_Buffer * buf, int len, Pattern_Data * params ) {
     speedFromVolume = remap(volume, MIN_VOLUME, MAX_VOLUME, 5, params->config == 0 ? 25 : 20); 
     switch (params->config) {
         case 0:
+          {
             offsetFromVolume = remap(volume, MIN_VOLUME, MAX_VOLUME, 0, 20000);
 
             //Create 3 sin beats with the speed and offset(first and last parameters) changing based off variables above
@@ -372,6 +373,7 @@ void glitch(Strip_Buffer * buf, int len, Pattern_Data * params ) {
             fadeToBlackBy(buf->leds, len, 100); 
 
             break;
+          }
         case 1: // glitch_sections
           {
             offsetFromVolume = remap(volume, MIN_VOLUME, MAX_VOLUME, 0, 10000);
