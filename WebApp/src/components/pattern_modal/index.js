@@ -20,8 +20,8 @@ const PATTERN_INFOS = [
   { title: 'Bar Fill',             desc: 'Flashes the whole LED strip with the selected colors.' },
   { title: 'Blend in',             desc: 'Flashes the whole LED strip with two colors that bleed together.' },
   { title: 'Bleed Through',        desc: 'Sends different colors down the LED strip that transitions based on volume.' },
-  { title: 'Synesthesia Rolling',  desc: ''},
-  { title: 'Note EQ',              desc: ''},
+  { title: 'Synesthesia Rolling',  desc: 'Maps the current note to a color.'},
+  { title: 'Note EQ',              desc: 'Maps the current note to a section on the led strip.'},
   { title: 'String Theory',        desc: 'Maps the LED strip to imitate the strings of a violin, changing position and color based on what strings are detected.' },
 ];
 
