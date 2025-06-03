@@ -356,20 +356,6 @@ void glitch(Strip_Buffer * buf, int len, Pattern_Data * params ) {
     speedFromVolume = remap(volume, MIN_VOLUME, MAX_VOLUME, 5, params->config == 0 ? 25 : 20); 
     switch (params->config) {
         case 0:
-            sinBeat[0] = beatsin16(speedFromVolume, 0, len-1, 0, 0);
-            sinBeat[1] = beatsin16(speedFromVolume, 0, len-1, 0, 32767);
-
-            f0Hue = remap(formants[0], MIN_FREQUENCY, MAX_FREQUENCY, 0, 255);
-
-            buf->leds[sinBeat[0]]  = CHSV(fHue, 255, MAX_BRIGHTNESS);
-            buf->leds[sinBeat[1]]  = CHSV(f0Hue, 255, MAX_BRIGHTNESS); //can use fHue instead of formants
-
-            blur1d(buf->leds, len, 80);
-            fadeToBlackBy(buf->leds, len, 40);
-
-            break;
-        case 1: // glitch_talk
-          {
             offsetFromVolume = remap(volume, MIN_VOLUME, MAX_VOLUME, 0, 20000);
 
             //Create 3 sin beats with the speed and offset(first and last parameters) changing based off variables above
@@ -386,8 +372,7 @@ void glitch(Strip_Buffer * buf, int len, Pattern_Data * params ) {
             fadeToBlackBy(buf->leds, len, 100); 
 
             break;
-          }
-        case 2: // glitch_sections
+        case 1: // glitch_sections
           {
             offsetFromVolume = remap(volume, MIN_VOLUME, MAX_VOLUME, 0, 10000);
 

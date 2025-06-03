@@ -37,7 +37,7 @@ const ConfigDropDown = ({
         ["Default", "Octaves", "Shift", "Compression"],
         ["Default", "Shift"],
         ["Hue", "Moving"],
-        ["Default", "Talk", "Sections"],
+        ["Talk", "Sections"],
         ["Default"],
         ["Volume", "Frequency"],
         ["Default"],
