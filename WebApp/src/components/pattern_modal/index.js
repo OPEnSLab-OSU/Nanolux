@@ -4,6 +4,11 @@ import style from './style.css';
  * @brief List of available pattern titles and their descriptions.
  */
 const PATTERN_INFOS = [
+  { title: 'Equalizer',            desc: 'Displays lights on the strip equally.' },
+  { title: 'Bands',                desc: 'Splits the strip into five bands of different colors. This pattern is currently not working.' },
+  { title: 'Splash Theory',        desc: 'Simulates a splash effect based on volume.' },
+  { title: 'Delta Heat',           desc: 'A heat map of the frequency bins based on amplitude change.' },
+  { title: 'Fire 2012',            desc: 'Similar to Raindrop but with fire-like colors.' },
   { title: 'Pixel Frequency',      desc: 'A Pixel will change position based on volume.' },
   { title: 'Confetti',             desc: 'Colored speckles will blink and fade smoothly across the board.' },
   { title: 'Hue Trail',            desc: 'Displays a moving stream of lights.' },
@@ -11,21 +16,13 @@ const PATTERN_INFOS = [
   { title: 'Groovy',               desc: 'Fluctuates in waves of green, yellow, purple, and blue.' },
   { title: 'Talking',              desc: 'Generates three clusters: one in the middle, and two that travel back and forth from the center.' },
   { title: 'Glitch',               desc: 'Creates two light clusters that move in a sine wave motion, with speed being based on volume. This pattern is currently not working.' },
-  { title: 'Equalizer',            desc: 'Displays lights on the strip equally.' },
-  { title: 'Bands',                desc: 'Splits the strip into five bands of different colors. This pattern is currently not working.' },
-  { title: 'Eq',                   desc: 'Changes the brightness of the pixels on the strip based on volume. Hue is locked to a rainbow.' },
   { title: 'Raindrop',             desc: 'A random spot on the strip will ripple based on the frequency.' },
-  { title: 'Tug of War',           desc: 'The strip splits into two sides that move back and forth.' },
-  { title: 'Fire 2012',            desc: 'Similar to Raindrop but with fire-like colors.' },
   { title: 'Bar Fill',             desc: 'Flashes the whole LED strip with the selected colors.' },
-  { title: 'Vowels Raindrop',      desc: 'A variation of the Raindrop pattern.' },
   { title: 'Blend in',             desc: 'Flashes the whole LED strip with two colors that bleed together.' },
   { title: 'Bleed Through',        desc: 'Sends different colors down the LED strip that transitions based on volume.' },
-  { title: 'Showcase Percussion',  desc: 'Sends a color down the strip if a percussion sound is detected.' },
-  { title: 'Showcase Centroid',    desc: 'Divides the LED strip depending on the frequency of the Centroid.' },
+  { title: 'Synesthesia Rolling',  desc: ''},
+  { title: 'Note EQ',              desc: ''},
   { title: 'String Theory',        desc: 'Maps the LED strip to imitate the strings of a violin, changing position and color based on what strings are detected.' },
-  { title: 'Splash Theory',        desc: 'Simulates a splash effect based on volume.' },
-  { title: 'Delta Heat',           desc: 'A heat map of the frequency bins based on amplitude change.' },
 ];
 
 /**
