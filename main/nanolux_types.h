@@ -50,7 +50,7 @@ enum VowelSounds {
 #define FRAMES_PER_SECOND  120
 
 // FFT
-#define SAMPLES             256     // Must be a power of 2  // 128 - 1024
+#define SAMPLES             128     // Must be a power of 2  // 128 - 1024
 #define SAMPLING_FREQUENCY  8000   // Hz, must be less than 10000 due to ADC
 #define BINS                SAMPLES / 2
 #define NOISE_GATE_THRESH   20
