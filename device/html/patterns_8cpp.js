@@ -24,7 +24,6 @@ var patterns_8cpp =
     [ "button_pressed", "patterns_8cpp.html#af23a0eb11ff9589330539e6b763badc8", null ],
     [ "config", "patterns_8cpp.html#a771cac207619504c2bd44a4392428a04", null ],
     [ "fHue", "patterns_8cpp.html#a7c08d24e884c11de984d2043cd9e0243", null ],
-    [ "formants", "patterns_8cpp.html#afb4968a692d198acc4488d90bd1ecde0", null ],
     [ "manual_control_enabled", "patterns_8cpp.html#a2cc0e9634c531780594a5d10445e6458", null ],
     [ "vbrightness", "patterns_8cpp.html#a7f0661869175f6745d4a7d291c627709", null ]
 ];
