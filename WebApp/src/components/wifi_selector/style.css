@@ -19,6 +19,7 @@
     border-radius: .4rem;
     width: 30vw;
     background: white;
+    color: black;
 }
 
 .dropdownInput {
@@ -38,12 +39,13 @@
     overflow: auto;
     max-height: 150px;
     z-index: 100;
-    background-color: var(--color-bg);
+    background-color: #ffffff;
+    color: black;
     /*display: table;*/
 }
 
 .dropdownItem {
-    color: var(--color-text);
+    color: black;
     padding: 5px;
     cursor: pointer;
     /*display: table-row;*/

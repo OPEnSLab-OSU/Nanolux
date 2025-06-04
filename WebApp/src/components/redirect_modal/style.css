@@ -12,7 +12,7 @@
 }
 
 .modal {
-    background-color: black;
+    background-color: var(--color-bg);
     padding: 20px;
     border-radius: 4px;
     max-width: 80%;
@@ -20,17 +20,20 @@
 }
 
 .modalTitle {
+    color: var(--color-text);
     margin-top: 0;
 }
 
 .textContainer {
+    color: var(--color-text);
     max-width: 60%;
     margin: 0 auto;
     text-align: justify;
 }
 
 .modalButton {
-    background-color: #aaa;
+    background-color: var(--brand);
+    color: #ffffff;
     border: 1px solid #dee2e6;
     border-radius: 4px;
     padding: 8px 16px;
