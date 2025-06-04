@@ -365,7 +365,7 @@ void update_hardware(){
     pattern_changed = true;
     manual_control_enabled = true;
 
-    //Serial.print("New pattern index: "); Serial.println(loaded_patterns.pattern[0].idx);
+    Serial.print("New pattern index: "); Serial.println(loaded_patterns.pattern[0].idx);
   }
 }
 

@@ -309,24 +309,9 @@ void talking(Strip_Buffer *buf, int len, Pattern_Data *params) {
   double volume = audioAnalysis.getVolume();
   // Common variables
   int offsetFromVolume;
-  int midpoint = len / 2;
 
   switch (params->config) {
-    case 1: { // Formants
-      double f0Hue = remap(formants[0], MIN_FREQUENCY, MAX_FREQUENCY, 0, 255);
-      double f1Hue = remap(formants[1], MIN_FREQUENCY, MAX_FREQUENCY, 0, 255);
-      double f0 = remap(formants[0], MIN_FREQUENCY, MAX_FREQUENCY, 0, 255);
-      double f1 = remap(formants[1], MIN_FREQUENCY, MAX_FREQUENCY, 0, 255);
-      double f2 = remap(formants[2], MIN_FREQUENCY, MAX_FREQUENCY, 0, 255);
-
-      offsetFromVolume = remap(volume, MIN_VOLUME, MAX_VOLUME, 1, 30);
-      buf->leds[len / 2] = CRGB(f0, f1, f2);
-      buf->leds[len / 2 - offsetFromVolume] = CHSV(f0Hue, 255, MAX_BRIGHTNESS);
-      buf->leds[len / 2 + offsetFromVolume] = CHSV(f0Hue, 255, MAX_BRIGHTNESS);
-      break;
-    } 
-
-    case 2: { // Moving
+    case 1: { // Moving
       offsetFromVolume = remap(volume, MIN_VOLUME, MAX_VOLUME, 0, 12500);
 
       uint16_t sinBeat0 = beatsin16(5, 2, len - 3, 0, 250);
@@ -342,9 +327,9 @@ void talking(Strip_Buffer *buf, int len, Pattern_Data *params) {
     default: // Talking Hue
     case 0:
       offsetFromVolume = remap(volume, MIN_VOLUME, MAX_VOLUME, 1, len/2);
-      buf->leds[midpoint] = CHSV(fHue / 2, 255, MAX_BRIGHTNESS);
-      buf->leds[midpoint - offsetFromVolume] = CHSV(fHue, 255, MAX_BRIGHTNESS);
-      buf->leds[midpoint + offsetFromVolume] = CHSV(fHue, 255, MAX_BRIGHTNESS);
+      buf->leds[BINS] = CHSV(fHue / 2, 255, MAX_BRIGHTNESS);
+      buf->leds[BINS - offsetFromVolume] = CHSV(fHue, 255, MAX_BRIGHTNESS);
+      buf->leds[BINS + offsetFromVolume] = CHSV(fHue, 255, MAX_BRIGHTNESS);
       break;
   }
 
@@ -371,19 +356,6 @@ void glitch(Strip_Buffer * buf, int len, Pattern_Data * params ) {
     speedFromVolume = remap(volume, MIN_VOLUME, MAX_VOLUME, 5, params->config == 0 ? 25 : 20); 
     switch (params->config) {
         case 0:
-            sinBeat[0] = beatsin16(speedFromVolume, 0, len-1, 0, 0);
-            sinBeat[1] = beatsin16(speedFromVolume, 0, len-1, 0, 32767);
-
-            f0Hue = remap(formants[0], MIN_FREQUENCY, MAX_FREQUENCY, 0, 255);
-
-            buf->leds[sinBeat[0]]  = CHSV(fHue, 255, MAX_BRIGHTNESS);
-            buf->leds[sinBeat[1]]  = CHSV(f0Hue, 255, MAX_BRIGHTNESS); //can use fHue instead of formants
-
-            blur1d(buf->leds, len, 80);
-            fadeToBlackBy(buf->leds, len, 40);
-
-            break;
-        case 1: // glitch_talk
           {
             offsetFromVolume = remap(volume, MIN_VOLUME, MAX_VOLUME, 0, 20000);
 
@@ -402,7 +374,7 @@ void glitch(Strip_Buffer * buf, int len, Pattern_Data * params ) {
 
             break;
           }
-        case 2: // glitch_sections
+        case 1: // glitch_sections
           {
             offsetFromVolume = remap(volume, MIN_VOLUME, MAX_VOLUME, 0, 10000);
 
@@ -779,13 +751,12 @@ void Fire2012(Strip_Buffer * buf, int len, Pattern_Data* params){
 /// @param len The length of LEDs to process
 /// @param params Pointer to Pattern_Data structure containing configuration options.
 void bar_fill(Strip_Buffer * buf, int len, Pattern_Data* params){
-  float volume = audioAnalysis.getVolume();
   uint8_t max_height = 0;
 
   switch(params->config) {
 
     case VOLUME: default: {
-      max_height = remap(volume, MIN_VOLUME * 4, MAX_VOLUME/2, 0, len-1);
+      max_height = remap(audioAnalysis.getVolume(), MIN_VOLUME * 4, MAX_VOLUME/2, 0, len-1);
       break;
     }
 
@@ -838,47 +809,47 @@ int getColor(int noteNumber) {
 /// @param len The length of LEDs to process
 /// @param params Pointer to Pattern_Data structure containing configuration options.
 void blendIn(Strip_Buffer * buf, int len, Pattern_Data* params){
-  static int prog = 0;
-  //get amplitudes for the samples
-   float* vReal = audioAnalysis.getVReal();
-   static int splatter[MAX_LEDS] = {0};
-   //determine colors based on static variable
-   CHSV backColor = CHSV(getColor(prog), 255, 150);
-   CHSV corrColor = CHSV(getColor(prog + 1), 255, 150);
-   //determine low's and high's for this sample
-   int lowVol = vReal[0];
-   int highVol = vReal[0];
-   for(int i = 1; i < len; i++){
-    if(vReal[i] > highVol) highVol = vReal[i];
-    if(vReal[i] < lowVol) lowVol = vReal[i];
-   }
-   for(int i = 0; i < len; i++){
-    //gate
-      if(vReal[i] > 200){
-        //determine blending based on amp
-        int blending = map(vReal[i], MIN_FREQUENCY, MAX_FREQUENCY, 1, 40);
-        splatter[i] += blending;
-        if(splatter[i] > 255){
-          splatter[i] = 255;
-        }
-       buf->leds[i] = blend(backColor, corrColor, splatter[i], SHORTEST_HUES);
-      }
-   }
-   bool pass = true;
-   //check if LED strip has reached the point to pass
-   for(int i = 0; i < len; i++){
-    if(splatter[i] < 200){
-      pass = false;
+    static int prog = 0;
+    //get amplitudes for the samples
+    float* vReal = audioAnalysis.getVReal();
+    static int splatter[MAX_LEDS] = {0};
+    //determine colors based on static variable
+    CHSV backColor = CHSV(getColor(prog), 255, 150);
+    CHSV corrColor = CHSV(getColor(prog + 1), 255, 150);
+    //determine low's and high's for this sample
+    int lowVol = vReal[0];
+    int highVol = vReal[0];
+    for(int i = 1; i < len; i++){
+      if(vReal[i] > highVol) highVol = vReal[i];
+      if(vReal[i] < lowVol) lowVol = vReal[i];
     }
-   }
-   //change colors and reset progression if succeeded in passing
-   if(pass){
-      prog++;
-      prog = prog % 12;
-      for(int i = 0; i < len; i++){
-        splatter[i] = 0;
+    for(int i = 0; i < len; i++){
+      //gate
+        if(vReal[i] > 200){
+          //determine blending based on amp
+          int blending = map(vReal[i], MIN_FREQUENCY, MAX_FREQUENCY, 1, 40);
+          splatter[i] += blending;
+          if(splatter[i] > 255){
+            splatter[i] = 255;
+          }
+        buf->leds[i] = blend(backColor, corrColor, splatter[i], SHORTEST_HUES);
+        }
+    }
+    bool pass = true;
+    //check if LED strip has reached the point to pass
+    for(int i = 0; i < len; i++){
+      if(splatter[i] < 200){
+        pass = false;
       }
-   }
+    }
+    //change colors and reset progression if succeeded in passing
+    if(pass){
+        prog++;
+        prog = prog % 12;
+        for(int i = 0; i < len; i++){
+          splatter[i] = 0;
+        }
+    }
 }
 
 
@@ -888,32 +859,32 @@ void blendIn(Strip_Buffer * buf, int len, Pattern_Data* params){
 /// @param len The length of LEDs to process
 /// @param params Pointer to Pattern_Data structure containing configuration options.
 void bleedThrough(Strip_Buffer * buf, int len, Pattern_Data* params){
-  float volume = audioAnalysis.getVolume();
-  static int prog = 0;
-  //find blending value through volume
-  int blending = remap(volume, MIN_VOLUME, MAX_VOLUME, 0, 60);
-  Serial.println(blending);
-  //gate
-  if(volume > 20){
-    buf->vol_pos += blending;
+    float volume = audioAnalysis.getVolume();
+    static int prog = 0;
+    //find blending value through volume
+    int blending = remap(volume, MIN_VOLUME, MAX_VOLUME, 0, 60);
+    // Serial.println(blending);
+    //gate
+    if(volume > 20){
+      buf->vol_pos += blending;
+    }
+    if (buf->vol_pos > 255){
+    buf->vol_pos = 255;
   }
-  if (buf->vol_pos > 255){
-   buf->vol_pos = 255;
- }
- //determine colors through static variable
- CHSV backColor = CHSV(getColor(prog), 255, remap(volume, MIN_VOLUME, MAX_VOLUME, 30, 255));
- CHSV corrColor = CHSV(getColor(prog + 1), 255, remap(volume, MIN_VOLUME, MAX_VOLUME, 30, 255));
- //slide LED's down one
- for(int i = len - 1; i > 0; i--){
-   buf->leds[i] = buf->leds[i - 1];
- }
- buf->leds[0] = blend(backColor, corrColor, buf->vol_pos, SHORTEST_HUES);
- //if variable has reached limit, move onto next color
- if (buf->vol_pos == 255){
-     prog++;
-     prog = prog % 12;
-     buf->vol_pos = 0;
- }
+  //determine colors through static variable
+  CHSV backColor = CHSV(getColor(prog), 255, remap(volume, MIN_VOLUME, MAX_VOLUME, 30, 255));
+  CHSV corrColor = CHSV(getColor(prog + 1), 255, remap(volume, MIN_VOLUME, MAX_VOLUME, 30, 255));
+  //slide LED's down one
+  for(int i = len - 1; i > 0; i--){
+    buf->leds[i] = buf->leds[i - 1];
+  }
+  buf->leds[0] = blend(backColor, corrColor, buf->vol_pos, SHORTEST_HUES);
+  //if variable has reached limit, move onto next color
+  if (buf->vol_pos == 255){
+      prog++;
+      prog = prog % 12;
+      buf->vol_pos = 0;
+  }
 }
 
 // Mapping MIDI note numbers to CHSV colors across all octaves. Based on common synesthesia associations.
@@ -1081,7 +1052,7 @@ void stringTheory(Strip_Buffer *buf, int len, Pattern_Data* params) {
   const int stringStartArray[] = {196, 294, 440, 659};
   const int stringEndArray[] = {293, 439, 658, 1008};
   int numStrings = 4;
-  Serial.println(peak);
+  // Serial.println(peak);
   for(int i = 0; i < numStrings; i++){
     //within bounds
     if(peak >= stringStartArray[i] && peak <= stringEndArray[i]){

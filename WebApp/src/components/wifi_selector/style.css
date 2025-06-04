@@ -38,11 +38,12 @@
     overflow: auto;
     max-height: 150px;
     z-index: 100;
-    background-color: #1c1c1c;
+    background-color: var(--color-bg);
     /*display: table;*/
 }
 
 .dropdownItem {
+    color: var(--color-text);
     padding: 5px;
     cursor: pointer;
     /*display: table-row;*/
