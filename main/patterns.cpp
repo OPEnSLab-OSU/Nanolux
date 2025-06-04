@@ -35,20 +35,14 @@ extern Pattern_Data params;
 extern uint8_t manual_pattern_idx;
 extern bool manual_control_enabled;
 
-/// Global formant array, used for accessing.
-extern double formants[3];
-
-uint8_t max_hue = 255;
-uint8_t min_hue = 0;
-
 
 // get frequency hue
-void getFhue(uint8_t tmin_hue, uint8_t tmax_hue){
+void getFhue(uint8_t min_hue, uint8_t max_hue){
   fHue = remap(
   log(audioAnalysis.getPeak()) / log(2),
   log(MIN_FREQUENCY) / log(2),
   log(MAX_FREQUENCY) / log(2),
-  tmin_hue, tmax_hue);
+  min_hue, max_hue);
   // disable min hue and max hue
   // 10, 240);
 }
