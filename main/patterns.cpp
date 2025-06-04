@@ -350,6 +350,7 @@ void glitch(Strip_Buffer * buf, int len, Pattern_Data * params ) {
     speedFromVolume = remap(volume, MIN_VOLUME, MAX_VOLUME, 5, params->config == 0 ? 25 : 20); 
     switch (params->config) {
         case 0:
+          {
             offsetFromVolume = remap(volume, MIN_VOLUME, MAX_VOLUME, 0, 20000);
 
             //Create 3 sin beats with the speed and offset(first and last parameters) changing based off variables above
@@ -366,6 +367,7 @@ void glitch(Strip_Buffer * buf, int len, Pattern_Data * params ) {
             fadeToBlackBy(buf->leds, len, 100); 
 
             break;
+          }
         case 1: // glitch_sections
           {
             offsetFromVolume = remap(volume, MIN_VOLUME, MAX_VOLUME, 0, 10000);
@@ -855,7 +857,7 @@ void bleedThrough(Strip_Buffer * buf, int len, Pattern_Data* params){
     static int prog = 0;
     //find blending value through volume
     int blending = remap(volume, MIN_VOLUME, MAX_VOLUME, 0, 60);
-    Serial.println(blending);
+    // Serial.println(blending);
     //gate
     if(volume > 20){
       buf->vol_pos += blending;
@@ -1044,7 +1046,7 @@ void stringTheory(Strip_Buffer *buf, int len, Pattern_Data* params) {
   const int stringStartArray[] = {196, 294, 440, 659};
   const int stringEndArray[] = {293, 439, 658, 1008};
   int numStrings = 4;
-  Serial.println(peak);
+  // Serial.println(peak);
   for(int i = 0; i < numStrings; i++){
     //within bounds
     if(peak >= stringStartArray[i] && peak <= stringEndArray[i]){
