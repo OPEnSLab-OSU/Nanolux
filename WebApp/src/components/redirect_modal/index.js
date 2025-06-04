@@ -31,11 +31,11 @@ const WiFiModal = ({ isOpen, onClose, ssid, audioLuxUrl }) => {
                 <div id='redirect-modal-desc' className={style.textContainer}>
                     <h3>The AudioLux has joined the {ssid} WiFi network.</h3>
                     <p>It will automatically join this network from now on.
-                        You can connect to the device using this URL:
+                        You can connect to the device using this URL: 
                         <a href={`http://${audioLuxUrl}`} aria-label={`Device URL: http://${audioLuxUrl}`} >http://{audioLuxUrl}</a>..
                     </p>
                     <p>To reset the network connection, use the Forget button on this
-                    page. After that, the device will be reachable at
+                    page. After that, the device will be reachable at 
                         <a href="http://192.168.4.1" aria-label='Default URL: http://192.168.4.1' >http://192.168.4.1</a>
                     </p>
                 </div>
