@@ -81,10 +81,8 @@ You will need to install the ESP32 board driver for developing on this board.
 You will also need to check the port connection with ESP32 Board.
 * Serial Connection with ESP32: https://docs.espressif.com/projects/esp-idf/en/latest/esp32/get-started/establish-serial-connection.html
 
+Use the “ESP32” package by Espressif Systems at version 2.0.16. In Arduino IDE, open Tools → Board → Boards Manager, search for “esp32,” and install or roll back to esp32 by Espressif Systems v2.0.16. This version is required to compile FastLED 3.7.0 without errors.
 
-# Memory model
-After setting up the board, you will need to select a memory model with enough room for the libraries. In the Arduino IDE, 
-go to Tools->Partition Scheme and make sure "No OTA (Large APP)" is selected. If this is not an option for you, you can ignore this step.
 
 # Using the AudioLux Device
 Once the device is set up correctly, it can be powered on using its micro USB and fed audio through the 3.5mm audio jack. To configure the device, either use the rotary encoder to cycle through patterns and modes or use the AudioLux web app (ensure the web application is deployed by following these steps in the Wiki: [The Web App](https://github.com/OPEnSLab-OSU/Nanolux/wiki/The-Web-App)). Once deployed by the device, the web app can be connected to by opening your device's Wifi settings and selecting the AudioLux Wifi (`AudioluxUnsecured`) that is hosted by the AudioLux device, and then opening the web app by going to `http://192.168.4.1/` if the device has not been configured before or `http://audiolux.local` if the device has been configured. Once connected, the AudioLux device can be configured freely using all of the web app's functionality and/or the device's rotary encoder.
