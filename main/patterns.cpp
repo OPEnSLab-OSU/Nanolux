@@ -57,11 +57,6 @@ void getVbrightness(){
     MAX_BRIGHTNESS);
 }
 
-void setHues(uint8_t tmin_hue, uint8_t tmax_hue){
-  min_hue = tmin_hue;
-  max_hue = tmax_hue;
-}
-
 void nextPattern() {
   // add one to the current pattern number, and wrap around at the end
   if(manual_control_enabled){
@@ -760,12 +755,12 @@ void bar_fill(Strip_Buffer * buf, int len, Pattern_Data* params){
     }
   }
 
-  uint8_t hue_step = (max_hue - min_hue) / (len - 1);
+  uint8_t hue_step = (255 - 0) / (len - 1);
 
   // Apply the color to the strip.
   for(uint8_t i = 0; i < max_height; i++){
     buf->leds[i] = CHSV(
-      (min_hue + hue_step * (i - 1)) % 255,
+      (0 + hue_step * (i - 1)) % 255,
       255,
       255
     );
